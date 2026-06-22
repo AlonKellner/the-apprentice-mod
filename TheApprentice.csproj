@@ -9,9 +9,10 @@
     <GodotPluginsInitializer>false</GodotPluginsInitializer>
   </PropertyGroup>
 
-  <!-- Exclude Godot asset folder from compilation -->
+  <!-- Exclude Godot asset folder and test project from compilation -->
   <ItemGroup>
     <Compile Remove="TheApprentice/**" />
+    <Compile Remove="TheApprentice.Tests/**" />
     <Compile Remove="materials/**" />
     <Compile Remove="shaders/**" />
     <Compile Remove="images/**" />
