@@ -1,0 +1,26 @@
+# Godot
+.godot/
+
+# Build output
+bin/
+obj/
+publish/
+
+# Packages
+packages/
+Properties/
+
+# Machine-local config (contains paths specific to this machine)
+Directory.Build.props
+local.props
+
+# IDE
+*.user
+.idea/
+.vs/
+
+# macOS
+.DS_Store
+
+# Android
+/android/

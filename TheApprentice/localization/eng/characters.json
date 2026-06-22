@@ -1,0 +1,16 @@
+{
+  "THEAPPRENTICE-THE_APPRENTICE.title": "The Apprentice",
+  "THEAPPRENTICE-THE_APPRENTICE.titleObject": "the Apprentice",
+  "THEAPPRENTICE-THE_APPRENTICE.description": "A student of the dark arts,\nwielding forbidden knowledge in the depths.",
+  "THEAPPRENTICE-THE_APPRENTICE.pronounObject": "them",
+  "THEAPPRENTICE-THE_APPRENTICE.possessiveAdjective": "their",
+  "THEAPPRENTICE-THE_APPRENTICE.pronounPossessive": "theirs",
+  "THEAPPRENTICE-THE_APPRENTICE.pronounSubject": "they",
+  "THEAPPRENTICE-THE_APPRENTICE.goldMonologue": "Knowledge... and coin.",
+  "THEAPPRENTICE-THE_APPRENTICE.eventDeathPrevention": "Not yet...",
+  "THEAPPRENTICE-THE_APPRENTICE.aromaPrinciple": "Knowledge",
+  "THEAPPRENTICE-THE_APPRENTICE.cardsModifierTitle": "Apprentice Cards",
+  "THEAPPRENTICE-THE_APPRENTICE.cardsModifierDescription": "Apprentice cards will now appear in rewards and shops.",
+  "THEAPPRENTICE-THE_APPRENTICE.banter.alive.endTurnPing": "Still thinking...",
+  "THEAPPRENTICE-THE_APPRENTICE.banter.dead.endTurnPing": "...",
+}

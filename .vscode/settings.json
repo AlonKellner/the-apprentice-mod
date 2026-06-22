@@ -1,0 +1,5 @@
+{
+    "claudeCode.allowDangerouslySkipPermissions": true,
+    "dotnet.defaultSolution": "TheApprentice.sln",
+    "godotTools.editorPath.godot4": "${env:HOME}/Applications/MegaDot.app/Contents/MacOS/Godot"
+}
