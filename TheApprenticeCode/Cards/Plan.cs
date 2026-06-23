@@ -1,5 +1,6 @@
 using BaseLib.Abstracts;
 using BaseLib.Extensions;
+using System.Linq;
 using MegaCrit.Sts2.Core.CardSelection;
 using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Commands;
@@ -31,6 +32,11 @@ public class Plan : ApprenticeCard
 
         if (selected == null) return;
         foreach (var card in selected)
+        {
+            int nextIndex = player.Piles.SelectMany(p => p.Cards).Count(c => c.TryGetModifier<PlannedModifier>(out _));
             CardModifier.AddModifier<PlannedModifier>(card);
+            if (card.TryGetModifier<PlannedModifier>(out var mod))
+                mod.SequenceIndex = nextIndex;
+        }
     }
 }

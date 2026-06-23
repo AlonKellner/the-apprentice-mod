@@ -10,12 +10,7 @@ public class PlannedModifier : CardModifier
 {
     public const string ModifierId = "TheApprentice:Planned";
 
-    public int SequenceIndex { get; private set; }
-
-    public PlannedModifier()
-    {
-        SequenceIndex = PlannedTracker.CurrentSequence++;
-    }
+    public int SequenceIndex { get; set; }
 
     // Adds the Unplayable keyword dynamically (global layer) so it wears off
     // automatically when this modifier is removed. If TryModifyKeywordsInCombat

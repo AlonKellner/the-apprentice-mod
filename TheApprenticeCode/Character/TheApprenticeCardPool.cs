@@ -1,5 +1,4 @@
 using BaseLib.Abstracts;
-using TheApprentice.TheApprenticeCode.Cards.Modifiers;
 using TheApprentice.TheApprenticeCode.Extensions;
 using Godot;
 
@@ -19,12 +18,4 @@ public class TheApprenticeCardPool : CustomCardPoolModel
     public override Color DeckEntryCardColor => new("ffffff");
 
     public override bool IsColorless => false;
-
-    public override bool ShouldReceiveCombatHooks => true;
-
-    public override Task BeforeCombatStart()
-    {
-        PlannedTracker.ResetSequence();
-        return Task.CompletedTask;
-    }
 }
