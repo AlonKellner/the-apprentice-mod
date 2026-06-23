@@ -1,4 +1,12 @@
 {
+  "THEAPPRENTICE-APPRENTICE_STRIKE.title": "Strike",
+  "THEAPPRENTICE-APPRENTICE_STRIKE.description": "Deal [red]6[/red] damage.",
+  "THEAPPRENTICE-APPRENTICE_STRIKE+.description": "Deal [red]9[/red] damage.",
+
+  "THEAPPRENTICE-APPRENTICE_DEFEND.title": "Defend",
+  "THEAPPRENTICE-APPRENTICE_DEFEND.description": "Gain [green]5[/green] Block.",
+  "THEAPPRENTICE-APPRENTICE_DEFEND+.description": "Gain [green]8[/green] Block.",
+
   "THEAPPRENTICE-PLAN.title": "Plan",
   "THEAPPRENTICE-PLAN.description": "Choose a card in your hand. Apply [keyword]Planned[/keyword] to it.",
   "THEAPPRENTICE-PLAN+.description": "Choose [blue]2[/blue] cards in your hand. Apply [keyword]Planned[/keyword] to them.",

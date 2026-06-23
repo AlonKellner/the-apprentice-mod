@@ -1,5 +1,6 @@
 using BaseLib.Abstracts;
 using BaseLib.Utils.NodeFactories;
+using TheApprentice.TheApprenticeCode.Cards;
 using TheApprentice.TheApprenticeCode.Extensions;
 using Godot;
 using MegaCrit.Sts2.Core.Entities.Characters;
@@ -21,16 +22,15 @@ public class TheApprentice : PlaceholderCharacterModel
 
     public override IEnumerable<CardModel> StartingDeck =>
     [
-        ModelDb.Card<StrikeIronclad>(),
-        ModelDb.Card<StrikeIronclad>(),
-        ModelDb.Card<StrikeIronclad>(),
-        ModelDb.Card<StrikeIronclad>(),
-        ModelDb.Card<StrikeIronclad>(),
-        ModelDb.Card<DefendIronclad>(),
-        ModelDb.Card<DefendIronclad>(),
-        ModelDb.Card<DefendIronclad>(),
-        ModelDb.Card<DefendIronclad>(),
-        ModelDb.Card<DefendIronclad>()
+        ModelDb.Card<ApprenticeStrike>(),
+        ModelDb.Card<ApprenticeStrike>(),
+        ModelDb.Card<ApprenticeStrike>(),
+        ModelDb.Card<ApprenticeStrike>(),
+        ModelDb.Card<ApprenticeStrike>(),
+        ModelDb.Card<ApprenticeDefend>(),
+        ModelDb.Card<ApprenticeDefend>(),
+        ModelDb.Card<ApprenticeDefend>(),
+        ModelDb.Card<ApprenticeDefend>(),
     ];
 
     public override IReadOnlyList<RelicModel> StartingRelics =>
