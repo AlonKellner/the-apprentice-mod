@@ -1,8 +1,7 @@
 using BaseLib.Abstracts;
-using MegaCrit.Sts2.Core.Commands;
+using BaseLib.Utils;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
-using MegaCrit.Sts2.Core.ValueProps;
 
 namespace TheApprentice.TheApprenticeCode.Cards;
 
@@ -12,13 +11,13 @@ public class ApprenticeStrike : ApprenticeCard
 
     public ApprenticeStrike() : base(1, CardType.Attack, CardRarity.Basic, TargetType.AnyEnemy, false)
     {
+        WithDamage(6);
     }
+
+    protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(3m);
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
-        await DamageCmd.Attack(IsUpgraded ? 9m : 6m)
-            .FromCard(cardPlay.Card)
-            .Targeting(cardPlay.Target!)
-            .Execute(context);
+        await CommonActions.CardAttack(cardPlay.Card, cardPlay).Execute(context);
     }
 }

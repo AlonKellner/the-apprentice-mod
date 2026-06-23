@@ -1,22 +1,20 @@
 {
   "THEAPPRENTICE-APPRENTICE_STRIKE.title": "Strike",
-  "THEAPPRENTICE-APPRENTICE_STRIKE.description": "Deal [red]6[/red] damage.",
-  "THEAPPRENTICE-APPRENTICE_STRIKE+.description": "Deal [red]9[/red] damage.",
+  "THEAPPRENTICE-APPRENTICE_STRIKE.description": "Deal {Damage:diff()} damage.",
 
   "THEAPPRENTICE-APPRENTICE_DEFEND.title": "Defend",
-  "THEAPPRENTICE-APPRENTICE_DEFEND.description": "Gain [green]5[/green] Block.",
-  "THEAPPRENTICE-APPRENTICE_DEFEND+.description": "Gain [green]8[/green] Block.",
+  "THEAPPRENTICE-APPRENTICE_DEFEND.description": "Gain {Block:diff()} [gold]Block[/gold].",
 
   "THEAPPRENTICE-PLAN.title": "Plan",
-  "THEAPPRENTICE-PLAN.description": "Choose a card in your hand. Apply [keyword]Planned[/keyword] to it.",
-  "THEAPPRENTICE-PLAN+.description": "Choose [blue]2[/blue] cards in your hand. Apply [keyword]Planned[/keyword] to them.",
+  "THEAPPRENTICE-PLAN.description": "Choose a card in your hand. Apply [gold]Planned[/gold] to it.",
+  "THEAPPRENTICE-PLAN+.description": "Choose 2 cards in your hand. Apply [gold]Planned[/gold] to them.",
   "THEAPPRENTICE-PLAN.selectionPrompt": "Choose a card to Plan.",
 
   "THEAPPRENTICE-EXECUTE_PLANS.title": "Execute Plans",
-  "THEAPPRENTICE-EXECUTE_PLANS.description": "Play all [keyword]Planned[/keyword] cards in the order they were planned.",
-  "THEAPPRENTICE-EXECUTE_PLANS+.description": "Play all [keyword]Planned[/keyword] cards in the order they were planned.",
+  "THEAPPRENTICE-EXECUTE_PLANS.description": "Play all [gold]Planned[/gold] cards in the order they were planned.",
+  "THEAPPRENTICE-EXECUTE_PLANS+.description": "Play all [gold]Planned[/gold] cards in the order they were planned.",
 
   "THEAPPRENTICE-SCRAP_PLANS.title": "Scrap Plans",
-  "THEAPPRENTICE-SCRAP_PLANS.description": "Discard all [keyword]Planned[/keyword] cards in your hand. Draw [blue]1[/blue] per card discarded.",
-  "THEAPPRENTICE-SCRAP_PLANS+.description": "Discard all [keyword]Planned[/keyword] cards in your hand. Draw [blue]1[/blue] per card discarded."
+  "THEAPPRENTICE-SCRAP_PLANS.description": "Discard all [gold]Planned[/gold] cards in your hand. Draw 1 per card discarded.",
+  "THEAPPRENTICE-SCRAP_PLANS+.description": "Discard all [gold]Planned[/gold] cards in your hand. Draw 1 per card discarded."
 }

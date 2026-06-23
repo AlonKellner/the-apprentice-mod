@@ -1,3 +1,4 @@
+using TheApprentice.TheApprenticeCode.Cards;
 using TheApprentice.TheApprenticeCode.Cards.Modifiers;
 using Xunit;
 
@@ -56,5 +57,27 @@ public class PlannedModifierTests
         PlannedTracker.ResetSequence();
         var fresh = new PlannedModifier();
         Assert.Equal(0, fresh.SequenceIndex);
+    }
+
+    [Fact(Skip = SkipReason)]
+    public void ModifyDescriptionPost_UsesGoldFormatting()
+    {
+        PlannedTracker.ResetSequence();
+        var mod = new PlannedModifier();
+        // Invoke via reflection to avoid a direct compile-time reference to Creature (sts2.dll).
+        var args = new object?[] { null, "base" };
+        typeof(PlannedModifier).GetMethod("ModifyDescriptionPost")!.Invoke(mod, args);
+        var result = (string)args[1]!;
+        Assert.Contains("[gold]Planned[/gold]", result);
+    }
+
+    [Fact(Skip = SkipReason)]
+    public void TryModifyKeywordsInCombat_AddsPlannedKeyword()
+    {
+        // Verifies ApprenticeKeywords.Planned exists (reflection-based, avoids sts2 CardKeyword resolve).
+        // Full behavior test (actually calling TryModifyKeywordsInCombat with a real CardModel)
+        // requires sts2.dll; that is the reason for the skip.
+        var field = typeof(ApprenticeKeywords).GetField("Planned");
+        Assert.NotNull(field);
     }
 }

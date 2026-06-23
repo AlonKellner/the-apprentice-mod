@@ -24,6 +24,7 @@ public class PlannedModifier : CardModifier
     {
         if (card == Owner)
         {
+            keywords.Add(ApprenticeKeywords.Planned);
             keywords.Add(CardKeyword.Unplayable);
             return true;
         }
@@ -32,7 +33,7 @@ public class PlannedModifier : CardModifier
 
     public override void ModifyDescriptionPost(Creature? creature, ref string description)
     {
-        description += $"\nPlanned #{SequenceIndex + 1}.";
+        description += $"\n[gold]Planned[/gold] #{SequenceIndex + 1}.";
     }
 
     public override void StoreSaveData(ModifierSave save)
