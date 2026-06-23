@@ -7,11 +7,11 @@ using TheApprentice.TheApprenticeCode.Cards.Modifiers;
 
 namespace TheApprentice.TheApprenticeCode.Cards;
 
-public class ScrapPlans : ConstructedCardModel
+public class ScrapPlans : ApprenticeCard
 {
     public const string CardId = "TheApprentice:ScrapPlans";
 
-    public ScrapPlans() : base(1, CardType.Skill, CardRarity.Common, TargetType.None, true, false)
+    public ScrapPlans() : base(1, CardType.Skill, CardRarity.Common, TargetType.None)
     {
     }
 

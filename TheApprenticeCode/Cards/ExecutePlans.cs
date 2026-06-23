@@ -8,19 +8,14 @@ using TheApprentice.TheApprenticeCode.Cards.Modifiers;
 
 namespace TheApprentice.TheApprenticeCode.Cards;
 
-public class ExecutePlans : ConstructedCardModel
+public class ExecutePlans : ApprenticeCard
 {
     public const string CardId = "TheApprentice:ExecutePlans";
 
-    public ExecutePlans() : base(3, CardType.Skill, CardRarity.Uncommon, TargetType.AnyEnemy, true, false)
+    public ExecutePlans() : base(3, CardType.Skill, CardRarity.Uncommon, TargetType.AnyEnemy)
     {
-        AddKeyword(CardKeyword.Retain);
-    }
-
-    protected override void OnUpgrade()
-    {
-        base.OnUpgrade();
-        AddKeyword(CardKeyword.Innate);
+        WithKeyword(CardKeyword.Retain, ConstructedCardModel.UpgradeType.None);
+        WithKeyword(CardKeyword.Innate, ConstructedCardModel.UpgradeType.Add);
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)

@@ -6,11 +6,11 @@ using MegaCrit.Sts2.Core.ValueProps;
 
 namespace TheApprentice.TheApprenticeCode.Cards;
 
-public class ApprenticeDefend : ConstructedCardModel
+public class ApprenticeDefend : ApprenticeCard
 {
     public const string CardId = "TheApprentice:ApprenticeDefend";
 
-    public ApprenticeDefend() : base(1, CardType.Skill, CardRarity.Basic, TargetType.None, false, false)
+    public ApprenticeDefend() : base(1, CardType.Skill, CardRarity.Basic, TargetType.None, false)
     {
     }
 

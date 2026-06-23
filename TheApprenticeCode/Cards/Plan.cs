@@ -9,11 +9,11 @@ using TheApprentice.TheApprenticeCode.Cards.Modifiers;
 
 namespace TheApprentice.TheApprenticeCode.Cards;
 
-public class Plan : ConstructedCardModel
+public class Plan : ApprenticeCard
 {
     public const string CardId = "TheApprentice:Plan";
 
-    public Plan() : base(1, CardType.Skill, CardRarity.Common, TargetType.None, true, false)
+    public Plan() : base(1, CardType.Skill, CardRarity.Common, TargetType.None)
     {
     }
 
