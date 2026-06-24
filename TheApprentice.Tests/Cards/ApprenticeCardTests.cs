@@ -27,8 +27,8 @@ public class ApprenticeCardTests
         Assert.True(typeof(Plan).IsSubclassOf(typeof(ApprenticeCard)));
 
     [Fact(Skip = SkipReason)]
-    public void ExecutePlans_InheritsFromApprenticeCard() =>
-        Assert.True(typeof(ExecutePlans).IsSubclassOf(typeof(ApprenticeCard)));
+    public void JustAsPlanned_InheritsFromApprenticeCard() =>
+        Assert.True(typeof(JustAsPlanned).IsSubclassOf(typeof(ApprenticeCard)));
 
     [Fact(Skip = SkipReason)]
     public void ScrapPlans_InheritsFromApprenticeCard() =>

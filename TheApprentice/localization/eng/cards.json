@@ -9,9 +9,9 @@
   "THEAPPRENTICE-PLAN.description": "Draw {Cards:diff()} card. Choose up to 2 cards in your hand. Apply [gold]Planned[/gold] to them.",
   "THEAPPRENTICE-PLAN.selectionPrompt": "Choose up to 2 cards to Plan.",
 
-  "THEAPPRENTICE-EXECUTE_PLANS.title": "Execute Plans",
-  "THEAPPRENTICE-EXECUTE_PLANS.description": "Play all [gold]Planned[/gold] cards in the order they were planned.",
-  "THEAPPRENTICE-EXECUTE_PLANS+.description": "Play all [gold]Planned[/gold] cards in the order they were planned.",
+  "THEAPPRENTICE-JUST_AS_PLANNED.title": "Just as Planned",
+  "THEAPPRENTICE-JUST_AS_PLANNED.description": "Play all [gold]Planned[/gold] cards in the order they were planned.",
+  "THEAPPRENTICE-JUST_AS_PLANNED+.description": "Play all [gold]Planned[/gold] cards in the order they were planned.",
 
   "THEAPPRENTICE-SCRAP_PLANS.title": "Scrap Plans",
   "THEAPPRENTICE-SCRAP_PLANS.description": "Discard all [gold]Planned[/gold] cards in your hand. Draw 1 per card discarded.",

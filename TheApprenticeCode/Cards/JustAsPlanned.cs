@@ -8,11 +8,11 @@ using TheApprentice.TheApprenticeCode.Cards.Modifiers;
 
 namespace TheApprentice.TheApprenticeCode.Cards;
 
-public class ExecutePlans : ApprenticeCard
+public class JustAsPlanned : ApprenticeCard
 {
-    public const string CardId = "TheApprentice:ExecutePlans";
+    public const string CardId = "TheApprentice:JustAsPlanned";
 
-    public ExecutePlans() : base(3, CardType.Skill, CardRarity.Uncommon, TargetType.AnyEnemy)
+    public JustAsPlanned() : base(3, CardType.Skill, CardRarity.Uncommon, TargetType.AnyEnemy)
     {
         WithKeyword(CardKeyword.Retain, ConstructedCardModel.UpgradeType.None);
         WithKeyword(CardKeyword.Innate, ConstructedCardModel.UpgradeType.Add);
@@ -22,7 +22,6 @@ public class ExecutePlans : ApprenticeCard
     {
         var player = cardPlay.Card.Owner;
 
-        // Collect planned cards from all piles (including Exhaust)
         var planned = new List<(CardModel card, PlannedModifier mod)>();
         foreach (var pile in player.Piles)
         {
@@ -33,7 +32,6 @@ public class ExecutePlans : ApprenticeCard
             }
         }
 
-        // Execute in FIFO order
         planned.Sort((a, b) => a.mod.SequenceIndex.CompareTo(b.mod.SequenceIndex));
 
         foreach (var (card, mod) in planned)

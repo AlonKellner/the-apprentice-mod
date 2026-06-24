@@ -26,13 +26,12 @@ public class TheApprentice : PlaceholderCharacterModel
         ModelDb.Card<ApprenticeStrike>(),
         ModelDb.Card<ApprenticeStrike>(),
         ModelDb.Card<ApprenticeStrike>(),
-        ModelDb.Card<ApprenticeStrike>(),
         ModelDb.Card<ApprenticeDefend>(),
         ModelDb.Card<ApprenticeDefend>(),
         ModelDb.Card<ApprenticeDefend>(),
         ModelDb.Card<ApprenticeDefend>(),
         ModelDb.Card<Plan>(),
-        ModelDb.Card<ExecutePlans>(),
+        ModelDb.Card<JustAsPlanned>(),
     ];
 
     public override IReadOnlyList<RelicModel> StartingRelics =>
