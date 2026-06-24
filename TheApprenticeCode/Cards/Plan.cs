@@ -19,6 +19,7 @@ public class Plan : ApprenticeCard
     {
         WithCards(1);
         WithCostUpgradeBy(-1);
+        WithTip(ApprenticeKeywords.Planned);
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)

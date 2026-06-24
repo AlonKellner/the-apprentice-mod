@@ -1,5 +1,6 @@
 using BaseLib.Abstracts;
 using BaseLib.Extensions;
+using BaseLib.Utils;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
@@ -16,6 +17,7 @@ public class JustAsPlanned : ApprenticeCard
     {
         WithKeyword(CardKeyword.Retain, ConstructedCardModel.UpgradeType.None);
         WithKeyword(CardKeyword.Innate, ConstructedCardModel.UpgradeType.Add);
+        WithTip(ApprenticeKeywords.Planned);
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
