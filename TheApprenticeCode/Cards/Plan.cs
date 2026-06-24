@@ -15,7 +15,7 @@ public class Plan : ApprenticeCard
 {
     public const string CardId = "TheApprentice:Plan";
 
-    public Plan() : base(0, CardType.Skill, CardRarity.Common, TargetType.None, false)
+    public Plan() : base(0, CardType.Skill, CardRarity.Basic, TargetType.None, false)
     {
         WithCards(1);
         WithTip(ApprenticeKeywords.Planned);
