@@ -6,9 +6,8 @@
   "THEAPPRENTICE-APPRENTICE_DEFEND.description": "Gain {Block:diff()} [gold]Block[/gold].",
 
   "THEAPPRENTICE-PLAN.title": "Plan",
-  "THEAPPRENTICE-PLAN.description": "Choose a card in your hand. Apply [gold]Planned[/gold] to it.",
-  "THEAPPRENTICE-PLAN+.description": "Choose 2 cards in your hand. Apply [gold]Planned[/gold] to them.",
-  "THEAPPRENTICE-PLAN.selectionPrompt": "Choose a card to Plan.",
+  "THEAPPRENTICE-PLAN.description": "Draw {Cards:diff()} card. Choose up to 2 cards in your hand. Apply [gold]Planned[/gold] to them.",
+  "THEAPPRENTICE-PLAN.selectionPrompt": "Choose up to 2 cards to Plan.",
 
   "THEAPPRENTICE-EXECUTE_PLANS.title": "Execute Plans",
   "THEAPPRENTICE-EXECUTE_PLANS.description": "Play all [gold]Planned[/gold] cards in the order they were planned.",

@@ -1,5 +1,6 @@
 using BaseLib.Abstracts;
 using BaseLib.Extensions;
+using BaseLib.Utils;
 using System.Linq;
 using MegaCrit.Sts2.Core.CardSelection;
 using MegaCrit.Sts2.Core.Localization;
@@ -16,17 +17,20 @@ public class Plan : ApprenticeCard
 
     public Plan() : base(1, CardType.Skill, CardRarity.Common, TargetType.None)
     {
+        WithCards(1);
+        WithCostUpgradeBy(-1);
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
         var player = cardPlay.Card.Owner;
-        int maxSelect = IsUpgraded ? 2 : 1;
+
+        await CommonActions.Draw(cardPlay.Card, context);
 
         var selected = await CardSelectCmd.FromHand(
             context,
             player,
-            new CardSelectorPrefs(new LocString("cards", "THEAPPRENTICE-PLAN.selectionPrompt"), 1, maxSelect),
+            new CardSelectorPrefs(new LocString("cards", "THEAPPRENTICE-PLAN.selectionPrompt"), 1, 2),
             c => c != this && !c.TryGetModifier<PlannedModifier>(out _),
             this);
 
