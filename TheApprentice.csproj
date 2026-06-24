@@ -115,5 +115,11 @@
       Command="&quot;$(GodotPath)&quot; --headless --export-pack &quot;BasicExport&quot; &quot;$(MSBuildProjectDirectory)/publish/$(AssemblyName).pck&quot;"
       WorkingDirectory="$(MSBuildProjectDirectory)" />
     <Delete Files="$(MSBuildProjectDirectory)/.godot_publish_lock" />
+    <!-- Always remove the lock file even if Exec above fails, so future publishes aren't blocked. -->
+    <OnError ExecuteTargets="GodotPublishCleanupLock" />
+  </Target>
+
+  <Target Name="GodotPublishCleanupLock">
+    <Delete Files="$(MSBuildProjectDirectory)/.godot_publish_lock" />
   </Target>
 </Project>
