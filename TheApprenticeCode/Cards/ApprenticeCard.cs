@@ -18,4 +18,6 @@ public abstract class ApprenticeCard(
 
     public override string CustomPortraitPath =>
         $"{Id.Entry.RemovePrefix().ToLowerInvariant()}.png".BigCardImagePath();
+
+    public virtual bool IsPrePlanned => false;
 }

@@ -1,4 +1,4 @@
 {
   "THEAPPRENTICE-PLANNED.title": "Planned",
-  "THEAPPRENTICE-PLANNED.description": "Cannot be played directly. Use Execute Plans or Scrap Plans to resolve."
+  "THEAPPRENTICE-PLANNED.description": "Unplayable. Some cards can play all [gold]Planned[/gold] cards in the order they were planned."
 }

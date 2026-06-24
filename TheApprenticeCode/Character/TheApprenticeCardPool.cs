@@ -1,4 +1,10 @@
 using BaseLib.Abstracts;
+using BaseLib.Extensions;
+using BaseLib.Utils;
+using MegaCrit.Sts2.Core.Entities.Cards;
+using MegaCrit.Sts2.Core.Models;
+using TheApprentice.TheApprenticeCode.Cards;
+using TheApprentice.TheApprenticeCode.Cards.Modifiers;
 using TheApprentice.TheApprenticeCode.Extensions;
 using Godot;
 
@@ -18,4 +24,15 @@ public class TheApprenticeCardPool : CustomCardPoolModel
     public override Color DeckEntryCardColor => new("ffffff");
 
     public override bool IsColorless => false;
+
+    public override Task AfterCardEnteredCombat(CardModel card)
+    {
+        if (card is ApprenticeCard { IsPrePlanned: true } && !card.TryGetModifier<PlannedModifier>(out _))
+        {
+            CardModifier.AddModifier<PlannedModifier>(card);
+            if (card.TryGetModifier<PlannedModifier>(out var mod))
+                mod.SequenceIndex = -1;
+        }
+        return Task.CompletedTask;
+    }
 }
