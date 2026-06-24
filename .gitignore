@@ -16,6 +16,7 @@ local.props
 
 # IDE
 *.user
+*.uid
 .idea/
 .vs/
 
