@@ -15,12 +15,13 @@ public class Plan : ApprenticeCard
 {
     public const string CardId = "TheApprentice:Plan";
 
-    public Plan() : base(1, CardType.Skill, CardRarity.Common, TargetType.None, false)
+    public Plan() : base(0, CardType.Skill, CardRarity.Common, TargetType.None, false)
     {
         WithCards(1);
-        WithCostUpgradeBy(-1);
         WithTip(ApprenticeKeywords.Planned);
     }
+
+    protected override void OnUpgrade() => DynamicVars.Cards.UpgradeValueBy(1);
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
@@ -28,10 +29,11 @@ public class Plan : ApprenticeCard
 
         await CommonActions.Draw(cardPlay.Card, context);
 
+        var maxSelect = IsUpgraded ? 3 : 2;
         var selected = await CardSelectCmd.FromHand(
             context,
             player,
-            new CardSelectorPrefs(new LocString("cards", "THEAPPRENTICE-PLAN.selectionPrompt"), 1, 2),
+            new CardSelectorPrefs(new LocString("cards", "THEAPPRENTICE-PLAN.selectionPrompt"), 1, maxSelect),
             c => c != this && !c.TryGetModifier<PlannedModifier>(out _),
             this);
 

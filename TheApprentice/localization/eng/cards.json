@@ -7,8 +7,8 @@
 
   "THEAPPRENTICE-PLAN.title": "Plan",
   "THEAPPRENTICE-PLAN.description": "Draw {Cards:diff()} card. Choose up to 2 cards in your hand. Apply [gold]Planned[/gold] to them.",
-  "THEAPPRENTICE-PLAN+.description": "Draw {Cards:diff()} card. Choose up to 2 cards in your hand. Apply [gold]Planned[/gold] to them.",
-  "THEAPPRENTICE-PLAN.selectionPrompt": "Choose up to 2 cards to make Planned.",
+  "THEAPPRENTICE-PLAN+.description": "Draw {Cards:diff()} cards. Choose up to 3 cards in your hand. Apply [gold]Planned[/gold] to them.",
+  "THEAPPRENTICE-PLAN.selectionPrompt": "Choose cards to make Planned.",
 
   "THEAPPRENTICE-JUST_AS_PLANNED.title": "Just as Planned",
   "THEAPPRENTICE-JUST_AS_PLANNED.description": "[gold]Retain[/gold]. Play all [gold]Planned[/gold] cards in the order they were planned.",
