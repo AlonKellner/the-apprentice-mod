@@ -15,7 +15,7 @@ public class Plan : ApprenticeCard
 {
     public const string CardId = "TheApprentice:Plan";
 
-    public Plan() : base(1, CardType.Skill, CardRarity.Common, TargetType.None)
+    public Plan() : base(1, CardType.Skill, CardRarity.Common, TargetType.None, false)
     {
         WithCards(1);
         WithCostUpgradeBy(-1);
