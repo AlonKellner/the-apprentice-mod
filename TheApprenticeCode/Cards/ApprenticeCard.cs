@@ -1,7 +1,12 @@
+using System.Linq;
 using BaseLib.Abstracts;
 using BaseLib.Extensions;
 using BaseLib.Utils;
+using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
+using MegaCrit.Sts2.Core.Entities.Players;
+using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using TheApprentice.TheApprenticeCode.Cards.Powers;
 using TheApprentice.TheApprenticeCode.Character;
 using TheApprentice.TheApprenticeCode.Extensions;
 
@@ -20,4 +25,11 @@ public abstract class ApprenticeCard(
         $"{Id.Entry.RemovePrefix().ToLowerInvariant()}.png".BigCardImagePath();
 
     public virtual bool IsPrePlanned => false;
+
+    public override async Task AfterPlayerTurnStartLate(PlayerChoiceContext context, Player player)
+    {
+        if (player != Owner) return;
+        if (!player.Creature.Powers.Any(p => p is PlannedCounterPower))
+            await PowerCmd.Apply<PlannedCounterPower>(context, player.Creature, 1m, player.Creature, null, false);
+    }
 }

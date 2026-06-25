@@ -23,9 +23,7 @@ public class InTheZonePower : CustomPowerModel
 
     public override async Task AfterPlayerTurnStart(PlayerChoiceContext context, Player player)
     {
-        bool hasPlanned = player.Piles
-            .SelectMany(p => p.Cards)
-            .Any(c => c.TryGetModifier<PlannedModifier>(out _));
+        bool hasPlanned = PlannedModifier.AnyIn(player.Piles.SelectMany(p => p.Cards));
         if (hasPlanned)
             await PlayerCmd.GainEnergy(Amount, player);
     }

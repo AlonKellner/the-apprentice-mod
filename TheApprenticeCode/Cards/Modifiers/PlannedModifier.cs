@@ -5,6 +5,8 @@ using BaseLib.Extensions;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Models;
+using TheApprentice.TheApprenticeCode.Cards.Powers;
+using TheApprentice.TheApprenticeCode.Extensions;
 
 namespace TheApprentice.TheApprenticeCode.Cards.Modifiers;
 
@@ -13,10 +15,51 @@ public class PlannedModifier : CardModifier
     public const string ModifierId = "TheApprentice:Planned";
 
     public int SequenceIndex { get; set; }
+    public int VisualIndex { get; set; }
+
+    public static event Action? Changed;
 
     // Computes next sequence index (max existing + 1). Pre-Planned cards at -1
     // are naturally excluded since any user-planned card at >= 0 wins the max.
     // Returns 0 when no Planned cards exist.
+    public static bool CanApplyTo(CardModel card) =>
+        !card.TryGetModifier<PlannedModifier>(out _) && !card.IsUnplayable();
+
+    public static bool AnyIn(IEnumerable<CardModel> cards) =>
+        cards.Any(c => c.TryGetModifier<PlannedModifier>(out _));
+
+    public static int CountIn(IEnumerable<CardModel> cards) =>
+        cards.Count(c => c.TryGetModifier<PlannedModifier>(out _));
+
+    public static List<(CardModel card, PlannedModifier mod)> GetSorted(IEnumerable<CardModel> cards)
+    {
+        var indexed = new List<(CardModel card, PlannedModifier mod, int deckIdx)>();
+        int i = 0;
+        foreach (var c in cards)
+        {
+            if (c.TryGetModifier<PlannedModifier>(out var mod))
+                indexed.Add((c, mod, i));
+            i++;
+        }
+        indexed.Sort((a, b) =>
+        {
+            int cmp = a.mod.SequenceIndex.CompareTo(b.mod.SequenceIndex);
+            return cmp != 0 ? cmp : a.deckIdx.CompareTo(b.deckIdx);
+        });
+        return indexed.Select(x => (x.card, x.mod)).ToList();
+    }
+
+    public static void AssignVisualIndices(List<(CardModel card, PlannedModifier mod)> sorted)
+    {
+        for (int i = 0; i < sorted.Count; i++)
+            sorted[i].mod.VisualIndex = i + 1;
+    }
+
+    public static void RefreshVisualIndices(IEnumerable<CardModel> allCards)
+    {
+        AssignVisualIndices(GetSorted(allCards));
+    }
+
     public static void Apply(CardModel card, IEnumerable<CardModel> allCards)
     {
         int max = -1;
@@ -26,17 +69,17 @@ public class PlannedModifier : CardModifier
         CardModifier.AddModifier<PlannedModifier>(card);
         if (card.TryGetModifier<PlannedModifier>(out var mod))
             mod.SequenceIndex = max + 1;
+        Changed?.Invoke();
     }
 
-    // Adds the Unplayable keyword dynamically (global layer) so it wears off
-    // automatically when this modifier is removed. If TryModifyKeywordsInCombat
-    // is not forwarded to CardModifiers at runtime, add PlannedPatches.cs as fallback.
     public override bool TryModifyKeywordsInCombat(CardModel card, ISet<CardKeyword> keywords)
     {
         if (card == Owner)
         {
             keywords.Add(ApprenticeKeywords.Planned);
-            keywords.Add(CardKeyword.Unplayable);
+            bool virtuosoActive = card.Owner?.Creature?.Powers.OfType<VirtuosoPower>().Any() ?? false;
+            if (!virtuosoActive)
+                keywords.Add(CardKeyword.Unplayable);
             return true;
         }
         return false;
@@ -44,7 +87,8 @@ public class PlannedModifier : CardModifier
 
     public override void ModifyDescriptionPost(Creature? creature, ref string description)
     {
-        description += $"\n[gold]Planned[/gold] #{SequenceIndex + 1}.";
+        int display = VisualIndex > 0 ? VisualIndex : SequenceIndex + 1;
+        description += $"\n[gold]Planned[/gold] #{display}.";
     }
 
     public override void StoreSaveData(ModifierSave save)

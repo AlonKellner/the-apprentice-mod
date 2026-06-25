@@ -26,7 +26,7 @@ public class Obsession : ApprenticeCard
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
-        var creature = (Creature)(object)cardPlay.Card.Owner;
-        await PowerCmd.Apply(context, new ObsessionPower(), creature, IsUpgraded ? 3m : 2m, creature, cardPlay.Card, false);
+        var creature = cardPlay.Card.Owner.Creature;
+        await PowerCmd.Apply<ObsessionPower>(context, creature, IsUpgraded ? 3m : 2m, creature, cardPlay.Card, false);
     }
 }

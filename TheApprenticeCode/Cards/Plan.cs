@@ -8,6 +8,8 @@ using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using TheApprentice.TheApprenticeCode.Cards.Modifiers;
+using TheApprentice.TheApprenticeCode.Cards.Powers;
+using TheApprentice.TheApprenticeCode.Extensions;
 
 namespace TheApprentice.TheApprenticeCode.Cards;
 
@@ -34,11 +36,14 @@ public class Plan : ApprenticeCard
             context,
             player,
             new CardSelectorPrefs(new LocString("cards", "THEAPPRENTICE-PLAN.selectionPrompt"), 1, maxSelect),
-            c => c != this && !c.TryGetModifier<PlannedModifier>(out _),
+            c => c != this && PlannedModifier.CanApplyTo(c),
             this);
 
         if (selected == null) return;
         foreach (var card in selected)
             PlannedModifier.Apply(card, player.Piles.SelectMany(p => p.Cards));
+
+        if (!player.Creature.Powers.Any(p => p is PlannedCounterPower))
+            await PowerCmd.Apply<PlannedCounterPower>(context, player.Creature, 1m, player.Creature, cardPlay.Card, false);
     }
 }

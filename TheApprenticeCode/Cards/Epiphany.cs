@@ -9,6 +9,7 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Models;
 using TheApprentice.TheApprenticeCode.Cards.Modifiers;
+using TheApprentice.TheApprenticeCode.Extensions;
 
 namespace TheApprentice.TheApprenticeCode.Cards;
 
@@ -37,7 +38,7 @@ public class Epiphany : ApprenticeCard
         var selected = await CardSelectCmd.FromHand(
             context, player,
             new CardSelectorPrefs(new LocString("cards", "THEAPPRENTICE-EPIPHANY.selectionPrompt"), 0, 1),
-            c => c != cardPlay.Card && !c.TryGetModifier<PlannedModifier>(out _),
+            c => c != cardPlay.Card && PlannedModifier.CanApplyTo(c),
             this);
 
         var target = selected?.FirstOrDefault();

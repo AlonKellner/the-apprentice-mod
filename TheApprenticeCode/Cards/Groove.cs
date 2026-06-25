@@ -27,7 +27,7 @@ public class Groove : ApprenticeCard
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
         var player = cardPlay.Card.Owner;
-        int count = player.Piles.SelectMany(p => p.Cards).Count(c => c.TryGetModifier<PlannedModifier>(out _));
+        int count = PlannedModifier.CountIn(player.Piles.SelectMany(p => p.Cards));
         if (count > 0)
             await CommonActions.CardAttack(cardPlay.Card, cardPlay, count).Execute(context);
     }

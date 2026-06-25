@@ -72,10 +72,10 @@
   "THEAPPRENTICE-PRELUDE.description": "Gain {Block:diff()} [gold]Block[/gold]. Draw {Cards:diff()} cards. Starts each combat [gold]Planned[/gold].",
   "THEAPPRENTICE-PRELUDE+.description": "Gain {Block:diff()} [gold]Block[/gold]. Draw {Cards:diff()} cards. Starts each combat [gold]Planned[/gold].",
 
-  "THEAPPRENTICE-METHOD_TO_THE_MADNESS.title": "Method to the Madness",
-  "THEAPPRENTICE-METHOD_TO_THE_MADNESS.description": "At the start of each turn, apply [gold]Planned[/gold] to a random card in your hand.",
-  "THEAPPRENTICE-METHOD_TO_THE_MADNESS+.description": "At the start of each turn, choose a card in your hand to apply [gold]Planned[/gold] to.",
-  "THEAPPRENTICE-METHOD_TO_THE_MADNESS.selectionPrompt": "Choose a card to make Planned.",
+  "THEAPPRENTICE-SCHEMING.title": "Scheming",
+  "THEAPPRENTICE-SCHEMING.description": "At the start of your turn, choose a card in your hand to apply [gold]Planned[/gold] to.",
+  "THEAPPRENTICE-SCHEMING+.description": "At the start of your turn, choose a card in your hand to apply [gold]Planned[/gold] to.",
+  "THEAPPRENTICE-SCHEMING.selectionPrompt": "Choose a card to make Planned.",
 
   "THEAPPRENTICE-IN_THE_ZONE.title": "In the Zone",
   "THEAPPRENTICE-IN_THE_ZONE.description": "At the start of each turn, if you have [gold]Planned[/gold] cards, gain {Energy:diff()} Energy.",

@@ -8,6 +8,7 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization;
 using TheApprentice.TheApprenticeCode.Cards.Modifiers;
+using TheApprentice.TheApprenticeCode.Extensions;
 
 namespace TheApprentice.TheApprenticeCode.Cards;
 
@@ -36,7 +37,7 @@ public class MagnumOpus : ApprenticeCard
             context, player,
             new CardSelectorPrefs(
                 new LocString("cards", "THEAPPRENTICE-MAGNUM_OPUS.selectionPrompt"), 1, maxCards),
-            c => !c.TryGetModifier<PlannedModifier>(out _),
+            c => PlannedModifier.CanApplyTo(c),
             PileType.Draw);
 
         if (selected == null) return;

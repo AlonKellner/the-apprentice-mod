@@ -29,7 +29,7 @@ public class CreativeBlock : ApprenticeCard
         var player = cardPlay.Card.Owner;
         await CommonActions.CardBlock(cardPlay.Card, cardPlay);
 
-        bool hasNoPlanned = !player.Piles.SelectMany(p => p.Cards).Any(c => c.TryGetModifier<PlannedModifier>(out _));
+        bool hasNoPlanned = !PlannedModifier.AnyIn(player.Piles.SelectMany(p => p.Cards));
         if (hasNoPlanned)
             await CommonActions.CardBlock(cardPlay.Card, cardPlay);
     }

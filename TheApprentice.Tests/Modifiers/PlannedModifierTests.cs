@@ -1,3 +1,7 @@
+using System.Linq;
+using System.Reflection;
+using MegaCrit.Sts2.Core.Models;
+using TheApprentice.TheApprenticeCode.Cards;
 using TheApprentice.TheApprenticeCode.Cards.Modifiers;
 using Xunit;
 
@@ -52,5 +56,60 @@ public class PlannedModifierTests
     {
         var field = typeof(TheApprentice.TheApprenticeCode.Cards.ApprenticeKeywords).GetField("Planned");
         Assert.NotNull(field);
+    }
+
+    [Fact]
+    public void CanApplyTo_IsStaticMethod()
+    {
+        var method = typeof(PlannedModifier).GetMethod(
+            "CanApplyTo", BindingFlags.Public | BindingFlags.Static);
+        Assert.NotNull(method);
+    }
+
+    [Fact]
+    public void CanApplyTo_FreshCard_ReturnsTrue()
+    {
+        Assert.True(PlannedModifier.CanApplyTo(new ApprenticeStrike()));
+    }
+
+    [Fact]
+    public void GetSorted_IsStaticMethod()
+    {
+        var method = typeof(PlannedModifier).GetMethod(
+            "GetSorted", BindingFlags.Public | BindingFlags.Static);
+        Assert.NotNull(method);
+    }
+
+    [Fact]
+    public void GetSorted_EmptyInput_ReturnsEmpty()
+    {
+        Assert.Empty(PlannedModifier.GetSorted(Enumerable.Empty<CardModel>()));
+    }
+
+    [Fact]
+    public void CountIn_EmptyInput_ReturnsZero()
+    {
+        Assert.Equal(0, PlannedModifier.CountIn(Enumerable.Empty<CardModel>()));
+    }
+
+    [Fact]
+    public void AnyIn_EmptyInput_ReturnsFalse()
+    {
+        Assert.False(PlannedModifier.AnyIn(Enumerable.Empty<CardModel>()));
+    }
+
+    [Fact]
+    public void VisualIndex_DefaultsToZero()
+    {
+        Assert.Equal(0, new PlannedModifier().VisualIndex);
+    }
+
+    [Fact]
+    public void ModifyDescriptionPost_ShowsVisualIndexWhenSet()
+    {
+        var mod = new PlannedModifier { SequenceIndex = 5, VisualIndex = 2 };
+        var args = new object?[] { null, "" };
+        typeof(PlannedModifier).GetMethod("ModifyDescriptionPost")!.Invoke(mod, args);
+        Assert.Contains("#2", (string)args[1]!);
     }
 }

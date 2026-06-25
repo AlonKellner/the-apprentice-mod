@@ -8,6 +8,7 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization;
 using TheApprentice.TheApprenticeCode.Cards.Modifiers;
+using TheApprentice.TheApprenticeCode.Extensions;
 
 namespace TheApprentice.TheApprenticeCode.Cards;
 
@@ -35,7 +36,7 @@ public class Realize : ApprenticeCard
         var selected = await CardSelectCmd.FromHand(
             context, player,
             new CardSelectorPrefs(new LocString("cards", "THEAPPRENTICE-REALIZE.selectionPrompt"), 0, 1),
-            c => c != cardPlay.Card && !c.TryGetModifier<PlannedModifier>(out _),
+            c => c != cardPlay.Card && PlannedModifier.CanApplyTo(c),
             this);
 
         var target = selected?.FirstOrDefault();

@@ -29,12 +29,7 @@ public class ObsessionPower : CustomPowerModel
     {
         if (side != CombatSide.Player) return;
 
-        // Owner is a Player at runtime; cast through object to bypass compile-time type check
-        var player = (Player)(object)Owner;
-
-        int plannedCount = player.Piles
-            .SelectMany(p => p.Cards)
-            .Count(c => c.TryGetModifier<PlannedModifier>(out _));
+        int plannedCount = PlannedModifier.CountIn(Owner.Player!.Piles.SelectMany(p => p.Cards));
         if (plannedCount == 0) return;
 
         await CreatureCmd.GainBlock(Owner, Amount * plannedCount, ValueProp.Unpowered, null, false);

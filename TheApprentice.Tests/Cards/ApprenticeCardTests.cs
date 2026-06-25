@@ -78,7 +78,7 @@ public class ApprenticeCardTests
     [Fact] public void Transpose_IsSkill_Uncommon_NotPrePlanned() { var c = new Transpose(); Assert.Equal(CardType.Skill, c.Type); Assert.Equal(CardRarity.Uncommon, c.Rarity); Assert.False(c.IsPrePlanned); }
     [Fact] public void Signature_IsAttack_Uncommon_IsPrePlanned() { var c = new Signature(); Assert.Equal(CardType.Attack, c.Type); Assert.Equal(CardRarity.Uncommon, c.Rarity); Assert.True(c.IsPrePlanned); }
     [Fact] public void Prelude_IsSkill_Uncommon_IsPrePlanned() { var c = new Prelude(); Assert.Equal(CardType.Skill, c.Type); Assert.Equal(CardRarity.Uncommon, c.Rarity); Assert.True(c.IsPrePlanned); }
-    [Fact] public void MethodToTheMadness_IsPower_Uncommon_NotPrePlanned() { var c = new MethodToTheMadness(); Assert.Equal(CardType.Power, c.Type); Assert.Equal(CardRarity.Uncommon, c.Rarity); Assert.False(c.IsPrePlanned); }
+    [Fact] public void Scheming_IsPower_Uncommon_NotPrePlanned() { var c = new Scheming(); Assert.Equal(CardType.Power, c.Type); Assert.Equal(CardRarity.Uncommon, c.Rarity); Assert.False(c.IsPrePlanned); }
     [Fact] public void InTheZone_IsPower_Rare_NotPrePlanned() { var c = new InTheZone(); Assert.Equal(CardType.Power, c.Type); Assert.Equal(CardRarity.Rare, c.Rarity); Assert.False(c.IsPrePlanned); }
     [Fact] public void Obsession_IsPower_Rare_NotPrePlanned() { var c = new Obsession(); Assert.Equal(CardType.Power, c.Type); Assert.Equal(CardRarity.Rare, c.Rarity); Assert.False(c.IsPrePlanned); }
     [Fact] public void Encore_IsSkill_Rare_NotPrePlanned() { var c = new Encore(); Assert.Equal(CardType.Skill, c.Type); Assert.Equal(CardRarity.Rare, c.Rarity); Assert.False(c.IsPrePlanned); }

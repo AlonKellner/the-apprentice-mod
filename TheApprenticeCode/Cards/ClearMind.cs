@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Linq;
 using BaseLib.Abstracts;
 using BaseLib.Extensions;
@@ -6,7 +5,7 @@ using BaseLib.Utils;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
-using MegaCrit.Sts2.Core.Models;
+using TheApprentice.TheApprenticeCode.Extensions;
 
 namespace TheApprentice.TheApprenticeCode.Cards;
 
@@ -24,18 +23,10 @@ public class ClearMind : ApprenticeCard
         var player = cardPlay.Card.Owner;
         var toExhaust = player.Piles
             .SelectMany(p => p.Cards)
-            .Where(c => c != cardPlay.Card && IsUnplayable(c))
+            .Where(c => c != cardPlay.Card && c.IsUnplayable())
             .ToList();
 
         foreach (var card in toExhaust)
             await CardCmd.Exhaust(context, card, false, false);
-    }
-
-    static bool IsUnplayable(CardModel card)
-    {
-        var kw = new HashSet<CardKeyword>();
-        foreach (var mod in CardModifier.DirectModifiers(card))
-            mod.TryModifyKeywordsInCombat(card, kw);
-        return kw.Contains(CardKeyword.Unplayable);
     }
 }

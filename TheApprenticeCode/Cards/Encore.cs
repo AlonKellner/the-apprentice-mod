@@ -1,11 +1,9 @@
-using System.Collections.Generic;
 using BaseLib.Abstracts;
 using BaseLib.Extensions;
 using BaseLib.Utils;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
-using MegaCrit.Sts2.Core.Models;
 using TheApprentice.TheApprenticeCode.Cards.Modifiers;
 
 namespace TheApprentice.TheApprenticeCode.Cards;
@@ -24,17 +22,7 @@ public class Encore : ApprenticeCard
     {
         var player = cardPlay.Card.Owner;
 
-        var planned = new List<(CardModel card, PlannedModifier mod)>();
-        foreach (var pile in player.Piles)
-        {
-            foreach (var card in pile.Cards.ToList())
-            {
-                if (card.TryGetModifier<PlannedModifier>(out var mod))
-                    planned.Add((card, mod));
-            }
-        }
-
-        planned.Sort((a, b) => a.mod.SequenceIndex.CompareTo(b.mod.SequenceIndex));
+        var planned = PlannedModifier.GetSorted(player.Piles.SelectMany(p => p.Cards));
 
         foreach (var (card, _) in planned)
         {

@@ -27,7 +27,7 @@ public class Overthinking : ApprenticeCard
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
         var player = cardPlay.Card.Owner;
-        int count = player.Piles.SelectMany(p => p.Cards).Count(c => c.TryGetModifier<PlannedModifier>(out _));
+        int count = PlannedModifier.CountIn(player.Piles.SelectMany(p => p.Cards));
         for (int i = 0; i < count; i++)
             await CommonActions.CardBlock(cardPlay.Card, cardPlay);
     }

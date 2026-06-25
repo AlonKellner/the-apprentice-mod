@@ -26,7 +26,7 @@ public class InTheZone : ApprenticeCard
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
-        var creature = (Creature)(object)cardPlay.Card.Owner;
-        await PowerCmd.Apply(context, new InTheZonePower(), creature, IsUpgraded ? 2m : 1m, creature, cardPlay.Card, false);
+        var creature = cardPlay.Card.Owner.Creature;
+        await PowerCmd.Apply<InTheZonePower>(context, creature, IsUpgraded ? 2m : 1m, creature, cardPlay.Card, false);
     }
 }
