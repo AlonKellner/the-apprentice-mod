@@ -12,9 +12,9 @@ public class Obsession : ApprenticeCard
 {
     public const string CardId = "TheApprentice:Obsession";
 
-    public Obsession() : base(1, CardType.Power, CardRarity.Rare, TargetType.None)
+    public Obsession() : base(2, CardType.Power, CardRarity.Rare, TargetType.None)
     {
-        WithBlock(2);
+        WithBlock(1);
         WithTip(CardKeyword.Unplayable);
     }
 
@@ -27,6 +27,6 @@ public class Obsession : ApprenticeCard
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
         var creature = cardPlay.Card.Owner.Creature;
-        await PowerCmd.Apply<ObsessionPower>(context, creature, IsUpgraded ? 3m : 2m, creature, cardPlay.Card, false);
+        await PowerCmd.Apply<ObsessionPower>(context, creature, IsUpgraded ? 2m : 1m, creature, cardPlay.Card, false);
     }
 }

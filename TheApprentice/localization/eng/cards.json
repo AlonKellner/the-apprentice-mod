@@ -81,8 +81,8 @@
   "THEAPPRENTICE-IN_THE_ZONE+.description": "At the start of each turn, if you have [gold]Planned[/gold] cards, gain {Energy:diff()} Energy.",
 
   "THEAPPRENTICE-OBSESSION.title": "Obsession",
-  "THEAPPRENTICE-OBSESSION.description": "At the end of each turn, gain {Block:diff()} [gold]Block[/gold] per [gold]Unplayable[/gold] card.",
-  "THEAPPRENTICE-OBSESSION+.description": "At the end of each turn, gain {Block:diff()} [gold]Block[/gold] per [gold]Unplayable[/gold] card.",
+  "THEAPPRENTICE-OBSESSION.description": "At the end of each turn, gain {Block:diff()} [gold]Block[/gold] per [gold]Unplayable[/gold] card in your draw pile.",
+  "THEAPPRENTICE-OBSESSION+.description": "At the end of each turn, gain {Block:diff()} [gold]Block[/gold] per [gold]Unplayable[/gold] card in your draw pile.",
 
   "THEAPPRENTICE-ENCORE.title": "Encore",
   "THEAPPRENTICE-ENCORE.description": "Execute all [gold]Planned[/gold] cards. They keep their [gold]Planned[/gold] status.",
