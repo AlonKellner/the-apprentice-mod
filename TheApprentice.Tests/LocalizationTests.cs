@@ -56,4 +56,38 @@ public class LocalizationTests
         var missing = expectedKeys.Where(k => !dict.ContainsKey(k) || string.IsNullOrWhiteSpace(dict[k])).ToList();
         Assert.True(missing.Count == 0, $"Missing or empty localization keys:\n{string.Join("\n", missing)}");
     }
+
+    [Fact]
+    public void CardsJson_HasAllDreamsAndAmbitionsCardKeys()
+    {
+        var dict = LoadJson("../TheApprentice/localization/eng/cards.json");
+        string[] expectedKeys = [
+            "THEAPPRENTICE-DREAM.title", "THEAPPRENTICE-DREAM.description", "THEAPPRENTICE-DREAM+.description",
+            "THEAPPRENTICE-AMBITION.title", "THEAPPRENTICE-AMBITION.description", "THEAPPRENTICE-AMBITION+.description",
+            "THEAPPRENTICE-POTENTIAL.title", "THEAPPRENTICE-POTENTIAL.description", "THEAPPRENTICE-POTENTIAL+.description",
+            "THEAPPRENTICE-NOCTURNE.title", "THEAPPRENTICE-NOCTURNE.description", "THEAPPRENTICE-NOCTURNE+.description",
+            "THEAPPRENTICE-HUBRIS.title", "THEAPPRENTICE-HUBRIS.description", "THEAPPRENTICE-HUBRIS+.description",
+            "THEAPPRENTICE-LONGING.title", "THEAPPRENTICE-LONGING.description", "THEAPPRENTICE-LONGING+.description",
+            "THEAPPRENTICE-DRIVE.title", "THEAPPRENTICE-DRIVE.description", "THEAPPRENTICE-DRIVE+.description",
+            "THEAPPRENTICE-REVERIE.title", "THEAPPRENTICE-REVERIE.description", "THEAPPRENTICE-REVERIE+.description",
+            "THEAPPRENTICE-SUBLIMATION.title", "THEAPPRENTICE-SUBLIMATION.description", "THEAPPRENTICE-SUBLIMATION+.description",
+            "THEAPPRENTICE-SYNTHESIS.title", "THEAPPRENTICE-SYNTHESIS.description", "THEAPPRENTICE-SYNTHESIS+.description", "THEAPPRENTICE-SYNTHESIS.selectionPrompt",
+            "THEAPPRENTICE-DRIVEN_INSPIRATION.title", "THEAPPRENTICE-DRIVEN_INSPIRATION.description", "THEAPPRENTICE-DRIVEN_INSPIRATION+.description", "THEAPPRENTICE-DRIVEN_INSPIRATION.selectionPrompt",
+            "THEAPPRENTICE-LULLABY.title", "THEAPPRENTICE-LULLABY.description", "THEAPPRENTICE-LULLABY+.description",
+            "THEAPPRENTICE-CONVICTION.title", "THEAPPRENTICE-CONVICTION.description", "THEAPPRENTICE-CONVICTION+.description",
+            "THEAPPRENTICE-MANIFESTO.title", "THEAPPRENTICE-MANIFESTO.description", "THEAPPRENTICE-MANIFESTO+.description",
+            "THEAPPRENTICE-LUCIDITY.title", "THEAPPRENTICE-LUCIDITY.description", "THEAPPRENTICE-LUCIDITY+.description",
+            "THEAPPRENTICE-RESOLVE.title", "THEAPPRENTICE-RESOLVE.description", "THEAPPRENTICE-RESOLVE+.description",
+            "THEAPPRENTICE-IGNITION.title", "THEAPPRENTICE-IGNITION.description", "THEAPPRENTICE-IGNITION+.description",
+            "THEAPPRENTICE-CHRYSALIS.title", "THEAPPRENTICE-CHRYSALIS.description", "THEAPPRENTICE-CHRYSALIS+.description",
+            "THEAPPRENTICE-DAYDREAM.title", "THEAPPRENTICE-DAYDREAM.description", "THEAPPRENTICE-DAYDREAM+.description",
+            "THEAPPRENTICE-WUNDERKIND.title", "THEAPPRENTICE-WUNDERKIND.description", "THEAPPRENTICE-WUNDERKIND+.description",
+            "THEAPPRENTICE-PRODIGY.title", "THEAPPRENTICE-PRODIGY.description", "THEAPPRENTICE-PRODIGY+.description",
+            "THEAPPRENTICE-CONDUCTOR.title", "THEAPPRENTICE-CONDUCTOR.description", "THEAPPRENTICE-CONDUCTOR+.description",
+            "THEAPPRENTICE-BLUEPRINT.title", "THEAPPRENTICE-BLUEPRINT.description", "THEAPPRENTICE-BLUEPRINT+.description",
+        ];
+        var missing = expectedKeys.Where(k => !dict.ContainsKey(k) || string.IsNullOrWhiteSpace(dict[k])).ToList();
+        Assert.True(missing.Count == 0, $"Missing or empty D&A localization keys:\n{string.Join("\n", missing)}");
+    }
+
 }

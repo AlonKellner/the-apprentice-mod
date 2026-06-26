@@ -96,5 +96,99 @@
   "THEAPPRENTICE-MAGNUM_OPUS.title": "Magnum Opus",
   "THEAPPRENTICE-MAGNUM_OPUS.description": "Choose up to {Cards:diff()} cards from your draw pile. Apply [gold]Planned[/gold] to them.",
   "THEAPPRENTICE-MAGNUM_OPUS+.description": "Choose up to {Cards:diff()} cards from your draw pile. Apply [gold]Planned[/gold] to them.",
-  "THEAPPRENTICE-MAGNUM_OPUS.selectionPrompt": "Choose cards from your draw pile to make Planned."
+  "THEAPPRENTICE-MAGNUM_OPUS.selectionPrompt": "Choose cards from your draw pile to make Planned.",
+
+  "THEAPPRENTICE-DREAM.title": "Dream",
+  "THEAPPRENTICE-DREAM.description": "Gain {CalculatedBlock} [gold]Block[/gold] ({CalculationExtra:diff()} per [gold]Dream[/gold] in your deck).",
+  "THEAPPRENTICE-DREAM+.description": "Gain {CalculatedBlock} [gold]Block[/gold] ({CalculationExtra:diff()} per [gold]Dream[/gold] in your deck).",
+
+  "THEAPPRENTICE-AMBITION.title": "Ambition",
+  "THEAPPRENTICE-AMBITION.description": "Deal {CalculatedDamage} damage ({ExtraDamage:diff()} per [gold]Ambition[/gold] in your deck).",
+  "THEAPPRENTICE-AMBITION+.description": "Deal {CalculatedDamage} damage ({ExtraDamage:diff()} per [gold]Ambition[/gold] in your deck).",
+
+  "THEAPPRENTICE-POTENTIAL.title": "Potential",
+  "THEAPPRENTICE-POTENTIAL.description": "Deal {CalculatedDamage} damage ({ExtraDamage:diff()} per [gold]Ambition[/gold]) and gain {PotBlock} [gold]Block[/gold] ({PotBlockExtra:diff()} per [gold]Dream[/gold]).",
+  "THEAPPRENTICE-POTENTIAL+.description": "Deal {CalculatedDamage} damage ({ExtraDamage:diff()} per [gold]Ambition[/gold]) and gain {PotBlock} [gold]Block[/gold] ({PotBlockExtra:diff()} per [gold]Dream[/gold]).",
+
+  "THEAPPRENTICE-NOCTURNE.title": "Nocturne",
+  "THEAPPRENTICE-NOCTURNE.description": "Add 3 [gold]Dreams[/gold] to your hand.",
+  "THEAPPRENTICE-NOCTURNE+.description": "Add 3 [gold]Dream+[/gold] to your hand.",
+
+  "THEAPPRENTICE-HUBRIS.title": "Hubris",
+  "THEAPPRENTICE-HUBRIS.description": "Deal {Damage:diff()} damage. Add 2 [gold]Ambitions[/gold] to your hand.",
+  "THEAPPRENTICE-HUBRIS+.description": "Deal {Damage:diff()} damage. Add 2 [gold]Ambitions[/gold] to your hand.",
+
+  "THEAPPRENTICE-LONGING.title": "Longing",
+  "THEAPPRENTICE-LONGING.description": "Gain {Block:diff()} [gold]Block[/gold]. Add 2 [gold]Dreams[/gold] to your hand.",
+  "THEAPPRENTICE-LONGING+.description": "Gain {Block:diff()} [gold]Block[/gold]. Add 2 [gold]Dream+[/gold] to your hand.",
+
+  "THEAPPRENTICE-DRIVE.title": "Drive",
+  "THEAPPRENTICE-DRIVE.description": "Deal {Damage:diff()} damage. Add 3 [gold]Ambitions[/gold] to your hand.",
+  "THEAPPRENTICE-DRIVE+.description": "Deal {Damage:diff()} damage. Add 3 [gold]Ambition+[/gold] to your hand.",
+
+  "THEAPPRENTICE-REVERIE.title": "Reverie",
+  "THEAPPRENTICE-REVERIE.description": "Add 4 [gold]Dreams[/gold] to your hand. Draw 1 card.",
+  "THEAPPRENTICE-REVERIE+.description": "Add 4 [gold]Dream+[/gold] to your hand. Draw 1 card.",
+
+  "THEAPPRENTICE-SUBLIMATION.title": "Sublimation",
+  "THEAPPRENTICE-SUBLIMATION.description": "Exhaust all [gold]Dreams[/gold] in your hand. For each, add 1 [gold]Ambition[/gold].",
+  "THEAPPRENTICE-SUBLIMATION+.description": "Exhaust all [gold]Dreams[/gold] in your hand. For each, add 1 [gold]Ambition+[/gold].",
+
+  "THEAPPRENTICE-SYNTHESIS.title": "Synthesis",
+  "THEAPPRENTICE-SYNTHESIS.description": "Transform 1 card in your hand into a [gold]Potential+[/gold]. [gold]Exhaust[/gold].",
+  "THEAPPRENTICE-SYNTHESIS+.description": "Transform 1 card in your hand into a [gold]Potential+[/gold].",
+  "THEAPPRENTICE-SYNTHESIS.selectionPrompt": "Choose a card to transform into Potential+.",
+
+  "THEAPPRENTICE-DRIVEN_INSPIRATION.title": "Driven Inspiration",
+  "THEAPPRENTICE-DRIVEN_INSPIRATION.description": "Add 1 [gold]Dream[/gold] and 1 [gold]Ambition[/gold] to your hand. Apply [gold]Planned[/gold] to a card in your hand.",
+  "THEAPPRENTICE-DRIVEN_INSPIRATION+.description": "Add 1 [gold]Dream[/gold], 1 [gold]Ambition[/gold], and 1 [gold]Potential[/gold] to your hand. Apply [gold]Planned[/gold] to a card in your hand.",
+  "THEAPPRENTICE-DRIVEN_INSPIRATION.selectionPrompt": "Choose a card to make Planned.",
+
+  "THEAPPRENTICE-LULLABY.title": "Lullaby",
+  "THEAPPRENTICE-LULLABY.description": "At the start of each turn, add 1 [gold]Dream[/gold] to your hand.",
+  "THEAPPRENTICE-LULLABY+.description": "At the start of each turn, add 1 [gold]Dream+[/gold] to your hand.",
+
+  "THEAPPRENTICE-CONVICTION.title": "Conviction",
+  "THEAPPRENTICE-CONVICTION.description": "At the start of each turn, add 1 [gold]Ambition[/gold] to your hand.",
+  "THEAPPRENTICE-CONVICTION+.description": "At the start of each turn, add 1 [gold]Ambition+[/gold] to your hand.",
+
+  "THEAPPRENTICE-MANIFESTO.title": "Manifesto",
+  "THEAPPRENTICE-MANIFESTO.description": "Add 4 [gold]Ambitions[/gold] to your hand. Draw 1 card.",
+  "THEAPPRENTICE-MANIFESTO+.description": "Add 4 [gold]Ambition+[/gold] to your hand. Draw 1 card.",
+
+  "THEAPPRENTICE-LUCIDITY.title": "Lucidity",
+  "THEAPPRENTICE-LUCIDITY.description": "Add 1 [gold]Dream+[/gold] to your hand. Upgrade all [gold]Dreams[/gold] in your hand.",
+  "THEAPPRENTICE-LUCIDITY+.description": "Add 2 [gold]Dream+[/gold] to your hand. Upgrade all [gold]Dreams[/gold] in your hand.",
+
+  "THEAPPRENTICE-RESOLVE.title": "Resolve",
+  "THEAPPRENTICE-RESOLVE.description": "Add 1 [gold]Ambition+[/gold] to your hand. Upgrade all [gold]Ambitions[/gold] in your hand.",
+  "THEAPPRENTICE-RESOLVE+.description": "Add 2 [gold]Ambition+[/gold] to your hand. Upgrade all [gold]Ambitions[/gold] in your hand.",
+
+  "THEAPPRENTICE-IGNITION.title": "Ignition",
+  "THEAPPRENTICE-IGNITION.description": "Add 2 [gold]Potentials[/gold] to your hand.",
+  "THEAPPRENTICE-IGNITION+.description": "Add 2 [gold]Potential+[/gold] to your hand.",
+
+  "THEAPPRENTICE-CHRYSALIS.title": "Chrysalis",
+  "THEAPPRENTICE-CHRYSALIS.description": "Exhaust all [gold]Dreams[/gold] and [gold]Ambitions[/gold] in your hand. For each, add 1 [gold]Potential[/gold] to your hand.",
+  "THEAPPRENTICE-CHRYSALIS+.description": "Exhaust all [gold]Dreams[/gold] and [gold]Ambitions[/gold] in your hand. For each, add 1 [gold]Potential+[/gold] to your hand.",
+
+  "THEAPPRENTICE-DAYDREAM.title": "Daydream",
+  "THEAPPRENTICE-DAYDREAM.description": "Add 1 [gold]Dream[/gold] to your hand for each card in your hand.",
+  "THEAPPRENTICE-DAYDREAM+.description": "Add 1 [gold]Dream[/gold] to your hand for each card in your hand. [gold]Retain[/gold].",
+
+  "THEAPPRENTICE-WUNDERKIND.title": "Wunderkind",
+  "THEAPPRENTICE-WUNDERKIND.description": "At the start of each turn, add 1 [gold]Dream+[/gold] and 1 [gold]Ambition+[/gold] to your hand.",
+  "THEAPPRENTICE-WUNDERKIND+.description": "At the start of each turn, add 1 [gold]Dream+[/gold] and 1 [gold]Ambition+[/gold] to your hand.",
+
+  "THEAPPRENTICE-PRODIGY.title": "Prodigy",
+  "THEAPPRENTICE-PRODIGY.description": "When you play a [gold]Dream[/gold], add 1 [gold]Ambition[/gold]. When you play an [gold]Ambition[/gold], add 1 [gold]Dream[/gold].",
+  "THEAPPRENTICE-PRODIGY+.description": "[gold]Innate[/gold]. When you play a [gold]Dream[/gold], add 1 [gold]Ambition[/gold]. When you play an [gold]Ambition[/gold], add 1 [gold]Dream[/gold].",
+
+  "THEAPPRENTICE-CONDUCTOR.title": "Conductor",
+  "THEAPPRENTICE-CONDUCTOR.description": "At the start of each turn, add 1 [gold]Potential[/gold] to your hand.",
+  "THEAPPRENTICE-CONDUCTOR+.description": "At the start of each turn, add 1 [gold]Potential+[/gold] to your hand.",
+
+  "THEAPPRENTICE-BLUEPRINT.title": "Blueprint",
+  "THEAPPRENTICE-BLUEPRINT.description": "Add 1 [gold]Dream[/gold] and 1 [gold]Ambition[/gold] per [gold]Planned[/gold] card in your hand. [gold]Exhaust[/gold].",
+  "THEAPPRENTICE-BLUEPRINT+.description": "Add 1 [gold]Dream+[/gold] and 1 [gold]Ambition+[/gold] per [gold]Planned[/gold] card in your hand. [gold]Exhaust[/gold]."
 }
