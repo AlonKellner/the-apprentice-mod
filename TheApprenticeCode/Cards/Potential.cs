@@ -7,6 +7,7 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models.CardPools;
 using MegaCrit.Sts2.Core.ValueProps;
+using TheApprentice.TheApprenticeCode.Cards.Modifiers;
 
 namespace TheApprentice.TheApprenticeCode.Cards;
 
@@ -34,5 +35,7 @@ public class Potential : ConstructedCardModel
 
         if (DynamicVars.TryGetValue("PotBlock", out DynamicVar potBlock))
             await CommonActions.CardBlock(this, potBlock, cardPlay);
+
+        CardModifier.AddModifier<SpentModifier>(cardPlay.Card);
     }
 }

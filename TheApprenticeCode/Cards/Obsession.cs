@@ -15,7 +15,7 @@ public class Obsession : ApprenticeCard
     public Obsession() : base(1, CardType.Power, CardRarity.Rare, TargetType.None)
     {
         WithBlock(2);
-        WithTip(ApprenticeKeywords.Planned);
+        WithTip(CardKeyword.Unplayable);
     }
 
     protected override void OnUpgrade()

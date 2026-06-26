@@ -2,6 +2,7 @@ using BaseLib.Abstracts;
 using BaseLib.Utils;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.HoverTips;
 
 namespace TheApprentice.TheApprenticeCode.Cards;
 
@@ -12,7 +13,7 @@ public class Drive : ApprenticeCard
     public Drive() : base(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
     {
         WithDamage(6);
-        WithTip(typeof(Ambition));
+        WithTip(new TooltipSource(card => HoverTipFactory.FromCard<Ambition>(upgrade: card.IsUpgraded)));
     }
 
     protected override void OnUpgrade()

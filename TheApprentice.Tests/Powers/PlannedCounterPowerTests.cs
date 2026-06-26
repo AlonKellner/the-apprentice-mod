@@ -48,4 +48,44 @@ public class PlannedCounterPowerTests
             BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
         Assert.Equal(typeof(PlannedCounterPower), method?.DeclaringType);
     }
+
+    [Fact]
+    public void BuildPlanList_EmptyList_ReturnsEmptyString()
+    {
+        Assert.Equal("", PlannedCounterPower.BuildPlanList([]));
+    }
+
+    [Fact]
+    public void BuildPlanList_SingleCard_ShowsNumberedEntry()
+    {
+        var result = PlannedCounterPower.BuildPlanList(["Contemplate"]);
+        Assert.Contains("#1", result);
+        Assert.Contains("Contemplate", result);
+    }
+
+    [Fact]
+    public void BuildPlanList_ThreeCards_NumberedInOrder()
+    {
+        var result = PlannedCounterPower.BuildPlanList(["Contemplate", "Groove", "Rehearsal"]);
+        Assert.Contains("#1", result);
+        Assert.Contains("#2", result);
+        Assert.Contains("#3", result);
+        Assert.True(result.IndexOf("Contemplate") < result.IndexOf("Groove"));
+        Assert.True(result.IndexOf("Groove") < result.IndexOf("Rehearsal"));
+    }
+
+    [Fact]
+    public void PlannedCounterPower_Localization_MentionsPlanned()
+    {
+        var p = new PlannedCounterPower();
+        Assert.Contains(p.Localization, entry => entry.Item2.Contains("Planned"));
+    }
+
+    [Fact]
+    public void BuildPlanList_ReorderedTitles_ProduceDifferentString()
+    {
+        var ab = PlannedCounterPower.BuildPlanList(["Alpha", "Beta"]);
+        var ba = PlannedCounterPower.BuildPlanList(["Beta", "Alpha"]);
+        Assert.NotEqual(ab, ba);
+    }
 }

@@ -1,8 +1,10 @@
 using System.Linq;
 using BaseLib.Abstracts;
+using BaseLib.Utils;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.HoverTips;
 
 namespace TheApprentice.TheApprenticeCode.Cards;
 
@@ -14,7 +16,7 @@ public class Chrysalis : ApprenticeCard
     {
         WithTip(typeof(Dream));
         WithTip(typeof(Ambition));
-        WithTip(typeof(Potential));
+        WithTip(new TooltipSource(card => HoverTipFactory.FromCard<Potential>(upgrade: card.IsUpgraded)));
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)

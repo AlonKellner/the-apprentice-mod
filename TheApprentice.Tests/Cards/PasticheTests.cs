@@ -4,16 +4,18 @@ using Xunit;
 
 namespace TheApprentice.Tests.Cards;
 
-public class TransposeTests
+public class PasticheTests
 {
     [Fact]
-    public void Transpose_CardId_MatchesExpectedConstant() =>
-        Assert.Equal("TheApprentice:Transpose", Transpose.CardId);
+    public void Pastiche_CardId_IsCorrect()
+    {
+        Assert.Equal("TheApprentice:Pastiche", Pastiche.CardId);
+    }
 
     [Fact]
-    public void Transpose_IsSkill_Uncommon()
+    public void Pastiche_IsSkill_Uncommon()
     {
-        var c = new Transpose();
+        var c = new Pastiche();
         Assert.Equal(CardType.Skill, c.Type);
         Assert.Equal(CardRarity.Uncommon, c.Rarity);
     }

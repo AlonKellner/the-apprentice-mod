@@ -6,17 +6,17 @@
   "THEAPPRENTICE-APPRENTICE_DEFEND.description": "Gain {Block:diff()} [gold]Block[/gold].",
 
   "THEAPPRENTICE-PLAN.title": "Plan",
-  "THEAPPRENTICE-PLAN.description": "Draw {Cards:diff()} card. Choose up to 2 cards in your hand. Apply [gold]Planned[/gold] to them.",
-  "THEAPPRENTICE-PLAN+.description": "Draw {Cards:diff()} cards. Choose up to 3 cards in your hand. Apply [gold]Planned[/gold] to them.",
+  "THEAPPRENTICE-PLAN.description": "Draw {Cards:diff()} card. Choose up to {Select:diff()} cards in your hand. Apply [gold]Planned[/gold] to them.",
+  "THEAPPRENTICE-PLAN+.description": "Draw {Cards:diff()} card. Choose up to {Select:diff()} cards in your hand. Apply [gold]Planned[/gold] to them.",
   "THEAPPRENTICE-PLAN.selectionPrompt": "Choose cards to make Planned.",
 
   "THEAPPRENTICE-JUST_AS_PLANNED.title": "Just as Planned",
   "THEAPPRENTICE-JUST_AS_PLANNED.description": "[gold]Retain[/gold]. Play all [gold]Planned[/gold] cards in the order they were planned.",
   "THEAPPRENTICE-JUST_AS_PLANNED+.description": "[gold]Retain[/gold]. [gold]Innate[/gold]. Play all [gold]Planned[/gold] cards in the order they were planned.",
 
-  "THEAPPRENTICE-SCRAP_PLANS.title": "Scrap Plans",
-  "THEAPPRENTICE-SCRAP_PLANS.description": "Discard all [gold]Planned[/gold] cards in your hand. Draw 1 per card discarded.",
-  "THEAPPRENTICE-SCRAP_PLANS+.description": "Discard all [gold]Planned[/gold] cards in your hand. Draw 1 per card discarded.",
+  "THEAPPRENTICE-NEW_PERSPECTIVE.title": "New Perspective",
+  "THEAPPRENTICE-NEW_PERSPECTIVE.description": "Discard all [gold]Unplayable[/gold] cards in your hand. Draw 1 per card discarded.",
+  "THEAPPRENTICE-NEW_PERSPECTIVE+.description": "Discard all [gold]Unplayable[/gold] cards in your hand. Draw 1 per card discarded.",
 
   "THEAPPRENTICE-CONTEMPLATE.title": "Contemplate",
   "THEAPPRENTICE-CONTEMPLATE.description": "Gain {Block:diff()} block. Apply [gold]Planned[/gold] to a card in your hand.",
@@ -29,17 +29,17 @@
   "THEAPPRENTICE-REALIZE.selectionPrompt": "Choose a card to make Planned.",
 
   "THEAPPRENTICE-EPIPHANY.title": "Epiphany",
-  "THEAPPRENTICE-EPIPHANY.description": "Draw {Cards:diff()} card. Apply [gold]Planned[/gold] to a card in your hand. [gold]Exhaust[/gold].",
-  "THEAPPRENTICE-EPIPHANY+.description": "Draw {Cards:diff()} card. Apply [gold]Planned[/gold] to a card in your hand.",
+  "THEAPPRENTICE-EPIPHANY.description": "Draw {Cards:diff()} card. Apply [gold]Planned[/gold] to a card in your hand.",
+  "THEAPPRENTICE-EPIPHANY+.description": "Draw {Cards:diff()} cards. Apply [gold]Planned[/gold] to a card in your hand.",
   "THEAPPRENTICE-EPIPHANY.selectionPrompt": "Choose a card to make Planned.",
 
   "THEAPPRENTICE-GROOVE.title": "Groove",
-  "THEAPPRENTICE-GROOVE.description": "Deal {Damage:diff()} damage for each [gold]Planned[/gold] card you have.",
-  "THEAPPRENTICE-GROOVE+.description": "Deal {Damage:diff()} damage for each [gold]Planned[/gold] card you have.",
+  "THEAPPRENTICE-GROOVE.description": "Deal {Damage:diff()} damage for each [gold]Unplayable[/gold] card you have.",
+  "THEAPPRENTICE-GROOVE+.description": "Deal {Damage:diff()} damage for each [gold]Unplayable[/gold] card you have.",
 
   "THEAPPRENTICE-OVERTHINKING.title": "Overthinking",
-  "THEAPPRENTICE-OVERTHINKING.description": "Gain {Block:diff()} block for each [gold]Planned[/gold] card you have.",
-  "THEAPPRENTICE-OVERTHINKING+.description": "Gain {Block:diff()} block for each [gold]Planned[/gold] card you have.",
+  "THEAPPRENTICE-OVERTHINKING.description": "Gain {Block:diff()} block for each [gold]Unplayable[/gold] card you have.",
+  "THEAPPRENTICE-OVERTHINKING+.description": "Gain {Block:diff()} block for each [gold]Unplayable[/gold] card you have.",
 
   "THEAPPRENTICE-CREATIVE_BLOCK.title": "Creative Block",
   "THEAPPRENTICE-CREATIVE_BLOCK.description": "Gain {Block:diff()} block. If you have no [gold]Planned[/gold] cards, gain {Block:diff()} additional block.",
@@ -51,22 +51,21 @@
   "THEAPPRENTICE-REHEARSAL.selectionPrompt": "Choose cards to make Planned.",
 
   "THEAPPRENTICE-CLEAR_MIND.title": "Clear Mind",
-  "THEAPPRENTICE-CLEAR_MIND.description": "[gold]Exhaust[/gold] all Unplayable cards. [gold]Exhaust[/gold].",
-  "THEAPPRENTICE-CLEAR_MIND+.description": "[gold]Exhaust[/gold] all Unplayable cards.",
+  "THEAPPRENTICE-CLEAR_MIND.description": "[gold]Exhaust[/gold] all [gold]Unplayable[/gold] cards. Deal {Damage:diff()} damage to all enemies for each.",
+  "THEAPPRENTICE-CLEAR_MIND+.description": "[gold]Exhaust[/gold] all [gold]Unplayable[/gold] cards. Deal {Damage:diff()} damage to all enemies for each.",
 
   "THEAPPRENTICE-TABULA_RASA.title": "Tabula Rasa",
   "THEAPPRENTICE-TABULA_RASA.description": "Remove [gold]Planned[/gold] from all cards.",
   "THEAPPRENTICE-TABULA_RASA+.description": "Remove [gold]Planned[/gold] from all cards. Draw 1 card.",
 
   "THEAPPRENTICE-TRANSPOSE.title": "Transpose",
-  "THEAPPRENTICE-TRANSPOSE.description": "Remove [gold]Planned[/gold] from a card. Apply [gold]Planned[/gold] to another.",
-  "THEAPPRENTICE-TRANSPOSE+.description": "Remove [gold]Planned[/gold] from a card. Apply [gold]Planned[/gold] to another. Draw 1 card.",
-  "THEAPPRENTICE-TRANSPOSE.selectionPrompt1": "Choose a Planned card to un-plan.",
-  "THEAPPRENTICE-TRANSPOSE.selectionPrompt2": "Choose a card to make Planned.",
+  "THEAPPRENTICE-TRANSPOSE.description": "Select 2 cards. Transfer [gold]Planned[/gold] from one to the other.",
+  "THEAPPRENTICE-TRANSPOSE+.description": "Select 2 cards. Transfer [gold]Planned[/gold] from one to the other. Draw {Cards:diff()} card.",
+  "THEAPPRENTICE-TRANSPOSE.selectionPrompt": "Choose 2 cards to transfer Planned.",
 
   "THEAPPRENTICE-SIGNATURE.title": "Signature",
-  "THEAPPRENTICE-SIGNATURE.description": "Deal {Damage:diff()} damage. [gold]Exhaust[/gold]. Starts each combat [gold]Planned[/gold].",
-  "THEAPPRENTICE-SIGNATURE+.description": "Deal {Damage:diff()} damage. [gold]Exhaust[/gold]. Starts each combat [gold]Planned[/gold].",
+  "THEAPPRENTICE-SIGNATURE.description": "Deal {Damage:diff()} damage. Starts each combat [gold]Planned[/gold].",
+  "THEAPPRENTICE-SIGNATURE+.description": "Deal {Damage:diff()} damage. Starts each combat [gold]Planned[/gold].",
 
   "THEAPPRENTICE-PRELUDE.title": "Prelude",
   "THEAPPRENTICE-PRELUDE.description": "Gain {Block:diff()} [gold]Block[/gold]. Draw {Cards:diff()} cards. Starts each combat [gold]Planned[/gold].",
@@ -82,16 +81,16 @@
   "THEAPPRENTICE-IN_THE_ZONE+.description": "At the start of each turn, if you have [gold]Planned[/gold] cards, gain {Energy:diff()} Energy.",
 
   "THEAPPRENTICE-OBSESSION.title": "Obsession",
-  "THEAPPRENTICE-OBSESSION.description": "At the end of each turn, gain {Block:diff()} [gold]Block[/gold] per [gold]Planned[/gold] card.",
-  "THEAPPRENTICE-OBSESSION+.description": "At the end of each turn, gain {Block:diff()} [gold]Block[/gold] per [gold]Planned[/gold] card.",
+  "THEAPPRENTICE-OBSESSION.description": "At the end of each turn, gain {Block:diff()} [gold]Block[/gold] per [gold]Unplayable[/gold] card.",
+  "THEAPPRENTICE-OBSESSION+.description": "At the end of each turn, gain {Block:diff()} [gold]Block[/gold] per [gold]Unplayable[/gold] card.",
 
   "THEAPPRENTICE-ENCORE.title": "Encore",
   "THEAPPRENTICE-ENCORE.description": "Execute all [gold]Planned[/gold] cards. They keep their [gold]Planned[/gold] status.",
   "THEAPPRENTICE-ENCORE+.description": "Execute all [gold]Planned[/gold] cards. They keep their [gold]Planned[/gold] status.",
 
   "THEAPPRENTICE-VIRTUOSO.title": "Virtuoso",
-  "THEAPPRENTICE-VIRTUOSO.description": "[gold]Planned[/gold] cards lose the [gold]Unplayable[/gold] keyword.",
-  "THEAPPRENTICE-VIRTUOSO+.description": "[gold]Innate[/gold]. [gold]Planned[/gold] cards lose the [gold]Unplayable[/gold] keyword.",
+  "THEAPPRENTICE-VIRTUOSO.description": "At the end of your turn, remove [gold]Unplayable[/gold] from all cards in your hand.",
+  "THEAPPRENTICE-VIRTUOSO+.description": "At the [i]start[/i] of your turn, remove [gold]Unplayable[/gold] from all cards in your hand.",
 
   "THEAPPRENTICE-MAGNUM_OPUS.title": "Magnum Opus",
   "THEAPPRENTICE-MAGNUM_OPUS.description": "Choose up to {Cards:diff()} cards from your draw pile. Apply [gold]Planned[/gold] to them.",
@@ -99,16 +98,16 @@
   "THEAPPRENTICE-MAGNUM_OPUS.selectionPrompt": "Choose cards from your draw pile to make Planned.",
 
   "THEAPPRENTICE-DREAM.title": "Dream",
-  "THEAPPRENTICE-DREAM.description": "Gain {CalculatedBlock} [gold]Block[/gold] ({CalculationExtra:diff()} per [gold]Dream[/gold] in your deck).",
-  "THEAPPRENTICE-DREAM+.description": "Gain {CalculatedBlock} [gold]Block[/gold] ({CalculationExtra:diff()} per [gold]Dream[/gold] in your deck).",
+  "THEAPPRENTICE-DREAM.description": "Gain {CalculatedBlock} [gold]Block[/gold] ({CalculationExtra:diff()} per [gold]Dream[/gold] in your deck). Become [gold]Unplayable[/gold].",
+  "THEAPPRENTICE-DREAM+.description": "Gain {CalculatedBlock} [gold]Block[/gold] ({CalculationExtra:diff()} per [gold]Dream[/gold] in your deck). Become [gold]Unplayable[/gold].",
 
   "THEAPPRENTICE-AMBITION.title": "Ambition",
-  "THEAPPRENTICE-AMBITION.description": "Deal {CalculatedDamage} damage ({ExtraDamage:diff()} per [gold]Ambition[/gold] in your deck).",
-  "THEAPPRENTICE-AMBITION+.description": "Deal {CalculatedDamage} damage ({ExtraDamage:diff()} per [gold]Ambition[/gold] in your deck).",
+  "THEAPPRENTICE-AMBITION.description": "Deal {CalculatedDamage} damage ({ExtraDamage:diff()} per [gold]Ambition[/gold] in your deck). Become [gold]Unplayable[/gold].",
+  "THEAPPRENTICE-AMBITION+.description": "Deal {CalculatedDamage} damage ({ExtraDamage:diff()} per [gold]Ambition[/gold] in your deck). Become [gold]Unplayable[/gold].",
 
   "THEAPPRENTICE-POTENTIAL.title": "Potential",
-  "THEAPPRENTICE-POTENTIAL.description": "Deal {CalculatedDamage} damage ({ExtraDamage:diff()} per [gold]Ambition[/gold]) and gain {PotBlock} [gold]Block[/gold] ({PotBlockExtra:diff()} per [gold]Dream[/gold]).",
-  "THEAPPRENTICE-POTENTIAL+.description": "Deal {CalculatedDamage} damage ({ExtraDamage:diff()} per [gold]Ambition[/gold]) and gain {PotBlock} [gold]Block[/gold] ({PotBlockExtra:diff()} per [gold]Dream[/gold]).",
+  "THEAPPRENTICE-POTENTIAL.description": "Deal {CalculatedDamage} damage ({ExtraDamage:diff()} per [gold]Ambition[/gold]) and gain {PotBlock} [gold]Block[/gold] ({PotBlockExtra:diff()} per [gold]Dream[/gold]). Become [gold]Unplayable[/gold].",
+  "THEAPPRENTICE-POTENTIAL+.description": "Deal {CalculatedDamage} damage ({ExtraDamage:diff()} per [gold]Ambition[/gold]) and gain {PotBlock} [gold]Block[/gold] ({PotBlockExtra:diff()} per [gold]Dream[/gold]). Become [gold]Unplayable[/gold].",
 
   "THEAPPRENTICE-NOCTURNE.title": "Nocturne",
   "THEAPPRENTICE-NOCTURNE.description": "Add 3 [gold]Dreams[/gold] to your hand.",
@@ -131,13 +130,13 @@
   "THEAPPRENTICE-REVERIE+.description": "Add 4 [gold]Dream+[/gold] to your hand. Draw 1 card.",
 
   "THEAPPRENTICE-SUBLIMATION.title": "Sublimation",
-  "THEAPPRENTICE-SUBLIMATION.description": "Exhaust all [gold]Dreams[/gold] in your hand. For each, add 1 [gold]Ambition[/gold].",
-  "THEAPPRENTICE-SUBLIMATION+.description": "Exhaust all [gold]Dreams[/gold] in your hand. For each, add 1 [gold]Ambition+[/gold].",
+  "THEAPPRENTICE-SUBLIMATION.description": "Exhaust all [gold]Unplayable[/gold] cards in your hand. For each, add 1 {AmbitionType}.",
+  "THEAPPRENTICE-SUBLIMATION+.description": "Exhaust all [gold]Unplayable[/gold] cards in your hand. For each, add 1 {AmbitionType}.",
 
-  "THEAPPRENTICE-SYNTHESIS.title": "Synthesis",
-  "THEAPPRENTICE-SYNTHESIS.description": "Transform 1 card in your hand into a [gold]Potential+[/gold]. [gold]Exhaust[/gold].",
-  "THEAPPRENTICE-SYNTHESIS+.description": "Transform 1 card in your hand into a [gold]Potential+[/gold].",
-  "THEAPPRENTICE-SYNTHESIS.selectionPrompt": "Choose a card to transform into Potential+.",
+  "THEAPPRENTICE-PASTICHE.title": "Pastiche",
+  "THEAPPRENTICE-PASTICHE.description": "Transform 1 card in your hand into a [gold]Potential+[/gold].",
+  "THEAPPRENTICE-PASTICHE+.description": "Transform 1 card in your hand into a [gold]Potential+[/gold].",
+  "THEAPPRENTICE-PASTICHE.selectionPrompt": "Choose a card to transform into Potential+.",
 
   "THEAPPRENTICE-DRIVEN_INSPIRATION.title": "Driven Inspiration",
   "THEAPPRENTICE-DRIVEN_INSPIRATION.description": "Add 1 [gold]Dream[/gold] and 1 [gold]Ambition[/gold] to your hand. Apply [gold]Planned[/gold] to a card in your hand.",
@@ -165,8 +164,8 @@
   "THEAPPRENTICE-RESOLVE+.description": "Add 2 [gold]Ambition+[/gold] to your hand. Upgrade all [gold]Ambitions[/gold] in your hand.",
 
   "THEAPPRENTICE-IGNITION.title": "Ignition",
-  "THEAPPRENTICE-IGNITION.description": "Add 2 [gold]Potentials[/gold] to your hand.",
-  "THEAPPRENTICE-IGNITION+.description": "Add 2 [gold]Potential+[/gold] to your hand.",
+  "THEAPPRENTICE-IGNITION.description": "Add {Cards:diff()} [gold]Potentials[/gold] to your hand.",
+  "THEAPPRENTICE-IGNITION+.description": "Add {Cards:diff()} [gold]Potentials[/gold] to your hand.",
 
   "THEAPPRENTICE-CHRYSALIS.title": "Chrysalis",
   "THEAPPRENTICE-CHRYSALIS.description": "Exhaust all [gold]Dreams[/gold] and [gold]Ambitions[/gold] in your hand. For each, add 1 [gold]Potential[/gold] to your hand.",
@@ -189,6 +188,6 @@
   "THEAPPRENTICE-CONDUCTOR+.description": "At the start of each turn, add 1 [gold]Potential+[/gold] to your hand.",
 
   "THEAPPRENTICE-BLUEPRINT.title": "Blueprint",
-  "THEAPPRENTICE-BLUEPRINT.description": "Add 1 [gold]Dream[/gold] and 1 [gold]Ambition[/gold] per [gold]Planned[/gold] card in your hand. [gold]Exhaust[/gold].",
-  "THEAPPRENTICE-BLUEPRINT+.description": "Add 1 [gold]Dream+[/gold] and 1 [gold]Ambition+[/gold] per [gold]Planned[/gold] card in your hand. [gold]Exhaust[/gold]."
+  "THEAPPRENTICE-BLUEPRINT.description": "Add 1 [gold]Dream[/gold] and 1 [gold]Ambition[/gold] per [gold]Unplayable[/gold] card you have.",
+  "THEAPPRENTICE-BLUEPRINT+.description": "Add 1 [gold]Dream+[/gold] and 1 [gold]Ambition+[/gold] per [gold]Unplayable[/gold] card you have."
 }

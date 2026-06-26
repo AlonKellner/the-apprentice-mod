@@ -2,6 +2,7 @@ using BaseLib.Abstracts;
 using BaseLib.Utils;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.HoverTips;
 
 namespace TheApprentice.TheApprenticeCode.Cards;
 
@@ -12,7 +13,7 @@ public class Longing : ApprenticeCard
     public Longing() : base(1, CardType.Skill, CardRarity.Common, TargetType.None)
     {
         WithBlock(5);
-        WithTip(typeof(Dream));
+        WithTip(new TooltipSource(card => HoverTipFactory.FromCard<Dream>(upgrade: card.IsUpgraded)));
     }
 
     protected override void OnUpgrade()

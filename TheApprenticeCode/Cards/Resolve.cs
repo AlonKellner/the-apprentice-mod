@@ -1,8 +1,10 @@
 using System.Linq;
 using BaseLib.Abstracts;
+using BaseLib.Utils;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Nodes.CommonUi;
 
 namespace TheApprentice.TheApprenticeCode.Cards;
@@ -13,7 +15,7 @@ public class Resolve : ApprenticeCard
 
     public Resolve() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.None)
     {
-        WithTip(typeof(Ambition));
+        WithTip(new TooltipSource(_ => HoverTipFactory.FromCard<Ambition>(upgrade: true)));
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)

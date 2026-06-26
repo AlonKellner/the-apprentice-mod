@@ -4,7 +4,7 @@ using BaseLib.Extensions;
 using BaseLib.Utils;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
-using TheApprentice.TheApprenticeCode.Cards.Modifiers;
+using TheApprentice.TheApprenticeCode.Extensions;
 
 namespace TheApprentice.TheApprenticeCode.Cards;
 
@@ -15,7 +15,7 @@ public class Overthinking : ApprenticeCard
     public Overthinking() : base(2, CardType.Skill, CardRarity.Uncommon, TargetType.None)
     {
         WithBlock(4);
-        WithTip(ApprenticeKeywords.Planned);
+        WithTip(CardKeyword.Unplayable);
     }
 
     protected override void OnUpgrade()
@@ -27,7 +27,7 @@ public class Overthinking : ApprenticeCard
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
         var player = cardPlay.Card.Owner;
-        int count = PlannedModifier.CountIn(player.Piles.SelectMany(p => p.Cards));
+        int count = player.Piles.SelectMany(p => p.Cards).Count(c => c.IsUnplayable());
         for (int i = 0; i < count; i++)
             await CommonActions.CardBlock(cardPlay.Card, cardPlay);
     }

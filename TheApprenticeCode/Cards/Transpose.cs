@@ -26,29 +26,38 @@ public class Transpose : ApprenticeCard
     {
         var player = cardPlay.Card.Owner;
 
-        // Step 1: choose a Planned card to un-plan
-        var toRemove = await CardSelectCmd.FromHand(
+        var selected = await CardSelectCmd.FromHand(
             context, player,
-            new CardSelectorPrefs(new LocString("cards", "THEAPPRENTICE-TRANSPOSE.selectionPrompt1"), 0, 1),
-            c => c.TryGetModifier<PlannedModifier>(out _),
+            new CardSelectorPrefs(new LocString("cards", "THEAPPRENTICE-TRANSPOSE.selectionPrompt"), 2, 2),
+            c => c != cardPlay.Card,
             this);
 
-        var unplanned = toRemove?.FirstOrDefault();
-        if (unplanned == null) return;
+        if (selected == null) return;
+        var cards = selected.ToList();
+        if (cards.Count < 2) return;
 
-        if (unplanned.TryGetModifier<PlannedModifier>(out var mod))
-            CardModifier.DirectModifiers(unplanned).Remove(mod);
+        var allCards = player.Piles.SelectMany(p => p.Cards);
+        var a = cards[0];
+        var b = cards[1];
+        bool aPlanned = a.TryGetModifier<PlannedModifier>(out var modA);
+        bool bPlanned = b.TryGetModifier<PlannedModifier>(out var modB);
 
-        // Step 2: choose a non-Planned card to make Planned
-        var toAdd = await CardSelectCmd.FromHand(
-            context, player,
-            new CardSelectorPrefs(new LocString("cards", "THEAPPRENTICE-TRANSPOSE.selectionPrompt2"), 0, 1),
-            c => c != cardPlay.Card && PlannedModifier.CanApplyTo(c),
-            this);
-
-        var target = toAdd?.FirstOrDefault();
-        if (target != null)
-            PlannedModifier.Apply(target, player.Piles.SelectMany(p => p.Cards));
+        if (aPlanned && bPlanned)
+        {
+            (modA!.SequenceIndex, modB!.SequenceIndex) = (modB!.SequenceIndex, modA!.SequenceIndex);
+            PlannedModifier.RefreshVisualIndices(allCards);
+            PlannedModifier.InvokeChanged();
+        }
+        else if (aPlanned)
+        {
+            PlannedModifier.Remove(a, allCards);
+            PlannedModifier.Apply(b, allCards);
+        }
+        else if (bPlanned)
+        {
+            PlannedModifier.Remove(b, allCards);
+            PlannedModifier.Apply(a, allCards);
+        }
 
         if (IsUpgraded)
             await CommonActions.Draw(cardPlay.Card, context);

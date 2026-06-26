@@ -2,6 +2,7 @@ using BaseLib.Abstracts;
 using BaseLib.Utils;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.HoverTips;
 
 namespace TheApprentice.TheApprenticeCode.Cards;
 
@@ -12,7 +13,7 @@ public class Manifesto : ApprenticeCard
     public Manifesto() : base(2, CardType.Skill, CardRarity.Uncommon, TargetType.None)
     {
         WithCards(1);
-        WithTip(typeof(Ambition));
+        WithTip(new TooltipSource(card => HoverTipFactory.FromCard<Ambition>(upgrade: card.IsUpgraded)));
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)

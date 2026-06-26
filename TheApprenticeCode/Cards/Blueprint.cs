@@ -1,8 +1,10 @@
 using System.Linq;
 using BaseLib.Abstracts;
+using BaseLib.Utils;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
-using TheApprentice.TheApprenticeCode.Cards.Modifiers;
+using MegaCrit.Sts2.Core.HoverTips;
+using TheApprentice.TheApprenticeCode.Extensions;
 
 namespace TheApprentice.TheApprenticeCode.Cards;
 
@@ -13,16 +15,16 @@ public class Blueprint : ApprenticeCard
     public Blueprint() : base(1, CardType.Skill, CardRarity.Rare, TargetType.None)
     {
         WithKeyword(CardKeyword.Exhaust, ConstructedCardModel.UpgradeType.None);
-        WithTip(ApprenticeKeywords.Planned);
-        WithTip(typeof(Dream));
-        WithTip(typeof(Ambition));
+        WithTip(CardKeyword.Unplayable);
+        WithTip(new TooltipSource(card => HoverTipFactory.FromCard<Dream>(upgrade: card.IsUpgraded)));
+        WithTip(new TooltipSource(card => HoverTipFactory.FromCard<Ambition>(upgrade: card.IsUpgraded)));
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
         var player = cardPlay.Card.Owner;
-        int plannedCount = PlannedModifier.CountIn(player.Piles.Where(p => p.Type == PileType.Hand).SelectMany(p => p.Cards));
-        await DreamsAndAmbitions.AddDreams(player, CombatState!, plannedCount, IsUpgraded);
-        await DreamsAndAmbitions.AddAmbitions(player, CombatState!, plannedCount, IsUpgraded);
+        int unplayableCount = player.Piles.SelectMany(p => p.Cards).Count(c => c.IsUnplayable());
+        await DreamsAndAmbitions.AddDreams(player, CombatState!, unplayableCount, IsUpgraded);
+        await DreamsAndAmbitions.AddAmbitions(player, CombatState!, unplayableCount, IsUpgraded);
     }
 }

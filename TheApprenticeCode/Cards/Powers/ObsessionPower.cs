@@ -10,7 +10,7 @@ using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.ValueProps;
-using TheApprentice.TheApprenticeCode.Cards.Modifiers;
+using TheApprentice.TheApprenticeCode.Extensions;
 
 namespace TheApprentice.TheApprenticeCode.Cards.Powers;
 
@@ -21,7 +21,7 @@ public class ObsessionPower : CustomPowerModel
 
     public override List<(string, string)> Localization => new PowerLoc(
         "Obsession",
-        "At the end of your turn, gain {Amount} [gold]Block[/gold] per [gold]Planned[/gold] card.",
+        "At the end of your turn, gain {Amount} [gold]Block[/gold] per [gold]Unplayable[/gold] card.",
         "");
 
     public override async Task BeforeSideTurnEnd(
@@ -29,9 +29,9 @@ public class ObsessionPower : CustomPowerModel
     {
         if (side != CombatSide.Player) return;
 
-        int plannedCount = PlannedModifier.CountIn(Owner.Player!.Piles.SelectMany(p => p.Cards));
-        if (plannedCount == 0) return;
+        int unplayableCount = Owner.Player!.Piles.SelectMany(p => p.Cards).Count(c => c.IsUnplayable());
+        if (unplayableCount == 0) return;
 
-        await CreatureCmd.GainBlock(Owner, Amount * plannedCount, ValueProp.Unpowered, null, false);
+        await CreatureCmd.GainBlock(Owner, Amount * unplayableCount, ValueProp.Unpowered, null, false);
     }
 }

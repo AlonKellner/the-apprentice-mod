@@ -1,16 +1,17 @@
+using System.Linq;
 using BaseLib.Extensions;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
-using TheApprentice.TheApprenticeCode.Cards.Modifiers;
+using TheApprentice.TheApprenticeCode.Extensions;
 
 namespace TheApprentice.TheApprenticeCode.Cards;
 
-public class ScrapPlans : ApprenticeCard
+public class NewPerspective : ApprenticeCard
 {
-    public const string CardId = "TheApprentice:ScrapPlans";
+    public const string CardId = "TheApprentice:NewPerspective";
 
-    public ScrapPlans() : base(1, CardType.Skill, CardRarity.Common, TargetType.None)
+    public NewPerspective() : base(1, CardType.Skill, CardRarity.Common, TargetType.None)
     {
     }
 
@@ -26,10 +27,10 @@ public class ScrapPlans : ApprenticeCard
         var handPile = player.Piles.FirstOrDefault(p => p.Type == PileType.Hand);
         if (handPile == null) return;
 
-        var planned = handPile.Cards
-            .Where(c => c.TryGetModifier<PlannedModifier>(out _))
+        var unplayable = handPile.Cards
+            .Where(c => c.IsUnplayable())
             .ToList();
 
-        await CardCmd.DiscardAndDraw(context, planned, planned.Count);
+        await CardCmd.DiscardAndDraw(context, unplayable, unplayable.Count);
     }
 }

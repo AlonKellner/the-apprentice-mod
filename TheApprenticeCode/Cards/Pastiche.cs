@@ -1,24 +1,24 @@
 using System.Linq;
 using BaseLib.Abstracts;
+using BaseLib.Utils;
 using MegaCrit.Sts2.Core.CardSelection;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Nodes.CommonUi;
 
 namespace TheApprentice.TheApprenticeCode.Cards;
 
-public class Synthesis : ApprenticeCard
+public class Pastiche : ApprenticeCard
 {
-    public const string CardId = "TheApprentice:Synthesis";
+    public const string CardId = "TheApprentice:Pastiche";
 
-    public Synthesis() : base(0, CardType.Skill, CardRarity.Uncommon, TargetType.None)
+    public Pastiche() : base(0, CardType.Skill, CardRarity.Uncommon, TargetType.None)
     {
         WithKeyword(CardKeyword.Exhaust, ConstructedCardModel.UpgradeType.Remove);
-        WithTip(typeof(Dream));
-        WithTip(typeof(Ambition));
-        WithTip(typeof(Potential));
+        WithTip(new TooltipSource(_ => HoverTipFactory.FromCard<Potential>(upgrade: true)));
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
@@ -26,7 +26,7 @@ public class Synthesis : ApprenticeCard
         var player = cardPlay.Card.Owner;
         var selected = await CardSelectCmd.FromHand(
             context, player,
-            new CardSelectorPrefs(new LocString("cards", "THEAPPRENTICE-SYNTHESIS.selectionPrompt"), 1, 1),
+            new CardSelectorPrefs(new LocString("cards", "THEAPPRENTICE-PASTICHE.selectionPrompt"), 1, 1),
             c => c != cardPlay.Card,
             this);
 

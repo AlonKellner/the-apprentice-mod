@@ -1,0 +1,17 @@
+using System.Collections.Generic;
+using BaseLib.Abstracts;
+using MegaCrit.Sts2.Core.Entities.Cards;
+using MegaCrit.Sts2.Core.Models;
+
+namespace TheApprentice.TheApprenticeCode.Cards.Modifiers;
+
+public class SpentModifier : CardModifier
+{
+    public const string ModifierId = "TheApprentice:Spent";
+
+    public override bool TryModifyKeywordsInCombat(CardModel card, ISet<CardKeyword> keywords)
+    {
+        if (card == Owner) { keywords.Add(CardKeyword.Unplayable); return true; }
+        return false;
+    }
+}

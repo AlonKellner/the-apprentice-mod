@@ -30,5 +30,6 @@ public class JustAsPlanned : ApprenticeCard
             CardModifier.DirectModifiers(card).Remove(mod);
             await CardCmd.AutoPlay(context, card, cardPlay.Target, AutoPlayType.None, false, false);
         }
+        PlannedModifier.InvokeChanged();
     }
 }

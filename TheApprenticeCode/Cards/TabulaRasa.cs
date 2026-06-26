@@ -24,6 +24,7 @@ public class TabulaRasa : ApprenticeCard
         foreach (var card in player.Piles.SelectMany(p => p.Cards).ToList())
             if (card.TryGetModifier<PlannedModifier>(out var mod))
                 CardModifier.DirectModifiers(card).Remove(mod);
+        PlannedModifier.InvokeChanged();
 
         if (IsUpgraded)
             await CommonActions.Draw(cardPlay.Card, context);

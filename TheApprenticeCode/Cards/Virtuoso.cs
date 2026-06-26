@@ -14,13 +14,12 @@ public class Virtuoso : ApprenticeCard
 
     public Virtuoso() : base(2, CardType.Power, CardRarity.Rare, TargetType.None)
     {
-        WithKeyword(CardKeyword.Innate, ConstructedCardModel.UpgradeType.Add);
-        WithTip(ApprenticeKeywords.Planned);
+        WithTip(CardKeyword.Unplayable);
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
         var creature = cardPlay.Card.Owner.Creature;
-        await PowerCmd.Apply<VirtuosoPower>(context, creature, 1m, creature, cardPlay.Card, false);
+        await PowerCmd.Apply<VirtuosoPower>(context, creature, IsUpgraded ? 1m : 0m, creature, cardPlay.Card, false);
     }
 }

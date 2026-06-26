@@ -1,5 +1,8 @@
 using System.Linq;
 using System.Reflection;
+using BaseLib.Abstracts;
+using BaseLib.Extensions;
+using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Models;
 using TheApprentice.TheApprenticeCode.Cards;
 using TheApprentice.TheApprenticeCode.Cards.Modifiers;
@@ -39,7 +42,7 @@ public class PlannedModifierTests
         var mod = new PlannedModifier { SequenceIndex = 0 };
         var args = new object?[] { null, "base" };
         typeof(PlannedModifier).GetMethod("ModifyDescriptionPost")!.Invoke(mod, args);
-        Assert.Contains("[gold]Planned[/gold]", (string)args[1]!);
+        Assert.Contains("[gold]Planned #", (string)args[1]!);
     }
 
     [Fact]
@@ -111,5 +114,45 @@ public class PlannedModifierTests
         var args = new object?[] { null, "" };
         typeof(PlannedModifier).GetMethod("ModifyDescriptionPost")!.Invoke(mod, args);
         Assert.Contains("#2", (string)args[1]!);
+    }
+
+    [Fact]
+    public void Remove_IsStaticMethod()
+    {
+        var method = typeof(PlannedModifier).GetMethod(
+            "Remove", BindingFlags.Public | BindingFlags.Static);
+        Assert.NotNull(method);
+    }
+
+    [Fact]
+    public void Remove_ClearsModifierFromCard()
+    {
+        var card = new ApprenticeStrike();
+        var mod = new PlannedModifier { SequenceIndex = 0 };
+        CardModifier.DirectModifiers(card).Add(mod);
+
+        PlannedModifier.Remove(card, Enumerable.Empty<CardModel>());
+
+        Assert.False(card.TryGetModifier<PlannedModifier>(out _));
+    }
+
+    [Fact]
+    public void Remove_FiresChangedEvent()
+    {
+        var card = new ApprenticeStrike();
+        var mod = new PlannedModifier { SequenceIndex = 0 };
+        CardModifier.DirectModifiers(card).Add(mod);
+
+        bool fired = false;
+        PlannedModifier.Changed += () => fired = true;
+        try
+        {
+            PlannedModifier.Remove(card, Enumerable.Empty<CardModel>());
+            Assert.True(fired);
+        }
+        finally
+        {
+            PlannedModifier.Changed -= () => fired = true;
+        }
     }
 }

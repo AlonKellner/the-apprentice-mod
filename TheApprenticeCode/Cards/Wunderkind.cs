@@ -1,7 +1,9 @@
 using BaseLib.Abstracts;
+using BaseLib.Utils;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.HoverTips;
 using TheApprentice.TheApprenticeCode.Cards.Powers;
 
 namespace TheApprentice.TheApprenticeCode.Cards;
@@ -13,8 +15,8 @@ public class Wunderkind : ApprenticeCard
     public Wunderkind() : base(2, CardType.Power, CardRarity.Rare, TargetType.None)
     {
         WithCostUpgradeBy(-1);
-        WithTip(typeof(Dream));
-        WithTip(typeof(Ambition));
+        WithTip(new TooltipSource(_ => HoverTipFactory.FromCard<Dream>(upgrade: true)));
+        WithTip(new TooltipSource(_ => HoverTipFactory.FromCard<Ambition>(upgrade: true)));
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)

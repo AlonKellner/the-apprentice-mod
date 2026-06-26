@@ -13,9 +13,16 @@ public class ClearMind : ApprenticeCard
 {
     public const string CardId = "TheApprentice:ClearMind";
 
-    public ClearMind() : base(1, CardType.Skill, CardRarity.Rare, TargetType.None)
+    public ClearMind() : base(1, CardType.Attack, CardRarity.Rare, TargetType.AllEnemies)
     {
-        WithKeyword(CardKeyword.Exhaust, ConstructedCardModel.UpgradeType.Remove);
+        WithDamage(2);
+        WithKeyword(CardKeyword.Exhaust, ConstructedCardModel.UpgradeType.None);
+    }
+
+    protected override void OnUpgrade()
+    {
+        base.OnUpgrade();
+        DynamicVars.Damage.UpgradeValueBy(1m);
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
@@ -28,5 +35,10 @@ public class ClearMind : ApprenticeCard
 
         foreach (var card in toExhaust)
             await CardCmd.Exhaust(context, card, false, false);
+
+        if (toExhaust.Count > 0)
+            await CommonActions.CardAttack(cardPlay.Card, cardPlay, toExhaust.Count)
+                .TargetingAllOpponents(CombatState!)
+                .Execute(context);
     }
 }

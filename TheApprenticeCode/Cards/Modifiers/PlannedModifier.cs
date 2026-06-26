@@ -72,6 +72,16 @@ public class PlannedModifier : CardModifier
         Changed?.Invoke();
     }
 
+    public static void Remove(CardModel card, IEnumerable<CardModel> allCards)
+    {
+        if (card.TryGetModifier<PlannedModifier>(out var mod))
+            CardModifier.DirectModifiers(card).Remove(mod);
+        RefreshVisualIndices(allCards);
+        Changed?.Invoke();
+    }
+
+    public static void InvokeChanged() => Changed?.Invoke();
+
     public override bool TryModifyKeywordsInCombat(CardModel card, ISet<CardKeyword> keywords)
     {
         if (card == Owner)
@@ -88,7 +98,7 @@ public class PlannedModifier : CardModifier
     public override void ModifyDescriptionPost(Creature? creature, ref string description)
     {
         int display = VisualIndex > 0 ? VisualIndex : SequenceIndex + 1;
-        description += $"\n[gold]Planned[/gold] #{display}.";
+        description += $"\n[gold]Planned #{display}[/gold].";
     }
 
     public override void StoreSaveData(ModifierSave save)
