@@ -34,12 +34,12 @@
   "THEAPPRENTICE-EPIPHANY.selectionPrompt": "Choose a card to make Planned.",
 
   "THEAPPRENTICE-GROOVE.title": "Groove",
-  "THEAPPRENTICE-GROOVE.description": "Deal {Damage:diff()} damage for each [gold]Unplayable[/gold] card you have.",
-  "THEAPPRENTICE-GROOVE+.description": "Deal {Damage:diff()} damage for each [gold]Unplayable[/gold] card you have.",
+  "THEAPPRENTICE-GROOVE.description": "Deal {Damage:diff()} damage for each [gold]Planned[/gold] card.",
+  "THEAPPRENTICE-GROOVE+.description": "Deal {Damage:diff()} damage for each [gold]Planned[/gold] card.",
 
   "THEAPPRENTICE-OVERTHINKING.title": "Overthinking",
-  "THEAPPRENTICE-OVERTHINKING.description": "Gain {Block:diff()} block for each [gold]Unplayable[/gold] card you have.",
-  "THEAPPRENTICE-OVERTHINKING+.description": "Gain {Block:diff()} block for each [gold]Unplayable[/gold] card you have.",
+  "THEAPPRENTICE-OVERTHINKING.description": "Gain {Block:diff()} [gold]Block[/gold] for each [gold]Planned[/gold] card.",
+  "THEAPPRENTICE-OVERTHINKING+.description": "Gain {Block:diff()} [gold]Block[/gold] for each [gold]Planned[/gold] card.",
 
   "THEAPPRENTICE-CREATIVE_BLOCK.title": "Creative Block",
   "THEAPPRENTICE-CREATIVE_BLOCK.description": "Gain {Block:diff()} block. If you have no [gold]Planned[/gold] cards, gain {Block:diff()} additional block.",
@@ -188,6 +188,6 @@
   "THEAPPRENTICE-CONDUCTOR+.description": "At the start of each turn, add 1 [gold]Potential+[/gold] to your hand.",
 
   "THEAPPRENTICE-BLUEPRINT.title": "Blueprint",
-  "THEAPPRENTICE-BLUEPRINT.description": "Add 1 [gold]Dream[/gold] and 1 [gold]Ambition[/gold] per [gold]Unplayable[/gold] card you have.",
-  "THEAPPRENTICE-BLUEPRINT+.description": "Add 1 [gold]Dream+[/gold] and 1 [gold]Ambition+[/gold] per [gold]Unplayable[/gold] card you have."
+  "THEAPPRENTICE-BLUEPRINT.description": "Add 1 [gold]Dream[/gold] and 1 [gold]Ambition[/gold] per [gold]Unplayable[/gold] card in your hand.",
+  "THEAPPRENTICE-BLUEPRINT+.description": "Add 1 [gold]Dream+[/gold] and 1 [gold]Ambition+[/gold] per [gold]Unplayable[/gold] card in your hand."
 }

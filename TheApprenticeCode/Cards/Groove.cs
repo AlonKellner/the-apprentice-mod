@@ -4,6 +4,7 @@ using BaseLib.Extensions;
 using BaseLib.Utils;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using TheApprentice.TheApprenticeCode.Cards.Modifiers;
 using TheApprentice.TheApprenticeCode.Extensions;
 
 namespace TheApprentice.TheApprenticeCode.Cards;
@@ -15,7 +16,7 @@ public class Groove : ApprenticeCard
     public Groove() : base(2, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
     {
         WithDamage(5);
-        WithTip(CardKeyword.Unplayable);
+        WithTip(ApprenticeKeywords.Planned);
     }
 
     protected override void OnUpgrade()
@@ -27,7 +28,7 @@ public class Groove : ApprenticeCard
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
         var player = cardPlay.Card.Owner;
-        int count = player.Piles.SelectMany(p => p.Cards).Count(c => c.IsUnplayable());
+        int count = player.Piles.SelectMany(p => p.Cards).Count(c => c.TryGetModifier<PlannedModifier>(out _));
         if (count > 0)
             await CommonActions.CardAttack(cardPlay.Card, cardPlay, count).Execute(context);
     }

@@ -23,7 +23,10 @@ public class Blueprint : ApprenticeCard
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
         var player = cardPlay.Card.Owner;
-        int unplayableCount = player.Piles.SelectMany(p => p.Cards).Count(c => c.IsUnplayable());
+        int unplayableCount = player.Piles
+            .Where(p => p.Type == PileType.Hand)
+            .SelectMany(p => p.Cards)
+            .Count(c => c.IsUnplayable());
         await DreamsAndAmbitions.AddDreams(player, CombatState!, unplayableCount, IsUpgraded);
         await DreamsAndAmbitions.AddAmbitions(player, CombatState!, unplayableCount, IsUpgraded);
     }
