@@ -150,7 +150,12 @@ public class TooltipConsistencyTests
         { "Unvulnerable",  typeof(UnvulnerablePower) },
     };
 
-    // Forward direction: if a description mentions [gold]X[/gold], the card must have a tip for X's PowerModel.
+    // Forward direction: if the BASE description mentions [gold]X[/gold], the card must have an
+    // always-present typeof(T) tip for X's PowerModel.
+    //
+    // Upgrade-only keywords (appearing only in +.description) are expected to be covered by
+    // conditional lambda tips — those are not detectable by GetCapturedType reflection and are
+    // intentionally excluded from this automated check.
     [Fact]
     public void AllCards_PowerKeywordsInDescription_HaveMatchingHoverTips()
     {
@@ -164,25 +169,28 @@ public class TooltipConsistencyTests
             var tips = GetHoverTips(card);
             var locPrefix = ToLocKeyPrefix(cardType);
 
-            json.TryGetValue($"{locPrefix}.description",  out var baseDesc);
-            json.TryGetValue($"{locPrefix}+.description", out var upgDesc);
+            json.TryGetValue($"{locPrefix}.description", out var baseDesc);
 
             foreach (var (keyword, powerType) in PowerKeywordToType)
             {
                 var tag = $"[gold]{keyword}[/gold]";
-                bool mentioned = baseDesc?.Contains(tag) == true || upgDesc?.Contains(tag) == true;
-                if (!mentioned) continue;
+                if (baseDesc?.Contains(tag) != true) continue;
 
                 if (!HasTipForType(tips, powerType))
-                    violations.Add($"{cardType.Name}: mentions '{keyword}' but has no {powerType.Name} hover tip");
+                    violations.Add($"{cardType.Name}: base description mentions '{keyword}' but has no {powerType.Name} hover tip");
             }
         }
 
         Assert.Empty(violations);
     }
 
-    // Reverse direction: if a card has a power tip, its description must mention that keyword.
-    // Guards against dead/dangling tooltips.
+    // Reverse direction: if a card has an always-present typeof(T) power tip, its keyword must
+    // appear in the BASE description. Always-present tips show on the unupgraded card, so their
+    // keywords must be explained in the base description — not just the upgrade description.
+    //
+    // Upgrade-only keywords must use conditional lambda tips (not typeof(T)) so this test won't
+    // flag them. Guards against dangling tooltips like a VulnerablePower tip when the base
+    // description only mentions Weak.
     [Fact]
     public void AllCards_PowerHoverTips_OnlyAddedWhenKeywordAppearsInDescription()
     {
@@ -199,8 +207,7 @@ public class TooltipConsistencyTests
             var tips = GetHoverTips(card);
             var locPrefix = ToLocKeyPrefix(cardType);
 
-            json.TryGetValue($"{locPrefix}.description",  out var baseDesc);
-            json.TryGetValue($"{locPrefix}+.description", out var upgDesc);
+            json.TryGetValue($"{locPrefix}.description", out var baseDesc);
 
             foreach (var tip in tips)
             {
@@ -208,13 +215,25 @@ public class TooltipConsistencyTests
                 if (capturedType == null || !typeToKeyword.TryGetValue(capturedType, out var keyword)) continue;
 
                 var tag = $"[gold]{keyword}[/gold]";
-                bool mentioned = baseDesc?.Contains(tag) == true || upgDesc?.Contains(tag) == true;
-                if (!mentioned)
-                    violations.Add($"{cardType.Name}: has {capturedType.Name} hover tip but description never mentions '{keyword}'");
+                if (baseDesc?.Contains(tag) != true)
+                    violations.Add($"{cardType.Name}: has always-present {capturedType.Name} tip but base description never mentions '{keyword}' (use a conditional lambda for upgrade-only keywords)");
             }
         }
 
         Assert.Empty(violations);
+    }
+
+    // Spot-check: Fortitude's VulnerablePower tip must be upgrade-only (conditional lambda),
+    // because the base description only mentions Weak — not Vulnerable.
+    [Fact]
+    public void Fortitude_BaseCard_HasNoAlwaysPresentVulnerablePowerTip()
+    {
+        var tips = GetHoverTips(new Fortitude());
+        Assert.False(HasTipForType(tips, typeof(VulnerablePower)),
+            "Fortitude base card must not carry an always-present VulnerablePower tip — " +
+            "base description only mentions Weak. Use a conditional lambda for the upgraded version.");
+        Assert.True(HasTipForType(tips, typeof(WeakPower)),     "Fortitude missing WeakPower tip");
+        Assert.True(HasTipForType(tips, typeof(StrengthPower)), "Fortitude missing StrengthPower tip");
     }
 
     // Spot-checks for key EE cards — these fail with the card name in the message for fast diagnosis.
@@ -249,13 +268,16 @@ public class TooltipConsistencyTests
     }
 
     [Fact]
-    public void TrueStrength_HasAllFivePowerTips()
+    public void TrueStrength_HasFourAlwaysPresentTipsPlusUpgradeOnlyStrength()
     {
         var tips = GetHoverTips(new TrueStrength());
         Assert.True(HasTipForType(tips, typeof(WeakPower)),         "TrueStrength missing WeakPower tip");
         Assert.True(HasTipForType(tips, typeof(VulnerablePower)),   "TrueStrength missing VulnerablePower tip");
         Assert.True(HasTipForType(tips, typeof(UnweakPower)),       "TrueStrength missing UnweakPower tip");
         Assert.True(HasTipForType(tips, typeof(UnvulnerablePower)), "TrueStrength missing UnvulnerablePower tip");
-        Assert.True(HasTipForType(tips, typeof(StrengthPower)),     "TrueStrength missing StrengthPower tip");
+        // Strength conversion is upgrade-only; StrengthPower tip must be a conditional lambda.
+        Assert.False(HasTipForType(tips, typeof(StrengthPower)),
+            "TrueStrength base card must not carry an always-present StrengthPower tip — " +
+            "base description doesn't mention Strength. Use a conditional lambda.");
     }
 }

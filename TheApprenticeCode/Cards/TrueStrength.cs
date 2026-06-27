@@ -1,3 +1,4 @@
+using BaseLib.Utils;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
@@ -16,7 +17,9 @@ public class TrueStrength : ApprenticeCard
         WithTip(typeof(VulnerablePower));
         WithTip(typeof(UnweakPower));
         WithTip(typeof(UnvulnerablePower));
-        WithTip(typeof(StrengthPower));
+        // Strength conversion only happens on upgrade — use conditional lambda.
+        TooltipSource upgradedStr = typeof(StrengthPower);
+        WithTip(new TooltipSource(card => card.IsUpgraded ? upgradedStr.Tip(card) : null!));
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
