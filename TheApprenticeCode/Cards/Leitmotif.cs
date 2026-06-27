@@ -12,26 +12,33 @@ using TheApprentice.TheApprenticeCode.Extensions;
 
 namespace TheApprentice.TheApprenticeCode.Cards;
 
-public class MagnumOpus : ApprenticeCard
+public class Leitmotif : ApprenticeCard
 {
-    public const string CardId = "TheApprentice:MagnumOpus";
+    public const string CardId = "TheApprentice:Leitmotif";
 
-    public MagnumOpus() : base(2, CardType.Skill, CardRarity.Rare, TargetType.None)
+    public Leitmotif() : base(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
     {
+        WithDamage(8);
         WithTip(ApprenticeKeywords.Planned);
+    }
+
+    protected override void OnUpgrade()
+    {
+        base.OnUpgrade();
+        DynamicVars.Damage.UpgradeValueBy(3m);
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
         var player = cardPlay.Card.Owner;
-        int maxCards = IsUpgraded ? 4 : 3;
+        await CommonActions.CardAttack(cardPlay.Card, cardPlay).Execute(context);
 
         var selected = await MultiPileCardSelect.Select(
             context, player,
             new CardSelectorPrefs(
-                new LocString("cards", "THEAPPRENTICE-MAGNUM_OPUS.selectionPrompt"), 1, maxCards),
+                new LocString("cards", "THEAPPRENTICE-LEITMOTIF.selectionPrompt"), 0, 1),
             c => PlannedModifier.CanApplyTo(c),
-            PileType.Draw);
+            PileType.Discard);
 
         if (selected == null) return;
         var allCards = player.Piles.SelectMany(p => p.Cards);

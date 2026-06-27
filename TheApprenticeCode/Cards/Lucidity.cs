@@ -1,11 +1,13 @@
 using System.Linq;
 using BaseLib.Abstracts;
+using BaseLib.Extensions;
 using BaseLib.Utils;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Nodes.CommonUi;
+using TheApprentice.TheApprenticeCode.Cards.Modifiers;
 
 namespace TheApprentice.TheApprenticeCode.Cards;
 
@@ -15,17 +17,23 @@ public class Lucidity : ApprenticeCard
 
     public Lucidity() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.None)
     {
-        WithTip(new TooltipSource(_ => HoverTipFactory.FromCard<Dream>(upgrade: true)));
+        WithTip(new TooltipSource(card => HoverTipFactory.FromCard<Dream>(upgrade: card.IsUpgraded)));
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
         var player = cardPlay.Card.Owner;
-        int toAdd = IsUpgraded ? 2 : 1;
-        await DreamsAndAmbitions.AddDreams(player, CombatState!, toAdd, upgraded: true);
+        await DreamsAndAmbitions.AddDreams(player, CombatState!, 1);
 
-        var hand = player.Piles.Where(p => p.Type == PileType.Hand).SelectMany(p => p.Cards);
-        foreach (var card in hand.Where(c => c is Dream && !c.IsUpgraded).ToList())
-            CardCmd.Upgrade(card, CardPreviewStyle.None);
+        var hand = player.Piles.FirstOrDefault(p => p.Type == PileType.Hand);
+        if (hand == null) return;
+
+        foreach (var card in hand.Cards.Where(c => c is Dream).ToList())
+            if (card.TryGetModifier<SpentModifier>(out var mod))
+                CardModifier.DirectModifiers(card).Remove(mod);
+
+        if (IsUpgraded)
+            foreach (var card in hand.Cards.Where(c => c is Dream && !c.IsUpgraded).ToList())
+                CardCmd.Upgrade(card, CardPreviewStyle.None);
     }
 }

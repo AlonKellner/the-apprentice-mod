@@ -12,7 +12,7 @@ public class Conductor : ApprenticeCard
 {
     public const string CardId = "TheApprentice:Conductor";
 
-    public Conductor() : base(1, CardType.Power, CardRarity.Uncommon, TargetType.None)
+    public Conductor() : base(1, CardType.Power, CardRarity.Rare, TargetType.None)
     {
         WithTip(new TooltipSource(card => HoverTipFactory.FromCard<Potential>(upgrade: card.IsUpgraded)));
     }

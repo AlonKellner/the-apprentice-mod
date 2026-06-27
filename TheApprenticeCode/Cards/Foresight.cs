@@ -12,11 +12,11 @@ using TheApprentice.TheApprenticeCode.Extensions;
 
 namespace TheApprentice.TheApprenticeCode.Cards;
 
-public class MagnumOpus : ApprenticeCard
+public class Foresight : ApprenticeCard
 {
-    public const string CardId = "TheApprentice:MagnumOpus";
+    public const string CardId = "TheApprentice:Foresight";
 
-    public MagnumOpus() : base(2, CardType.Skill, CardRarity.Rare, TargetType.None)
+    public Foresight() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.None)
     {
         WithTip(ApprenticeKeywords.Planned);
     }
@@ -24,18 +24,23 @@ public class MagnumOpus : ApprenticeCard
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
         var player = cardPlay.Card.Owner;
-        int maxCards = IsUpgraded ? 4 : 3;
 
         var selected = await MultiPileCardSelect.Select(
             context, player,
             new CardSelectorPrefs(
-                new LocString("cards", "THEAPPRENTICE-MAGNUM_OPUS.selectionPrompt"), 1, maxCards),
+                new LocString("cards", "THEAPPRENTICE-FORESIGHT.selectionPrompt"), 0, 1),
             c => PlannedModifier.CanApplyTo(c),
             PileType.Draw);
 
-        if (selected == null) return;
-        var allCards = player.Piles.SelectMany(p => p.Cards);
-        foreach (var card in selected)
-            PlannedModifier.Apply(card, allCards);
+        if (selected != null)
+        {
+            var allCards = player.Piles.SelectMany(p => p.Cards);
+            foreach (var card in selected)
+                PlannedModifier.Apply(card, allCards);
+        }
+
+        int draws = IsUpgraded ? 2 : 1;
+        for (int i = 0; i < draws; i++)
+            await CommonActions.Draw(cardPlay.Card, context);
     }
 }

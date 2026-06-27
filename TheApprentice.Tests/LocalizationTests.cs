@@ -37,10 +37,10 @@ public class LocalizationTests
             "THEAPPRENTICE-REALIZE.title", "THEAPPRENTICE-REALIZE.description", "THEAPPRENTICE-REALIZE+.description", "THEAPPRENTICE-REALIZE.selectionPrompt",
             "THEAPPRENTICE-EPIPHANY.title", "THEAPPRENTICE-EPIPHANY.description", "THEAPPRENTICE-EPIPHANY+.description", "THEAPPRENTICE-EPIPHANY.selectionPrompt",
             "THEAPPRENTICE-GROOVE.title", "THEAPPRENTICE-GROOVE.description", "THEAPPRENTICE-GROOVE+.description",
-            "THEAPPRENTICE-OVERTHINKING.title", "THEAPPRENTICE-OVERTHINKING.description", "THEAPPRENTICE-OVERTHINKING+.description",
+            "THEAPPRENTICE-IMPROVISE.title", "THEAPPRENTICE-IMPROVISE.description", "THEAPPRENTICE-IMPROVISE+.description",
             "THEAPPRENTICE-NEW_PERSPECTIVE.title", "THEAPPRENTICE-NEW_PERSPECTIVE.description", "THEAPPRENTICE-NEW_PERSPECTIVE+.description",
             "THEAPPRENTICE-CREATIVE_BLOCK.title", "THEAPPRENTICE-CREATIVE_BLOCK.description", "THEAPPRENTICE-CREATIVE_BLOCK+.description",
-            "THEAPPRENTICE-REHEARSAL.title", "THEAPPRENTICE-REHEARSAL.description", "THEAPPRENTICE-REHEARSAL+.description", "THEAPPRENTICE-REHEARSAL.selectionPrompt",
+            "THEAPPRENTICE-REHEARSAL.title", "THEAPPRENTICE-REHEARSAL.description", "THEAPPRENTICE-REHEARSAL+.description",
             "THEAPPRENTICE-CLEAR_MIND.title", "THEAPPRENTICE-CLEAR_MIND.description", "THEAPPRENTICE-CLEAR_MIND+.description",
             "THEAPPRENTICE-TABULA_RASA.title", "THEAPPRENTICE-TABULA_RASA.description", "THEAPPRENTICE-TABULA_RASA+.description",
             "THEAPPRENTICE-TRANSPOSE.title", "THEAPPRENTICE-TRANSPOSE.description", "THEAPPRENTICE-TRANSPOSE+.description",
@@ -53,6 +53,12 @@ public class LocalizationTests
             "THEAPPRENTICE-ENCORE.title", "THEAPPRENTICE-ENCORE.description", "THEAPPRENTICE-ENCORE+.description",
             "THEAPPRENTICE-VIRTUOSO.title", "THEAPPRENTICE-VIRTUOSO.description", "THEAPPRENTICE-VIRTUOSO+.description",
             "THEAPPRENTICE-MAGNUM_OPUS.title", "THEAPPRENTICE-MAGNUM_OPUS.description", "THEAPPRENTICE-MAGNUM_OPUS+.description", "THEAPPRENTICE-MAGNUM_OPUS.selectionPrompt",
+            "THEAPPRENTICE-PREFACE.title", "THEAPPRENTICE-PREFACE.description", "THEAPPRENTICE-PREFACE+.description",
+            "THEAPPRENTICE-LEITMOTIF.title", "THEAPPRENTICE-LEITMOTIF.description", "THEAPPRENTICE-LEITMOTIF+.description", "THEAPPRENTICE-LEITMOTIF.selectionPrompt",
+            "THEAPPRENTICE-DRAFT.title", "THEAPPRENTICE-DRAFT.description", "THEAPPRENTICE-DRAFT+.description",
+            "THEAPPRENTICE-FORESIGHT.title", "THEAPPRENTICE-FORESIGHT.description", "THEAPPRENTICE-FORESIGHT+.description", "THEAPPRENTICE-FORESIGHT.selectionPrompt",
+            "THEAPPRENTICE-OVERTURE.title", "THEAPPRENTICE-OVERTURE.description", "THEAPPRENTICE-OVERTURE+.description",
+            "THEAPPRENTICE-MAESTRO.title", "THEAPPRENTICE-MAESTRO.description", "THEAPPRENTICE-MAESTRO+.description",
         ];
         var missing = expectedKeys.Where(k => !dict.ContainsKey(k) || string.IsNullOrWhiteSpace(dict[k])).ToList();
         Assert.True(missing.Count == 0, $"Missing or empty localization keys:\n{string.Join("\n", missing)}");
@@ -86,6 +92,11 @@ public class LocalizationTests
             "THEAPPRENTICE-PRODIGY.title", "THEAPPRENTICE-PRODIGY.description", "THEAPPRENTICE-PRODIGY+.description",
             "THEAPPRENTICE-CONDUCTOR.title", "THEAPPRENTICE-CONDUCTOR.description", "THEAPPRENTICE-CONDUCTOR+.description",
             "THEAPPRENTICE-BLUEPRINT.title", "THEAPPRENTICE-BLUEPRINT.description", "THEAPPRENTICE-BLUEPRINT+.description",
+            "THEAPPRENTICE-SOLACE.title", "THEAPPRENTICE-SOLACE.description", "THEAPPRENTICE-SOLACE+.description",
+            "THEAPPRENTICE-CHORUS.title", "THEAPPRENTICE-CHORUS.description", "THEAPPRENTICE-CHORUS+.description",
+            "THEAPPRENTICE-WISHFUL.title", "THEAPPRENTICE-WISHFUL.description", "THEAPPRENTICE-WISHFUL+.description",
+            "THEAPPRENTICE-PASSION.title", "THEAPPRENTICE-PASSION.description", "THEAPPRENTICE-PASSION+.description",
+            "THEAPPRENTICE-CRESCENDO.title", "THEAPPRENTICE-CRESCENDO.description", "THEAPPRENTICE-CRESCENDO+.description",
         ];
         var missing = expectedKeys.Where(k => !dict.ContainsKey(k) || string.IsNullOrWhiteSpace(dict[k])).ToList();
         Assert.True(missing.Count == 0, $"Missing or empty D&A localization keys:\n{string.Join("\n", missing)}");
@@ -122,6 +133,23 @@ public class LocalizationTests
         ];
         var missing = expectedKeys.Where(k => !dict.ContainsKey(k) || string.IsNullOrWhiteSpace(dict[k])).ToList();
         Assert.True(missing.Count == 0, $"Missing or empty Emotional Expression localization keys:\n{string.Join("\n", missing)}");
+    }
+
+    [Fact]
+    public void CardsJson_HasAllCrossoverCardKeys()
+    {
+        var dict = LoadJson("../TheApprentice/localization/eng/cards.json");
+        string[] expectedKeys = [
+            "THEAPPRENTICE-DESTINED.title", "THEAPPRENTICE-DESTINED.description", "THEAPPRENTICE-DESTINED+.description",
+            "THEAPPRENTICE-FLOURISH.title", "THEAPPRENTICE-FLOURISH.description", "THEAPPRENTICE-FLOURISH+.description",
+            "THEAPPRENTICE-RESTRAINED_STRIKE.title", "THEAPPRENTICE-RESTRAINED_STRIKE.description", "THEAPPRENTICE-RESTRAINED_STRIKE+.description",
+            "THEAPPRENTICE-ACHING_WISH.title", "THEAPPRENTICE-ACHING_WISH.description", "THEAPPRENTICE-ACHING_WISH+.description",
+            "THEAPPRENTICE-DESIRE.title", "THEAPPRENTICE-DESIRE.description", "THEAPPRENTICE-DESIRE+.description",
+            "THEAPPRENTICE-CATHARTIC_VISION.title", "THEAPPRENTICE-CATHARTIC_VISION.description", "THEAPPRENTICE-CATHARTIC_VISION+.description",
+            "THEAPPRENTICE-PROPHECY.title", "THEAPPRENTICE-PROPHECY.description", "THEAPPRENTICE-PROPHECY+.description",
+        ];
+        var missing = expectedKeys.Where(k => !dict.ContainsKey(k) || string.IsNullOrWhiteSpace(dict[k])).ToList();
+        Assert.True(missing.Count == 0, $"Missing or empty crossover localization keys:\n{string.Join("\n", missing)}");
     }
 
     [Fact]

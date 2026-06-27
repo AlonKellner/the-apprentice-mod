@@ -10,13 +10,7 @@ public class Ignition : ApprenticeCard
 
     public Ignition() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.None)
     {
-        WithCards(2);
         WithTip(typeof(Potential));
-    }
-
-    protected override void OnUpgrade()
-    {
-        DynamicVars.Cards.UpgradeValueBy(1m);
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)

@@ -1,0 +1,27 @@
+using BaseLib.Abstracts;
+using BaseLib.Utils;
+using MegaCrit.Sts2.Core.Entities.Cards;
+using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using TheApprentice.TheApprenticeCode.Cards.Powers;
+
+namespace TheApprentice.TheApprenticeCode.Cards;
+
+public class CatharticVision : ApprenticeCard
+{
+    public const string CardId = "TheApprentice:CatharticVision";
+
+    public CatharticVision() : base(1, CardType.Skill, CardRarity.Rare, TargetType.None)
+    {
+        WithKeyword(CardKeyword.Exhaust, ConstructedCardModel.UpgradeType.None);
+        WithTip(typeof(UnweakPower));
+        WithTip(typeof(UnvulnerablePower));
+    }
+
+    protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
+    {
+        var creature = cardPlay.Card.Owner.Creature;
+        int stacks = IsUpgraded ? 2 : 1;
+        await EmotionalExpression.ApplyUnweak(context, creature, stacks, cardPlay.Card);
+        await EmotionalExpression.ApplyUnvulnerable(context, creature, stacks, cardPlay.Card);
+    }
+}

@@ -6,26 +6,28 @@ using MegaCrit.Sts2.Core.HoverTips;
 
 namespace TheApprentice.TheApprenticeCode.Cards;
 
-public class Longing : ApprenticeCard
+public class Passion : ApprenticeCard
 {
-    public const string CardId = "TheApprentice:Longing";
+    public const string CardId = "TheApprentice:Passion";
 
-    public Longing() : base(1, CardType.Skill, CardRarity.Common, TargetType.None)
+    public Passion() : base(2, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
     {
-        WithBlock(5);
+        WithDamage(8);
         WithTip(new TooltipSource(card => HoverTipFactory.FromCard<Dream>(upgrade: card.IsUpgraded)));
     }
 
     protected override void OnUpgrade()
     {
         base.OnUpgrade();
-        DynamicVars.Block.UpgradeValueBy(3m);
+        DynamicVars.Damage.UpgradeValueBy(2m);
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
         var player = cardPlay.Card.Owner;
-        await CommonActions.CardBlock(cardPlay.Card, cardPlay);
-        await DreamsAndAmbitions.AddDreams(player, CombatState!, 1, IsUpgraded);
+        await CommonActions.CardAttack(cardPlay.Card, cardPlay).Execute(context);
+        await CommonActions.CardAttack(cardPlay.Card, cardPlay).Execute(context);
+        await DreamsAndAmbitions.AddDreams(player, CombatState!, 2);
+        await DreamsAndAmbitions.AddAmbitions(player, CombatState!, 2);
     }
 }

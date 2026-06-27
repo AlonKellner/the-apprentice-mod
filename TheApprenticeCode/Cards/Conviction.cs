@@ -12,7 +12,7 @@ public class Conviction : ApprenticeCard
 {
     public const string CardId = "TheApprentice:Conviction";
 
-    public Conviction() : base(1, CardType.Power, CardRarity.Common, TargetType.None)
+    public Conviction() : base(1, CardType.Power, CardRarity.Uncommon, TargetType.None)
     {
         WithTip(new TooltipSource(card => HoverTipFactory.FromCard<Ambition>(upgrade: card.IsUpgraded)));
     }

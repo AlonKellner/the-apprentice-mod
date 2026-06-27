@@ -1,9 +1,13 @@
+using System.Collections.Generic;
 using System.Linq;
 using BaseLib.Abstracts;
 using BaseLib.Utils;
+using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
+using MegaCrit.Sts2.Core.Models;
+using MegaCrit.Sts2.Core.Nodes.CommonUi;
 using TheApprentice.TheApprenticeCode.Extensions;
 
 namespace TheApprentice.TheApprenticeCode.Cards;
@@ -14,7 +18,6 @@ public class Blueprint : ApprenticeCard
 
     public Blueprint() : base(1, CardType.Skill, CardRarity.Rare, TargetType.None)
     {
-        WithKeyword(CardKeyword.Exhaust, ConstructedCardModel.UpgradeType.None);
         WithTip(CardKeyword.Unplayable);
         WithTip(new TooltipSource(card => HoverTipFactory.FromCard<Dream>(upgrade: card.IsUpgraded)));
         WithTip(new TooltipSource(card => HoverTipFactory.FromCard<Ambition>(upgrade: card.IsUpgraded)));
@@ -23,11 +26,27 @@ public class Blueprint : ApprenticeCard
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
         var player = cardPlay.Card.Owner;
-        int unplayableCount = player.Piles
-            .Where(p => p.Type == PileType.Hand)
-            .SelectMany(p => p.Cards)
-            .Count(c => c.IsUnplayable());
-        await DreamsAndAmbitions.AddDreams(player, CombatState!, unplayableCount, IsUpgraded);
-        await DreamsAndAmbitions.AddAmbitions(player, CombatState!, unplayableCount, IsUpgraded);
+        var hand = player.Piles.FirstOrDefault(p => p.Type == PileType.Hand);
+        if (hand == null) return;
+
+        var toExhaust = hand.Cards
+            .Where(c => c != cardPlay.Card && c.IsUnplayable())
+            .ToList();
+
+        foreach (var card in toExhaust)
+            await CardCmd.Exhaust(context, card, false, false);
+
+        int count = toExhaust.Count;
+        if (count <= 0) return;
+
+        var dreams = new List<CardModel>(count);
+        var ambitions = new List<CardModel>(count);
+        for (int i = 0; i < count; i++)
+        {
+            dreams.Add(CombatState!.CreateCard<Dream>(player));
+            ambitions.Add(CombatState!.CreateCard<Ambition>(player));
+        }
+        await CardPileCmd.AddGeneratedCardsToCombat(dreams, PileType.Draw, player);
+        await CardPileCmd.AddGeneratedCardsToCombat(ambitions, PileType.Draw, player);
     }
 }

@@ -12,7 +12,7 @@ public class Lullaby : ApprenticeCard
 {
     public const string CardId = "TheApprentice:Lullaby";
 
-    public Lullaby() : base(1, CardType.Power, CardRarity.Common, TargetType.None)
+    public Lullaby() : base(1, CardType.Power, CardRarity.Uncommon, TargetType.None)
     {
         WithTip(new TooltipSource(card => HoverTipFactory.FromCard<Dream>(upgrade: card.IsUpgraded)));
     }

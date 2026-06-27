@@ -11,7 +11,7 @@ public class Daydream : ApprenticeCard
 
     public Daydream() : base(1, CardType.Skill, CardRarity.Rare, TargetType.None)
     {
-        WithKeyword(CardKeyword.Retain, ConstructedCardModel.UpgradeType.Add);
+        WithKeyword(CardKeyword.Exhaust, ConstructedCardModel.UpgradeType.None);
         WithTip(typeof(Dream));
     }
 

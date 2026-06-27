@@ -20,12 +20,12 @@ public class Potential : ConstructedCardModel
     {
         WithTip(typeof(Dream));
         WithTip(typeof(Ambition));
-        WithCalculatedDamage(2, 2,
+        WithCalculatedDamage(0, 2,
             static (card, _) => card.Owner?.Piles.SelectMany(p => p.Cards).Count(c => c is Ambition) ?? 0m,
-            ValueProp.Move, 2, 2);
-        WithCalculatedBlock("PotBlock", 2, 2,
+            ValueProp.Move, 0, 2);
+        WithCalculatedBlock("PotBlock", 0, 2,
             static (card, _) => card.Owner?.Piles.SelectMany(p => p.Cards).Count(c => c is Dream) ?? 0m,
-            ValueProp.Move, 2, 2);
+            ValueProp.Move, 0, 2);
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)

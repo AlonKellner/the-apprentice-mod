@@ -18,11 +18,11 @@ public class PowerClassTests
     }
 
     [Fact]
-    public void ObsessionPower_IsBuff_Counter()
+    public void ObsessionPower_IsBuff_Single()
     {
         var p = new ObsessionPower();
         Assert.Equal(PowerType.Buff, p.Type);
-        Assert.Equal(PowerStackType.Counter, p.StackType);
+        Assert.Equal(PowerStackType.Single, p.StackType);
     }
 
     [Fact]

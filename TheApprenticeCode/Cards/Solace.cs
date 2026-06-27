@@ -6,14 +6,14 @@ using MegaCrit.Sts2.Core.HoverTips;
 
 namespace TheApprentice.TheApprenticeCode.Cards;
 
-public class Longing : ApprenticeCard
+public class Solace : ApprenticeCard
 {
-    public const string CardId = "TheApprentice:Longing";
+    public const string CardId = "TheApprentice:Solace";
 
-    public Longing() : base(1, CardType.Skill, CardRarity.Common, TargetType.None)
+    public Solace() : base(1, CardType.Skill, CardRarity.Common, TargetType.None)
     {
-        WithBlock(5);
-        WithTip(new TooltipSource(card => HoverTipFactory.FromCard<Dream>(upgrade: card.IsUpgraded)));
+        WithBlock(8);
+        WithTip(new TooltipSource(card => HoverTipFactory.FromCard<Ambition>(upgrade: card.IsUpgraded)));
     }
 
     protected override void OnUpgrade()
@@ -26,6 +26,6 @@ public class Longing : ApprenticeCard
     {
         var player = cardPlay.Card.Owner;
         await CommonActions.CardBlock(cardPlay.Card, cardPlay);
-        await DreamsAndAmbitions.AddDreams(player, CombatState!, 1, IsUpgraded);
+        await DreamsAndAmbitions.AddAmbitions(player, CombatState!, 1);
     }
 }
