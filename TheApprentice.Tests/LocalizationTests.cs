@@ -91,4 +91,69 @@ public class LocalizationTests
         Assert.True(missing.Count == 0, $"Missing or empty D&A localization keys:\n{string.Join("\n", missing)}");
     }
 
+    [Fact]
+    public void CardsJson_HasAllEmotionalExpressionCardKeys()
+    {
+        var dict = LoadJson("../TheApprentice/localization/eng/cards.json");
+        string[] expectedKeys = [
+            "THEAPPRENTICE-LAMENT.title", "THEAPPRENTICE-LAMENT.description", "THEAPPRENTICE-LAMENT+.description",
+            "THEAPPRENTICE-CANTICLE.title", "THEAPPRENTICE-CANTICLE.description", "THEAPPRENTICE-CANTICLE+.description",
+            "THEAPPRENTICE-OUTCRY.title", "THEAPPRENTICE-OUTCRY.description", "THEAPPRENTICE-OUTCRY+.description",
+            "THEAPPRENTICE-CONFESSION.title", "THEAPPRENTICE-CONFESSION.description", "THEAPPRENTICE-CONFESSION+.description",
+            "THEAPPRENTICE-REPOSE.title", "THEAPPRENTICE-REPOSE.description", "THEAPPRENTICE-REPOSE+.description",
+            "THEAPPRENTICE-CANDOR.title", "THEAPPRENTICE-CANDOR.description", "THEAPPRENTICE-CANDOR+.description",
+            "THEAPPRENTICE-INVERSION.title", "THEAPPRENTICE-INVERSION.description", "THEAPPRENTICE-INVERSION+.description",
+            "THEAPPRENTICE-REVERSAL.title", "THEAPPRENTICE-REVERSAL.description", "THEAPPRENTICE-REVERSAL+.description",
+            "THEAPPRENTICE-DISCORD.title", "THEAPPRENTICE-DISCORD.description", "THEAPPRENTICE-DISCORD+.description",
+            "THEAPPRENTICE-RELEASE.title", "THEAPPRENTICE-RELEASE.description", "THEAPPRENTICE-RELEASE+.description",
+            "THEAPPRENTICE-TRANSFERENCE.title", "THEAPPRENTICE-TRANSFERENCE.description", "THEAPPRENTICE-TRANSFERENCE+.description", "THEAPPRENTICE-TRANSFERENCE.selectionPrompt",
+            "THEAPPRENTICE-REFLECTION.title", "THEAPPRENTICE-REFLECTION.description", "THEAPPRENTICE-REFLECTION+.description",
+            "THEAPPRENTICE-UNBURDENING.title", "THEAPPRENTICE-UNBURDENING.description", "THEAPPRENTICE-UNBURDENING+.description",
+            "THEAPPRENTICE-PROJECTION.title", "THEAPPRENTICE-PROJECTION.description", "THEAPPRENTICE-PROJECTION+.description",
+            "THEAPPRENTICE-DEFIANCE.title", "THEAPPRENTICE-DEFIANCE.description", "THEAPPRENTICE-DEFIANCE+.description",
+            "THEAPPRENTICE-TENACITY.title", "THEAPPRENTICE-TENACITY.description", "THEAPPRENTICE-TENACITY+.description",
+            "THEAPPRENTICE-FORTITUDE.title", "THEAPPRENTICE-FORTITUDE.description", "THEAPPRENTICE-FORTITUDE+.description",
+            "THEAPPRENTICE-UNDERCURRENT.title", "THEAPPRENTICE-UNDERCURRENT.description", "THEAPPRENTICE-UNDERCURRENT+.description",
+            "THEAPPRENTICE-CATHARSIS.title", "THEAPPRENTICE-CATHARSIS.description", "THEAPPRENTICE-CATHARSIS+.description",
+            "THEAPPRENTICE-TIRADE.title", "THEAPPRENTICE-TIRADE.description", "THEAPPRENTICE-TIRADE+.description",
+            "THEAPPRENTICE-SCAPEGOAT.title", "THEAPPRENTICE-SCAPEGOAT.description", "THEAPPRENTICE-SCAPEGOAT+.description", "THEAPPRENTICE-SCAPEGOAT.selectionPrompt",
+            "THEAPPRENTICE-RECRIMINATION.title", "THEAPPRENTICE-RECRIMINATION.description", "THEAPPRENTICE-RECRIMINATION+.description",
+            "THEAPPRENTICE-TRUE_STRENGTH.title", "THEAPPRENTICE-TRUE_STRENGTH.description", "THEAPPRENTICE-TRUE_STRENGTH+.description",
+        ];
+        var missing = expectedKeys.Where(k => !dict.ContainsKey(k) || string.IsNullOrWhiteSpace(dict[k])).ToList();
+        Assert.True(missing.Count == 0, $"Missing or empty Emotional Expression localization keys:\n{string.Join("\n", missing)}");
+    }
+
+    [Fact]
+    public void CardsJson_EmotionalExpressionCards_UseCorrectTextConvention()
+    {
+        var dict = LoadJson("../TheApprentice/localization/eng/cards.json");
+        var eeKeyPrefixes = new[]
+        {
+            "THEAPPRENTICE-LAMENT", "THEAPPRENTICE-CANTICLE", "THEAPPRENTICE-OUTCRY",
+            "THEAPPRENTICE-CONFESSION", "THEAPPRENTICE-REPOSE", "THEAPPRENTICE-CANDOR",
+            "THEAPPRENTICE-INVERSION", "THEAPPRENTICE-REVERSAL", "THEAPPRENTICE-DISCORD",
+            "THEAPPRENTICE-RELEASE", "THEAPPRENTICE-TRANSFERENCE", "THEAPPRENTICE-REFLECTION",
+            "THEAPPRENTICE-UNBURDENING", "THEAPPRENTICE-PROJECTION", "THEAPPRENTICE-DEFIANCE",
+            "THEAPPRENTICE-TENACITY", "THEAPPRENTICE-FORTITUDE", "THEAPPRENTICE-UNDERCURRENT",
+            "THEAPPRENTICE-CATHARSIS", "THEAPPRENTICE-TIRADE", "THEAPPRENTICE-SCAPEGOAT",
+            "THEAPPRENTICE-RECRIMINATION", "THEAPPRENTICE-TRUE_STRENGTH",
+        };
+        var violations = new List<string>();
+        foreach (var prefix in eeKeyPrefixes)
+        {
+            foreach (var suffix in new[] { ".description", "+.description" })
+            {
+                var key = prefix + suffix;
+                if (!dict.TryGetValue(key, out var text)) continue;
+                if (text.Contains("Become [gold]"))
+                    violations.Add($"{key}: uses old 'Become [gold]...' convention");
+                if (text.Contains("[/gold]("))
+                    violations.Add($"{key}: uses old '[/gold](N)' suffix convention");
+            }
+        }
+        Assert.True(violations.Count == 0,
+            $"Old text conventions found — update to 'Apply N [gold]X[/gold] to yourself':\n{string.Join("\n", violations)}");
+    }
+
 }

@@ -189,5 +189,99 @@
 
   "THEAPPRENTICE-BLUEPRINT.title": "Blueprint",
   "THEAPPRENTICE-BLUEPRINT.description": "Add 1 [gold]Dream[/gold] and 1 [gold]Ambition[/gold] per [gold]Unplayable[/gold] card in your hand.",
-  "THEAPPRENTICE-BLUEPRINT+.description": "Add 1 [gold]Dream+[/gold] and 1 [gold]Ambition+[/gold] per [gold]Unplayable[/gold] card in your hand."
+  "THEAPPRENTICE-BLUEPRINT+.description": "Add 1 [gold]Dream+[/gold] and 1 [gold]Ambition+[/gold] per [gold]Unplayable[/gold] card in your hand.",
+
+  "THEAPPRENTICE-LAMENT.title": "Lament",
+  "THEAPPRENTICE-LAMENT.description": "Deal {Damage:diff()} damage. Apply 1 [gold]Weak[/gold] to yourself.",
+  "THEAPPRENTICE-LAMENT+.description": "Deal {Damage:diff()} damage. Apply 1 [gold]Weak[/gold] to yourself.",
+
+  "THEAPPRENTICE-CANTICLE.title": "Canticle",
+  "THEAPPRENTICE-CANTICLE.description": "Deal {Damage:diff()} damage. Lose 1 [gold]Strength[/gold].",
+  "THEAPPRENTICE-CANTICLE+.description": "Deal {Damage:diff()} damage. Lose 1 [gold]Strength[/gold].",
+
+  "THEAPPRENTICE-OUTCRY.title": "Outcry",
+  "THEAPPRENTICE-OUTCRY.description": "Deal {Damage:diff()} damage. Apply 1 [gold]Vulnerable[/gold] to yourself.",
+  "THEAPPRENTICE-OUTCRY+.description": "Deal {Damage:diff()} damage. Apply 1 [gold]Vulnerable[/gold] to yourself.",
+
+  "THEAPPRENTICE-CONFESSION.title": "Confession",
+  "THEAPPRENTICE-CONFESSION.description": "Deal {Damage:diff()} damage to ALL enemies. Apply 1 [gold]Weak[/gold] to yourself.",
+  "THEAPPRENTICE-CONFESSION+.description": "Deal {Damage:diff()} damage to ALL enemies. Apply 1 [gold]Weak[/gold] to yourself.",
+
+  "THEAPPRENTICE-REPOSE.title": "Repose",
+  "THEAPPRENTICE-REPOSE.description": "Gain {Block:diff()} [gold]Block[/gold]. Apply 1 [gold]Weak[/gold] to yourself.",
+  "THEAPPRENTICE-REPOSE+.description": "Gain {Block:diff()} [gold]Block[/gold]. Apply 1 [gold]Weak[/gold] to yourself.",
+
+  "THEAPPRENTICE-CANDOR.title": "Candor",
+  "THEAPPRENTICE-CANDOR.description": "Apply 1 [gold]Vulnerable[/gold] to ALL enemies. Apply 1 [gold]Vulnerable[/gold] to yourself.",
+  "THEAPPRENTICE-CANDOR+.description": "Apply 1 [gold]Vulnerable[/gold] to ALL enemies. Apply 1 [gold]Vulnerable[/gold] to yourself.",
+
+  "THEAPPRENTICE-INVERSION.title": "Inversion",
+  "THEAPPRENTICE-INVERSION.description": "Convert up to 5 [gold]Weak[/gold] to [gold]Unweak[/gold]. Convert up to 5 [gold]Vulnerable[/gold] to [gold]Unvulnerable[/gold].",
+  "THEAPPRENTICE-INVERSION+.description": "Convert up to 5 [gold]Weak[/gold] to [gold]Unweak[/gold]. Convert up to 5 [gold]Vulnerable[/gold] to [gold]Unvulnerable[/gold].",
+
+  "THEAPPRENTICE-REVERSAL.title": "Reversal",
+  "THEAPPRENTICE-REVERSAL.description": "If you are [gold]Weak[/gold], convert up to 3 [gold]Weak[/gold] to [gold]Unweak[/gold]. Deal {Damage:diff()} damage.",
+  "THEAPPRENTICE-REVERSAL+.description": "If you are [gold]Weak[/gold], convert up to 5 [gold]Weak[/gold] to [gold]Unweak[/gold]. Deal {Damage:diff()} damage.",
+
+  "THEAPPRENTICE-DISCORD.title": "Discord",
+  "THEAPPRENTICE-DISCORD.description": "Deal {Damage:diff()} damage twice. Apply 1 [gold]Vulnerable[/gold] to yourself.",
+  "THEAPPRENTICE-DISCORD+.description": "Deal {Damage:diff()} damage twice. Apply 1 [gold]Vulnerable[/gold] to yourself.",
+
+  "THEAPPRENTICE-RELEASE.title": "Release",
+  "THEAPPRENTICE-RELEASE.description": "Remove all [gold]Block[/gold]. Deal {Damage:diff()} damage. If you removed 12+ [gold]Block[/gold], deal 18 more.",
+  "THEAPPRENTICE-RELEASE+.description": "Remove all [gold]Block[/gold]. Deal {Damage:diff()} damage. If you removed 10+ [gold]Block[/gold], deal 22 more.",
+
+  "THEAPPRENTICE-TRANSFERENCE.title": "Transference",
+  "THEAPPRENTICE-TRANSFERENCE.description": "Remove your [gold]Weak[/gold]. Apply it to an enemy.",
+  "THEAPPRENTICE-TRANSFERENCE+.description": "Remove your [gold]Weak[/gold] and [gold]Vulnerable[/gold]. Apply them to an enemy.",
+  "THEAPPRENTICE-TRANSFERENCE.selectionPrompt": "Choose an enemy to receive your debuffs.",
+
+  "THEAPPRENTICE-REFLECTION.title": "Reflection",
+  "THEAPPRENTICE-REFLECTION.description": "Gain 1 [gold]Strength[/gold] per [gold]Weak[/gold] stack. Remove all [gold]Weak[/gold].",
+  "THEAPPRENTICE-REFLECTION+.description": "Gain 1 [gold]Strength[/gold] per [gold]Weak[/gold] stack + 1. Remove all [gold]Weak[/gold].",
+
+  "THEAPPRENTICE-UNBURDENING.title": "Unburdening",
+  "THEAPPRENTICE-UNBURDENING.description": "Gain 1 [gold]Unvulnerable[/gold].",
+  "THEAPPRENTICE-UNBURDENING+.description": "Gain 2 [gold]Unvulnerable[/gold].",
+
+  "THEAPPRENTICE-PROJECTION.title": "Projection",
+  "THEAPPRENTICE-PROJECTION.description": "Apply your [gold]Weak[/gold] and [gold]Vulnerable[/gold] stacks to ALL enemies. Apply 1 [gold]Weak[/gold] to yourself.",
+  "THEAPPRENTICE-PROJECTION+.description": "Apply your [gold]Weak[/gold] and [gold]Vulnerable[/gold] stacks to ALL enemies.",
+
+  "THEAPPRENTICE-DEFIANCE.title": "Defiance",
+  "THEAPPRENTICE-DEFIANCE.description": "Gain 2 [gold]Unvulnerable[/gold].",
+  "THEAPPRENTICE-DEFIANCE+.description": "Gain 3 [gold]Unvulnerable[/gold].",
+
+  "THEAPPRENTICE-TENACITY.title": "Tenacity",
+  "THEAPPRENTICE-TENACITY.description": "Whenever you become [gold]Weak[/gold] or [gold]Vulnerable[/gold], gain 1 [gold]Strength[/gold].",
+  "THEAPPRENTICE-TENACITY+.description": "Whenever you become [gold]Weak[/gold] or [gold]Vulnerable[/gold], gain 2 [gold]Strength[/gold].",
+
+  "THEAPPRENTICE-FORTITUDE.title": "Fortitude",
+  "THEAPPRENTICE-FORTITUDE.description": "At the start of your turn, if you are [gold]Weak[/gold], gain 1 [gold]Strength[/gold].",
+  "THEAPPRENTICE-FORTITUDE+.description": "At the start of your turn, if you are [gold]Weak[/gold] or [gold]Vulnerable[/gold], gain 1 [gold]Strength[/gold].",
+
+  "THEAPPRENTICE-UNDERCURRENT.title": "Undercurrent",
+  "THEAPPRENTICE-UNDERCURRENT.description": "At the end of your turn, if you are [gold]Weak[/gold], deal 8 damage to ALL enemies.",
+  "THEAPPRENTICE-UNDERCURRENT+.description": "At the end of your turn, if you are [gold]Weak[/gold], deal 12 damage to ALL enemies.",
+
+  "THEAPPRENTICE-CATHARSIS.title": "Catharsis",
+  "THEAPPRENTICE-CATHARSIS.description": "Remove all your [gold]Weak[/gold] and [gold]Vulnerable[/gold]. Deal 8 damage to ALL enemies per stack removed.",
+  "THEAPPRENTICE-CATHARSIS+.description": "Remove all your [gold]Weak[/gold] and [gold]Vulnerable[/gold]. Deal 10 damage to ALL enemies per stack removed.",
+
+  "THEAPPRENTICE-TIRADE.title": "Tirade",
+  "THEAPPRENTICE-TIRADE.description": "Remove all [gold]Block[/gold]. Deal {Damage:diff()} damage to ALL enemies. If you removed 15+ [gold]Block[/gold], deal 20 more.",
+  "THEAPPRENTICE-TIRADE+.description": "Remove all [gold]Block[/gold]. Deal {Damage:diff()} damage to ALL enemies. If you removed 12+ [gold]Block[/gold], deal 25 more.",
+
+  "THEAPPRENTICE-SCAPEGOAT.title": "Scapegoat",
+  "THEAPPRENTICE-SCAPEGOAT.description": "Transfer all your [gold]Weak[/gold], [gold]Vulnerable[/gold], and negative [gold]Strength[/gold] to an enemy.",
+  "THEAPPRENTICE-SCAPEGOAT+.description": "Transfer all your [gold]Weak[/gold], [gold]Vulnerable[/gold], and negative [gold]Strength[/gold] to ALL enemies.",
+  "THEAPPRENTICE-SCAPEGOAT.selectionPrompt": "Choose an enemy to receive your debuffs.",
+
+  "THEAPPRENTICE-RECRIMINATION.title": "Recrimination",
+  "THEAPPRENTICE-RECRIMINATION.description": "At the start of your turn, apply your [gold]Vulnerable[/gold] stacks to ALL enemies.",
+  "THEAPPRENTICE-RECRIMINATION+.description": "At the start of your turn, apply your [gold]Vulnerable[/gold] and [gold]Weak[/gold] stacks to ALL enemies.",
+
+  "THEAPPRENTICE-TRUE_STRENGTH.title": "True Strength",
+  "THEAPPRENTICE-TRUE_STRENGTH.description": "At the end of your turn, convert up to 5 [gold]Weak[/gold] to [gold]Unweak[/gold] and up to 5 [gold]Vulnerable[/gold] to [gold]Unvulnerable[/gold].",
+  "THEAPPRENTICE-TRUE_STRENGTH+.description": "At the end of your turn, convert up to 5 [gold]Weak[/gold] to [gold]Unweak[/gold], up to 5 [gold]Vulnerable[/gold] to [gold]Unvulnerable[/gold], and negative [gold]Strength[/gold] to positive."
 }

@@ -143,4 +143,32 @@ public class ApprenticeCardTests
     [Fact] public void Wunderkind_IsPower_Rare() { var c = new Wunderkind();  Assert.Equal(CardType.Power,  c.Type); Assert.Equal(CardRarity.Rare, c.Rarity); }
     [Fact] public void Prodigy_IsPower_Rare()    { var c = new Prodigy();     Assert.Equal(CardType.Power,  c.Type); Assert.Equal(CardRarity.Rare, c.Rarity); }
     [Fact] public void Blueprint_IsSkill_Rare()  { var c = new Blueprint();   Assert.Equal(CardType.Skill,  c.Type); Assert.Equal(CardRarity.Rare, c.Rarity); }
+
+    // ── Emotional Expression cards ──────────────────────────────────────────────
+
+    [Fact] public void Lament_IsAttack_Common_0Cost()     { var c = new Lament();      Assert.Equal(CardType.Attack, c.Type); Assert.Equal(CardRarity.Common, c.Rarity); Assert.Equal(0, c.EnergyCost.Canonical); }
+    [Fact] public void Canticle_IsAttack_Common_1Cost()   { var c = new Canticle();    Assert.Equal(CardType.Attack, c.Type); Assert.Equal(CardRarity.Common, c.Rarity); Assert.Equal(1, c.EnergyCost.Canonical); }
+    [Fact] public void Outcry_IsAttack_Common_1Cost()     { var c = new Outcry();      Assert.Equal(CardType.Attack, c.Type); Assert.Equal(CardRarity.Common, c.Rarity); Assert.Equal(1, c.EnergyCost.Canonical); }
+    [Fact] public void Confession_IsAttack_Common_1Cost() { var c = new Confession();  Assert.Equal(CardType.Attack, c.Type); Assert.Equal(CardRarity.Common, c.Rarity); Assert.Equal(1, c.EnergyCost.Canonical); }
+    [Fact] public void Repose_IsSkill_Common_1Cost()      { var c = new Repose();      Assert.Equal(CardType.Skill,  c.Type); Assert.Equal(CardRarity.Common, c.Rarity); Assert.Equal(1, c.EnergyCost.Canonical); }
+    [Fact] public void Candor_IsSkill_Common_1Cost()      { var c = new Candor();      Assert.Equal(CardType.Skill,  c.Type); Assert.Equal(CardRarity.Common, c.Rarity); Assert.Equal(1, c.EnergyCost.Canonical); }
+    [Fact] public void Inversion_IsSkill_Common_2Cost_Exhaust() { var c = new Inversion(); Assert.Equal(CardType.Skill, c.Type); Assert.Equal(CardRarity.Common, c.Rarity); Assert.Equal(2, c.EnergyCost.Canonical); Assert.Contains(c.Keywords, k => k == CardKeyword.Exhaust); }
+
+    [Fact] public void Reversal_IsAttack_Uncommon_1Cost()     { var c = new Reversal();     Assert.Equal(CardType.Attack,  c.Type); Assert.Equal(CardRarity.Uncommon, c.Rarity); Assert.Equal(1, c.EnergyCost.Canonical); }
+    [Fact] public void Discord_IsAttack_Uncommon_2Cost()      { var c = new Discord();      Assert.Equal(CardType.Attack,  c.Type); Assert.Equal(CardRarity.Uncommon, c.Rarity); Assert.Equal(2, c.EnergyCost.Canonical); }
+    [Fact] public void Release_IsAttack_Uncommon_1Cost()      { var c = new Release();      Assert.Equal(CardType.Attack,  c.Type); Assert.Equal(CardRarity.Uncommon, c.Rarity); Assert.Equal(1, c.EnergyCost.Canonical); }
+    [Fact] public void Transference_IsSkill_Uncommon_1Cost()  { var c = new Transference(); Assert.Equal(CardType.Skill,   c.Type); Assert.Equal(CardRarity.Uncommon, c.Rarity); Assert.Equal(1, c.EnergyCost.Canonical); }
+    [Fact] public void Reflection_IsSkill_Uncommon_1Cost()    { var c = new Reflection();   Assert.Equal(CardType.Skill,   c.Type); Assert.Equal(CardRarity.Uncommon, c.Rarity); Assert.Equal(1, c.EnergyCost.Canonical); }
+    [Fact] public void Unburdening_IsSkill_Uncommon_0Cost()   { var c = new Unburdening();  Assert.Equal(CardType.Skill,   c.Type); Assert.Equal(CardRarity.Uncommon, c.Rarity); Assert.Equal(0, c.EnergyCost.Canonical); }
+    [Fact] public void Projection_IsSkill_Uncommon_1Cost()    { var c = new Projection();   Assert.Equal(CardType.Skill,   c.Type); Assert.Equal(CardRarity.Uncommon, c.Rarity); Assert.Equal(1, c.EnergyCost.Canonical); }
+    [Fact] public void Defiance_IsSkill_Uncommon_1Cost()      { var c = new Defiance();     Assert.Equal(CardType.Skill,   c.Type); Assert.Equal(CardRarity.Uncommon, c.Rarity); Assert.Equal(1, c.EnergyCost.Canonical); }
+    [Fact] public void Tenacity_IsPower_Uncommon_1Cost()      { var c = new Tenacity();     Assert.Equal(CardType.Power,   c.Type); Assert.Equal(CardRarity.Uncommon, c.Rarity); Assert.Equal(1, c.EnergyCost.Canonical); }
+    [Fact] public void Fortitude_IsPower_Uncommon_1Cost()     { var c = new Fortitude();    Assert.Equal(CardType.Power,   c.Type); Assert.Equal(CardRarity.Uncommon, c.Rarity); Assert.Equal(1, c.EnergyCost.Canonical); }
+    [Fact] public void Undercurrent_IsPower_Uncommon_2Cost()  { var c = new Undercurrent(); Assert.Equal(CardType.Power,   c.Type); Assert.Equal(CardRarity.Uncommon, c.Rarity); Assert.Equal(2, c.EnergyCost.Canonical); }
+
+    [Fact] public void Catharsis_IsAttack_Rare_0Cost_Exhaust() { var c = new Catharsis(); Assert.Equal(CardType.Attack, c.Type); Assert.Equal(CardRarity.Rare, c.Rarity); Assert.Equal(0, c.EnergyCost.Canonical); Assert.Contains(c.Keywords, k => k == CardKeyword.Exhaust); }
+    [Fact] public void Tirade_IsAttack_Rare_2Cost()            { var c = new Tirade();     Assert.Equal(CardType.Attack, c.Type); Assert.Equal(CardRarity.Rare, c.Rarity); Assert.Equal(2, c.EnergyCost.Canonical); }
+    [Fact] public void Scapegoat_IsSkill_Rare_1Cost()          { var c = new Scapegoat();  Assert.Equal(CardType.Skill,  c.Type); Assert.Equal(CardRarity.Rare, c.Rarity); Assert.Equal(1, c.EnergyCost.Canonical); }
+    [Fact] public void Recrimination_IsPower_Rare_1Cost()      { var c = new Recrimination(); Assert.Equal(CardType.Power, c.Type); Assert.Equal(CardRarity.Rare, c.Rarity); Assert.Equal(1, c.EnergyCost.Canonical); }
+    [Fact] public void TrueStrength_IsPower_Rare_2Cost()       { var c = new TrueStrength();  Assert.Equal(CardType.Power, c.Type); Assert.Equal(CardRarity.Rare, c.Rarity); Assert.Equal(2, c.EnergyCost.Canonical); }
 }

@@ -114,6 +114,62 @@ public class PowerClassTests
     }
 
     [Fact]
+    public void UnweakPower_IsBuff_Counter()
+    {
+        var p = new UnweakPower();
+        Assert.Equal(PowerType.Buff, p.Type);
+        Assert.Equal(PowerStackType.Counter, p.StackType);
+    }
+
+    [Fact]
+    public void UnvulnerablePower_IsBuff_Counter()
+    {
+        var p = new UnvulnerablePower();
+        Assert.Equal(PowerType.Buff, p.Type);
+        Assert.Equal(PowerStackType.Counter, p.StackType);
+    }
+
+    [Fact]
+    public void TenacityPower_IsBuff_Single()
+    {
+        var p = new TenacityPower();
+        Assert.Equal(PowerType.Buff, p.Type);
+        Assert.Equal(PowerStackType.Single, p.StackType);
+    }
+
+    [Fact]
+    public void FortitudePower_IsBuff_Single()
+    {
+        var p = new FortitudePower();
+        Assert.Equal(PowerType.Buff, p.Type);
+        Assert.Equal(PowerStackType.Single, p.StackType);
+    }
+
+    [Fact]
+    public void UndercurrentPower_IsBuff_Single()
+    {
+        var p = new UndercurrentPower();
+        Assert.Equal(PowerType.Buff, p.Type);
+        Assert.Equal(PowerStackType.Single, p.StackType);
+    }
+
+    [Fact]
+    public void RecriminationPower_IsBuff_Single()
+    {
+        var p = new RecriminationPower();
+        Assert.Equal(PowerType.Buff, p.Type);
+        Assert.Equal(PowerStackType.Single, p.StackType);
+    }
+
+    [Fact]
+    public void TrueStrengthPower_IsBuff_Single()
+    {
+        var p = new TrueStrengthPower();
+        Assert.Equal(PowerType.Buff, p.Type);
+        Assert.Equal(PowerStackType.Single, p.StackType);
+    }
+
+    [Fact]
     public void AllPowers_Localization_IsNonEmpty()
     {
         Assert.NotEmpty(new InTheZonePower().Localization);
@@ -121,6 +177,13 @@ public class PowerClassTests
         Assert.NotEmpty(new SchemingPower().Localization);
         Assert.NotEmpty(new VirtuosoPower().Localization);
         Assert.NotEmpty(new PlannedCounterPower().Localization);
+        Assert.NotEmpty(new UnweakPower().Localization);
+        Assert.NotEmpty(new UnvulnerablePower().Localization);
+        Assert.NotEmpty(new TenacityPower().Localization);
+        Assert.NotEmpty(new FortitudePower().Localization);
+        Assert.NotEmpty(new UndercurrentPower().Localization);
+        Assert.NotEmpty(new RecriminationPower().Localization);
+        Assert.NotEmpty(new TrueStrengthPower().Localization);
     }
 
     [Fact]
