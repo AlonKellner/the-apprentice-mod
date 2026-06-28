@@ -1,4 +1,3 @@
-using BaseLib.Utils;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models.Powers;
@@ -12,9 +11,12 @@ public class Transference : ApprenticeCard
     public Transference() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.AnyEnemy)
     {
         WithTip(typeof(WeakPower));
-        // Base transfers Weak only. Upgrade also transfers Vulnerable.
-        TooltipSource upgradedVul = typeof(VulnerablePower);
-        WithTip(new TooltipSource(card => card.IsUpgraded ? upgradedVul.Tip(card) : null!));
+    }
+
+    protected override void OnUpgrade()
+    {
+        base.OnUpgrade();
+        WithTip(typeof(VulnerablePower));
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)

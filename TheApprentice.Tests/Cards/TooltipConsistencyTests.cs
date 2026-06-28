@@ -184,13 +184,13 @@ public class TooltipConsistencyTests
         Assert.Empty(violations);
     }
 
-    // Reverse direction: if a card has an always-present typeof(T) power tip, its keyword must
-    // appear in the BASE description. Always-present tips show on the unupgraded card, so their
+    // Reverse direction: if a card has a typeof(T) power tip in its constructor, its keyword must
+    // appear in the BASE description. Constructor tips show on the unupgraded card, so their
     // keywords must be explained in the base description — not just the upgrade description.
     //
-    // Upgrade-only keywords must use conditional lambda tips (not typeof(T)) so this test won't
-    // flag them. Guards against dangling tooltips like a VulnerablePower tip when the base
-    // description only mentions Weak.
+    // Upgrade-only tips must be added in OnUpgrade() so this test won't flag them.
+    // Guards against dangling tooltips like a VulnerablePower tip when the base description
+    // only mentions Weak.
     [Fact]
     public void AllCards_PowerHoverTips_OnlyAddedWhenKeywordAppearsInDescription()
     {
@@ -223,7 +223,37 @@ public class TooltipConsistencyTests
         Assert.Empty(violations);
     }
 
-    // Spot-check: Fortitude's VulnerablePower tip must be upgrade-only (conditional lambda),
+    // Guards against lambda tips that return null for unupgraded cards.
+    // Null tips crash the game with NullReferenceException in IHoverTip.RemoveDupes when hovering.
+    // Upgrade-only tips must be added in OnUpgrade(), not via null-returning lambdas.
+    //
+    // Note: tips using HoverTipFactory.FromCard<T> may throw in tests (no game registry loaded).
+    // Exceptions are skipped — they don't indicate a null-return bug.
+    [Fact]
+    public void AllCards_BaseCard_NoTipsReturnNull()
+    {
+        var violations = new List<string>();
+
+        foreach (var cardType in typeof(ApprenticeCard).Assembly.GetTypes()
+            .Where(t => !t.IsAbstract && t.IsSubclassOf(typeof(ApprenticeCard))))
+        {
+            var card = (ConstructedCardModel)Activator.CreateInstance(cardType)!;
+            var tips = GetHoverTips(card);
+
+            foreach (var tip in tips)
+            {
+                IHoverTip? result;
+                try { result = tip.Tip(card); }
+                catch { continue; } // exceptions are expected when game registry isn't loaded
+                if (result == null)
+                    violations.Add($"{cardType.Name}: tip returned null — add upgrade-only tips in OnUpgrade() instead of a null-returning lambda");
+            }
+        }
+
+        Assert.Empty(violations);
+    }
+
+    // Spot-check: Fortitude's VulnerablePower tip must be upgrade-only (added in OnUpgrade),
     // because the base description only mentions Weak — not Vulnerable.
     [Fact]
     public void Fortitude_BaseCard_HasNoAlwaysPresentVulnerablePowerTip()
@@ -231,7 +261,7 @@ public class TooltipConsistencyTests
         var tips = GetHoverTips(new Fortitude());
         Assert.False(HasTipForType(tips, typeof(VulnerablePower)),
             "Fortitude base card must not carry an always-present VulnerablePower tip — " +
-            "base description only mentions Weak. Use a conditional lambda for the upgraded version.");
+            "base description only mentions Weak. Add it in OnUpgrade() instead.");
         Assert.True(HasTipForType(tips, typeof(WeakPower)),     "Fortitude missing WeakPower tip");
         Assert.True(HasTipForType(tips, typeof(StrengthPower)), "Fortitude missing StrengthPower tip");
     }
