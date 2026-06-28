@@ -4,7 +4,15 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
+    <!-- ScriptPathAttributeGenerator flows in transitively from Godot.NET.Sdk but has nothing
+         to do in the test project — suppress the 'GodotProjectDir is null' failure it emits. -->
+    <NoWarn>$(NoWarn);CS8785</NoWarn>
   </PropertyGroup>
+
+  <!-- Expose localization JSON files to the ModAnalyzers Roslyn analyzer (suppresses STS002) -->
+  <ItemGroup>
+    <AdditionalFiles Include="../TheApprentice/localization/**/*.json" />
+  </ItemGroup>
 
   <!-- Sts2PathDiscovery.props is already imported via Directory.Build.props -->
 
