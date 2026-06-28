@@ -2,6 +2,7 @@ using BaseLib.Abstracts;
 using BaseLib.Utils.NodeFactories;
 using TheApprentice.TheApprenticeCode.Cards;
 using TheApprentice.TheApprenticeCode.Extensions;
+using TheApprentice.TheApprenticeCode.Relics;
 using Godot;
 using MegaCrit.Sts2.Core.Entities.Characters;
 using MegaCrit.Sts2.Core.Models;
@@ -36,7 +37,7 @@ public class TheApprentice : PlaceholderCharacterModel
 
     public override IReadOnlyList<RelicModel> StartingRelics =>
     [
-        ModelDb.Relic<BurningBlood>()
+        ModelDb.Relic<ConstantStruggle>()
     ];
 
     public override CardPoolModel CardPool => ModelDb.CardPool<TheApprenticeCardPool>();

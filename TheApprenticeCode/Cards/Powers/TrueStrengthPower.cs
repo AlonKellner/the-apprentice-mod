@@ -21,7 +21,9 @@ public class TrueStrengthPower : CustomPowerModel
         Amount >= 2
             ? "At the [i]start[/i] of your turn, convert up to 5 [gold]Weak[/gold] to [gold]Unweak[/gold] and up to 5 [gold]Vulnerable[/gold] to [gold]Unvulnerable[/gold]."
             : "At the end of your turn, convert up to 5 [gold]Weak[/gold] to [gold]Unweak[/gold] and up to 5 [gold]Vulnerable[/gold] to [gold]Unvulnerable[/gold].",
-        "");
+        Amount >= 2
+            ? "At the [i]start[/i] of your turn, convert up to 5 [gold]Weak[/gold] to [gold]Unweak[/gold] and up to 5 [gold]Vulnerable[/gold] to [gold]Unvulnerable[/gold]."
+            : "At the end of your turn, convert up to 5 [gold]Weak[/gold] to [gold]Unweak[/gold] and up to 5 [gold]Vulnerable[/gold] to [gold]Unvulnerable[/gold].");
 
     public override async Task AfterPlayerTurnStart(PlayerChoiceContext context, Player player)
     {

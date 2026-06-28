@@ -1,5 +1,6 @@
 using BaseLib.Abstracts;
 using BaseLib.Utils;
+using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 
@@ -22,7 +23,8 @@ public class Preface : ApprenticeCard
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
-        await CommonActions.CardAttack(cardPlay.Card, cardPlay)
+        await DamageCmd.Attack(cardPlay.Card.DynamicVars.Damage.BaseValue)
+            .FromCard(cardPlay.Card)
             .TargetingAllOpponents(CombatState!)
             .Execute(context);
     }

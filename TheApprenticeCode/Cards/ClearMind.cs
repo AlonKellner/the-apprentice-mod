@@ -37,7 +37,9 @@ public class ClearMind : ApprenticeCard
             await CardCmd.Exhaust(context, card, false, false);
 
         if (toExhaust.Count > 0)
-            await CommonActions.CardAttack(cardPlay.Card, cardPlay, toExhaust.Count)
+            await DamageCmd.Attack(cardPlay.Card.DynamicVars.Damage.BaseValue)
+                .WithHitCount(toExhaust.Count)
+                .FromCard(cardPlay.Card)
                 .TargetingAllOpponents(CombatState!)
                 .Execute(context);
     }

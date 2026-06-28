@@ -23,10 +23,8 @@ public class Projection : ApprenticeCard
 
         foreach (var enemy in CombatState!.HittableEnemies)
         {
-            if (weakAmount > 0)
-                await PowerCmd.Apply<WeakPower>(context, enemy, weakAmount, creature, cardPlay.Card, false);
-            if (vulAmount > 0)
-                await PowerCmd.Apply<VulnerablePower>(context, enemy, vulAmount, creature, cardPlay.Card, false);
+            await PowerCmd.Apply<WeakPower>(context, enemy, weakAmount + 1, creature, cardPlay.Card, false);
+            await PowerCmd.Apply<VulnerablePower>(context, enemy, vulAmount + 1, creature, cardPlay.Card, false);
         }
 
         if (!IsUpgraded)

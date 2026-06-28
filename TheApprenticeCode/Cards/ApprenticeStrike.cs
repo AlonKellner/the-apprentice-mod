@@ -12,6 +12,7 @@ public class ApprenticeStrike : ApprenticeCard
     public ApprenticeStrike() : base(1, CardType.Attack, CardRarity.Basic, TargetType.AnyEnemy, false)
     {
         WithDamage(6);
+        WithTags(CardTag.Strike);
     }
 
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(3m);

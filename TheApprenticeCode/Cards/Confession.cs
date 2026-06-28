@@ -1,4 +1,5 @@
 using BaseLib.Utils;
+using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models.Powers;
@@ -24,7 +25,8 @@ public class Confession : ApprenticeCard
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
         var creature = cardPlay.Card.Owner.Creature;
-        await CommonActions.CardAttack(cardPlay.Card, cardPlay)
+        await DamageCmd.Attack(cardPlay.Card.DynamicVars.Damage.BaseValue)
+            .FromCard(cardPlay.Card)
             .TargetingAllOpponents(CombatState!)
             .Execute(context);
         await EmotionalExpression.ApplyWeakToSelf(context, creature, 1, cardPlay.Card);

@@ -18,7 +18,7 @@ public class RecriminationPower : CustomPowerModel
     public override List<(string, string)> Localization => new PowerLoc(
         "Recrimination",
         "At the start of your turn, apply your [gold]Vulnerable[/gold] and [gold]Weak[/gold] stacks to all enemies.",
-        "");
+        "At the start of your turn, apply your [gold]Vulnerable[/gold] and [gold]Weak[/gold] stacks to all enemies.");
 
     public override async Task AfterPlayerTurnStart(PlayerChoiceContext context, Player player)
     {

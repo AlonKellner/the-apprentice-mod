@@ -200,7 +200,7 @@
   "THEAPPRENTICE-CATHARTIC_VISION.description": "#Gain -1-+2+ [gold]Unweak[/gold] and -1-+2+ [gold]Unvulnerable[/gold].",
 
   "THEAPPRENTICE-PROPHECY.title": "Prophecy",
-  "THEAPPRENTICE-PROPHECY.description": "For each debuff you have, add 1 {IfUpgraded:show:[gold]Dream+[/gold]|[gold]Dream[/gold]} with [gold]Planned[/gold] to your hand.",
+  "THEAPPRENTICE-PROPHECY.description": "For each type of debuff you have, add 1 {IfUpgraded:show:[gold]Dream+[/gold]|[gold]Dream[/gold]} with [gold]Planned[/gold] to your hand.",
 
   "THEAPPRENTICE-LAMENT.title": "Lament",
   "THEAPPRENTICE-LAMENT.description": "Deal {Damage:diff()} damage. Apply 1 [gold]Weak[/gold] to yourself.",
@@ -233,17 +233,17 @@
   "THEAPPRENTICE-RELEASE.description": "Remove all [gold]Block[/gold]. Deal {Damage:diff()} damage. If you removed {IfUpgraded:show:10+|12+} [gold]Block[/gold], deal {IfUpgraded:show:22|18} more.",
 
   "THEAPPRENTICE-TRANSFERENCE.title": "Transference",
-  "THEAPPRENTICE-TRANSFERENCE.description": "#Remove your [gold]Weak[/gold] and [gold]Vulnerable[/gold]. Apply them to an enemy.+ Draw 1 card.+",
+  "THEAPPRENTICE-TRANSFERENCE.description": "Transfer up to 3 [gold]Weak[/gold] and up to 3 [gold]Vulnerable[/gold] to an enemy.{IfUpgraded:show: Draw 1 card.|}",
   "THEAPPRENTICE-TRANSFERENCE.selectionPrompt": "Choose an enemy to receive your debuffs.",
 
   "THEAPPRENTICE-REFLECTION.title": "Reflection",
-  "THEAPPRENTICE-REFLECTION.description": "Gain 1 [gold]Strength[/gold] per [gold]Weak[/gold] stack{IfUpgraded:show: + 1|}. Remove all [gold]Weak[/gold].",
+  "THEAPPRENTICE-REFLECTION.description": "Remove up to {IfUpgraded:show:5|3} [gold]Weak[/gold]. Gain 1 [gold]Strength[/gold] for each removed.",
 
   "THEAPPRENTICE-UNBURDENING.title": "Unburdening",
   "THEAPPRENTICE-UNBURDENING.description": "#Gain -1-+2+ [gold]Unvulnerable[/gold].",
 
   "THEAPPRENTICE-PROJECTION.title": "Projection",
-  "THEAPPRENTICE-PROJECTION.description": "#Apply your [gold]Weak[/gold] and [gold]Vulnerable[/gold] stacks to ALL enemies.- Apply 1 [gold]Weak[/gold] to yourself.-",
+  "THEAPPRENTICE-PROJECTION.description": "Apply your [gold]Weak[/gold]+1 and [gold]Vulnerable[/gold]+1 to ALL enemies.{IfUpgraded:show:| Apply 1 [gold]Weak[/gold] to yourself.}",
 
   "THEAPPRENTICE-DEFIANCE.title": "Defiance",
   "THEAPPRENTICE-DEFIANCE.description": "#Gain -2-+3+ [gold]Unvulnerable[/gold].",
@@ -258,13 +258,13 @@
   "THEAPPRENTICE-UNDERCURRENT.description": "#At the end of your turn, if you are [gold]Weak[/gold], deal -8-+12+ damage to ALL enemies.",
 
   "THEAPPRENTICE-CATHARSIS.title": "Catharsis",
-  "THEAPPRENTICE-CATHARSIS.description": "#Remove all your [gold]Weak[/gold] and [gold]Vulnerable[/gold]. Deal -8-+10+ damage to ALL enemies per stack removed.",
+  "THEAPPRENTICE-CATHARSIS.description": "Remove up to 3 [gold]Weak[/gold] and up to 3 [gold]Vulnerable[/gold]. Deal {IfUpgraded:show:10|8} damage to ALL enemies per stack removed. [gold]Exhaust[/gold].",
 
   "THEAPPRENTICE-TIRADE.title": "Tirade",
   "THEAPPRENTICE-TIRADE.description": "Remove all [gold]Block[/gold]. Deal {Damage:diff()} damage to ALL enemies. If you removed {IfUpgraded:show:12+|15+} [gold]Block[/gold], deal {IfUpgraded:show:25|20} more.",
 
   "THEAPPRENTICE-SCAPEGOAT.title": "Scapegoat",
-  "THEAPPRENTICE-SCAPEGOAT.description": "#Transfer all your [gold]Weak[/gold], [gold]Vulnerable[/gold], and negative [gold]Strength[/gold] to -an enemy-+ALL enemies+.",
+  "THEAPPRENTICE-SCAPEGOAT.description": "Transfer up to 3 [gold]Weak[/gold] and up to 3 [gold]Vulnerable[/gold] and all negative [gold]Strength[/gold] to {IfUpgraded:show:ALL enemies|an enemy}.",
   "THEAPPRENTICE-SCAPEGOAT.selectionPrompt": "Choose an enemy to receive your debuffs.",
 
   "THEAPPRENTICE-RECRIMINATION.title": "Recrimination",

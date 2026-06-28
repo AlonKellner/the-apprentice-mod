@@ -24,7 +24,9 @@ public class VirtuosoPower : CustomPowerModel
         Amount == 1
             ? "At the [i]start[/i] of your turn, remove [gold]Unplayable[/gold] from all cards in your hand."
             : "At the end of your turn, remove [gold]Unplayable[/gold] from all cards in your hand.",
-        "");
+        Amount == 1
+            ? "At the [i]start[/i] of your turn, remove [gold]Unplayable[/gold] from all cards in your hand."
+            : "At the end of your turn, remove [gold]Unplayable[/gold] from all cards in your hand.");
 
     public override Task BeforeSideTurnEnd(
         PlayerChoiceContext context, CombatSide side, System.Collections.Generic.IEnumerable<Creature> creatures)

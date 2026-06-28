@@ -18,7 +18,7 @@ public class FortitudePower : CustomPowerModel
     public override List<(string, string)> Localization => new PowerLoc(
         "Fortitude",
         "At the start of your turn, if you are [gold]Weak[/gold], gain {Amount} [gold]Strength[/gold].",
-        "");
+        "At the start of your turn, if you are [gold]Weak[/gold], gain {Amount} [gold]Strength[/gold].");
 
     public override async Task AfterPlayerTurnStart(PlayerChoiceContext context, Player player)
     {

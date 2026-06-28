@@ -20,7 +20,8 @@ public class Tirade : ApprenticeCard
         int blockRemoved = creature.Block;
         await CreatureCmd.LoseBlock(creature, blockRemoved);
 
-        await CommonActions.CardAttack(cardPlay.Card, cardPlay)
+        await DamageCmd.Attack(cardPlay.Card.DynamicVars.Damage.BaseValue)
+            .FromCard(cardPlay.Card)
             .TargetingAllOpponents(CombatState!)
             .Execute(context);
 

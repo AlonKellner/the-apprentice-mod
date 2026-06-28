@@ -29,7 +29,7 @@ public class Prophecy : ApprenticeCard
         var creature = player.Creature;
         int weakStacks = creature.GetPowerAmount<WeakPower>();
         int vulStacks = creature.GetPowerAmount<VulnerablePower>();
-        int count = weakStacks + vulStacks;
+        int count = EmotionalExpression.CountUniqueDebuffTypes(weakStacks, vulStacks);
         if (count <= 0) return;
 
         var hand = player.Piles.FirstOrDefault(p => p.Type == PileType.Hand);

@@ -22,6 +22,15 @@ public static class EmotionalExpression
         return (0, totalUnweak - totalWeak);
     }
 
+    public static int CountUniqueDebuffTypes(int weakAmt, int vulAmt) =>
+        (weakAmt > 0 ? 1 : 0) + (vulAmt > 0 ? 1 : 0);
+
+    public static (int reducedAmount, int consumed) ComputeWeakCancellation(int weakApplied, int unweakAvailable)
+    {
+        int consumed = Math.Min(weakApplied, unweakAvailable);
+        return (weakApplied - consumed, consumed);
+    }
+
     public static (int netVul, int netUnvul) ComputeNetVulnerable(int curVul, int curUnvul, int deltaVul, int deltaUnvul)
     {
         int totalVul = curVul + deltaVul;
@@ -93,29 +102,30 @@ public static class EmotionalExpression
         await PowerCmd.Apply<UnvulnerablePower>(ctx, creature, vulAmount, creature, null, false);
     }
 
-    // Remove Weak from source and apply the same amount of Weak to target.
-    public static async Task TransferWeakTo(PlayerChoiceContext ctx, Creature source, Creature target, CardModel? card)
+    // Remove up to max Weak from source and apply to target.
+    public static async Task TransferWeakTo(PlayerChoiceContext ctx, Creature source, Creature target, CardModel? card, int max = int.MaxValue)
     {
-        int weakAmount = source.GetPowerAmount<WeakPower>();
+        int weakAmount = Math.Min(source.GetPowerAmount<WeakPower>(), max);
         if (weakAmount <= 0) return;
         await PowerCmd.Apply<WeakPower>(ctx, source, -weakAmount, source, card, false);
         await PowerCmd.Apply<WeakPower>(ctx, target, weakAmount, source, card, false);
     }
 
-    // Remove Vulnerable from source and apply to target.
-    public static async Task TransferVulnerableTo(PlayerChoiceContext ctx, Creature source, Creature target, CardModel? card)
+    // Remove up to max Vulnerable from source and apply to target.
+    public static async Task TransferVulnerableTo(PlayerChoiceContext ctx, Creature source, Creature target, CardModel? card, int max = int.MaxValue)
     {
-        int vulAmount = source.GetPowerAmount<VulnerablePower>();
+        int vulAmount = Math.Min(source.GetPowerAmount<VulnerablePower>(), max);
         if (vulAmount <= 0) return;
         await PowerCmd.Apply<VulnerablePower>(ctx, source, -vulAmount, source, card, false);
         await PowerCmd.Apply<VulnerablePower>(ctx, target, vulAmount, source, card, false);
     }
 
-    // Transfer all debuffs (Weak, Vulnerable, negative Strength) from source to a single target.
-    public static async Task TransferDebuffsTo(PlayerChoiceContext ctx, Creature source, Creature target, CardModel? card)
+    // Transfer debuffs (Weak, Vulnerable, negative Strength) from source to a single target.
+    // maxEach caps each of Weak and Vulnerable independently; negative Strength is always fully transferred.
+    public static async Task TransferDebuffsTo(PlayerChoiceContext ctx, Creature source, Creature target, CardModel? card, int maxEach = int.MaxValue)
     {
-        await TransferWeakTo(ctx, source, target, card);
-        await TransferVulnerableTo(ctx, source, target, card);
+        await TransferWeakTo(ctx, source, target, card, maxEach);
+        await TransferVulnerableTo(ctx, source, target, card, maxEach);
 
         int strengthAmount = source.GetPowerAmount<StrengthPower>();
         if (strengthAmount < 0)

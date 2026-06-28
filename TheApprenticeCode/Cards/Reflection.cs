@@ -21,8 +21,9 @@ public class Reflection : ApprenticeCard
         int weakAmount = creature.GetPowerAmount<WeakPower>();
         if (weakAmount <= 0) return;
 
-        int strengthGain = weakAmount + (IsUpgraded ? 1 : 0);
-        await PowerCmd.Apply<WeakPower>(context, creature, -weakAmount, creature, cardPlay.Card, false);
-        await PowerCmd.Apply<StrengthPower>(context, creature, strengthGain, creature, cardPlay.Card, false);
+        int cap = IsUpgraded ? 5 : 3;
+        int removed = Math.Min(weakAmount, cap);
+        await PowerCmd.Apply<WeakPower>(context, creature, -removed, creature, cardPlay.Card, false);
+        await PowerCmd.Apply<StrengthPower>(context, creature, removed, creature, cardPlay.Card, false);
     }
 }

@@ -21,7 +21,7 @@ public class DesirePower : CustomPowerModel
     public override List<(string, string)> Localization => new PowerLoc(
         "Desire",
         "Whenever you gain a debuff, add 1 [gold]Dream[/gold] to your hand.",
-        "");
+        "Whenever you gain a debuff, add 1 [gold]Dream[/gold] to your hand.");
 
     private int _lastWeak;
     private int _lastVul;

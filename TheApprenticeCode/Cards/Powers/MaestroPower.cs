@@ -21,7 +21,7 @@ public class MaestroPower : CustomPowerModel
     public override List<(string, string)> Localization => new PowerLoc(
         "Maestro",
         "Whenever you apply [gold]Planned[/gold] to a card, draw 1 card.",
-        "");
+        "Whenever you apply [gold]Planned[/gold] to a card, draw 1 card.");
 
     private int _lastPlannedCount;
 

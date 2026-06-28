@@ -20,8 +20,8 @@ public class Catharsis : ApprenticeCard
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
         var creature = cardPlay.Card.Owner.Creature;
-        int weakStacks = creature.GetPowerAmount<WeakPower>();
-        int vulStacks = creature.GetPowerAmount<VulnerablePower>();
+        int weakStacks = Math.Min(creature.GetPowerAmount<WeakPower>(), 3);
+        int vulStacks = Math.Min(creature.GetPowerAmount<VulnerablePower>(), 3);
         int totalStacks = weakStacks + vulStacks;
 
         if (weakStacks > 0)

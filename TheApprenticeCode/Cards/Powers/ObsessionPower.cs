@@ -22,7 +22,7 @@ public class ObsessionPower : CustomPowerModel
     public override List<(string, string)> Localization => new PowerLoc(
         "Obsession",
         "Whenever a card becomes [gold]Unplayable[/gold], gain {Amount} [gold]Block[/gold].",
-        "");
+        "Whenever a card becomes [gold]Unplayable[/gold], gain {Amount} [gold]Block[/gold].");
 
     private int _lastPlannedCount;
     private int _lastSpentCount;

@@ -22,6 +22,13 @@ public class PoeticStruggle : CustomRelicModel
 {
     public override RelicRarity Rarity => RelicRarity.Starter;
 
+    public override decimal ModifyHandDraw(Player player, decimal count)
+    {
+        if (player != base.Owner || base.Owner?.PlayerCombatState?.TurnNumber != 1)
+            return count;
+        return count - 1;
+    }
+
     public override async Task BeforeHandDraw(Player player, PlayerChoiceContext choiceContext, ICombatState combatState)
     {
         if (player != base.Owner || base.Owner?.PlayerCombatState?.TurnNumber != 1)

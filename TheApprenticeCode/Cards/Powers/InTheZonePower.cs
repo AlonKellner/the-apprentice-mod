@@ -19,7 +19,7 @@ public class InTheZonePower : CustomPowerModel
     public override List<(string, string)> Localization => new PowerLoc(
         "In the Zone",
         "At the start of your turn, if you have any [gold]Planned[/gold] cards, gain {Amount} Energy.",
-        "");
+        "At the start of your turn, if you have any [gold]Planned[/gold] cards, gain {Amount} Energy.");
 
     public override async Task AfterPlayerTurnStart(PlayerChoiceContext context, Player player)
     {

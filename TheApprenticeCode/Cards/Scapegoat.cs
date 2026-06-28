@@ -22,11 +22,11 @@ public class Scapegoat : ApprenticeCard
         if (IsUpgraded)
         {
             foreach (var enemy in CombatState!.HittableEnemies)
-                await EmotionalExpression.TransferDebuffsTo(context, creature, enemy, cardPlay.Card);
+                await EmotionalExpression.TransferDebuffsTo(context, creature, enemy, cardPlay.Card, maxEach: 3);
         }
         else
         {
-            await EmotionalExpression.TransferDebuffsTo(context, creature, cardPlay.Target!, cardPlay.Card);
+            await EmotionalExpression.TransferDebuffsTo(context, creature, cardPlay.Target!, cardPlay.Card, maxEach: 3);
         }
     }
 }

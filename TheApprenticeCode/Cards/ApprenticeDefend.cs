@@ -12,6 +12,7 @@ public class ApprenticeDefend : ApprenticeCard
     public ApprenticeDefend() : base(1, CardType.Skill, CardRarity.Basic, TargetType.None, false)
     {
         WithBlock(5);
+        WithTags(CardTag.Defend);
     }
 
     protected override void OnUpgrade() => DynamicVars.Block.UpgradeValueBy(3m);

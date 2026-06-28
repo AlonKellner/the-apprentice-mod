@@ -253,4 +253,18 @@ public class LocalizationTests
             $"Old text conventions found — update to 'Apply N [gold]X[/gold] to yourself':\n{string.Join("\n", violations)}");
     }
 
+    [Fact]
+    public void RelicsJson_HasAllRelicKeys()
+    {
+        var dict = LoadJson("../TheApprentice/localization/eng/relics.json");
+        string[] expectedKeys = [
+            "THEAPPRENTICE-CONSTANT_STRUGGLE.title", "THEAPPRENTICE-CONSTANT_STRUGGLE.description",
+            "THEAPPRENTICE-CONSTANT_STRUGGLE.selectionPrompt",
+            "THEAPPRENTICE-POETIC_STRUGGLE.title", "THEAPPRENTICE-POETIC_STRUGGLE.description",
+            "THEAPPRENTICE-POETIC_STRUGGLE.selectionPrompt",
+        ];
+        var missing = expectedKeys.Where(k => !dict.ContainsKey(k) || string.IsNullOrWhiteSpace(dict[k])).ToList();
+        Assert.True(missing.Count == 0, $"Missing or empty relic localization keys:\n{string.Join("\n", missing)}");
+    }
+
 }

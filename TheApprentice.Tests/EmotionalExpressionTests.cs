@@ -60,4 +60,40 @@ public class EmotionalExpressionTests
     [Fact]
     public void ComputeNetVulnerable_Vulnerable3_ApplyUnvulnerable4_LeavesUnvulnerable1() =>
         Assert.Equal((0, 1), EmotionalExpression.ComputeNetVulnerable(3, 0, 0, 4));
+
+    // CountUniqueDebuffTypes
+
+    [Fact]
+    public void CountUniqueDebuffTypes_NonePresent_Returns0() =>
+        Assert.Equal(0, EmotionalExpression.CountUniqueDebuffTypes(0, 0));
+
+    [Fact]
+    public void CountUniqueDebuffTypes_OnlyWeak_Returns1() =>
+        Assert.Equal(1, EmotionalExpression.CountUniqueDebuffTypes(3, 0));
+
+    [Fact]
+    public void CountUniqueDebuffTypes_OnlyVulnerable_Returns1() =>
+        Assert.Equal(1, EmotionalExpression.CountUniqueDebuffTypes(0, 5));
+
+    [Fact]
+    public void CountUniqueDebuffTypes_BothPresent_Returns2() =>
+        Assert.Equal(2, EmotionalExpression.CountUniqueDebuffTypes(2, 4));
+
+    // ComputeWeakCancellation — incoming Weak absorbed by existing Unweak
+
+    [Fact]
+    public void ComputeWeakCancellation_NoUnweak_PassesThrough() =>
+        Assert.Equal((3, 0), EmotionalExpression.ComputeWeakCancellation(3, 0));
+
+    [Fact]
+    public void ComputeWeakCancellation_ExactMatch_BlocksAll() =>
+        Assert.Equal((0, 3), EmotionalExpression.ComputeWeakCancellation(3, 3));
+
+    [Fact]
+    public void ComputeWeakCancellation_MoreWeakThanUnweak_ReducesPartially() =>
+        Assert.Equal((1, 2), EmotionalExpression.ComputeWeakCancellation(3, 2));
+
+    [Fact]
+    public void ComputeWeakCancellation_MoreUnweakThanWeak_BlocksAll() =>
+        Assert.Equal((0, 2), EmotionalExpression.ComputeWeakCancellation(2, 5));
 }
