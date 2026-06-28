@@ -22,6 +22,6 @@ public class Daydream : ApprenticeCard
             .Where(p => p.Type == PileType.Hand)
             .SelectMany(p => p.Cards)
             .Count();
-        await DreamsAndAmbitions.AddDreams(player, CombatState!, cardsInHand);
+        await DreamsAndAmbitions.AddDreams(player, CombatState!, cardsInHand, IsUpgraded);
     }
 }

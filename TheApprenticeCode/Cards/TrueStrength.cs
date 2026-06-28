@@ -1,3 +1,4 @@
+using BaseLib.Utils;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
@@ -16,12 +17,6 @@ public class TrueStrength : ApprenticeCard
         WithTip(typeof(VulnerablePower));
         WithTip(typeof(UnweakPower));
         WithTip(typeof(UnvulnerablePower));
-    }
-
-    protected override void OnUpgrade()
-    {
-        base.OnUpgrade();
-        WithTip(typeof(StrengthPower));
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)

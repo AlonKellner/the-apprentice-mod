@@ -17,17 +17,14 @@ public class FortitudePower : CustomPowerModel
 
     public override List<(string, string)> Localization => new PowerLoc(
         "Fortitude",
-        "At the start of your turn, if you are [gold]Weak[/gold], gain 1 [gold]Strength[/gold].",
-        "At the start of your turn, if you are [gold]Weak[/gold] or [gold]Vulnerable[/gold], gain 1 [gold]Strength[/gold].");
+        "At the start of your turn, if you are [gold]Weak[/gold], gain {Amount} [gold]Strength[/gold].",
+        "");
 
     public override async Task AfterPlayerTurnStart(PlayerChoiceContext context, Player player)
     {
         if (player.Creature != Owner) return;
 
-        bool hasWeak = Owner.GetPowerAmount<WeakPower>() > 0;
-        bool hasVulnerable = Amount >= 2 && Owner.GetPowerAmount<VulnerablePower>() > 0;
-
-        if (hasWeak || hasVulnerable)
-            await PowerCmd.Apply<StrengthPower>(context, Owner, 1m, Owner, null, false);
+        if (Owner.GetPowerAmount<WeakPower>() > 0)
+            await PowerCmd.Apply<StrengthPower>(context, Owner, Amount, Owner, null, false);
     }
 }

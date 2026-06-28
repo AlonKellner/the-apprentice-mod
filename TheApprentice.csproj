@@ -62,10 +62,10 @@
   </Target>
 
   <!-- Copy compiled mod files to StS2 mods folder after build.
-       Skipped when the lock file is present (i.e. we're inside MegaDot's recursive dotnet publish)
+       Skipped when inside MegaDot's recursive dotnet publish (env var set by GodotPublish's Exec)
        so MegaDot's x86_64-targeted DLL doesn't overwrite the AnyCPU one we already copied. -->
   <Target Name="CopyToModsFolderOnBuild" AfterTargets="Build"
-          Condition="!Exists('$(MSBuildProjectDirectory)/.godot_publish_lock')">
+          Condition="'$([System.Environment]::GetEnvironmentVariable(&quot;STS2_INSIDE_GODOT_PUBLISH&quot;))' != '1'">
     <Copy
       SourceFiles="$(OutputPath)$(AssemblyName).dll"
       DestinationFolder="$(ModsPath)"
@@ -85,7 +85,7 @@
 
   <!-- Copy .pck to mods folder for quick code-only builds (reuses PCK from last publish) -->
   <Target Name="CopyQuickPck" AfterTargets="Build"
-          Condition="!Exists('$(MSBuildProjectDirectory)/.godot_publish_lock')">
+          Condition="'$([System.Environment]::GetEnvironmentVariable(&quot;STS2_INSIDE_GODOT_PUBLISH&quot;))' != '1'">
     <Copy
       SourceFiles="$(MSBuildProjectDirectory)/publish/$(AssemblyName).pck"
       DestinationFolder="$(ModsPath)"
@@ -102,24 +102,17 @@
   </Target>
 
   <!-- Export Godot .pck for publishing.
-       Guard with a lock file so MegaDot's recursive "dotnet publish" call skips this target
-       and doesn't spawn another MegaDot process (which would loop until OOM). -->
+       STS2_INSIDE_GODOT_PUBLISH=1 is passed to MegaDot's Exec so that its recursive "dotnet publish"
+       inherits the env var and skips this target — no OOM spawn loop, no stale lock files. -->
   <Target Name="GodotPublish" AfterTargets="Publish"
-          Condition="!Exists('$(MSBuildProjectDirectory)/.godot_publish_lock')">
+          Condition="'$([System.Environment]::GetEnvironmentVariable(&quot;STS2_INSIDE_GODOT_PUBLISH&quot;))' != '1'">
     <Error
       Condition="!Exists('$(GodotPath)')"
       Text="MegaDot not found at '$(GodotPath)'. Update GodotPath in Directory.Build.props." />
-    <Touch Files="$(MSBuildProjectDirectory)/.godot_publish_lock" AlwaysCreate="true" />
     <Exec
       Condition="Exists('$(GodotPath)')"
       Command="&quot;$(GodotPath)&quot; --headless --export-pack &quot;BasicExport&quot; &quot;$(MSBuildProjectDirectory)/publish/$(AssemblyName).pck&quot;"
-      WorkingDirectory="$(MSBuildProjectDirectory)" />
-    <Delete Files="$(MSBuildProjectDirectory)/.godot_publish_lock" />
-    <!-- Always remove the lock file even if Exec above fails, so future publishes aren't blocked. -->
-    <OnError ExecuteTargets="GodotPublishCleanupLock" />
-  </Target>
-
-  <Target Name="GodotPublishCleanupLock">
-    <Delete Files="$(MSBuildProjectDirectory)/.godot_publish_lock" />
+      WorkingDirectory="$(MSBuildProjectDirectory)"
+      EnvironmentVariables="STS2_INSIDE_GODOT_PUBLISH=1" />
   </Target>
 </Project>

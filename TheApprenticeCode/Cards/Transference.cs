@@ -1,3 +1,4 @@
+using BaseLib.Utils;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models.Powers;
@@ -10,12 +11,8 @@ public class Transference : ApprenticeCard
 
     public Transference() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.AnyEnemy)
     {
+        WithCards(1);
         WithTip(typeof(WeakPower));
-    }
-
-    protected override void OnUpgrade()
-    {
-        base.OnUpgrade();
         WithTip(typeof(VulnerablePower));
     }
 
@@ -24,7 +21,8 @@ public class Transference : ApprenticeCard
         var creature = cardPlay.Card.Owner.Creature;
         var target = cardPlay.Target!;
         await EmotionalExpression.TransferWeakTo(context, creature, target, cardPlay.Card);
+        await EmotionalExpression.TransferVulnerableTo(context, creature, target, cardPlay.Card);
         if (IsUpgraded)
-            await EmotionalExpression.TransferVulnerableTo(context, creature, target, cardPlay.Card);
+            await CommonActions.Draw(cardPlay.Card, context);
     }
 }

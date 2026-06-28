@@ -21,7 +21,7 @@ public class ObsessionPower : CustomPowerModel
 
     public override List<(string, string)> Localization => new PowerLoc(
         "Obsession",
-        "Whenever a card becomes [gold]Unplayable[/gold], gain 4 [gold]Block[/gold].",
+        "Whenever a card becomes [gold]Unplayable[/gold], gain {Amount} [gold]Block[/gold].",
         "");
 
     private int _lastPlannedCount;
@@ -52,6 +52,6 @@ public class ObsessionPower : CustomPowerModel
         _lastSpentCount = currentSpent;
 
         if (total > 0)
-            await CreatureCmd.GainBlock(Owner, 4 * total, ValueProp.Unpowered, null, false);
+            await CreatureCmd.GainBlock(Owner, (int)Amount * total, ValueProp.Unpowered, null, false);
     }
 }

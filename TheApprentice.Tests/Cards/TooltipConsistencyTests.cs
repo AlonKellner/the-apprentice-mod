@@ -124,11 +124,13 @@ public class TooltipConsistencyTests
                 if (capturedType == null) continue;
                 var tokenName = capturedType.Name; // "Ambition", "Dream", "Potential"
 
-                json.TryGetValue($"{locPrefix}.description",  out var baseDesc);
-                json.TryGetValue($"{locPrefix}+.description", out var upgDesc);
+                json.TryGetValue($"{locPrefix}.description", out var baseDesc);
 
-                if (baseDesc?.Contains(tokenName + "+") == true ||
-                    upgDesc?.Contains(tokenName + "+") == true)
+                // Strip {IfUpgraded:show:upgrade|base} to get the base-card rendering,
+                // since the upgrade path may mention tokenName+ even when the base card does not.
+                var baseRendered = Regex.Replace(baseDesc ?? "", @"\{IfUpgraded:show:[^|]*\|([^}]*)\}", "$1");
+
+                if (baseRendered.Contains(tokenName + "+"))
                     violations.Add(
                         $"{cardType.Name}: typeof({tokenName}) tip used but description says '{tokenName}+'");
             }
@@ -185,10 +187,11 @@ public class TooltipConsistencyTests
     }
 
     // Reverse direction: if a card has a typeof(T) power tip in its constructor, its keyword must
-    // appear in the BASE description. Constructor tips show on the unupgraded card, so their
-    // keywords must be explained in the base description — not just the upgrade description.
+    // appear in the BASE description. typeof(T) tips are always-present (shown on unupgraded card),
+    // so their keywords must be explained in the base description — not just the upgrade description.
     //
-    // Upgrade-only tips must be added in OnUpgrade() so this test won't flag them.
+    // Upgrade-only tips must use conditional lambdas in the constructor (not OnUpgrade()), because
+    // OnUpgrade() is not called when loading upgraded cards from save. This test doesn't flag lambdas.
     // Guards against dangling tooltips like a VulnerablePower tip when the base description
     // only mentions Weak.
     [Fact]
@@ -225,10 +228,11 @@ public class TooltipConsistencyTests
 
     // Guards against lambda tips that return null for unupgraded cards.
     // Null tips crash the game with NullReferenceException in IHoverTip.RemoveDupes when hovering.
-    // Upgrade-only tips must be added in OnUpgrade(), not via null-returning lambdas.
+    // Upgrade-only tips must use conditional lambdas whose non-upgraded branch returns a non-null tip
+    // (e.g., duplicate an existing always-present tip — RemoveDupes deduplicates by ID).
     //
-    // Note: tips using HoverTipFactory.FromCard<T> may throw in tests (no game registry loaded).
-    // Exceptions are skipped — they don't indicate a null-return bug.
+    // Note: tips using HoverTipFactory.FromCard<T> or typeof(T) may throw in tests (no game
+    // registry loaded). Exceptions are skipped — they don't indicate a null-return bug.
     [Fact]
     public void AllCards_BaseCard_NoTipsReturnNull()
     {
@@ -253,17 +257,96 @@ public class TooltipConsistencyTests
         Assert.Empty(violations);
     }
 
-    // Spot-check: Fortitude's VulnerablePower tip must be upgrade-only (added in OnUpgrade),
-    // because the base description only mentions Weak — not Vulnerable.
+    private static FieldInfo GetCurrentUpgradeLevelField()
+    {
+        var t = typeof(ConstructedCardModel).BaseType ?? typeof(ConstructedCardModel);
+        while (t != null)
+        {
+            var f = t.GetField("_currentUpgradeLevel", BindingFlags.NonPublic | BindingFlags.Instance);
+            if (f != null) return f;
+            t = t.BaseType;
+        }
+        // Also try ConstructedCardModel itself
+        var f2 = typeof(ConstructedCardModel).GetField("_currentUpgradeLevel", BindingFlags.NonPublic | BindingFlags.Instance);
+        if (f2 != null) return f2;
+        throw new InvalidOperationException("_currentUpgradeLevel field not found on CardModel hierarchy");
+    }
+
+    // Simulate how the game loads an upgraded card: set _currentUpgradeLevel directly.
+    // The game does NOT call OnUpgrade() when loading from save — only sets the level field.
+    // Tips added in OnUpgrade() are therefore LOST after reload, making OnUpgrade() wrong
+    // for upgrade-conditional tooltips.
+    private static T AsUpgraded<T>(T card) where T : ConstructedCardModel
+    {
+        GetCurrentUpgradeLevelField().SetValue(card, 1);
+        return card;
+    }
+
+    // Spot-check: Fortitude's VulnerablePower tip must be upgrade-only, because the base
+    // description only mentions Weak — not Vulnerable.
+    // After the lambda fix: the tip is in _hoverTips as a conditional lambda (not typeof(T)),
+    // so HasTipForType (which uses GetCapturedType) correctly returns false for the base card.
     [Fact]
     public void Fortitude_BaseCard_HasNoAlwaysPresentVulnerablePowerTip()
     {
         var tips = GetHoverTips(new Fortitude());
         Assert.False(HasTipForType(tips, typeof(VulnerablePower)),
-            "Fortitude base card must not carry an always-present VulnerablePower tip — " +
-            "base description only mentions Weak. Add it in OnUpgrade() instead.");
+            "Fortitude base card must not carry an always-present VulnerablePower typeof(T) tip — " +
+            "base description only mentions Weak. Use a conditional lambda for upgrade-only keywords.");
         Assert.True(HasTipForType(tips, typeof(WeakPower)),     "Fortitude missing WeakPower tip");
         Assert.True(HasTipForType(tips, typeof(StrengthPower)), "Fortitude missing StrengthPower tip");
+    }
+
+    // Fortitude has no upgrade-only keywords — both base and upgrade mention Weak and Strength.
+    // Upgrade only increases the Strength gain (1 → 2), handled by the power's Amount.
+    [Fact]
+    public void Fortitude_HasNoConditionalLambdaTip()
+    {
+        var tips = GetHoverTips(new Fortitude());
+        Assert.True(tips.All(UsesImplicitTypeConversion),
+            "Fortitude has no upgrade-only keywords — all tips must be always-present typeof(T) tips, not conditional lambdas.");
+    }
+
+    // Comprehensive: for every card where the upgrade description introduces a new power keyword
+    // not present in the base description, there must be a conditional lambda tip (non-typeof(T))
+    // in the constructor. typeof(T) tips are always-present; OnUpgrade() tips are NOT present when
+    // loading upgraded cards from save (the game only sets _currentUpgradeLevel, not calling OnUpgrade()).
+    [Fact]
+    public void AllCards_UpgradeOnlyPowerKeywords_HaveConditionalLambdaTip()
+    {
+        var json = LoadCardsJson();
+        var violations = new List<string>();
+
+        foreach (var cardType in typeof(ApprenticeCard).Assembly.GetTypes()
+            .Where(t => !t.IsAbstract && t.IsSubclassOf(typeof(ApprenticeCard))))
+        {
+            var card = (ConstructedCardModel)Activator.CreateInstance(cardType)!;
+            var locPrefix = ToLocKeyPrefix(cardType);
+
+            json.TryGetValue($"{locPrefix}.description",  out var baseDesc);
+            json.TryGetValue($"{locPrefix}+.description", out var upgDesc);
+
+            if (upgDesc == null) continue;
+
+            var tips = GetHoverTips(card);
+            bool hasAnyConditionalLambda = tips.Any(tip => !UsesImplicitTypeConversion(tip));
+
+            foreach (var (keyword, _) in PowerKeywordToType)
+            {
+                var tag = $"[gold]{keyword}[/gold]";
+                if (baseDesc?.Contains(tag) == true) continue; // base has it → typeof(T) tip covers it
+                if (!upgDesc.Contains(tag)) continue;          // neither has it → no tip needed
+
+                if (!hasAnyConditionalLambda)
+                    violations.Add(
+                        $"{cardType.Name}: '{keyword}' appears only in +.description but no " +
+                        "conditional lambda tip found. OnUpgrade() is not called when loading " +
+                        "upgraded cards from save. Add a lambda in the constructor that checks " +
+                        "card.IsUpgraded at display time.");
+            }
+        }
+
+        Assert.Empty(violations);
     }
 
     // Spot-checks for key EE cards — these fail with the card name in the message for fast diagnosis.
@@ -298,16 +381,90 @@ public class TooltipConsistencyTests
     }
 
     [Fact]
-    public void TrueStrength_HasFourAlwaysPresentTipsPlusUpgradeOnlyStrength()
+    public void Transference_BaseCard_HasWeakAndVulnerablePowerTips()
+    {
+        var tips = GetHoverTips(new Transference());
+        Assert.True(HasTipForType(tips, typeof(WeakPower)),       "Transference missing WeakPower tip");
+        Assert.True(HasTipForType(tips, typeof(VulnerablePower)), "Transference missing VulnerablePower tip");
+        Assert.True(tips.All(UsesImplicitTypeConversion),
+            "Transference has no upgrade-only keywords — all tips must be typeof(T), not conditional lambdas.");
+    }
+
+    [Fact]
+    public void Recrimination_BaseCard_HasWeakAndVulnerablePowerTips()
+    {
+        var tips = GetHoverTips(new Recrimination());
+        Assert.True(HasTipForType(tips, typeof(VulnerablePower)), "Recrimination missing VulnerablePower tip");
+        Assert.True(HasTipForType(tips, typeof(WeakPower)),       "Recrimination missing WeakPower tip");
+        Assert.True(tips.All(UsesImplicitTypeConversion),
+            "Recrimination has no upgrade-only keywords — all tips must be typeof(T), not conditional lambdas.");
+    }
+
+    [Fact]
+    public void TrueStrength_HasExactlyFourAlwaysPresentTips_NoLambda_NoStrength()
     {
         var tips = GetHoverTips(new TrueStrength());
         Assert.True(HasTipForType(tips, typeof(WeakPower)),         "TrueStrength missing WeakPower tip");
         Assert.True(HasTipForType(tips, typeof(VulnerablePower)),   "TrueStrength missing VulnerablePower tip");
         Assert.True(HasTipForType(tips, typeof(UnweakPower)),       "TrueStrength missing UnweakPower tip");
         Assert.True(HasTipForType(tips, typeof(UnvulnerablePower)), "TrueStrength missing UnvulnerablePower tip");
-        // Strength conversion is upgrade-only; StrengthPower tip must be a conditional lambda.
         Assert.False(HasTipForType(tips, typeof(StrengthPower)),
-            "TrueStrength base card must not carry an always-present StrengthPower tip — " +
-            "base description doesn't mention Strength. Use a conditional lambda.");
+            "TrueStrength must not have a StrengthPower tip — Strength was removed from the upgrade.");
+        Assert.True(tips.All(UsesImplicitTypeConversion),
+            "TrueStrength has no upgrade-only keywords — all tips must be typeof(T), not conditional lambdas.");
+    }
+
+    // Detects the power-keyword lambda anti-pattern: a TooltipSource whose closure captures
+    // another TooltipSource (i.e. `card => card.IsUpgraded ? powerTip : otherPowerTip`).
+    // This is distinct from legitimate token-display lambdas, which capture nothing.
+    private static bool HasPowerKeywordLambdaAntiPattern(TooltipSource tip)
+    {
+        if (UsesImplicitTypeConversion(tip)) return false;
+        var makeTipField = typeof(TooltipSource)
+            .GetField("_makeTip", BindingFlags.NonPublic | BindingFlags.Instance);
+        var makeTip = makeTipField?.GetValue(tip) as Delegate;
+        if (makeTip?.Target == null) return false;
+        return makeTip.Target.GetType()
+            .GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
+            .Any(f => f.FieldType == typeof(TooltipSource));
+    }
+
+    // Bidirectional guard: if +.description introduces no new power keywords vs .description,
+    // then the card must not use conditional power-keyword lambda tips (closures that capture
+    // TooltipSource to switch between power tips based on IsUpgraded). Legitimate token-display
+    // lambdas (which do not capture TooltipSource) are NOT flagged.
+    [Fact]
+    public void AllCards_NoConditionalLambdaTips_UnlessUpgradeDescriptionHasNewKeywords()
+    {
+        var json = LoadCardsJson();
+        var violations = new List<string>();
+
+        foreach (var cardType in typeof(ApprenticeCard).Assembly.GetTypes()
+            .Where(t => !t.IsAbstract && t.IsSubclassOf(typeof(ApprenticeCard))))
+        {
+            var locPrefix = ToLocKeyPrefix(cardType);
+            json.TryGetValue($"{locPrefix}.description",  out var baseDesc);
+            json.TryGetValue($"{locPrefix}+.description", out var upgDesc);
+
+            if (upgDesc == null) continue;
+
+            bool upgradeHasNewKeyword = PowerKeywordToType.Keys.Any(keyword =>
+            {
+                var tag = $"[gold]{keyword}[/gold]";
+                return upgDesc.Contains(tag) && baseDesc?.Contains(tag) != true;
+            });
+
+            if (upgradeHasNewKeyword) continue;
+
+            var card = (ConstructedCardModel)Activator.CreateInstance(cardType)!;
+            var tips = GetHoverTips(card);
+
+            if (tips.Any(HasPowerKeywordLambdaAntiPattern))
+                violations.Add(
+                    $"{cardType.Name}: +.description introduces no new power keywords " +
+                    "but card has conditional power-keyword lambda tips — use typeof(T) tips.");
+        }
+
+        Assert.Empty(violations);
     }
 }

@@ -33,7 +33,7 @@ public class Potential : ConstructedCardModel
         if (DynamicVars.CalculatedDamage.Calculate(cardPlay.Target) > 0)
             await CommonActions.CardAttack(cardPlay.Card, cardPlay.Target, 1).Execute(context);
 
-        if (DynamicVars.TryGetValue("PotBlock", out DynamicVar potBlock))
+        if (DynamicVars.TryGetValue("PotBlock", out DynamicVar? potBlock))
             await CommonActions.CardBlock(this, potBlock, cardPlay);
 
         CardModifier.AddModifier<SpentModifier>(cardPlay.Card);

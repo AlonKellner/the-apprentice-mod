@@ -14,19 +14,12 @@ public class Obsession : ApprenticeCard
 
     public Obsession() : base(2, CardType.Power, CardRarity.Rare, TargetType.None)
     {
-        WithBlock(1);
         WithTip(CardKeyword.Unplayable);
-    }
-
-    protected override void OnUpgrade()
-    {
-        base.OnUpgrade();
-        DynamicVars.Block.UpgradeValueBy(1m);
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
         var creature = cardPlay.Card.Owner.Creature;
-        await PowerCmd.Apply<ObsessionPower>(context, creature, IsUpgraded ? 2m : 1m, creature, cardPlay.Card, false);
+        await PowerCmd.Apply<ObsessionPower>(context, creature, IsUpgraded ? 6m : 4m, creature, cardPlay.Card, false);
     }
 }

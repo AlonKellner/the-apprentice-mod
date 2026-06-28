@@ -1,3 +1,4 @@
+using BaseLib.Utils;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
@@ -14,12 +15,6 @@ public class Fortitude : ApprenticeCard
     {
         WithTip(typeof(WeakPower));
         WithTip(typeof(StrengthPower));
-    }
-
-    protected override void OnUpgrade()
-    {
-        base.OnUpgrade();
-        WithTip(typeof(VulnerablePower));
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
