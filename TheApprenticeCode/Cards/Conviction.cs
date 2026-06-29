@@ -15,6 +15,7 @@ public class Conviction : ApprenticeCard
     public Conviction() : base(1, CardType.Power, CardRarity.Uncommon, TargetType.None)
     {
         WithTip(new TooltipSource(card => HoverTipFactory.FromCard<Ambition>(upgrade: card.IsUpgraded)));
+        WithAmbitionKeywordTips();
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)

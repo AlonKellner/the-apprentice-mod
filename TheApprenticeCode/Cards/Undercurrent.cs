@@ -12,7 +12,7 @@ public class Undercurrent : ApprenticeCard
 
     public Undercurrent() : base(2, CardType.Power, CardRarity.Uncommon, TargetType.None)
     {
-        WithTip(typeof(WeakPower));
+        WithTip(typeof(VulnerablePower));
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)

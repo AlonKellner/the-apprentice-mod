@@ -9,7 +9,7 @@ public class Repose : ApprenticeCard
 {
     public const string CardId = "TheApprentice:Repose";
 
-    public Repose() : base(1, CardType.Skill, CardRarity.Common, TargetType.None)
+    public Repose() : base(1, CardType.Skill, CardRarity.Basic, TargetType.None)
     {
         WithBlock(13);
         WithTip(typeof(WeakPower));

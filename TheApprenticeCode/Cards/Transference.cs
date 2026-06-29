@@ -23,6 +23,6 @@ public class Transference : ApprenticeCard
         await EmotionalExpression.TransferWeakTo(context, creature, target, cardPlay.Card, max: 3);
         await EmotionalExpression.TransferVulnerableTo(context, creature, target, cardPlay.Card, max: 3);
         if (IsUpgraded)
-            await CommonActions.Draw(cardPlay.Card, context);
+            await CommonActions.Draw(this, context);
     }
 }

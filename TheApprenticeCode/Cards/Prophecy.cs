@@ -21,6 +21,7 @@ public class Prophecy : ApprenticeCard
     {
         WithTip(ApprenticeKeywords.Planned);
         WithTip(new TooltipSource(card => HoverTipFactory.FromCard<Dream>(upgrade: card.IsUpgraded)));
+        WithDreamKeywordTips();
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)

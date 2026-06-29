@@ -15,9 +15,10 @@ public class Resolve : ApprenticeCard
 {
     public const string CardId = "TheApprentice:Resolve";
 
-    public Resolve() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.None)
+    public Resolve() : base(1, CardType.Skill, CardRarity.Basic, TargetType.None)
     {
         WithTip(new TooltipSource(card => HoverTipFactory.FromCard<Ambition>(upgrade: card.IsUpgraded)));
+        WithAmbitionKeywordTips();
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)

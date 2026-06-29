@@ -21,6 +21,8 @@ public class Blueprint : ApprenticeCard
         WithTip(CardKeyword.Unplayable);
         WithTip(new TooltipSource(card => HoverTipFactory.FromCard<Dream>(upgrade: card.IsUpgraded)));
         WithTip(new TooltipSource(card => HoverTipFactory.FromCard<Ambition>(upgrade: card.IsUpgraded)));
+        WithDreamKeywordTips();
+        WithAmbitionKeywordTips();
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)

@@ -11,7 +11,7 @@ public class Exertion : ApprenticeCard
 {
     public const string CardId = "TheApprentice:Exertion";
 
-    public Exertion() : base(0, CardType.Skill, CardRarity.Common, TargetType.None)
+    public Exertion() : base(0, CardType.Skill, CardRarity.Basic, TargetType.None)
     {
         WithTip(typeof(VigorPower));
     }

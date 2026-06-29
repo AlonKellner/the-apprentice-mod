@@ -7,4 +7,13 @@ public static class ApprenticeKeywords
 {
     [CustomEnum]
     public static CardKeyword Planned;
+
+    [CustomEnum, KeywordProperties(AutoKeywordPosition.Before)]
+    public static CardKeyword Dreamy;
+
+    [CustomEnum, KeywordProperties(AutoKeywordPosition.Before)]
+    public static CardKeyword Ambitous;
+
+    [CustomEnum, KeywordProperties(AutoKeywordPosition.After)]
+    public static CardKeyword Expend;
 }

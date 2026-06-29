@@ -17,8 +17,8 @@ public class Destined : ApprenticeCard
     {
         WithCostUpgradeBy(-1);
         WithTip(ApprenticeKeywords.Planned);
-        WithTip(typeof(Dream));
-        WithTip(typeof(Ambition));
+        WithDreamTips();
+        WithAmbitionTips();
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)

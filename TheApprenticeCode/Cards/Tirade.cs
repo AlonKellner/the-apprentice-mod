@@ -9,7 +9,7 @@ public class Tirade : ApprenticeCard
 {
     public const string CardId = "TheApprentice:Tirade";
 
-    public Tirade() : base(2, CardType.Attack, CardRarity.Rare, TargetType.AllEnemies)
+    public Tirade() : base(2, CardType.Attack, CardRarity.Basic, TargetType.AllEnemies)
     {
         WithDamage(10);
     }

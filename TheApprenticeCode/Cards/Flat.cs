@@ -10,7 +10,7 @@ public class Flat : ApprenticeCard
 {
     public const string CardId = "TheApprentice:Flat";
 
-    public Flat() : base(1, CardType.Skill, CardRarity.Common, TargetType.None)
+    public Flat() : base(1, CardType.Skill, CardRarity.Basic, TargetType.None)
     {
         WithTip(typeof(UnvulnerablePower));
         WithTip(typeof(StrengthPower));

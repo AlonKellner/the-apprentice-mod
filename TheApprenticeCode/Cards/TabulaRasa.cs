@@ -27,6 +27,6 @@ public class TabulaRasa : ApprenticeCard
         PlannedModifier.InvokeChanged();
 
         if (IsUpgraded)
-            await CommonActions.Draw(cardPlay.Card, context);
+            await CommonActions.Draw(this, context);
     }
 }

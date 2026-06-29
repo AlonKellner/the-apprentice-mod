@@ -9,7 +9,7 @@ public class Score : ApprenticeCard
 {
     public const string CardId = "TheApprentice:Score";
 
-    public Score() : base(2, CardType.Skill, CardRarity.Uncommon, TargetType.None)
+    public Score() : base(2, CardType.Skill, CardRarity.Basic, TargetType.None)
     {
         WithBlock(18);
         WithTip(typeof(TensionPower));

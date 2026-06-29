@@ -1,12 +1,8 @@
-using System.Linq;
 using BaseLib.Abstracts;
 using BaseLib.Utils;
-using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models.CardPools;
-using MegaCrit.Sts2.Core.ValueProps;
-using TheApprentice.TheApprenticeCode.Cards.Modifiers;
 
 namespace TheApprentice.TheApprenticeCode.Cards;
 
@@ -14,17 +10,18 @@ namespace TheApprentice.TheApprenticeCode.Cards;
 public class Dream : ConstructedCardModel
 {
     public const string CardId = "TheApprentice:Dream";
+    public const int BaseBlock = 0;
 
     public Dream() : base(0, CardType.Skill, CardRarity.Token, TargetType.None, showInCardLibrary: false)
     {
-        WithCalculatedBlock(0, 1,
-            static (card, _) => card.Owner?.Piles.SelectMany(p => p.Cards).Count(c => c is Dream) ?? 0m,
-            ValueProp.Move, 0, 1);
+        WithBlock(BaseBlock);
+        WithKeyword(ApprenticeKeywords.Dreamy, ConstructedCardModel.UpgradeType.None);
+        WithKeyword(ApprenticeKeywords.Expend, ConstructedCardModel.UpgradeType.None);
+        WithKeyword(CardKeyword.Exhaust, ConstructedCardModel.UpgradeType.Add);
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
         await CommonActions.CardBlock(this, cardPlay);
-        CardModifier.AddModifier<SpentModifier>(cardPlay.Card);
     }
 }

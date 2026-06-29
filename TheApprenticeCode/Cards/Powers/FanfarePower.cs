@@ -19,8 +19,8 @@ public class FanfarePower : CustomPowerModel
 
     public override List<(string, string)> Localization => new PowerLoc(
         "Fanfare",
-        "The first time each debuff type is applied to you in combat, gain 1 Energy.",
-        "The first time each debuff type is applied to you in combat, gain 1 Energy.");
+        "The first time each debuff type is applied to you in combat, gain {energyPrefix:energyIcons(1)}.",
+        "The first time each debuff type is applied to you in combat, gain {energyPrefix:energyIcons(1)}.");
 
     private readonly HashSet<Type> _triggeredDebuffs = new();
 

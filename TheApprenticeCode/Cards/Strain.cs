@@ -11,7 +11,7 @@ public class Strain : ApprenticeCard
 {
     public const string CardId = "TheApprentice:Strain";
 
-    public Strain() : base(0, CardType.Skill, CardRarity.Common, TargetType.None)
+    public Strain() : base(0, CardType.Skill, CardRarity.Basic, TargetType.None)
     {
         WithTip(typeof(StrengthPower));
         WithTip(typeof(VigorPower));

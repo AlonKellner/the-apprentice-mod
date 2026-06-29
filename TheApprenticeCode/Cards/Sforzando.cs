@@ -10,7 +10,7 @@ public class Sforzando : ApprenticeCard
 {
     public const string CardId = "TheApprentice:Sforzando";
 
-    public Sforzando() : base(0, CardType.Skill, CardRarity.Uncommon, TargetType.None)
+    public Sforzando() : base(0, CardType.Skill, CardRarity.Basic, TargetType.None)
     {
         WithTip(typeof(StrengthPower));
         WithTip(typeof(TensionPower));

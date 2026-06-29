@@ -9,7 +9,7 @@ public class Flourish : ApprenticeCard
 {
     public const string CardId = "TheApprentice:Flourish";
 
-    public Flourish() : base(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
+    public Flourish() : base(1, CardType.Attack, CardRarity.Basic, TargetType.AnyEnemy)
     {
         WithDamage(7);
         WithTip(typeof(UnvulnerablePower));

@@ -11,8 +11,9 @@ public class Rehearsal : ApprenticeCard
 {
     public const string CardId = "TheApprentice:Rehearsal";
 
-    public Rehearsal() : base(2, CardType.Skill, CardRarity.Uncommon, TargetType.None)
+    public Rehearsal() : base(2, CardType.Skill, CardRarity.Basic, TargetType.None)
     {
+        WithCards(1);
         WithTip(ApprenticeKeywords.Planned);
     }
 
@@ -22,8 +23,8 @@ public class Rehearsal : ApprenticeCard
 
         if (IsUpgraded)
         {
-            await CommonActions.Draw(cardPlay.Card, context);
-            await CommonActions.Draw(cardPlay.Card, context);
+            await CommonActions.Draw(this, context);
+            await CommonActions.Draw(this, context);
         }
 
         var allCards = player.Piles.SelectMany(p => p.Cards).ToList();

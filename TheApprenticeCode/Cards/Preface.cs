@@ -10,7 +10,7 @@ public class Preface : ApprenticeCard
 {
     public const string CardId = "TheApprentice:Preface";
 
-    public Preface() : base(0, CardType.Attack, CardRarity.Common, TargetType.AllEnemies)
+    public Preface() : base(0, CardType.Attack, CardRarity.Basic, TargetType.AllEnemies)
     {
         WithDamage(4);
     }

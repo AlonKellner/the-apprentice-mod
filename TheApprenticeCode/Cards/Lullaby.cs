@@ -15,6 +15,7 @@ public class Lullaby : ApprenticeCard
     public Lullaby() : base(1, CardType.Power, CardRarity.Uncommon, TargetType.None)
     {
         WithTip(new TooltipSource(card => HoverTipFactory.FromCard<Dream>(upgrade: card.IsUpgraded)));
+        WithDreamKeywordTips();
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)

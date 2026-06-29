@@ -17,6 +17,7 @@ public class Draft : ApprenticeCard
 
     public Draft() : base(0, CardType.Skill, CardRarity.Common, TargetType.None)
     {
+        WithCards(1);
         WithTip(ApprenticeKeywords.Planned);
     }
 
@@ -30,7 +31,7 @@ public class Draft : ApprenticeCard
         var before = new HashSet<CardModel>(hand.Cards);
 
         for (int i = 0; i < draws; i++)
-            await CommonActions.Draw(cardPlay.Card, context);
+            await CommonActions.Draw(this, context);
 
         var allCards = player.Piles.SelectMany(p => p.Cards).ToList();
         foreach (var drawnCard in hand.Cards.Where(c => !before.Contains(c)).ToList())

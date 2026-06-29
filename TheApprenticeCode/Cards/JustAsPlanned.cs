@@ -12,7 +12,7 @@ public class JustAsPlanned : ApprenticeCard
 {
     public const string CardId = "TheApprentice:JustAsPlanned";
 
-    public JustAsPlanned() : base(3, CardType.Skill, CardRarity.Basic, TargetType.AnyEnemy, false)
+    public JustAsPlanned() : base(2, CardType.Skill, CardRarity.Basic, TargetType.AnyEnemy, false)
     {
         WithKeyword(CardKeyword.Retain, ConstructedCardModel.UpgradeType.None);
         WithKeyword(CardKeyword.Innate, ConstructedCardModel.UpgradeType.Add);

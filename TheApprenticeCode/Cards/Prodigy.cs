@@ -14,8 +14,8 @@ public class Prodigy : ApprenticeCard
     public Prodigy() : base(1, CardType.Power, CardRarity.Rare, TargetType.None)
     {
         WithKeyword(CardKeyword.Innate, ConstructedCardModel.UpgradeType.Add);
-        WithTip(typeof(Dream));
-        WithTip(typeof(Ambition));
+        WithDreamTips();
+        WithAmbitionTips();
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)

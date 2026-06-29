@@ -11,7 +11,7 @@ public class Penance : ApprenticeCard
 {
     public const string CardId = "TheApprentice:Penance";
 
-    public Penance() : base(2, CardType.Power, CardRarity.Rare, TargetType.None)
+    public Penance() : base(2, CardType.Power, CardRarity.Basic, TargetType.None)
     {
         WithTip(typeof(StrengthPower));
     }

@@ -14,9 +14,12 @@ public class Chrysalis : ApprenticeCard
 
     public Chrysalis() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.None)
     {
-        WithTip(typeof(Dream));
-        WithTip(typeof(Ambition));
+        WithDreamTips();
+        WithAmbitionTips();
         WithTip(new TooltipSource(card => HoverTipFactory.FromCard<Potential>(upgrade: card.IsUpgraded)));
+        WithTip(ApprenticeKeywords.Ambitous);
+        WithTip(ApprenticeKeywords.Dreamy);
+        WithTip(ApprenticeKeywords.Expend);
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)

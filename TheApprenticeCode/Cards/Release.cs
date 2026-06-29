@@ -9,7 +9,7 @@ public class Release : ApprenticeCard
 {
     public const string CardId = "TheApprentice:Release";
 
-    public Release() : base(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
+    public Release() : base(1, CardType.Attack, CardRarity.Basic, TargetType.AnyEnemy)
     {
         WithDamage(4);
     }

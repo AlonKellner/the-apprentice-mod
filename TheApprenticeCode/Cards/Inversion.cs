@@ -10,7 +10,7 @@ public class Inversion : ApprenticeCard
 {
     public const string CardId = "TheApprentice:Inversion";
 
-    public Inversion() : base(2, CardType.Skill, CardRarity.Common, TargetType.None)
+    public Inversion() : base(2, CardType.Skill, CardRarity.Basic, TargetType.None)
     {
         WithKeyword(CardKeyword.Exhaust, ConstructedCardModel.UpgradeType.None);
         WithCostUpgradeBy(-1);

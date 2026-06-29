@@ -15,12 +15,13 @@ public class Reverie : ApprenticeCard
     {
         WithCards(1);
         WithTip(new TooltipSource(card => HoverTipFactory.FromCard<Dream>(upgrade: card.IsUpgraded)));
+        WithDreamKeywordTips();
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
         var player = cardPlay.Card.Owner;
         await DreamsAndAmbitions.AddDreams(player, CombatState!, 3, IsUpgraded);
-        await CommonActions.Draw(cardPlay.Card, context);
+        await CommonActions.Draw(this, context);
     }
 }

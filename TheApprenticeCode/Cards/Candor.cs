@@ -9,7 +9,7 @@ public class Candor : ApprenticeCard
 {
     public const string CardId = "TheApprentice:Candor";
 
-    public Candor() : base(1, CardType.Skill, CardRarity.Common, TargetType.AllEnemies)
+    public Candor() : base(1, CardType.Skill, CardRarity.Basic, TargetType.AllEnemies)
     {
         WithCostUpgradeBy(-1);
         WithTip(typeof(VulnerablePower));

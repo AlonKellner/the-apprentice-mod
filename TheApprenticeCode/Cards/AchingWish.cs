@@ -15,6 +15,7 @@ public class AchingWish : ApprenticeCard
     {
         WithTip(typeof(VulnerablePower));
         WithTip(new TooltipSource(card => HoverTipFactory.FromCard<Dream>(upgrade: card.IsUpgraded)));
+        WithDreamKeywordTips();
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)

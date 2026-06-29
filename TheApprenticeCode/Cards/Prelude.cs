@@ -27,6 +27,6 @@ public class Prelude : ApprenticeCard
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
         await CommonActions.CardBlock(cardPlay.Card, cardPlay);
-        await CommonActions.Draw(cardPlay.Card, context);
+        await CommonActions.Draw(this, context);
     }
 }

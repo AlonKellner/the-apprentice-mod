@@ -13,11 +13,12 @@ public class Sublimation : ApprenticeCard
 {
     public const string CardId = "TheApprentice:Sublimation";
 
-    public Sublimation() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.None)
+    public Sublimation() : base(1, CardType.Skill, CardRarity.Basic, TargetType.None)
     {
         WithVars(new StringVar("AmbitionType", "[gold]Ambition[/gold]"));
         WithTip(CardKeyword.Unplayable);
         WithTip(new BaseLib.Utils.TooltipSource(card => HoverTipFactory.FromCard<Ambition>(upgrade: card.IsUpgraded)));
+        WithAmbitionKeywordTips();
     }
 
     protected override void OnUpgrade()

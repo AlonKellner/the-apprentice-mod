@@ -15,6 +15,7 @@ public class Conductor : ApprenticeCard
     public Conductor() : base(1, CardType.Power, CardRarity.Rare, TargetType.None)
     {
         WithTip(new TooltipSource(card => HoverTipFactory.FromCard<Potential>(upgrade: card.IsUpgraded)));
+        WithPotentialKeywordTips();
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)

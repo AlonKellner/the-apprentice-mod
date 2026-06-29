@@ -1,4 +1,10 @@
 {
   "THEAPPRENTICE-PLANNED.title": "Planned",
-  "THEAPPRENTICE-PLANNED.description": "Unplayable. Some cards can play all [gold]Planned[/gold] cards in the order they were planned."
+  "THEAPPRENTICE-PLANNED.description": "Unplayable. Some cards can play all [gold]Planned[/gold] cards in the order they were planned.",
+  "THEAPPRENTICE-DREAMY.title": "Dreamy",
+  "THEAPPRENTICE-DREAMY.description": "Dreamy cards gain 1 additional Block for each Dream created this combat.",
+  "THEAPPRENTICE-AMBITOUS.title": "Ambitous",
+  "THEAPPRENTICE-AMBITOUS.description": "Ambitous cards deal 1 additional Damage for each Ambition created this combat.",
+  "THEAPPRENTICE-EXPEND.title": "Expend",
+  "THEAPPRENTICE-EXPEND.description": "Add Unplayable to this card."
 }

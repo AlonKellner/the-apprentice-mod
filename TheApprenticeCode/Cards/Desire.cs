@@ -15,7 +15,7 @@ public class Desire : ApprenticeCard
     public Desire() : base(1, CardType.Power, CardRarity.Rare, TargetType.None)
     {
         WithKeyword(CardKeyword.Innate, ConstructedCardModel.UpgradeType.Add);
-        WithTip(typeof(Dream));
+        WithDreamTips();
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)

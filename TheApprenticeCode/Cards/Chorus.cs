@@ -13,7 +13,7 @@ public class Chorus : ApprenticeCard
     public Chorus() : base(1, CardType.Attack, CardRarity.Common, TargetType.AllEnemies)
     {
         WithDamage(7);
-        WithTip(typeof(Ambition));
+        WithAmbitionTips();
     }
 
     protected override void OnUpgrade()

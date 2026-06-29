@@ -10,7 +10,7 @@ public class Canticle : ApprenticeCard
 {
     public const string CardId = "TheApprentice:Canticle";
 
-    public Canticle() : base(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
+    public Canticle() : base(1, CardType.Attack, CardRarity.Basic, TargetType.AnyEnemy)
     {
         WithDamage(14);
         WithTip(typeof(StrengthPower));

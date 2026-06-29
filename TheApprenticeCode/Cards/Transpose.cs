@@ -60,6 +60,6 @@ public class Transpose : ApprenticeCard
         }
 
         if (IsUpgraded)
-            await CommonActions.Draw(cardPlay.Card, context);
+            await CommonActions.Draw(this, context);
     }
 }

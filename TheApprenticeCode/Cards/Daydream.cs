@@ -12,7 +12,7 @@ public class Daydream : ApprenticeCard
     public Daydream() : base(1, CardType.Skill, CardRarity.Rare, TargetType.None)
     {
         WithKeyword(CardKeyword.Exhaust, ConstructedCardModel.UpgradeType.None);
-        WithTip(typeof(Dream));
+        WithDreamTips();
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)

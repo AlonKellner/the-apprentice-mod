@@ -16,7 +16,7 @@ public class Realize : ApprenticeCard
 {
     public const string CardId = "TheApprentice:Realize";
 
-    public Realize() : base(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
+    public Realize() : base(1, CardType.Attack, CardRarity.Basic, TargetType.AnyEnemy)
     {
         WithDamage(8);
         WithTip(ApprenticeKeywords.Planned);

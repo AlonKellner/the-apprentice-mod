@@ -12,7 +12,7 @@ public class Hubris : ApprenticeCard
     public Hubris() : base(0, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
     {
         WithDamage(3);
-        WithTip(typeof(Ambition));
+        WithAmbitionTips();
     }
 
     protected override void OnUpgrade()

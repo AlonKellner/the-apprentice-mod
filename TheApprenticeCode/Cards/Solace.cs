@@ -10,10 +10,11 @@ public class Solace : ApprenticeCard
 {
     public const string CardId = "TheApprentice:Solace";
 
-    public Solace() : base(1, CardType.Skill, CardRarity.Common, TargetType.None)
+    public Solace() : base(1, CardType.Skill, CardRarity.Basic, TargetType.None)
     {
         WithBlock(8);
         WithTip(new TooltipSource(card => HoverTipFactory.FromCard<Ambition>(upgrade: card.IsUpgraded)));
+        WithAmbitionKeywordTips();
     }
 
     protected override void OnUpgrade()

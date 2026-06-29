@@ -16,6 +16,7 @@ public class Improvise : ApprenticeCard
 
     public Improvise() : base(0, CardType.Skill, CardRarity.Uncommon, TargetType.None)
     {
+        WithCards(1);
         WithKeyword(CardKeyword.Retain, ConstructedCardModel.UpgradeType.Add);
         WithTip(ApprenticeKeywords.Planned);
     }
@@ -35,6 +36,6 @@ public class Improvise : ApprenticeCard
             PlannedModifier.Remove(card, allCards);
 
         for (int i = 0; i < planned.Count; i++)
-            await CommonActions.Draw(cardPlay.Card, context);
+            await CommonActions.Draw(this, context);
     }
 }

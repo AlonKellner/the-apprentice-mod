@@ -11,10 +11,11 @@ public class Attunement : ApprenticeCard
 {
     public const string CardId = "TheApprentice:Attunement";
 
-    public Attunement() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.None)
+    public Attunement() : base(1, CardType.Skill, CardRarity.Basic, TargetType.None)
     {
-        WithTip(typeof(Dream));
-        WithTip(typeof(Ambition));
+        WithCards(1);
+        WithDreamTips();
+        WithAmbitionTips();
         WithTip(typeof(TensionPower));
     }
 
@@ -27,6 +28,6 @@ public class Attunement : ApprenticeCard
         int tensionPerToken = IsUpgraded ? 3 : 2;
         if (tokens > 0)
             await TensionHelper.AddTension(context, player.Creature, tokens * tensionPerToken, cardPlay.Card);
-        await CommonActions.Draw(cardPlay.Card, context);
+        await CommonActions.Draw(this, context);
     }
 }

@@ -11,7 +11,7 @@ public class Dissolution : ApprenticeCard
 {
     public const string CardId = "TheApprentice:Dissolution";
 
-    public Dissolution() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.AllEnemies)
+    public Dissolution() : base(1, CardType.Skill, CardRarity.Basic, TargetType.AllEnemies)
     {
         WithTip(typeof(TensionPower));
         WithTip(typeof(WeakPower));

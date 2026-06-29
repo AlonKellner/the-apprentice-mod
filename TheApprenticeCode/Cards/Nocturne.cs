@@ -10,9 +10,10 @@ public class Nocturne : ApprenticeCard
 {
     public const string CardId = "TheApprentice:Nocturne";
 
-    public Nocturne() : base(1, CardType.Skill, CardRarity.Common, TargetType.None)
+    public Nocturne() : base(1, CardType.Skill, CardRarity.Basic, TargetType.None)
     {
         WithTip(new TooltipSource(card => HoverTipFactory.FromCard<Dream>(upgrade: card.IsUpgraded)));
+        WithDreamKeywordTips();
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)

@@ -10,7 +10,7 @@ public class Reflection : ApprenticeCard
 {
     public const string CardId = "TheApprentice:Reflection";
 
-    public Reflection() : base(2, CardType.Skill, CardRarity.Uncommon, TargetType.None)
+    public Reflection() : base(2, CardType.Skill, CardRarity.Basic, TargetType.None)
     {
         WithKeyword(CardKeyword.Exhaust, ConstructedCardModel.UpgradeType.None);
         WithTip(typeof(WeakPower));

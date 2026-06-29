@@ -10,7 +10,7 @@ public class Burden : ApprenticeCard
 {
     public const string CardId = "TheApprentice:Burden";
 
-    public Burden() : base(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
+    public Burden() : base(1, CardType.Attack, CardRarity.Basic, TargetType.AnyEnemy)
     {
         WithTip(typeof(StrengthPower));
     }

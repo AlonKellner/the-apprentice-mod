@@ -12,7 +12,7 @@ public class Ensemble : ApprenticeCard
 {
     public const string CardId = "TheApprentice:Ensemble";
 
-    public Ensemble() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.None)
+    public Ensemble() : base(1, CardType.Skill, CardRarity.Basic, TargetType.None)
     {
         WithTip(typeof(TensionPower));
         WithTip(typeof(VigorPower));

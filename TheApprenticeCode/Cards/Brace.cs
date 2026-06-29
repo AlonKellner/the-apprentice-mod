@@ -11,7 +11,7 @@ public class Brace : ApprenticeCard
 {
     public const string CardId = "TheApprentice:Brace";
 
-    public Brace() : base(0, CardType.Skill, CardRarity.Uncommon, TargetType.None)
+    public Brace() : base(0, CardType.Skill, CardRarity.Basic, TargetType.None)
     {
         WithTip(typeof(StrengthPower));
     }

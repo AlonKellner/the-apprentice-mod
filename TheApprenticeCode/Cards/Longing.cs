@@ -10,10 +10,11 @@ public class Longing : ApprenticeCard
 {
     public const string CardId = "TheApprentice:Longing";
 
-    public Longing() : base(1, CardType.Skill, CardRarity.Common, TargetType.None)
+    public Longing() : base(1, CardType.Skill, CardRarity.Basic, TargetType.None)
     {
         WithBlock(5);
         WithTip(new TooltipSource(card => HoverTipFactory.FromCard<Dream>(upgrade: card.IsUpgraded)));
+        WithDreamKeywordTips();
     }
 
     protected override void OnUpgrade()

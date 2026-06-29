@@ -8,9 +8,9 @@ public class Ignition : ApprenticeCard
 {
     public const string CardId = "TheApprentice:Ignition";
 
-    public Ignition() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.None)
+    public Ignition() : base(1, CardType.Skill, CardRarity.Basic, TargetType.None)
     {
-        WithTip(typeof(Potential));
+        WithPotentialTips();
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)

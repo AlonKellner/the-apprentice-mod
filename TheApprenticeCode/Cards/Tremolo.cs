@@ -11,7 +11,7 @@ public class Tremolo : ApprenticeCard
 {
     public const string CardId = "TheApprentice:Tremolo";
 
-    public Tremolo() : base(1, CardType.Skill, CardRarity.Common, TargetType.AnyEnemy)
+    public Tremolo() : base(1, CardType.Skill, CardRarity.Basic, TargetType.AnyEnemy)
     {
         WithBlock(5);
         WithTip(typeof(WeakPower));

@@ -16,8 +16,8 @@ public class DrivenInspiration : ApprenticeCard
     public DrivenInspiration() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.None)
     {
         WithTip(ApprenticeKeywords.Planned);
-        WithTip(typeof(Dream));
-        WithTip(typeof(Ambition));
+        WithDreamTips();
+        WithAmbitionTips();
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)

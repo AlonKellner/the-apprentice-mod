@@ -36,7 +36,7 @@ public class Plan : ApprenticeCard
     {
         var player = cardPlay.Card.Owner;
 
-        await CommonActions.Draw(cardPlay.Card, context);
+        await CommonActions.Draw(this, context);
 
         var maxSelect = IsUpgraded ? 3 : 2;
         var selected = await CardSelectCmd.FromHand(

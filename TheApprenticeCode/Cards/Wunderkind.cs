@@ -12,11 +12,13 @@ public class Wunderkind : ApprenticeCard
 {
     public const string CardId = "TheApprentice:Wunderkind";
 
-    public Wunderkind() : base(2, CardType.Power, CardRarity.Rare, TargetType.None)
+    public Wunderkind() : base(2, CardType.Power, CardRarity.Basic, TargetType.None)
     {
         WithCostUpgradeBy(-1);
         WithTip(new TooltipSource(_ => HoverTipFactory.FromCard<Dream>(upgrade: true)));
         WithTip(new TooltipSource(_ => HoverTipFactory.FromCard<Ambition>(upgrade: true)));
+        WithDreamKeywordTips();
+        WithAmbitionKeywordTips();
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)

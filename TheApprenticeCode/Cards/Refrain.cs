@@ -10,7 +10,7 @@ public class Refrain : ApprenticeCard
 {
     public const string CardId = "TheApprentice:Refrain";
 
-    public Refrain() : base(1, CardType.Skill, CardRarity.Common, TargetType.None)
+    public Refrain() : base(1, CardType.Skill, CardRarity.Basic, TargetType.None)
     {
         WithTip(typeof(TensionPower));
     }

@@ -16,8 +16,9 @@ public class Foresight : ApprenticeCard
 {
     public const string CardId = "TheApprentice:Foresight";
 
-    public Foresight() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.None)
+    public Foresight() : base(1, CardType.Skill, CardRarity.Basic, TargetType.None)
     {
+        WithCards(1);
         WithTip(ApprenticeKeywords.Planned);
     }
 
@@ -41,6 +42,6 @@ public class Foresight : ApprenticeCard
 
         int draws = IsUpgraded ? 2 : 1;
         for (int i = 0; i < draws; i++)
-            await CommonActions.Draw(cardPlay.Card, context);
+            await CommonActions.Draw(this, context);
     }
 }

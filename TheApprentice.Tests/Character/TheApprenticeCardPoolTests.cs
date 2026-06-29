@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using TheApprentice.TheApprenticeCode.Cards;
 using Xunit;
 
@@ -40,5 +43,30 @@ public class TheApprenticeCardPoolTests
             .ToList();
 
         Assert.Equal(new[] { "Prelude", "Signature" }, overrides);
+    }
+
+    [Fact]
+    public void Pool_HasExactly20CommonCards() => Assert.Equal(20, CountCardsByRarity("Common"));
+
+    [Fact]
+    public void Pool_HasExactly36UncommonCards() => Assert.Equal(36, CountCardsByRarity("Uncommon"));
+
+    [Fact]
+    public void Pool_HasExactly26RareCards() => Assert.Equal(26, CountCardsByRarity("Rare"));
+
+    [Fact]
+    public void Pool_HasExactly82CombatCards()
+        => Assert.Equal(82, CountCardsByRarity("Common") + CountCardsByRarity("Uncommon") + CountCardsByRarity("Rare"));
+
+    private static int CountCardsByRarity(string rarity)
+    {
+        var root = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", ".."));
+        var cardsDir = Path.Combine(root, "TheApprenticeCode", "Cards");
+        var skip = new HashSet<string> { "ApprenticeCard", "ApprenticeKeywords", "DreamsAndAmbitions", "TensionHelper" };
+        var pattern = new System.Text.RegularExpressions.Regex(
+            @":\s*base\(\s*\d+\s*,\s*CardType\.\w+\s*,\s*CardRarity\." + rarity + @"\b");
+        return Directory.GetFiles(cardsDir, "*.cs")
+            .Where(f => !skip.Contains(Path.GetFileNameWithoutExtension(f)))
+            .Count(f => pattern.IsMatch(File.ReadAllText(f)));
     }
 }

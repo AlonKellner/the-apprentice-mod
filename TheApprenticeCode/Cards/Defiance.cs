@@ -8,7 +8,7 @@ public class Defiance : ApprenticeCard
 {
     public const string CardId = "TheApprentice:Defiance";
 
-    public Defiance() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.None)
+    public Defiance() : base(1, CardType.Skill, CardRarity.Basic, TargetType.None)
     {
         WithTip(typeof(UnvulnerablePower));
     }

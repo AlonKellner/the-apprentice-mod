@@ -60,7 +60,7 @@
   "THEAPPRENTICE-SCHEMING.selectionPrompt": "Choose a card to make Planned.",
 
   "THEAPPRENTICE-IN_THE_ZONE.title": "In the Zone",
-  "THEAPPRENTICE-IN_THE_ZONE.description": "At the start of each turn, if you have [gold]Planned[/gold] cards, gain {Energy:diff()} Energy.",
+  "THEAPPRENTICE-IN_THE_ZONE.description": "At the start of each turn, if you have [gold]Planned[/gold] cards, gain {Energy:energyIcons}.",
 
   "THEAPPRENTICE-OBSESSION.title": "Obsession",
   "THEAPPRENTICE-OBSESSION.description": "#Whenever a card becomes [gold]Unplayable[/gold], gain -4-+6+ [gold]Block[/gold].",
@@ -96,16 +96,16 @@
   "THEAPPRENTICE-MAESTRO.description": "Whenever you apply [gold]Planned[/gold] to a card, draw 1 card.",
 
   "THEAPPRENTICE-DREAM.title": "Dream",
-  "THEAPPRENTICE-DREAM.description": "Gain {CalculatedBlock} [gold]Block[/gold] ({CalculationExtra:diff()} per [gold]Dream[/gold] in your deck). Become [gold]Unplayable[/gold].",
+  "THEAPPRENTICE-DREAM.description": "Gain {Block:diff()} [gold]Block[/gold].",
 
   "THEAPPRENTICE-AMBITION.title": "Ambition",
-  "THEAPPRENTICE-AMBITION.description": "Deal {CalculatedDamage} damage ({ExtraDamage:diff()} per [gold]Ambition[/gold] in your deck). Become [gold]Unplayable[/gold].",
+  "THEAPPRENTICE-AMBITION.description": "Deal {Damage:diff()} damage.",
 
   "THEAPPRENTICE-POTENTIAL.title": "Potential",
-  "THEAPPRENTICE-POTENTIAL.description": "Deal {CalculatedDamage} damage ({ExtraDamage:diff()} per [gold]Ambition[/gold]) and gain {PotBlock} [gold]Block[/gold] ({PotBlockExtra:diff()} per [gold]Dream[/gold]). Become [gold]Unplayable[/gold].",
+  "THEAPPRENTICE-POTENTIAL.description": "Deal {Damage:diff()} damage twice.\nGain {Block:diff()} [gold]Block[/gold] twice.",
 
   "THEAPPRENTICE-NOCTURNE.title": "Nocturne",
-  "THEAPPRENTICE-NOCTURNE.description": "Add 2 {IfUpgraded:show:[gold]Dream+[/gold]|[gold]Dreams[/gold]} to your hand.",
+  "THEAPPRENTICE-NOCTURNE.description": "Add 2 {IfUpgraded:show:[gold]Dreams+[/gold]|[gold]Dreams[/gold]} to your hand.",
 
   "THEAPPRENTICE-HUBRIS.title": "Hubris",
   "THEAPPRENTICE-HUBRIS.description": "Deal {Damage:diff()} damage. Add 2 [gold]Ambitions[/gold] to your hand.",
@@ -117,7 +117,7 @@
   "THEAPPRENTICE-DRIVE.description": "Deal {Damage:diff()} damage. Add 3 {IfUpgraded:show:[gold]Ambition+[/gold]|[gold]Ambitions[/gold]} to your hand.",
 
   "THEAPPRENTICE-REVERIE.title": "Reverie",
-  "THEAPPRENTICE-REVERIE.description": "Add 3 {IfUpgraded:show:[gold]Dream+[/gold]|[gold]Dreams[/gold]} to your hand. Draw 1 card.",
+  "THEAPPRENTICE-REVERIE.description": "Add 3 {IfUpgraded:show:[gold]Dreams+[/gold]|[gold]Dreams[/gold]} to your hand. Draw 1 card.",
 
   "THEAPPRENTICE-SUBLIMATION.title": "Sublimation",
   "THEAPPRENTICE-SUBLIMATION.description": "Exhaust all [gold]Unplayable[/gold] cards in your hand. For each, add 1 {AmbitionType}.",
@@ -224,19 +224,19 @@
   "THEAPPRENTICE-INVERSION.description": "Convert up to 5 [gold]Weak[/gold] to [gold]Unweak[/gold]. Convert up to 5 [gold]Vulnerable[/gold] to [gold]Unvulnerable[/gold].",
 
   "THEAPPRENTICE-EXERTION.title": "Exertion",
-  "THEAPPRENTICE-EXERTION.description": "Gain -4-+6+ [gold]Vigor[/gold].",
+  "THEAPPRENTICE-EXERTION.description": "#Gain -4-+6+ [gold]Vigor[/gold].",
 
   "THEAPPRENTICE-STRAIN.title": "Strain",
-  "THEAPPRENTICE-STRAIN.description": "Lose 1 [gold]Strength[/gold]. Gain -5-+8+ [gold]Vigor[/gold].",
+  "THEAPPRENTICE-STRAIN.description": "#Lose 1 [gold]Strength[/gold]. Gain -5-+8+ [gold]Vigor[/gold].",
 
   "THEAPPRENTICE-WALLOW.title": "Wallow",
-  "THEAPPRENTICE-WALLOW.description": "Gain -4-+6+ [gold]Block[/gold] for each [gold]Weak[/gold] you have.",
+  "THEAPPRENTICE-WALLOW.description": "#Gain -4-+6+ [gold]Block[/gold] for each [gold]Weak[/gold] you have.",
 
   "THEAPPRENTICE-COMPOSE.title": "Compose",
-  "THEAPPRENTICE-COMPOSE.description": "Remove -1-+2+ [gold]Weak[/gold]. Deal {Damage:diff()} damage.",
+  "THEAPPRENTICE-COMPOSE.description": "#Remove -1-+2+ [gold]Weak[/gold]. Deal {Damage:diff()} damage.",
 
   "THEAPPRENTICE-SURRENDER.title": "Surrender",
-  "THEAPPRENTICE-SURRENDER.description": "Remove up to -1-+2+ [gold]Vulnerable[/gold]. Gain 7 [gold]Block[/gold] per [gold]Vulnerable[/gold] removed.",
+  "THEAPPRENTICE-SURRENDER.description": "#Remove up to -1-+2+ [gold]Vulnerable[/gold]. Gain 7 [gold]Block[/gold] per [gold]Vulnerable[/gold] removed.",
 
   "THEAPPRENTICE-REVERSAL.title": "Reversal",
   "THEAPPRENTICE-REVERSAL.description": "#Gain {Block:diff()} [gold]Block[/gold]. Convert up to -1-+2+ [gold]Weak[/gold] to [gold]Unweak[/gold].",
@@ -245,19 +245,19 @@
   "THEAPPRENTICE-BREAKTHROUGH.description": "#Convert up to -1-+2+ [gold]Vulnerable[/gold] to [gold]Unvulnerable[/gold]. Deal {Damage:diff()} damage.",
 
   "THEAPPRENTICE-DISSOLUTION.title": "Dissolution",
-  "THEAPPRENTICE-DISSOLUTION.description": "Remove all [gold]Tension[/gold]. Apply 1 [gold]Weak[/gold] to ALL enemies for each -5-+3+ [gold]Tension[/gold] removed.",
+  "THEAPPRENTICE-DISSOLUTION.description": "#Remove all [gold]Tension[/gold]. Apply 1 [gold]Weak[/gold] to ALL enemies for each -5-+3+ [gold]Tension[/gold] removed.",
 
   "THEAPPRENTICE-BRACE.title": "Brace",
-  "THEAPPRENTICE-BRACE.description": "Gain -4-+6+ [gold]Block[/gold] per negative [gold]Strength[/gold].",
+  "THEAPPRENTICE-BRACE.description": "#Gain -4-+6+ [gold]Block[/gold] per negative [gold]Strength[/gold].",
 
   "THEAPPRENTICE-BURDEN.title": "Burden",
-  "THEAPPRENTICE-BURDEN.description": "Remove up to -2-+3+ negative [gold]Strength[/gold]. Deal 12 damage per [gold]Strength[/gold] removed.",
+  "THEAPPRENTICE-BURDEN.description": "#Remove up to -2-+3+ negative [gold]Strength[/gold]. Deal 12 damage per [gold]Strength[/gold] removed.",
 
   "THEAPPRENTICE-ENSEMBLE.title": "Ensemble",
-  "THEAPPRENTICE-ENSEMBLE.description": "Gain -3-+4+ [gold]Tension[/gold] and -3-+4+ [gold]Vigor[/gold] for each unique debuff active on you.",
+  "THEAPPRENTICE-ENSEMBLE.description": "#Gain -3-+4+ [gold]Tension[/gold] and -3-+4+ [gold]Vigor[/gold] for each unique debuff active on you.",
 
   "THEAPPRENTICE-ACCENT.title": "Accent",
-  "THEAPPRENTICE-ACCENT.description": "-The next [gold]Weak[/gold], [gold]Unweak[/gold], [gold]Vulnerable[/gold], or [gold]Unvulnerable[/gold] applied to you is doubled.-+The next [gold]Weak[/gold], [gold]Unweak[/gold], [gold]Vulnerable[/gold], or [gold]Unvulnerable[/gold] applied to you is doubled. [gold]Retain[/gold].+",
+  "THEAPPRENTICE-ACCENT.description": "#-The next [gold]Weak[/gold], [gold]Unweak[/gold], [gold]Vulnerable[/gold], or [gold]Unvulnerable[/gold] applied to you is doubled.-+The next [gold]Weak[/gold], [gold]Unweak[/gold], [gold]Vulnerable[/gold], or [gold]Unvulnerable[/gold] applied to you is doubled. [gold]Retain[/gold].+",
 
   "THEAPPRENTICE-DISCORD.title": "Discord",
   "THEAPPRENTICE-DISCORD.description": "Deal {Damage:diff()} damage twice. Apply 1 [gold]Vulnerable[/gold] to yourself.",
@@ -288,16 +288,16 @@
   "THEAPPRENTICE-FORTITUDE.description": "#At the start of your turn, if you are [gold]Weak[/gold], gain -3-+5+ [gold]Vigor[/gold].",
 
   "THEAPPRENTICE-UNDERCURRENT.title": "Undercurrent",
-  "THEAPPRENTICE-UNDERCURRENT.description": "#At the end of your turn, if you are [gold]Weak[/gold], deal -8-+12+ damage to ALL enemies.",
+  "THEAPPRENTICE-UNDERCURRENT.description": "#At the end of your turn, if you are [gold]Vulnerable[/gold], deal -8-+12+ damage to ALL enemies.",
 
   "THEAPPRENTICE-CATHARSIS.title": "Catharsis",
-  "THEAPPRENTICE-CATHARSIS.description": "Remove up to 3 [gold]Weak[/gold] and up to 3 [gold]Vulnerable[/gold]. Deal {IfUpgraded:show:10|8} damage to ALL enemies per stack removed. [gold]Exhaust[/gold].",
+  "THEAPPRENTICE-CATHARSIS.description": "Remove up to 3 [gold]Weak[/gold] and up to 3 [gold]Vulnerable[/gold]. Deal {IfUpgraded:show:10|8} damage to ALL enemies per stack removed.",
 
   "THEAPPRENTICE-TIRADE.title": "Tirade",
   "THEAPPRENTICE-TIRADE.description": "Remove all [gold]Block[/gold]. Deal {Damage:diff()} damage to ALL enemies. If you removed {IfUpgraded:show:12+|15+} [gold]Block[/gold], deal {IfUpgraded:show:25|20} more.",
 
   "THEAPPRENTICE-SCAPEGOAT.title": "Scapegoat",
-  "THEAPPRENTICE-SCAPEGOAT.description": "Transfer up to 3 [gold]Weak[/gold] and up to 3 [gold]Vulnerable[/gold] and all negative [gold]Strength[/gold] to {IfUpgraded:show:ALL enemies|an enemy}.",
+  "THEAPPRENTICE-SCAPEGOAT.description": "Transfer up to 3 [gold]Weak[/gold] and up to 3 [gold]Vulnerable[/gold] to {IfUpgraded:show:ALL enemies|an enemy}.",
   "THEAPPRENTICE-SCAPEGOAT.selectionPrompt": "Choose an enemy to receive your debuffs.",
 
   "THEAPPRENTICE-RECRIMINATION.title": "Recrimination",
@@ -310,7 +310,7 @@
   "THEAPPRENTICE-PENANCE.description": "#Whenever you lose [gold]Strength[/gold], gain -6-+10+ [gold]Block[/gold].",
 
   "THEAPPRENTICE-FANFARE.title": "Fanfare",
-  "THEAPPRENTICE-FANFARE.description": "#The first time each debuff type is applied to you in combat, gain 1 Energy.",
+  "THEAPPRENTICE-FANFARE.description": "#The first time each debuff type is applied to you in combat, gain {energyPrefix:energyIcons(1)}.",
 
   "THEAPPRENTICE-DIMINUENDO.title": "Diminuendo",
   "THEAPPRENTICE-DIMINUENDO.description": "#Lose 1 [gold]Strength[/gold]. Gain {Block:diff()} [gold]Block[/gold]. Draw 1.",
@@ -319,7 +319,7 @@
   "THEAPPRENTICE-FLAT.description": "#Apply -2-+3+ [gold]Unvulnerable[/gold] to yourself. Lose 1 [gold]Strength[/gold].",
 
   "THEAPPRENTICE-SFORZANDO.title": "Sforzando",
-  "THEAPPRENTICE-SFORZANDO.description": "#Lose 1 [gold]Strength[/gold]. Gain -4-+5+ [gold]Tension[/gold]. Gain 1 Energy.",
+  "THEAPPRENTICE-SFORZANDO.description": "#Lose 1 [gold]Strength[/gold]. Gain -4-+5+ [gold]Tension[/gold]. Gain {energyPrefix:energyIcons(1)}.",
 
   "THEAPPRENTICE-STACCATO.title": "Staccato",
   "THEAPPRENTICE-STACCATO.description": "#Deal -5-+7+ damage. Gain 2 [gold]Tension[/gold].",
@@ -355,7 +355,7 @@
   "THEAPPRENTICE-MARCATO.description": "#Deal -3-+4+ damage to a random enemy 4 times. Gain 5 [gold]Tension[/gold].",
 
   "THEAPPRENTICE-BUILDUP.title": "Buildup",
-  "THEAPPRENTICE-BUILDUP.description": "#Double your current [gold]Tension[/gold]. -+Gain 1 Energy.+",
+  "THEAPPRENTICE-BUILDUP.description": "#Double your current [gold]Tension[/gold]. -+Gain {energyPrefix:energyIcons(1)}.+",
 
   "THEAPPRENTICE-DECEPTIVE_CADENCE.title": "Deceptive Cadence",
   "THEAPPRENTICE-DECEPTIVE_CADENCE.description": "#[gold]Tension[/gold] will not damage you this turn. [gold]Tension[/gold] is NOT removed at end of turn. -+Also gain 1 [gold]Block[/gold] per [gold]Tension[/gold] held over.+",
@@ -382,11 +382,23 @@
   "THEAPPRENTICE-TRIUMPH.description": "#Remove up to 15 [gold]Tension[/gold]. Gain [gold]Block[/gold] equal to -200%-+300%+ of [gold]Tension[/gold] removed. Gain [gold]Vigor[/gold] equal to [gold]Tension[/gold] removed.",
 
   "THEAPPRENTICE-TRAGEDY.title": "Tragedy",
-  "THEAPPRENTICE-TRAGEDY.description": "#Remove all [gold]Tension[/gold]. Apply -3-+5+ [gold]Vulnerable[/gold] to ALL enemies. Gain [gold]Vigor[/gold] equal to [gold]Tension[/gold] removed. [gold]Exhaust[/gold].",
+  "THEAPPRENTICE-TRAGEDY.description": "#Remove all [gold]Tension[/gold]. Apply -3-+5+ [gold]Vulnerable[/gold] to ALL enemies. Gain [gold]Vigor[/gold] equal to [gold]Tension[/gold] removed.",
 
   "THEAPPRENTICE-FORTISSIMO.title": "Fortissimo",
   "THEAPPRENTICE-FORTISSIMO.description": "#[gold]Tension[/gold] no longer damages you. At the end of your turn, deal your [gold]Tension[/gold] as damage to ALL enemies, then remove all [gold]Tension[/gold]. -+Your [gold]Tension[/gold] gain is tripled.+",
 
   "THEAPPRENTICE-CADENCE.title": "Cadence",
-  "THEAPPRENTICE-CADENCE.description": "#All [gold]Tension[/gold] you gain is -doubled-+tripled+."
+  "THEAPPRENTICE-CADENCE.description": "#All [gold]Tension[/gold] you gain is -doubled-+tripled+.",
+
+  "THEAPPRENTICE-OVERTONE.title": "Overtone",
+  "THEAPPRENTICE-OVERTONE.description": "#Gain -2-+3+ [gold]Tension[/gold]. Gain {energyPrefix:energyIcons(1)}.",
+
+  "THEAPPRENTICE-RESONANCE.title": "Resonance",
+  "THEAPPRENTICE-RESONANCE.description": "#Gain {energyPrefix:energyIcons(1)} for each [gold]Planned[/gold] card in your hand.",
+
+  "THEAPPRENTICE-ELEGY.title": "Elegy",
+  "THEAPPRENTICE-ELEGY.description": "#Deal -10-+14+ damage. Apply 1 [gold]Vulnerable[/gold] to yourself.",
+
+  "THEAPPRENTICE-CADENZA.title": "Cadenza",
+  "THEAPPRENTICE-CADENZA.description": "#Deal X times -6-+9+ damage. Gain X [gold]Tension[/gold]."
 }

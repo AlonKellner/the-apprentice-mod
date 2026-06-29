@@ -19,6 +19,7 @@ public class Pastiche : ApprenticeCard
     {
         WithKeyword(CardKeyword.Exhaust, ConstructedCardModel.UpgradeType.Remove);
         WithTip(new TooltipSource(_ => HoverTipFactory.FromCard<Potential>(upgrade: true)));
+        WithPotentialKeywordTips();
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)

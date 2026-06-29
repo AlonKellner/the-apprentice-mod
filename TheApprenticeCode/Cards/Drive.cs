@@ -14,6 +14,7 @@ public class Drive : ApprenticeCard
     {
         WithDamage(6);
         WithTip(new TooltipSource(card => HoverTipFactory.FromCard<Ambition>(upgrade: card.IsUpgraded)));
+        WithAmbitionKeywordTips();
     }
 
     protected override void OnUpgrade()

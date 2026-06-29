@@ -10,8 +10,9 @@ public class Diminuendo : ApprenticeCard
 {
     public const string CardId = "TheApprentice:Diminuendo";
 
-    public Diminuendo() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.None)
+    public Diminuendo() : base(1, CardType.Skill, CardRarity.Basic, TargetType.None)
     {
+        WithCards(1);
         WithBlock(14);
         WithTip(typeof(StrengthPower));
     }
@@ -27,6 +28,6 @@ public class Diminuendo : ApprenticeCard
         var creature = cardPlay.Card.Owner.Creature;
         await PowerCmd.Apply<StrengthPower>(context, creature, -1m, creature, cardPlay.Card, false);
         await CommonActions.CardBlock(cardPlay.Card, cardPlay);
-        await CommonActions.Draw(cardPlay.Card, context);
+        await CommonActions.Draw(this, context);
     }
 }

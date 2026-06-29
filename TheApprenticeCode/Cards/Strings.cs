@@ -9,8 +9,9 @@ public class Strings : ApprenticeCard
 {
     public const string CardId = "TheApprentice:Strings";
 
-    public Strings() : base(1, CardType.Skill, CardRarity.Common, TargetType.None)
+    public Strings() : base(1, CardType.Skill, CardRarity.Basic, TargetType.None)
     {
+        WithCards(1);
         WithTip(typeof(TensionPower));
     }
 
@@ -18,7 +19,7 @@ public class Strings : ApprenticeCard
     {
         int draws = IsUpgraded ? 3 : 2;
         for (int i = 0; i < draws; i++)
-            await CommonActions.Draw(cardPlay.Card, context);
+            await CommonActions.Draw(this, context);
         await TensionHelper.AddTension(context, cardPlay.Card.Owner.Creature, 3, cardPlay.Card);
     }
 }

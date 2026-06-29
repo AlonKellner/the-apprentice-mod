@@ -8,7 +8,7 @@ public class Unburdening : ApprenticeCard
 {
     public const string CardId = "TheApprentice:Unburdening";
 
-    public Unburdening() : base(0, CardType.Skill, CardRarity.Uncommon, TargetType.None)
+    public Unburdening() : base(0, CardType.Skill, CardRarity.Basic, TargetType.None)
     {
         WithTip(typeof(UnvulnerablePower));
     }

@@ -19,13 +19,13 @@ public class UndercurrentPower : CustomPowerModel
 
     public override List<(string, string)> Localization => new PowerLoc(
         "Undercurrent",
-        "At the end of your turn, if you are [gold]Weak[/gold], deal 8 damage to all enemies.",
-        "At the end of your turn, if you are [gold]Weak[/gold], deal 12 damage to all enemies.");
+        "At the end of your turn, if you are [gold]Vulnerable[/gold], deal 8 damage to all enemies.",
+        "At the end of your turn, if you are [gold]Vulnerable[/gold], deal 12 damage to all enemies.");
 
     public override async Task BeforeSideTurnEnd(PlayerChoiceContext context, CombatSide side, IEnumerable<Creature> creatures)
     {
         if (side != CombatSide.Player) return;
-        if (Owner.GetPowerAmount<WeakPower>() <= 0) return;
+        if (Owner.GetPowerAmount<VulnerablePower>() <= 0) return;
 
         decimal damage = Amount >= 2 ? 12m : 8m;
         await CreatureCmd.Damage(context, Owner.CombatState!.HittableEnemies, damage, ValueProp.Unpowered, Owner, null);

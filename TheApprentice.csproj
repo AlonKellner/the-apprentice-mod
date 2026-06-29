@@ -104,7 +104,10 @@
   <!-- Export Godot .pck for publishing.
        STS2_INSIDE_GODOT_PUBLISH=1 is passed to MegaDot's Exec so that its recursive dotnet publish
        inherits the env var and skips this target — no OOM spawn loop, no stale lock files.
-       An import pass runs first so EditorSettings singletons are fully initialized before export-pack. -->
+       An import pass runs first so EditorSettings singletons are fully initialized before export-pack.
+       IgnoreExitCode on export-pack: Godot writes the .pck (savepack DONE) then crashes during
+       shutdown with an EditorSettings singleton error — the output is valid despite the non-zero exit.
+       The subsequent <Error> task confirms the file was actually created. -->
   <Target Name="GodotPublish" AfterTargets="Publish"
           Condition="'$([System.Environment]::GetEnvironmentVariable(&quot;STS2_INSIDE_GODOT_PUBLISH&quot;))' != '1'">
     <Error
@@ -119,6 +122,10 @@
       Condition="Exists('$(GodotPath)')"
       Command="&quot;$(GodotPath)&quot; --headless --export-pack &quot;BasicExport&quot; &quot;$(MSBuildProjectDirectory)/publish/$(AssemblyName).pck&quot;"
       WorkingDirectory="$(MSBuildProjectDirectory)"
-      EnvironmentVariables="STS2_INSIDE_GODOT_PUBLISH=1" />
+      EnvironmentVariables="STS2_INSIDE_GODOT_PUBLISH=1"
+      IgnoreExitCode="true" />
+    <Error
+      Condition="Exists('$(GodotPath)') and !Exists('$(MSBuildProjectDirectory)/publish/$(AssemblyName).pck')"
+      Text="export-pack failed: publish/$(AssemblyName).pck was not created." />
   </Target>
 </Project>

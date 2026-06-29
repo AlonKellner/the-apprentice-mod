@@ -7,6 +7,7 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using BaseLib.Abstracts;
 using BaseLib.Utils;
+using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Powers;
@@ -466,5 +467,168 @@ public class TooltipConsistencyTests
         }
 
         Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void Undercurrent_HasVulnerablePowerTip_NotWeakPowerTip()
+    {
+        var tips = GetHoverTips(new Undercurrent());
+        Assert.True(HasTipForType(tips, typeof(VulnerablePower)), "Undercurrent must have a VulnerablePower tip");
+        Assert.False(HasTipForType(tips, typeof(WeakPower)), "Undercurrent must not have a WeakPower tip after retargeting");
+    }
+
+    // Detects token card type from a TooltipSource via two strategies:
+    // 1. typeof(T) implicit conversion: captured System.Type field in the closure
+    // 2. HoverTipFactory.FromCard<T>() lambda: scan IL of the closure method for a call
+    //    to a generic HoverTipFactory.FromCard<T> and extract the generic argument
+    private static Type? GetTokenTypeFromTip(TooltipSource tip)
+    {
+        var capturedType = GetCapturedType(tip);
+        if (capturedType == typeof(Dream) || capturedType == typeof(Ambition) || capturedType == typeof(Potential))
+            return capturedType;
+
+        var makeTipField = typeof(TooltipSource).GetField("_makeTip", BindingFlags.NonPublic | BindingFlags.Instance);
+        var makeTip = makeTipField?.GetValue(tip) as Delegate;
+        if (makeTip == null) return null;
+        return ScanLambdaForFromCardType(makeTip.Method);
+    }
+
+    private static readonly HashSet<Type> TokenCardTypes = new() { typeof(Dream), typeof(Ambition), typeof(Potential) };
+
+    private static Type? ScanLambdaForFromCardType(MethodBase method)
+    {
+        var il = method.GetMethodBody()?.GetILAsByteArray();
+        if (il == null) return null;
+        int i = 0;
+        while (i < il.Length)
+        {
+            byte b = il[i];
+            if ((b == 0x28 || b == 0x6F) && i + 4 < il.Length)
+            {
+                int token = BitConverter.ToInt32(il, i + 1);
+                try
+                {
+                    var resolved = method.Module.ResolveMethod(token);
+                    if (resolved is MethodInfo mi && mi.IsGenericMethod && mi.Name == "FromCard" &&
+                        mi.DeclaringType?.Name == "HoverTipFactory")
+                    {
+                        var arg = mi.GetGenericArguments().FirstOrDefault();
+                        if (arg != null && TokenCardTypes.Contains(arg)) return arg;
+                    }
+                }
+                catch { }
+                i += 5;
+            }
+            else if ((b >= 0x72 && b <= 0x80) || b == 0x8C || b == 0x8D || b == 0xD0 || b == 0x29 ||
+                     b == 0x20 || b == 0x21 || b == 0x22 || b == 0x23)
+            {
+                i += 5; // instructions with 4-byte operands
+            }
+            else if (b == 0x0E || b == 0x0F || b == 0x10 || b == 0x11 || b == 0x12 ||
+                     b == 0x13 || b == 0x1F || (b >= 0x2B && b <= 0x37))
+            {
+                i += 2; // instructions with 1-byte operands
+            }
+            else if (b == 0xFE)
+            {
+                i += 2; // two-byte instruction prefix
+            }
+            else
+            {
+                i += 1;
+            }
+        }
+        return null;
+    }
+
+    private static CardKeyword? GetCapturedCardKeyword(TooltipSource tip)
+    {
+        var makeTipField = typeof(TooltipSource).GetField("_makeTip", BindingFlags.NonPublic | BindingFlags.Instance);
+        var makeTip = makeTipField?.GetValue(tip) as Delegate;
+        if (makeTip?.Target == null) return null;
+        var kField = makeTip.Target.GetType()
+            .GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
+            .FirstOrDefault(f => f.FieldType == typeof(CardKeyword));
+        if (kField == null) return null;
+        return (CardKeyword)kField.GetValue(makeTip.Target)!;
+    }
+
+    // Custom enum values (ApprenticeKeywords.*) are 0 outside the game runtime because the
+    // Harmony patch that assigns them only runs during ModelDb.Init(). We temporarily inject
+    // distinct sentinel values so GetCapturedCardKeyword can tell the keywords apart.
+    [Fact]
+    public void AllCards_TokenPreviewTips_HaveMatchingKeywordTips()
+    {
+        var savedDreamy   = ApprenticeKeywords.Dreamy;
+        var savedAmbitous = ApprenticeKeywords.Ambitous;
+        var savedExpend   = ApprenticeKeywords.Expend;
+        ApprenticeKeywords.Dreamy   = (CardKeyword)1001;
+        ApprenticeKeywords.Ambitous = (CardKeyword)1002;
+        ApprenticeKeywords.Expend   = (CardKeyword)1003;
+
+        try
+        {
+            var violations = new List<string>();
+
+            foreach (var cardType in typeof(ApprenticeCard).Assembly.GetTypes()
+                .Where(t => !t.IsAbstract && t.IsSubclassOf(typeof(ApprenticeCard))))
+            {
+                var card = (ConstructedCardModel)Activator.CreateInstance(cardType)!;
+                var tips = GetHoverTips(card);
+
+                var tokenTypes = tips
+                    .Select(GetTokenTypeFromTip)
+                    .Where(t => t != null).Select(t => t!).ToHashSet();
+
+                var keywords = tips
+                    .Select(GetCapturedCardKeyword)
+                    .Where(k => k.HasValue).Select(k => k!.Value).ToHashSet();
+
+                bool hasDreamy   = keywords.Contains((CardKeyword)1001);
+                bool hasAmbitous = keywords.Contains((CardKeyword)1002);
+                bool hasExpend   = keywords.Contains((CardKeyword)1003);
+
+                if (tokenTypes.Contains(typeof(Dream)))
+                {
+                    if (!hasDreamy)
+                        violations.Add($"{cardType.Name}: has Dream tip but missing Dreamy keyword tip");
+                    if (!hasExpend)
+                        violations.Add($"{cardType.Name}: has Dream tip but missing Expend keyword tip");
+                }
+                if (tokenTypes.Contains(typeof(Ambition)))
+                {
+                    if (!hasAmbitous)
+                        violations.Add($"{cardType.Name}: has Ambition tip but missing Ambitous keyword tip");
+                    if (!hasExpend)
+                        violations.Add($"{cardType.Name}: has Ambition tip but missing Expend keyword tip");
+                }
+                if (tokenTypes.Contains(typeof(Potential)))
+                {
+                    if (!hasAmbitous)
+                        violations.Add($"{cardType.Name}: has Potential tip but missing Ambitous keyword tip");
+                    if (!hasDreamy)
+                        violations.Add($"{cardType.Name}: has Potential tip but missing Dreamy keyword tip");
+                    if (!hasExpend)
+                        violations.Add($"{cardType.Name}: has Potential tip but missing Expend keyword tip");
+                }
+            }
+
+            Assert.Empty(violations);
+        }
+        finally
+        {
+            ApprenticeKeywords.Dreamy   = savedDreamy;
+            ApprenticeKeywords.Ambitous = savedAmbitous;
+            ApprenticeKeywords.Expend   = savedExpend;
+        }
+    }
+
+    [Fact]
+    public void Scapegoat_DescriptionDoesNotMentionStrength()
+    {
+        var json = LoadCardsJson();
+        Assert.True(json.TryGetValue("THEAPPRENTICE-SCAPEGOAT.description", out var desc),
+            "THEAPPRENTICE-SCAPEGOAT.description key not found in cards.json");
+        Assert.DoesNotContain("Strength", desc, StringComparison.OrdinalIgnoreCase);
     }
 }

@@ -12,7 +12,6 @@ public class Scapegoat : ApprenticeCard
     {
         WithTip(typeof(WeakPower));
         WithTip(typeof(VulnerablePower));
-        WithTip(typeof(StrengthPower));
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
@@ -22,11 +21,15 @@ public class Scapegoat : ApprenticeCard
         if (IsUpgraded)
         {
             foreach (var enemy in CombatState!.HittableEnemies)
-                await EmotionalExpression.TransferDebuffsTo(context, creature, enemy, cardPlay.Card, maxEach: 3);
+            {
+                await EmotionalExpression.TransferWeakTo(context, creature, enemy, cardPlay.Card, 3);
+                await EmotionalExpression.TransferVulnerableTo(context, creature, enemy, cardPlay.Card, 3);
+            }
         }
         else
         {
-            await EmotionalExpression.TransferDebuffsTo(context, creature, cardPlay.Target!, cardPlay.Card, maxEach: 3);
+            await EmotionalExpression.TransferWeakTo(context, creature, cardPlay.Target!, cardPlay.Card, 3);
+            await EmotionalExpression.TransferVulnerableTo(context, creature, cardPlay.Target!, cardPlay.Card, 3);
         }
     }
 }

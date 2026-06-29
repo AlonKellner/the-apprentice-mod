@@ -12,7 +12,7 @@ public class CreativeBlock : ApprenticeCard
 {
     public const string CardId = "TheApprentice:CreativeBlock";
 
-    public CreativeBlock() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.None)
+    public CreativeBlock() : base(1, CardType.Skill, CardRarity.Basic, TargetType.None)
     {
         WithBlock(8);
         WithTip(ApprenticeKeywords.Planned);

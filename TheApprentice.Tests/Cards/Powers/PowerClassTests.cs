@@ -309,4 +309,13 @@ public class PowerClassTests
             .GetMethod("UpdateDisplayIfChanged", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly);
         Assert.NotNull(method);
     }
+
+    [Fact]
+    public void UndercurrentPower_LocalizationMentionsVulnerableNotWeak()
+    {
+        var p = new UndercurrentPower();
+        var descriptions = p.Localization.Where(e => e.Item1 == "description").Select(e => e.Item2);
+        Assert.All(descriptions, d => Assert.Contains("Vulnerable", d));
+        Assert.All(descriptions, d => Assert.DoesNotContain("Weak", d));
+    }
 }

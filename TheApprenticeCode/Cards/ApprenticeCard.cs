@@ -32,4 +32,41 @@ public abstract class ApprenticeCard(
         if (!player.Creature.Powers.Any(p => p is PlannedCounterPower))
             await PowerCmd.Apply<PlannedCounterPower>(context, player.Creature, 1m, player.Creature, null, false);
     }
+
+    protected void WithDreamKeywordTips()
+    {
+        WithTip(ApprenticeKeywords.Dreamy);
+        WithTip(ApprenticeKeywords.Expend);
+    }
+
+    protected void WithAmbitionKeywordTips()
+    {
+        WithTip(ApprenticeKeywords.Ambitous);
+        WithTip(ApprenticeKeywords.Expend);
+    }
+
+    protected void WithPotentialKeywordTips()
+    {
+        WithTip(ApprenticeKeywords.Ambitous);
+        WithTip(ApprenticeKeywords.Dreamy);
+        WithTip(ApprenticeKeywords.Expend);
+    }
+
+    protected void WithDreamTips()
+    {
+        WithTip(typeof(Dream));
+        WithDreamKeywordTips();
+    }
+
+    protected void WithAmbitionTips()
+    {
+        WithTip(typeof(Ambition));
+        WithAmbitionKeywordTips();
+    }
+
+    protected void WithPotentialTips()
+    {
+        WithTip(typeof(Potential));
+        WithPotentialKeywordTips();
+    }
 }

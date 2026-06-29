@@ -3,6 +3,7 @@ using System.Linq;
 using BaseLib.Abstracts;
 using BaseLib.Extensions;
 using BaseLib.Utils;
+using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Powers;
@@ -43,6 +44,6 @@ public class MaestroPower : CustomPowerModel
         _lastPlannedCount = currentPlanned;
 
         for (int i = 0; i < newPlanned; i++)
-            await CommonActions.Draw(cardPlay.Card, context);
+            await CardPileCmd.Draw(context, 1, player, false);
     }
 }

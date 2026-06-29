@@ -9,7 +9,7 @@ public class Motif : ApprenticeCard
 {
     public const string CardId = "TheApprentice:Motif";
 
-    public Motif() : base(1, CardType.Skill, CardRarity.Common, TargetType.None)
+    public Motif() : base(1, CardType.Skill, CardRarity.Basic, TargetType.None)
     {
         WithBlock(9);
         WithTip(typeof(TensionPower));

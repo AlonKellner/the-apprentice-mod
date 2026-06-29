@@ -15,9 +15,10 @@ public class Lucidity : ApprenticeCard
 {
     public const string CardId = "TheApprentice:Lucidity";
 
-    public Lucidity() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.None)
+    public Lucidity() : base(1, CardType.Skill, CardRarity.Basic, TargetType.None)
     {
         WithTip(new TooltipSource(card => HoverTipFactory.FromCard<Dream>(upgrade: card.IsUpgraded)));
+        WithDreamKeywordTips();
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)

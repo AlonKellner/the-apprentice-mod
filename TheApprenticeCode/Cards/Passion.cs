@@ -14,6 +14,9 @@ public class Passion : ApprenticeCard
     {
         WithDamage(8);
         WithTip(new TooltipSource(card => HoverTipFactory.FromCard<Dream>(upgrade: card.IsUpgraded)));
+        WithTip(new TooltipSource(card => HoverTipFactory.FromCard<Ambition>(upgrade: card.IsUpgraded)));
+        WithDreamKeywordTips();
+        WithAmbitionKeywordTips();
     }
 
     protected override void OnUpgrade()

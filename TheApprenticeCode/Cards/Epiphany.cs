@@ -33,7 +33,7 @@ public class Epiphany : ApprenticeCard
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
         var player = cardPlay.Card.Owner;
-        await CommonActions.Draw(cardPlay.Card, context);
+        await CommonActions.Draw(this, context);
 
         var selected = await CardSelectCmd.FromHand(
             context, player,

@@ -9,7 +9,7 @@ public class Discord : ApprenticeCard
 {
     public const string CardId = "TheApprentice:Discord";
 
-    public Discord() : base(2, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
+    public Discord() : base(2, CardType.Attack, CardRarity.Basic, TargetType.AnyEnemy)
     {
         WithDamage(10);
         WithTip(typeof(VulnerablePower));

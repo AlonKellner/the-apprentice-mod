@@ -14,6 +14,7 @@ public class Wishful : ApprenticeCard
     {
         WithDamage(5);
         WithTip(new TooltipSource(card => HoverTipFactory.FromCard<Dream>(upgrade: card.IsUpgraded)));
+        WithDreamKeywordTips();
     }
 
     protected override void OnUpgrade()
