@@ -293,12 +293,12 @@ public class TooltipConsistencyTests
         Assert.False(HasTipForType(tips, typeof(VulnerablePower)),
             "Fortitude base card must not carry an always-present VulnerablePower typeof(T) tip — " +
             "base description only mentions Weak. Use a conditional lambda for upgrade-only keywords.");
-        Assert.True(HasTipForType(tips, typeof(WeakPower)),     "Fortitude missing WeakPower tip");
-        Assert.True(HasTipForType(tips, typeof(StrengthPower)), "Fortitude missing StrengthPower tip");
+        Assert.True(HasTipForType(tips, typeof(WeakPower)),   "Fortitude missing WeakPower tip");
+        Assert.True(HasTipForType(tips, typeof(VigorPower)), "Fortitude missing VigorPower tip");
     }
 
-    // Fortitude has no upgrade-only keywords — both base and upgrade mention Weak and Strength.
-    // Upgrade only increases the Strength gain (1 → 2), handled by the power's Amount.
+    // Fortitude has no upgrade-only keywords — both base and upgrade mention Weak and Vigor.
+    // Upgrade only increases the Vigor gain (3 → 5), handled by the power's Amount.
     [Fact]
     public void Fortitude_HasNoConditionalLambdaTip()
     {
@@ -401,17 +401,17 @@ public class TooltipConsistencyTests
     }
 
     [Fact]
-    public void TrueStrength_HasExactlyFourAlwaysPresentTips_NoLambda_NoStrength()
+    public void Fermata_HasExactlyFourAlwaysPresentTips_NoLambda_NoStrength()
     {
-        var tips = GetHoverTips(new TrueStrength());
-        Assert.True(HasTipForType(tips, typeof(WeakPower)),         "TrueStrength missing WeakPower tip");
-        Assert.True(HasTipForType(tips, typeof(VulnerablePower)),   "TrueStrength missing VulnerablePower tip");
-        Assert.True(HasTipForType(tips, typeof(UnweakPower)),       "TrueStrength missing UnweakPower tip");
-        Assert.True(HasTipForType(tips, typeof(UnvulnerablePower)), "TrueStrength missing UnvulnerablePower tip");
+        var tips = GetHoverTips(new Fermata());
+        Assert.True(HasTipForType(tips, typeof(WeakPower)),         "Fermata missing WeakPower tip");
+        Assert.True(HasTipForType(tips, typeof(VulnerablePower)),   "Fermata missing VulnerablePower tip");
+        Assert.True(HasTipForType(tips, typeof(UnweakPower)),       "Fermata missing UnweakPower tip");
+        Assert.True(HasTipForType(tips, typeof(UnvulnerablePower)), "Fermata missing UnvulnerablePower tip");
         Assert.False(HasTipForType(tips, typeof(StrengthPower)),
-            "TrueStrength must not have a StrengthPower tip — Strength was removed from the upgrade.");
+            "Fermata must not have a StrengthPower tip.");
         Assert.True(tips.All(UsesImplicitTypeConversion),
-            "TrueStrength has no upgrade-only keywords — all tips must be typeof(T), not conditional lambdas.");
+            "Fermata has no upgrade-only keywords — all tips must be typeof(T), not conditional lambdas.");
     }
 
     // Detects the power-keyword lambda anti-pattern: a TooltipSource whose closure captures

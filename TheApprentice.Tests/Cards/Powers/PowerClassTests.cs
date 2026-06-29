@@ -162,9 +162,115 @@ public class PowerClassTests
     }
 
     [Fact]
-    public void TrueStrengthPower_IsBuff_Single()
+    public void FermataPower_IsBuff_Single()
     {
-        var p = new TrueStrengthPower();
+        var p = new FermataPower();
+        Assert.Equal(PowerType.Buff, p.Type);
+        Assert.Equal(PowerStackType.Single, p.StackType);
+    }
+
+    [Fact]
+    public void PenancePower_IsBuff_Counter()
+    {
+        var p = new PenancePower();
+        Assert.Equal(PowerType.Buff, p.Type);
+        Assert.Equal(PowerStackType.Counter, p.StackType);
+    }
+
+    [Fact]
+    public void FanfarePower_IsBuff_Single()
+    {
+        var p = new FanfarePower();
+        Assert.Equal(PowerType.Buff, p.Type);
+        Assert.Equal(PowerStackType.Single, p.StackType);
+    }
+
+    [Fact]
+    public void TenacityPower_Localization_DescriptionMentionsVigor()
+    {
+        var p = new TenacityPower();
+        var descriptions = p.Localization.Where(e => e.Item1 == "description").Select(e => e.Item2).ToList();
+        Assert.All(descriptions, d => Assert.Contains("Vigor", d, StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void TenacityPower_Localization_DescriptionDoesNotMentionStrength()
+    {
+        var p = new TenacityPower();
+        var descriptions = p.Localization.Where(e => e.Item1 == "description").Select(e => e.Item2).ToList();
+        Assert.All(descriptions, d => Assert.DoesNotContain("Strength", d, StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void FortitudePower_Localization_DescriptionMentionsVigor()
+    {
+        var p = new FortitudePower();
+        var descriptions = p.Localization.Where(e => e.Item1 == "description").Select(e => e.Item2).ToList();
+        Assert.All(descriptions, d => Assert.Contains("Vigor", d, StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void FortitudePower_Localization_DescriptionDoesNotMentionStrength()
+    {
+        var p = new FortitudePower();
+        var descriptions = p.Localization.Where(e => e.Item1 == "description").Select(e => e.Item2).ToList();
+        Assert.All(descriptions, d => Assert.DoesNotContain("Strength", d, StringComparison.Ordinal));
+    }
+
+    // ── Tension infrastructure powers ─────────────────────────────────────────
+
+    [Fact]
+    public void TensionPower_IsDebuff_Counter()
+    {
+        var p = new TensionPower();
+        Assert.Equal(PowerType.Debuff, p.Type);
+        Assert.Equal(PowerStackType.Counter, p.StackType);
+    }
+
+    [Fact]
+    public void DeceptiveCadencePower_IsBuff_Single()
+    {
+        var p = new DeceptiveCadencePower();
+        Assert.Equal(PowerType.Buff, p.Type);
+        Assert.Equal(PowerStackType.Single, p.StackType);
+    }
+
+    [Fact]
+    public void DynamicsNextCardPower_IsBuff_Counter()
+    {
+        var p = new DynamicsNextCardPower();
+        Assert.Equal(PowerType.Buff, p.Type);
+        Assert.Equal(PowerStackType.Counter, p.StackType);
+    }
+
+    [Fact]
+    public void TuningPower_IsBuff_Counter()
+    {
+        var p = new TuningPower();
+        Assert.Equal(PowerType.Buff, p.Type);
+        Assert.Equal(PowerStackType.Counter, p.StackType);
+    }
+
+    [Fact]
+    public void CadencePower_IsBuff_Counter()
+    {
+        var p = new CadencePower();
+        Assert.Equal(PowerType.Buff, p.Type);
+        Assert.Equal(PowerStackType.Counter, p.StackType);
+    }
+
+    [Fact]
+    public void FortissimoPower_IsBuff_Counter()
+    {
+        var p = new FortissimoPower();
+        Assert.Equal(PowerType.Buff, p.Type);
+        Assert.Equal(PowerStackType.Counter, p.StackType);
+    }
+
+    [Fact]
+    public void SuspensionPower_IsBuff_Single()
+    {
+        var p = new SuspensionPower();
         Assert.Equal(PowerType.Buff, p.Type);
         Assert.Equal(PowerStackType.Single, p.StackType);
     }
@@ -183,7 +289,17 @@ public class PowerClassTests
         Assert.NotEmpty(new FortitudePower().Localization);
         Assert.NotEmpty(new UndercurrentPower().Localization);
         Assert.NotEmpty(new RecriminationPower().Localization);
-        Assert.NotEmpty(new TrueStrengthPower().Localization);
+        Assert.NotEmpty(new FermataPower().Localization);
+        Assert.NotEmpty(new PenancePower().Localization);
+        Assert.NotEmpty(new FanfarePower().Localization);
+        Assert.NotEmpty(new AccentPower().Localization);
+        Assert.NotEmpty(new TensionPower().Localization);
+        Assert.NotEmpty(new DeceptiveCadencePower().Localization);
+        Assert.NotEmpty(new DynamicsNextCardPower().Localization);
+        Assert.NotEmpty(new TuningPower().Localization);
+        Assert.NotEmpty(new CadencePower().Localization);
+        Assert.NotEmpty(new FortissimoPower().Localization);
+        Assert.NotEmpty(new SuspensionPower().Localization);
     }
 
     [Fact]

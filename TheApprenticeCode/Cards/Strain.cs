@@ -7,21 +7,21 @@ using TheApprentice.TheApprenticeCode.Cards.Powers;
 
 namespace TheApprentice.TheApprenticeCode.Cards;
 
-public class Fortitude : ApprenticeCard
+public class Strain : ApprenticeCard
 {
-    public const string CardId = "TheApprentice:Fortitude";
+    public const string CardId = "TheApprentice:Strain";
 
-    public Fortitude() : base(1, CardType.Power, CardRarity.Uncommon, TargetType.None)
+    public Strain() : base(0, CardType.Skill, CardRarity.Common, TargetType.None)
     {
-        WithTip(typeof(WeakPower));
+        WithTip(typeof(StrengthPower));
         WithTip(typeof(VigorPower));
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
         var creature = cardPlay.Card.Owner.Creature;
-        await CreatureCmd.TriggerAnim(creature, "PowerUp", Owner.Character.PowerUpAnimDelay);
-        decimal amount = IsUpgraded ? 5m : 3m;
-        await PowerCmd.Apply<FortitudePower>(context, creature, amount, creature, cardPlay.Card, false);
+        await PowerCmd.Apply<StrengthPower>(context, creature, -1m, creature, cardPlay.Card, false);
+        int vigor = IsUpgraded ? 8 : 5;
+        await PowerCmd.Apply<VigorPower>(context, creature, vigor, creature, cardPlay.Card, false);
     }
 }

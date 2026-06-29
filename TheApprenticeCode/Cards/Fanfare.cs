@@ -1,27 +1,25 @@
+using BaseLib.Abstracts;
 using BaseLib.Utils;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
-using MegaCrit.Sts2.Core.Models.Powers;
 using TheApprentice.TheApprenticeCode.Cards.Powers;
 
 namespace TheApprentice.TheApprenticeCode.Cards;
 
-public class Fortitude : ApprenticeCard
+public class Fanfare : ApprenticeCard
 {
-    public const string CardId = "TheApprentice:Fortitude";
+    public const string CardId = "TheApprentice:Fanfare";
 
-    public Fortitude() : base(1, CardType.Power, CardRarity.Uncommon, TargetType.None)
+    public Fanfare() : base(2, CardType.Power, CardRarity.Rare, TargetType.None)
     {
-        WithTip(typeof(WeakPower));
-        WithTip(typeof(VigorPower));
+        WithKeyword(CardKeyword.Innate, ConstructedCardModel.UpgradeType.Add);
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
         var creature = cardPlay.Card.Owner.Creature;
         await CreatureCmd.TriggerAnim(creature, "PowerUp", Owner.Character.PowerUpAnimDelay);
-        decimal amount = IsUpgraded ? 5m : 3m;
-        await PowerCmd.Apply<FortitudePower>(context, creature, amount, creature, cardPlay.Card, false);
+        await PowerCmd.Apply<FanfarePower>(context, creature, 1m, creature, cardPlay.Card, false);
     }
 }

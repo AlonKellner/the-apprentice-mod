@@ -68,7 +68,7 @@ public static class EmotionalExpression
 
         int tenacityGain = creature.GetPowerAmount<TenacityPower>();
         if (tenacityGain > 0 && stacks > 0)
-            await PowerCmd.Apply<StrengthPower>(ctx, creature, tenacityGain, creature, card, false);
+            await PowerCmd.Apply<VigorPower>(ctx, creature, tenacityGain, creature, card, false);
     }
 
     // Apply Vulnerable to self. Cancels against existing Unvulnerable. Triggers TenacityPower if present.
@@ -81,7 +81,7 @@ public static class EmotionalExpression
 
         int tenacityGain = creature.GetPowerAmount<TenacityPower>();
         if (tenacityGain > 0 && stacks > 0)
-            await PowerCmd.Apply<StrengthPower>(ctx, creature, tenacityGain, creature, card, false);
+            await PowerCmd.Apply<VigorPower>(ctx, creature, tenacityGain, creature, card, false);
     }
 
     // Convert WeakPower to UnweakPower (same stacks, different sign). Max limits stacks converted.

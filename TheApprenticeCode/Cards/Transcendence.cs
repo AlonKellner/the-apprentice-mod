@@ -6,11 +6,11 @@ using TheApprentice.TheApprenticeCode.Cards.Powers;
 
 namespace TheApprentice.TheApprenticeCode.Cards;
 
-public class CatharticVision : ApprenticeCard
+public class Transcendence : ApprenticeCard
 {
-    public const string CardId = "TheApprentice:CatharticVision";
+    public const string CardId = "TheApprentice:Transcendence";
 
-    public CatharticVision() : base(1, CardType.Skill, CardRarity.Rare, TargetType.None)
+    public Transcendence() : base(1, CardType.Skill, CardRarity.Rare, TargetType.None)
     {
         WithKeyword(CardKeyword.Exhaust, ConstructedCardModel.UpgradeType.None);
         WithTip(typeof(UnweakPower));

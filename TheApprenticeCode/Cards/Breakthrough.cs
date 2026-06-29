@@ -6,28 +6,28 @@ using TheApprentice.TheApprenticeCode.Cards.Powers;
 
 namespace TheApprentice.TheApprenticeCode.Cards;
 
-public class Reversal : ApprenticeCard
+public class Breakthrough : ApprenticeCard
 {
-    public const string CardId = "TheApprentice:Reversal";
+    public const string CardId = "TheApprentice:Breakthrough";
 
-    public Reversal() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.None)
+    public Breakthrough() : base(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
     {
-        WithBlock(12);
-        WithTip(typeof(WeakPower));
-        WithTip(typeof(UnweakPower));
+        WithDamage(10);
+        WithTip(typeof(VulnerablePower));
+        WithTip(typeof(UnvulnerablePower));
     }
 
     protected override void OnUpgrade()
     {
         base.OnUpgrade();
-        DynamicVars.Block.UpgradeValueBy(6m);
+        DynamicVars.Damage.UpgradeValueBy(4m);
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
         var creature = cardPlay.Card.Owner.Creature;
         int cap = IsUpgraded ? 2 : 1;
-        await CommonActions.CardBlock(cardPlay.Card, cardPlay);
-        await EmotionalExpression.ConvertWeakToUnweak(context, creature, cap);
+        await EmotionalExpression.ConvertVulnerableToUnvulnerable(context, creature, cap);
+        await CommonActions.CardAttack(cardPlay.Card, cardPlay).Execute(context);
     }
 }

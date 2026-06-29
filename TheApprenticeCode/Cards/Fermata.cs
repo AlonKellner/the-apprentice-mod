@@ -1,3 +1,4 @@
+using BaseLib.Abstracts;
 using BaseLib.Utils;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -7,12 +8,13 @@ using TheApprentice.TheApprenticeCode.Cards.Powers;
 
 namespace TheApprentice.TheApprenticeCode.Cards;
 
-public class TrueStrength : ApprenticeCard
+public class Fermata : ApprenticeCard
 {
-    public const string CardId = "TheApprentice:TrueStrength";
+    public const string CardId = "TheApprentice:Fermata";
 
-    public TrueStrength() : base(2, CardType.Power, CardRarity.Rare, TargetType.None)
+    public Fermata() : base(2, CardType.Power, CardRarity.Rare, TargetType.None)
     {
+        WithKeyword(CardKeyword.Innate, ConstructedCardModel.UpgradeType.Add);
         WithTip(typeof(WeakPower));
         WithTip(typeof(VulnerablePower));
         WithTip(typeof(UnweakPower));
@@ -23,7 +25,6 @@ public class TrueStrength : ApprenticeCard
     {
         var creature = cardPlay.Card.Owner.Creature;
         await CreatureCmd.TriggerAnim(creature, "PowerUp", Owner.Character.PowerUpAnimDelay);
-        decimal amount = IsUpgraded ? 2m : 1m;
-        await PowerCmd.Apply<TrueStrengthPower>(context, creature, amount, creature, cardPlay.Card, false);
+        await PowerCmd.Apply<FermataPower>(context, creature, 1m, creature, cardPlay.Card, false);
     }
 }

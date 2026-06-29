@@ -1,3 +1,5 @@
+using BaseLib.Abstracts;
+using BaseLib.Utils;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
@@ -6,22 +8,22 @@ using TheApprentice.TheApprenticeCode.Cards.Powers;
 
 namespace TheApprentice.TheApprenticeCode.Cards;
 
-public class Tenacity : ApprenticeCard
+public class Accent : ApprenticeCard
 {
-    public const string CardId = "TheApprentice:Tenacity";
+    public const string CardId = "TheApprentice:Accent";
 
-    public Tenacity() : base(1, CardType.Power, CardRarity.Uncommon, TargetType.None)
+    public Accent() : base(0, CardType.Skill, CardRarity.Uncommon, TargetType.None)
     {
+        WithKeyword(CardKeyword.Retain, ConstructedCardModel.UpgradeType.Add);
         WithTip(typeof(WeakPower));
         WithTip(typeof(VulnerablePower));
-        WithTip(typeof(VigorPower));
+        WithTip(typeof(UnweakPower));
+        WithTip(typeof(UnvulnerablePower));
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
         var creature = cardPlay.Card.Owner.Creature;
-        await CreatureCmd.TriggerAnim(creature, "PowerUp", Owner.Character.PowerUpAnimDelay);
-        decimal amount = IsUpgraded ? 7m : 4m;
-        await PowerCmd.Apply<TenacityPower>(context, creature, amount, creature, cardPlay.Card, false);
+        await PowerCmd.Apply<AccentPower>(context, creature, 1m, creature, cardPlay.Card, false);
     }
 }

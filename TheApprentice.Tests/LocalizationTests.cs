@@ -129,7 +129,20 @@ public class LocalizationTests
             "THEAPPRENTICE-TIRADE.title", "THEAPPRENTICE-TIRADE.description",
             "THEAPPRENTICE-SCAPEGOAT.title", "THEAPPRENTICE-SCAPEGOAT.description", "THEAPPRENTICE-SCAPEGOAT.selectionPrompt",
             "THEAPPRENTICE-RECRIMINATION.title", "THEAPPRENTICE-RECRIMINATION.description",
-            "THEAPPRENTICE-TRUE_STRENGTH.title", "THEAPPRENTICE-TRUE_STRENGTH.description",
+            "THEAPPRENTICE-FERMATA.title", "THEAPPRENTICE-FERMATA.description",
+            "THEAPPRENTICE-EXERTION.title", "THEAPPRENTICE-EXERTION.description",
+            "THEAPPRENTICE-STRAIN.title", "THEAPPRENTICE-STRAIN.description",
+            "THEAPPRENTICE-WALLOW.title", "THEAPPRENTICE-WALLOW.description",
+            "THEAPPRENTICE-COMPOSE.title", "THEAPPRENTICE-COMPOSE.description",
+            "THEAPPRENTICE-SURRENDER.title", "THEAPPRENTICE-SURRENDER.description",
+            "THEAPPRENTICE-BREAKTHROUGH.title", "THEAPPRENTICE-BREAKTHROUGH.description",
+            "THEAPPRENTICE-DISSOLUTION.title", "THEAPPRENTICE-DISSOLUTION.description",
+            "THEAPPRENTICE-BRACE.title", "THEAPPRENTICE-BRACE.description",
+            "THEAPPRENTICE-BURDEN.title", "THEAPPRENTICE-BURDEN.description",
+            "THEAPPRENTICE-ENSEMBLE.title", "THEAPPRENTICE-ENSEMBLE.description",
+            "THEAPPRENTICE-PENANCE.title", "THEAPPRENTICE-PENANCE.description",
+            "THEAPPRENTICE-FANFARE.title", "THEAPPRENTICE-FANFARE.description",
+            "THEAPPRENTICE-ACCENT.title", "THEAPPRENTICE-ACCENT.description",
         ];
         var missing = expectedKeys.Where(k => !dict.ContainsKey(k) || string.IsNullOrWhiteSpace(dict[k])).ToList();
         Assert.True(missing.Count == 0, $"Missing or empty Emotional Expression localization keys:\n{string.Join("\n", missing)}");
@@ -145,7 +158,7 @@ public class LocalizationTests
             "THEAPPRENTICE-RESTRAINED_STRIKE.title", "THEAPPRENTICE-RESTRAINED_STRIKE.description",
             "THEAPPRENTICE-ACHING_WISH.title", "THEAPPRENTICE-ACHING_WISH.description",
             "THEAPPRENTICE-DESIRE.title", "THEAPPRENTICE-DESIRE.description",
-            "THEAPPRENTICE-CATHARTIC_VISION.title", "THEAPPRENTICE-CATHARTIC_VISION.description",
+            "THEAPPRENTICE-TRANSCENDENCE.title", "THEAPPRENTICE-TRANSCENDENCE.description",
             "THEAPPRENTICE-PROPHECY.title", "THEAPPRENTICE-PROPHECY.description",
         ];
         var missing = expectedKeys.Where(k => !dict.ContainsKey(k) || string.IsNullOrWhiteSpace(dict[k])).ToList();

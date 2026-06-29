@@ -1,3 +1,4 @@
+using BaseLib.Abstracts;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
@@ -9,8 +10,9 @@ public class Reflection : ApprenticeCard
 {
     public const string CardId = "TheApprentice:Reflection";
 
-    public Reflection() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.None)
+    public Reflection() : base(2, CardType.Skill, CardRarity.Uncommon, TargetType.None)
     {
+        WithKeyword(CardKeyword.Exhaust, ConstructedCardModel.UpgradeType.None);
         WithTip(typeof(WeakPower));
         WithTip(typeof(StrengthPower));
     }
