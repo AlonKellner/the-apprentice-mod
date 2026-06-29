@@ -56,19 +56,23 @@ public static class DreamsAndAmbitions
 
     private static void ApplyDreamyModifier(CardModel card)
     {
-        var mod = new DreamyModifier { OriginalBaseBlock = (int)card.DynamicVars.Block.BaseValue };
-        CardModifier.AddModifier(card, mod);
+        int origBlock = (int)card.DynamicVars.Block.BaseValue;
+        CardModifier.AddModifier<DreamyModifier>(card);
+        if (card.TryGetModifier<DreamyModifier>(out var mod))
+            mod.OriginalBaseBlock = origBlock;
     }
 
     private static void ApplyAmbitousModifier(CardModel card)
     {
-        var mod = new AmbitousModifier { OriginalBaseDamage = (int)card.DynamicVars.Damage.BaseValue };
-        CardModifier.AddModifier(card, mod);
+        int origDamage = (int)card.DynamicVars.Damage.BaseValue;
+        CardModifier.AddModifier<AmbitousModifier>(card);
+        if (card.TryGetModifier<AmbitousModifier>(out var mod))
+            mod.OriginalBaseDamage = origDamage;
     }
 
     private static void ApplyExpendModifier(CardModel card)
     {
-        CardModifier.AddModifier(card, new ExpendModifier());
+        CardModifier.AddModifier<ExpendModifier>(card);
     }
 
     public static async Task AddDreams(Player player, ICombatState combatState, int count, bool upgraded = false)
