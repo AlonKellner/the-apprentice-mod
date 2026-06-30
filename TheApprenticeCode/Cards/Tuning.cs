@@ -11,7 +11,6 @@ public class Tuning : ApprenticeCard
 
     public Tuning() : base(1, CardType.Power, CardRarity.Uncommon, TargetType.None)
     {
-        WithTip(typeof(TuningPower));
         WithTip(typeof(TensionPower));
     }
 

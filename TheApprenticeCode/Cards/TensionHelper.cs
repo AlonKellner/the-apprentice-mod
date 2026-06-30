@@ -10,12 +10,11 @@ namespace TheApprentice.TheApprenticeCode.Cards;
 public static class TensionHelper
 {
     // Pure math — testable in isolation.
-    // Order: Cadence multiplier (1=none, 2=double, 3=triple) → Fortissimo triples → Tuning/Dynamics bonus added last.
-    public static int ComputeTensionGain(int baseAmount, int tuningBonus, int cadenceMultiplier, bool fortissimoTriple)
+    // Order: Cadence multiplier (1=none, 2=double, 3=triple) → Tuning/Dynamics bonus added last.
+    public static int ComputeTensionGain(int baseAmount, int tuningBonus, int cadenceMultiplier)
     {
         int result = baseAmount;
         if (cadenceMultiplier > 1) result *= cadenceMultiplier;
-        if (fortissimoTriple) result *= 3;
         result += tuningBonus;
         return result;
     }
@@ -29,13 +28,12 @@ public static class TensionHelper
         int tuningBonus = (int)creature.GetPowerAmount<TuningPower>();
         int cadencePower = (int)creature.GetPowerAmount<CadencePower>();
         int cadenceMultiplier = cadencePower >= 2 ? 3 : cadencePower >= 1 ? 2 : 1;
-        bool fortissimoTriple = creature.GetPowerAmount<FortissimoPower>() >= 2;
 
         int dynamicsBonus = (int)creature.GetPowerAmount<DynamicsNextCardPower>();
         if (dynamicsBonus > 0)
             await PowerCmd.Apply<DynamicsNextCardPower>(ctx, creature, -dynamicsBonus, creature, card, false);
 
-        int finalAmount = ComputeTensionGain(amount, tuningBonus + dynamicsBonus, cadenceMultiplier, fortissimoTriple);
+        int finalAmount = ComputeTensionGain(amount, tuningBonus + dynamicsBonus, cadenceMultiplier);
         await PowerCmd.Apply<TensionPower>(ctx, creature, finalAmount, creature, card, false);
     }
 

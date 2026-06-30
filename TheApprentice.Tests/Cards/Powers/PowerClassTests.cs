@@ -1,5 +1,6 @@
 using System.Reflection;
 using MegaCrit.Sts2.Core.Entities.Powers;
+using MegaCrit.Sts2.Core.Models;
 using TheApprentice.TheApprenticeCode.Cards;
 using TheApprentice.TheApprenticeCode.Cards.Powers;
 using TheApprentice.TheApprenticeCode.Character;
@@ -217,6 +218,31 @@ public class PowerClassTests
         Assert.All(descriptions, d => Assert.DoesNotContain("Strength", d, StringComparison.Ordinal));
     }
 
+    // PowerModel.GetDumbHoverTip — used for typeof(T) tips shown on cards that merely reference
+    // Tension (e.g. Tuning, Suspension) — reads the ModelDb *template* instance's Amount, which is
+    // always 0 outside combat. The live stack count is already shown as a number badge on the
+    // power icon itself, so the hover text doesn't need to repeat {Amount} — describe the effect
+    // in terms of Tension instead, and use the same wording for both "description" (dumb,
+    // card-context) and "smartDescription" (live, in-combat icon) so there's one source of truth.
+    [Fact]
+    public void TensionPower_Description_DoesNotInterpolateAmount()
+    {
+        var p = new TensionPower();
+        var descriptions = p.Localization.Where(e => e.Item1 == "description").Select(e => e.Item2).ToList();
+        Assert.NotEmpty(descriptions);
+        Assert.All(descriptions, d => Assert.DoesNotContain("{Amount}", d, StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void TensionPower_DescriptionAndSmartDescription_Match()
+    {
+        var p = new TensionPower();
+        var loc = p.Localization;
+        var description = loc.Single(e => e.Item1 == "description").Item2;
+        var smartDescription = loc.Single(e => e.Item1 == "smartDescription").Item2;
+        Assert.Equal(description, smartDescription);
+    }
+
     // ── Tension infrastructure powers ─────────────────────────────────────────
 
     [Fact]
@@ -265,6 +291,31 @@ public class PowerClassTests
         var p = new FortissimoPower();
         Assert.Equal(PowerType.Buff, p.Type);
         Assert.Equal(PowerStackType.Counter, p.StackType);
+    }
+
+    private static void SetAmount(PowerModel power, int amount)
+    {
+        var field = typeof(PowerModel).GetField("_amount", BindingFlags.NonPublic | BindingFlags.Instance);
+        field!.SetValue(power, amount);
+    }
+
+    [Fact]
+    public void FortissimoPower_BaseDescription_DealsOnce_NotTwiceOrTripled()
+    {
+        var p = new FortissimoPower();
+        var desc = p.Localization.First(e => e.Item1 == "description").Item2;
+        Assert.DoesNotContain("twice", desc, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("tripled", desc, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public void FortissimoPower_UpgradedDescription_DealsTwice_NotTripled()
+    {
+        var p = new FortissimoPower();
+        SetAmount(p, 2);
+        var desc = p.Localization.First(e => e.Item1 == "description").Item2;
+        Assert.Contains("twice", desc, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("tripled", desc, StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]

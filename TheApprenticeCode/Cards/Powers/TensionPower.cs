@@ -18,8 +18,8 @@ public class TensionPower : CustomPowerModel
 
     public override List<(string, string)> Localization => new PowerLoc(
         "Tension",
-        "At the end of your turn, take {Amount} damage. Then Tension is removed.",
-        "At the end of your turn, take {Amount} damage. Then Tension is removed.");
+        "At the end of your turn, take damage equal to [gold]Tension[/gold]. Then [gold]Tension[/gold] is removed.",
+        "At the end of your turn, take damage equal to [gold]Tension[/gold]. Then [gold]Tension[/gold] is removed.");
 
     public override async Task BeforeSideTurnEnd(PlayerChoiceContext context, CombatSide side, IEnumerable<Creature> creatures)
     {
@@ -27,8 +27,10 @@ public class TensionPower : CustomPowerModel
 
         if (Owner.GetPowerAmount<FortissimoPower>() > 0)
         {
-            // Redirect all Tension damage to enemies
-            await CreatureCmd.Damage(context, Owner.CombatState!.HittableEnemies, Amount, ValueProp.Unpowered, Owner, null);
+            // Redirect all Tension damage to enemies; upgraded Fortissimo (Amount>=2) deals it twice.
+            int hits = Owner.GetPowerAmount<FortissimoPower>() >= 2 ? 2 : 1;
+            for (int i = 0; i < hits; i++)
+                await CreatureCmd.Damage(context, Owner.CombatState!.HittableEnemies, Amount, ValueProp.Unpowered, Owner, null);
             await PowerCmd.Apply<TensionPower>(context, Owner, -Amount, Owner, null, false);
             return;
         }

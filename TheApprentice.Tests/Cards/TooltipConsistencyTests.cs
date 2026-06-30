@@ -660,4 +660,39 @@ public class TooltipConsistencyTests
             $"unupgraded) — {cardType.Name}'s own upgrade never causes the created {tokenType.Name} " +
             "token to become upgraded.");
     }
+
+    // Fails before fix: Tuning and Suspension both add a typeof(T) hover tip pointing at their
+    // own granted power. typeof(T) tips render via PowerModel.GetDumbHoverTip, which reads the
+    // ModelDb *template* instance's Amount (always 0) — never the live stack count — so hovering
+    // the card shows "gain 0 additional Tension" / "gain 0 Tension and 0 Vigor". It's also
+    // redundant: the card's own description already states the effect (see e.g. Conviction,
+    // Lullaby, Conductor, Wunderkind, none of which self-tip their granted power).
+    // Passes after fix: the self-referential typeof(T) tip is removed.
+    [Theory]
+    [InlineData(typeof(Tuning), typeof(TuningPower))]
+    [InlineData(typeof(Suspension), typeof(SuspensionPower))]
+    [InlineData(typeof(Fortissimo), typeof(FortissimoPower))]
+    public void Card_DoesNotTipItsOwnGrantedPower(Type cardType, Type ownPowerType)
+    {
+        var card = (ConstructedCardModel)Activator.CreateInstance(cardType)!;
+        var tips = GetHoverTips(card);
+        Assert.False(HasTipForType(tips, ownPowerType),
+            $"{cardType.Name} must not have a self-referential {ownPowerType.Name} tip — " +
+            "typeof(T) tips read the ModelDb template's Amount (always 0), and the card's own " +
+            "description already states the effect.");
+    }
+
+    // Both Tuning and Suspension still need to explain Tension itself (a concept they reference
+    // but don't grant directly via their own power), so the TensionPower tip must remain.
+    [Theory]
+    [InlineData(typeof(Tuning))]
+    [InlineData(typeof(Suspension))]
+    [InlineData(typeof(Fortissimo))]
+    public void Card_StillHasTensionPowerTip(Type cardType)
+    {
+        var card = (ConstructedCardModel)Activator.CreateInstance(cardType)!;
+        var tips = GetHoverTips(card);
+        Assert.True(HasTipForType(tips, typeof(TensionPower)),
+            $"{cardType.Name} must still have a TensionPower tip explaining what Tension does.");
+    }
 }

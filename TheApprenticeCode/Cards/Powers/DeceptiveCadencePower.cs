@@ -14,6 +14,6 @@ public class DeceptiveCadencePower : CustomPowerModel
 
     public override List<(string, string)> Localization => new PowerLoc(
         "Deceptive Cadence",
-        "Tension will not damage you this turn. Tension is NOT removed at end of turn.",
-        "Tension will not damage you this turn. Tension is NOT removed at end of turn.");
+        "[gold]Tension[/gold] will not damage you this turn. [gold]Tension[/gold] is NOT removed at end of turn.",
+        "[gold]Tension[/gold] will not damage you this turn. [gold]Tension[/gold] is NOT removed at end of turn.");
 }

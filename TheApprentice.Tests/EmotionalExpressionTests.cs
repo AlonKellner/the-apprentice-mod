@@ -43,6 +43,68 @@ public class EmotionalExpressionTests
     public void ComputeNetWeak_Weak3_Unweak1_ApplyUnweak2_LeavesWeak0() =>
         Assert.Equal((0, 0), EmotionalExpression.ComputeNetWeak(3, 1, 0, 2));
 
+    // ComputeWeakConversion — "convert up to max Weak to Unweak". Capped conversions that leave a
+    // remainder must cancel that remainder against the newly-created Unweak rather than letting
+    // both coexist (Weak/Unweak are documented as mutually-cancelling, see UnweakPower's tooltip).
+
+    [Fact]
+    public void ComputeWeakConversion_Weak1_Max1_ConvertsFully() =>
+        Assert.Equal((0, 1), EmotionalExpression.ComputeWeakConversion(1, 0, 1));
+
+    [Fact]
+    public void ComputeWeakConversion_Weak2_Max1_RemainderCancelsNewUnweak() =>
+        Assert.Equal((0, 0), EmotionalExpression.ComputeWeakConversion(2, 0, 1));
+
+    [Fact]
+    public void ComputeWeakConversion_Weak3_Max1_RemainderPartiallyCancels() =>
+        Assert.Equal((1, 0), EmotionalExpression.ComputeWeakConversion(3, 0, 1));
+
+    [Fact]
+    public void ComputeWeakConversion_Weak3_Max2_LeftoverWeak1CancelsOneNewUnweak() =>
+        Assert.Equal((0, 1), EmotionalExpression.ComputeWeakConversion(3, 0, 2));
+
+    [Fact]
+    public void ComputeWeakConversion_Weak2_Max5_ConvertsAll_NoLeftover() =>
+        Assert.Equal((0, 2), EmotionalExpression.ComputeWeakConversion(2, 0, 5));
+
+    [Fact]
+    public void ComputeWeakConversion_NoWeak_NoOp() =>
+        Assert.Equal((0, 0), EmotionalExpression.ComputeWeakConversion(0, 0, 1));
+
+    [Fact]
+    public void ComputeWeakConversion_MaxZero_NoOp() =>
+        Assert.Equal((3, 0), EmotionalExpression.ComputeWeakConversion(3, 0, 0));
+
+    // ComputeVulnerableConversion — mirror cases
+
+    [Fact]
+    public void ComputeVulnerableConversion_Vulnerable1_Max1_ConvertsFully() =>
+        Assert.Equal((0, 1), EmotionalExpression.ComputeVulnerableConversion(1, 0, 1));
+
+    [Fact]
+    public void ComputeVulnerableConversion_Vulnerable2_Max1_RemainderCancelsNewUnvulnerable() =>
+        Assert.Equal((0, 0), EmotionalExpression.ComputeVulnerableConversion(2, 0, 1));
+
+    [Fact]
+    public void ComputeVulnerableConversion_Vulnerable3_Max1_RemainderPartiallyCancels() =>
+        Assert.Equal((1, 0), EmotionalExpression.ComputeVulnerableConversion(3, 0, 1));
+
+    [Fact]
+    public void ComputeVulnerableConversion_Vulnerable3_Max2_LeftoverVulnerable1CancelsOneNewUnvulnerable() =>
+        Assert.Equal((0, 1), EmotionalExpression.ComputeVulnerableConversion(3, 0, 2));
+
+    [Fact]
+    public void ComputeVulnerableConversion_Vulnerable2_Max5_ConvertsAll_NoLeftover() =>
+        Assert.Equal((0, 2), EmotionalExpression.ComputeVulnerableConversion(2, 0, 5));
+
+    [Fact]
+    public void ComputeVulnerableConversion_NoVulnerable_NoOp() =>
+        Assert.Equal((0, 0), EmotionalExpression.ComputeVulnerableConversion(0, 0, 1));
+
+    [Fact]
+    public void ComputeVulnerableConversion_MaxZero_NoOp() =>
+        Assert.Equal((3, 0), EmotionalExpression.ComputeVulnerableConversion(3, 0, 0));
+
     // ComputeNetVulnerable — mirror cases
 
     [Fact]

@@ -11,13 +11,12 @@ public class Fortissimo : ApprenticeCard
 
     public Fortissimo() : base(2, CardType.Power, CardRarity.Rare, TargetType.None)
     {
-        WithTip(typeof(FortissimoPower));
         WithTip(typeof(TensionPower));
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
-        // Amount=2 on upgrade signals FortissimoPower to also triple Tension gains.
+        // Amount=2 on upgrade signals FortissimoPower to deal its end-of-turn damage twice.
         decimal amount = IsUpgraded ? 2m : 1m;
         var creature = cardPlay.Card.Owner.Creature;
         await PowerCmd.Apply<FortissimoPower>(context, creature, amount, creature, cardPlay.Card, false);

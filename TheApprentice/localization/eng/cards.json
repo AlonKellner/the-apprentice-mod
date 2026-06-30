@@ -346,7 +346,7 @@
   "THEAPPRENTICE-CODA.description": "#Remove up to -5-+8+ [gold]Tension[/gold]. Deal damage equal to twice the [gold]Tension[/gold] removed.",
 
   "THEAPPRENTICE-REPRISE.title": "Reprise",
-  "THEAPPRENTICE-REPRISE.description": "#Remove all [gold]Tension[/gold]. Deal damage equal to -the Tension removed-+double the Tension removed+ to ALL enemies.",
+  "THEAPPRENTICE-REPRISE.description": "#Remove all [gold]Tension[/gold]. Deal damage equal to -the [gold]Tension[/gold] removed-+double the [gold]Tension[/gold] removed+ to ALL enemies.",
 
   "THEAPPRENTICE-VIBRATO.title": "Vibrato",
   "THEAPPRENTICE-VIBRATO.description": "#Deal damage to ALL enemies equal to -half your [gold]Tension[/gold] (rounded up)-+your full [gold]Tension[/gold]+. [gold]Tension[/gold] is NOT removed.",
@@ -385,7 +385,7 @@
   "THEAPPRENTICE-TRAGEDY.description": "#Remove all [gold]Tension[/gold]. Apply -3-+5+ [gold]Vulnerable[/gold] to ALL enemies. Gain [gold]Vigor[/gold] equal to [gold]Tension[/gold] removed.",
 
   "THEAPPRENTICE-FORTISSIMO.title": "Fortissimo",
-  "THEAPPRENTICE-FORTISSIMO.description": "#[gold]Tension[/gold] no longer damages you. At the end of your turn, deal your [gold]Tension[/gold] as damage to ALL enemies, then remove all [gold]Tension[/gold]. -+Your [gold]Tension[/gold] gain is tripled.+",
+  "THEAPPRENTICE-FORTISSIMO.description": "#[gold]Tension[/gold] no longer damages you. At the end of your turn, deal your [gold]Tension[/gold] as damage to ALL enemies+ twice+, then remove all [gold]Tension[/gold].",
 
   "THEAPPRENTICE-CADENCE.title": "Cadence",
   "THEAPPRENTICE-CADENCE.description": "#All [gold]Tension[/gold] you gain is -doubled-+tripled+.",

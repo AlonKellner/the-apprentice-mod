@@ -40,6 +40,24 @@ public static class EmotionalExpression
         return (0, totalUnvul - totalVul);
     }
 
+    // "Convert up to max Weak to Unweak." A capped conversion can leave Weak remaining alongside
+    // the newly-created Unweak — those must cancel against each other (Weak/Unweak are mutually
+    // exclusive by design) rather than coexist, so this routes through ComputeNetWeak.
+    public static (int netWeak, int netUnweak) ComputeWeakConversion(int curWeak, int curUnweak, int max)
+    {
+        int weakAmount = Math.Min(curWeak, max);
+        if (weakAmount <= 0) return (curWeak, curUnweak);
+        return ComputeNetWeak(curWeak, curUnweak, -weakAmount, weakAmount);
+    }
+
+    // Mirror of ComputeWeakConversion for Vulnerable/Unvulnerable.
+    public static (int netVul, int netUnvul) ComputeVulnerableConversion(int curVul, int curUnvul, int max)
+    {
+        int vulAmount = Math.Min(curVul, max);
+        if (vulAmount <= 0) return (curVul, curUnvul);
+        return ComputeNetVulnerable(curVul, curUnvul, -vulAmount, vulAmount);
+    }
+
     // Apply Unweak to a creature, cancelling against any existing WeakPower.
     public static async Task ApplyUnweak(PlayerChoiceContext ctx, Creature creature, int stacks, CardModel? card)
     {
@@ -84,22 +102,26 @@ public static class EmotionalExpression
             await PowerCmd.Apply<VigorPower>(ctx, creature, tenacityGain, creature, card, false);
     }
 
-    // Convert WeakPower to UnweakPower (same stacks, different sign). Max limits stacks converted.
+    // Convert up to max WeakPower to UnweakPower. Any remaining Weak (when current Weak exceeds
+    // max) cancels against the newly-created Unweak via ComputeWeakConversion, so the two never
+    // coexist.
     public static async Task ConvertWeakToUnweak(PlayerChoiceContext ctx, Creature creature, int max = int.MaxValue)
     {
-        int weakAmount = Math.Min(creature.GetPowerAmount<WeakPower>(), max);
-        if (weakAmount <= 0) return;
-        await PowerCmd.Apply<WeakPower>(ctx, creature, -weakAmount, creature, null, false);
-        await PowerCmd.Apply<UnweakPower>(ctx, creature, weakAmount, creature, null, false);
+        int curWeak = creature.GetPowerAmount<WeakPower>();
+        if (curWeak <= 0 || max <= 0) return;
+        int curUnweak = creature.GetPowerAmount<UnweakPower>();
+        var (netWeak, netUnweak) = ComputeWeakConversion(curWeak, curUnweak, max);
+        await AdjustWeakPowers(ctx, creature, null, curWeak, curUnweak, netWeak, netUnweak);
     }
 
-    // Convert VulnerablePower to UnvulnerablePower (same stacks, different sign). Max limits stacks converted.
+    // Mirror of ConvertWeakToUnweak for Vulnerable/Unvulnerable.
     public static async Task ConvertVulnerableToUnvulnerable(PlayerChoiceContext ctx, Creature creature, int max = int.MaxValue)
     {
-        int vulAmount = Math.Min(creature.GetPowerAmount<VulnerablePower>(), max);
-        if (vulAmount <= 0) return;
-        await PowerCmd.Apply<VulnerablePower>(ctx, creature, -vulAmount, creature, null, false);
-        await PowerCmd.Apply<UnvulnerablePower>(ctx, creature, vulAmount, creature, null, false);
+        int curVul = creature.GetPowerAmount<VulnerablePower>();
+        if (curVul <= 0 || max <= 0) return;
+        int curUnvul = creature.GetPowerAmount<UnvulnerablePower>();
+        var (netVul, netUnvul) = ComputeVulnerableConversion(curVul, curUnvul, max);
+        await AdjustVulnerablePowers(ctx, creature, null, curVul, curUnvul, netVul, netUnvul);
     }
 
     // Remove up to max Weak from source and apply to target.

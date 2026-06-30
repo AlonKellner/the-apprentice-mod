@@ -12,7 +12,6 @@ public class Suspension : ApprenticeCard
     public Suspension() : base(2, CardType.Power, CardRarity.Rare, TargetType.None)
     {
         WithTip(typeof(TensionPower));
-        WithTip(typeof(SuspensionPower));
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
