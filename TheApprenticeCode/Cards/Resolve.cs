@@ -30,8 +30,8 @@ public class Resolve : ApprenticeCard
         if (hand == null) return;
 
         foreach (var card in hand.Cards.Where(c => c is Ambition).ToList())
-            if (card.TryGetModifier<SpentModifier>(out var mod))
-                CardModifier.DirectModifiers(card).Remove(mod);
+            if (card.TryGetModifier<ExpendModifier>(out var mod) && mod.IsSpent)
+                mod.Reset();
 
         if (IsUpgraded)
             foreach (var card in hand.Cards.Where(c => c is Ambition && !c.IsUpgraded).ToList())

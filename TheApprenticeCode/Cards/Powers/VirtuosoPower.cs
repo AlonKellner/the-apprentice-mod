@@ -48,7 +48,7 @@ public class VirtuosoPower : CustomPowerModel
         var hand = Owner.Player!.Piles.FirstOrDefault(p => p.Type == PileType.Hand);
         if (hand == null) return;
         foreach (var card in hand.Cards.ToList())
-            if (card.TryGetModifier<SpentModifier>(out var mod))
-                CardModifier.DirectModifiers(card).Remove(mod);
+            if (card.TryGetModifier<ExpendModifier>(out var mod) && mod.IsSpent)
+                mod.Reset();
     }
 }

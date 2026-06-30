@@ -12,10 +12,12 @@ public class Reflection : ApprenticeCard
 
     public Reflection() : base(2, CardType.Skill, CardRarity.Basic, TargetType.None)
     {
-        WithKeyword(CardKeyword.Exhaust, ConstructedCardModel.UpgradeType.None);
+        WithKeyword(ApprenticeKeywords.Expend, ConstructedCardModel.UpgradeType.None);
         WithTip(typeof(WeakPower));
         WithTip(typeof(StrengthPower));
     }
+
+    public override bool HasExpend => true;
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {

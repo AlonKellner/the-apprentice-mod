@@ -105,9 +105,14 @@
        STS2_INSIDE_GODOT_PUBLISH=1 is passed to MegaDot's Exec so that its recursive dotnet publish
        inherits the env var and skips this target — no OOM spawn loop, no stale lock files.
        An import pass runs first so EditorSettings singletons are fully initialized before export-pack.
-       IgnoreExitCode on export-pack: Godot writes the .pck (savepack DONE) then crashes during
-       shutdown with an EditorSettings singleton error — the output is valid despite the non-zero exit.
-       The subsequent <Error> task confirms the file was actually created. -->
+       IgnoreExitCode + IgnoreStandardErrorWarningFormat on both Exec calls: Godot does its work
+       (import / savepack DONE) then crashes during shutdown with an EditorSettings singleton error
+       — the output is valid despite the non-zero exit. This shutdown crash can hit either
+       invocation, so both need IgnoreExitCode. Separately, MSBuild's Exec task scans every stderr
+       line for error-like text and promotes it to a build error (synthesized as "EXEC : error :
+       ...") independent of exit code — IgnoreStandardErrorWarningFormat disables that scan so the
+       crash's stderr text doesn't fail the build on its own. The subsequent <Error> task confirms
+       the .pck was actually created. -->
   <Target Name="GodotPublish" AfterTargets="Publish"
           Condition="'$([System.Environment]::GetEnvironmentVariable(&quot;STS2_INSIDE_GODOT_PUBLISH&quot;))' != '1'">
     <Error
@@ -117,13 +122,16 @@
       Condition="Exists('$(GodotPath)')"
       Command="&quot;$(GodotPath)&quot; --headless --import"
       WorkingDirectory="$(MSBuildProjectDirectory)"
-      EnvironmentVariables="STS2_INSIDE_GODOT_PUBLISH=1" />
+      EnvironmentVariables="STS2_INSIDE_GODOT_PUBLISH=1"
+      IgnoreExitCode="true"
+      IgnoreStandardErrorWarningFormat="true" />
     <Exec
       Condition="Exists('$(GodotPath)')"
       Command="&quot;$(GodotPath)&quot; --headless --export-pack &quot;BasicExport&quot; &quot;$(MSBuildProjectDirectory)/publish/$(AssemblyName).pck&quot;"
       WorkingDirectory="$(MSBuildProjectDirectory)"
       EnvironmentVariables="STS2_INSIDE_GODOT_PUBLISH=1"
-      IgnoreExitCode="true" />
+      IgnoreExitCode="true"
+      IgnoreStandardErrorWarningFormat="true" />
     <Error
       Condition="Exists('$(GodotPath)') and !Exists('$(MSBuildProjectDirectory)/publish/$(AssemblyName).pck')"
       Text="export-pack failed: publish/$(AssemblyName).pck was not created." />

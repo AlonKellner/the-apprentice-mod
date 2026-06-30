@@ -90,7 +90,7 @@ public static class DreamsAndAmbitions
         }
         await CardPileCmd.AddGeneratedCardsToCombat(cards, PileType.Hand, player);
         _dreamsCreated += count;
-        UpdateDreamyCards(player.Piles.SelectMany(p => p.Cards), _dreamsCreated);
+        UpdateDreamyCards(player.Piles.SelectMany(p => p.Cards).ToList(), _dreamsCreated);
     }
 
     public static async Task AddAmbitions(Player player, ICombatState combatState, int count, bool upgraded = false)
@@ -108,7 +108,7 @@ public static class DreamsAndAmbitions
         }
         await CardPileCmd.AddGeneratedCardsToCombat(cards, PileType.Hand, player);
         _ambitionsCreated += count;
-        UpdateAmbitousCards(player.Piles.SelectMany(p => p.Cards), _ambitionsCreated);
+        UpdateAmbitousCards(player.Piles.SelectMany(p => p.Cards).ToList(), _ambitionsCreated);
     }
 
     public static async Task AddPotentials(Player player, ICombatState combatState, int count, bool upgraded = false)
@@ -126,7 +126,8 @@ public static class DreamsAndAmbitions
             cards.Add(card);
         }
         await CardPileCmd.AddGeneratedCardsToCombat(cards, PileType.Hand, player);
-        UpdateDreamyCards(player.Piles.SelectMany(p => p.Cards), _dreamsCreated);
-        UpdateAmbitousCards(player.Piles.SelectMany(p => p.Cards), _ambitionsCreated);
+        var allCards = player.Piles.SelectMany(p => p.Cards).ToList();
+        UpdateDreamyCards(allCards, _dreamsCreated);
+        UpdateAmbitousCards(allCards, _ambitionsCreated);
     }
 }

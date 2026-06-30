@@ -1,7 +1,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
+using BaseLib.Abstracts;
+using BaseLib.Extensions;
 using TheApprentice.TheApprenticeCode.Cards;
+using TheApprentice.TheApprenticeCode.Cards.Modifiers;
+using TheApprentice.TheApprenticeCode.Character;
 using Xunit;
 
 namespace TheApprentice.Tests.Character;
@@ -43,6 +48,61 @@ public class TheApprenticeCardPoolTests
             .ToList();
 
         Assert.Equal(new[] { "Prelude", "Signature" }, overrides);
+    }
+
+    [Fact]
+    public void HasExpend_DefaultsToFalse_OnApprenticeCardBase()
+    {
+        // The base ApprenticeCard declares HasExpend as virtual returning false.
+        // Only the cards converted from Exhaust to Expend override it.
+        var overrides = typeof(ApprenticeCard).Assembly.GetTypes()
+            .Where(t => t.IsSubclassOf(typeof(ApprenticeCard)) && !t.IsAbstract)
+            .Where(t =>
+            {
+                var method = t.GetMethod("get_HasExpend");
+                return method != null && method.DeclaringType == t;
+            })
+            .Select(t => t.Name)
+            .OrderBy(n => n)
+            .ToList();
+
+        Assert.Equal(
+            new[] { "Daydream", "Epiphany", "Inversion", "Reflection", "Resonance", "Transcendence" },
+            overrides);
+    }
+
+    [Fact]
+    public void AfterCardEnteredCombat_AttachesExpendModifier_WhenHasExpend()
+    {
+        var card = new Reflection();
+        new TheApprenticeCardPool().AfterCardEnteredCombat(card);
+        Assert.True(card.TryGetModifier<ExpendModifier>(out _));
+    }
+
+    [Fact]
+    public void AfterCardEnteredCombat_DoesNotAttachExpendModifier_WhenNotHasExpend()
+    {
+        var card = new ClearMind();
+        new TheApprenticeCardPool().AfterCardEnteredCombat(card);
+        Assert.False(card.TryGetModifier<ExpendModifier>(out _));
+    }
+
+    [Fact]
+    public void AfterCardEnteredCombat_ResetsStaleIsSpent_WhenModifierAlreadyAttached()
+    {
+        // Simulates a "real" card carrying a spent ExpendModifier over from a
+        // previous combat. Nothing else in the codebase resets IsSpent between
+        // combats, so the pool hook must do it defensively (mirrors how the
+        // IsPrePlanned branch re-asserts SequenceIndex on every combat entry).
+        var card = new Reflection();
+        var mod = new ExpendModifier();
+        CardModifier.AddModifier(card, mod);
+        typeof(ExpendModifier).GetProperty(nameof(ExpendModifier.IsSpent))!.SetValue(mod, true);
+        Assert.True(mod.IsSpent);
+
+        new TheApprenticeCardPool().AfterCardEnteredCombat(card);
+
+        Assert.False(mod.IsSpent);
     }
 
     [Fact]

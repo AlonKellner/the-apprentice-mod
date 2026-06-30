@@ -19,4 +19,19 @@ public class PasticheTests
         Assert.Equal(CardType.Skill, c.Type);
         Assert.Equal(CardRarity.Uncommon, c.Rarity);
     }
+
+    [Fact]
+    public void Pastiche_Costs1Energy()
+    {
+        var c = new Pastiche();
+        Assert.Equal(1, c.EnergyCost.Canonical);
+    }
+
+    [Fact]
+    public void Pastiche_HasNeitherExhaustNorExpend()
+    {
+        var c = new Pastiche();
+        Assert.DoesNotContain(c.Keywords, k => k == CardKeyword.Exhaust);
+        Assert.DoesNotContain(c.Keywords, k => k == ApprenticeKeywords.Expend);
+    }
 }

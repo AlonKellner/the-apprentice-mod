@@ -37,7 +37,7 @@ public class MaestroPower : CustomPowerModel
     {
         if (cardPlay.Card.Owner?.Creature != Owner) return;
         var player = cardPlay.Card.Owner;
-        var allCards = player.Piles.SelectMany(p => p.Cards);
+        var allCards = player.Piles.SelectMany(p => p.Cards).ToList();
 
         int currentPlanned = PlannedModifier.CountIn(allCards);
         int newPlanned = Math.Max(0, currentPlanned - _lastPlannedCount);

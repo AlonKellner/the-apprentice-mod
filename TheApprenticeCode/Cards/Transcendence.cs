@@ -12,10 +12,12 @@ public class Transcendence : ApprenticeCard
 
     public Transcendence() : base(1, CardType.Skill, CardRarity.Rare, TargetType.None)
     {
-        WithKeyword(CardKeyword.Exhaust, ConstructedCardModel.UpgradeType.None);
+        WithKeyword(ApprenticeKeywords.Expend, ConstructedCardModel.UpgradeType.None);
         WithTip(typeof(UnweakPower));
         WithTip(typeof(UnvulnerablePower));
     }
+
+    public override bool HasExpend => true;
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {

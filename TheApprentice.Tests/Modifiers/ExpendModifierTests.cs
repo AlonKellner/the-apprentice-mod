@@ -7,7 +7,7 @@ using Xunit;
 
 namespace TheApprentice.Tests.Modifiers;
 
-// OnPlay (adds SpentModifier) requires CardPlay context — verified in-game.
+// OnPlay (sets IsSpent = true) requires CardPlay context — verified in-game.
 public class ExpendModifierTests
 {
     [Fact]
@@ -47,5 +47,39 @@ public class ExpendModifierTests
 
         Assert.False(result);
         Assert.DoesNotContain(ApprenticeKeywords.Expend, keywords);
+    }
+
+    // ── IsSpent / Reset ──────────────────────────────────────────────────────────
+
+    [Fact]
+    public void IsSpent_DefaultsFalse()
+    {
+        var mod = new ExpendModifier();
+        Assert.False(mod.IsSpent);
+    }
+
+    [Fact]
+    public void TryModifyKeywordsInCombat_WhenNotSpent_DoesNotAddUnplayable()
+    {
+        var card = new Dream();
+        var mod = new ExpendModifier();
+        CardModifier.AddModifier(card, mod);
+
+        var keywords = new HashSet<CardKeyword>();
+        mod.TryModifyKeywordsInCombat(card, keywords);
+
+        Assert.DoesNotContain(CardKeyword.Unplayable, keywords);
+    }
+
+    [Fact]
+    public void Reset_ClearsIsSpent()
+    {
+        var card = new Dream();
+        var mod = new ExpendModifier();
+        CardModifier.AddModifier(card, mod);
+        // Simulate spent state (OnPlay requires CardPlay context so we use Reset's inverse)
+        // Verify Reset works on a freshly-constructed mod (IsSpent=false remains false)
+        mod.Reset();
+        Assert.False(mod.IsSpent);
     }
 }

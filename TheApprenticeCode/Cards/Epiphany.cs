@@ -20,9 +20,11 @@ public class Epiphany : ApprenticeCard
     public Epiphany() : base(0, CardType.Skill, CardRarity.Common, TargetType.None)
     {
         WithCards(1);
-        WithKeyword(CardKeyword.Exhaust, ConstructedCardModel.UpgradeType.None);
+        WithKeyword(ApprenticeKeywords.Expend, ConstructedCardModel.UpgradeType.None);
         WithTip(ApprenticeKeywords.Planned);
     }
+
+    public override bool HasExpend => true;
 
     protected override void OnUpgrade()
     {

@@ -30,8 +30,8 @@ public class Lucidity : ApprenticeCard
         if (hand == null) return;
 
         foreach (var card in hand.Cards.Where(c => c is Dream).ToList())
-            if (card.TryGetModifier<SpentModifier>(out var mod))
-                CardModifier.DirectModifiers(card).Remove(mod);
+            if (card.TryGetModifier<ExpendModifier>(out var mod) && mod.IsSpent)
+                mod.Reset();
 
         if (IsUpgraded)
             foreach (var card in hand.Cards.Where(c => c is Dream && !c.IsUpgraded).ToList())

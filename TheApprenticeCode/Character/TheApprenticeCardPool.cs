@@ -33,6 +33,14 @@ public class TheApprenticeCardPool : CustomCardPoolModel
             if (card.TryGetModifier<PlannedModifier>(out var mod))
                 mod.SequenceIndex = -1;
         }
+        if (card is ApprenticeCard { HasExpend: true } apprenticeCard
+            && !(apprenticeCard.ExpendRemovedOnUpgrade && card.IsUpgraded))
+        {
+            if (!card.TryGetModifier<ExpendModifier>(out var expendMod))
+                CardModifier.AddModifier(card, new ExpendModifier());
+            else
+                expendMod.Reset();
+        }
         return Task.CompletedTask;
     }
 }

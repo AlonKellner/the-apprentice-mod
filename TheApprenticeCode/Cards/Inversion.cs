@@ -12,13 +12,15 @@ public class Inversion : ApprenticeCard
 
     public Inversion() : base(2, CardType.Skill, CardRarity.Basic, TargetType.None)
     {
-        WithKeyword(CardKeyword.Exhaust, ConstructedCardModel.UpgradeType.None);
+        WithKeyword(ApprenticeKeywords.Expend, ConstructedCardModel.UpgradeType.None);
         WithCostUpgradeBy(-1);
         WithTip(typeof(WeakPower));
         WithTip(typeof(VulnerablePower));
         WithTip(typeof(UnweakPower));
         WithTip(typeof(UnvulnerablePower));
     }
+
+    public override bool HasExpend => true;
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {

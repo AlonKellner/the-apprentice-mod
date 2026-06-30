@@ -1,11 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using BaseLib.Abstracts;
-using BaseLib.Utils;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
-using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Nodes.CommonUi;
 using TheApprentice.TheApprenticeCode.Extensions;
@@ -19,8 +17,8 @@ public class Blueprint : ApprenticeCard
     public Blueprint() : base(1, CardType.Skill, CardRarity.Rare, TargetType.None)
     {
         WithTip(CardKeyword.Unplayable);
-        WithTip(new TooltipSource(card => HoverTipFactory.FromCard<Dream>(upgrade: card.IsUpgraded)));
-        WithTip(new TooltipSource(card => HoverTipFactory.FromCard<Ambition>(upgrade: card.IsUpgraded)));
+        WithTip(typeof(Dream));
+        WithTip(typeof(Ambition));
         WithDreamKeywordTips();
         WithAmbitionKeywordTips();
     }

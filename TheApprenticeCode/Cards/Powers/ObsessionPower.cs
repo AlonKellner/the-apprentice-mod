@@ -31,7 +31,7 @@ public class ObsessionPower : CustomPowerModel
     {
         var allCards = Owner.Player?.Piles.SelectMany(p => p.Cards) ?? Enumerable.Empty<CardModel>();
         _lastPlannedCount = PlannedModifier.CountIn(allCards);
-        _lastSpentCount = allCards.Count(c => c.TryGetModifier<SpentModifier>(out _));
+        _lastSpentCount = allCards.Count(c => c.TryGetModifier<ExpendModifier>(out var m) && m.IsSpent);
         return Task.CompletedTask;
     }
 
@@ -42,7 +42,7 @@ public class ObsessionPower : CustomPowerModel
         var allCards = player.Piles.SelectMany(p => p.Cards).ToList();
 
         int currentPlanned = PlannedModifier.CountIn(allCards);
-        int currentSpent = allCards.Count(c => c.TryGetModifier<SpentModifier>(out _));
+        int currentSpent = allCards.Count(c => c.TryGetModifier<ExpendModifier>(out var m) && m.IsSpent);
 
         int newPlanned = Math.Max(0, currentPlanned - _lastPlannedCount);
         int newSpent = Math.Max(0, currentSpent - _lastSpentCount);

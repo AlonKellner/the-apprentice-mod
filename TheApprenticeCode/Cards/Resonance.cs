@@ -14,9 +14,12 @@ public class Resonance : ApprenticeCard
 
     public Resonance() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.None)
     {
-        WithKeyword(CardKeyword.Exhaust, ConstructedCardModel.UpgradeType.Remove);
+        WithKeyword(ApprenticeKeywords.Expend, ConstructedCardModel.UpgradeType.Remove);
         WithTip(ApprenticeKeywords.Planned);
     }
+
+    public override bool HasExpend => true;
+    public override bool ExpendRemovedOnUpgrade => true;
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {

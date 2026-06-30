@@ -11,16 +11,31 @@ public class ExpendModifier : CardModifier
 {
     public const string ModifierId = "TheApprentice:Expend";
 
+    public bool IsSpent { get; private set; }
+
+    public void Reset() => IsSpent = false;
+
     public override bool TryModifyKeywordsInCombat(CardModel card, ISet<CardKeyword> keywords)
     {
-        if (card == Owner) { keywords.Add(ApprenticeKeywords.Expend); return true; }
-        return false;
+        if (card != Owner) return false;
+        keywords.Add(ApprenticeKeywords.Expend);
+        if (IsSpent) keywords.Add(CardKeyword.Unplayable);
+        return true;
     }
 
     public override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         if (cardPlay.Card == Owner)
-            CardModifier.AddModifier<SpentModifier>(cardPlay.Card);
+            IsSpent = true;
         await Task.CompletedTask;
+    }
+
+    public override void StoreSaveData(ModifierSave save) =>
+        save.IntProperties["spent"] = IsSpent ? 1 : 0;
+
+    public override void LoadSaveData(ModifierSave save)
+    {
+        if (save.IntProperties.TryGetValue("spent", out int v))
+            IsSpent = v != 0;
     }
 }

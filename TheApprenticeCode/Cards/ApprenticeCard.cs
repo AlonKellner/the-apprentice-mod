@@ -26,6 +26,9 @@ public abstract class ApprenticeCard(
 
     public virtual bool IsPrePlanned => false;
 
+    public virtual bool HasExpend => false;
+    public virtual bool ExpendRemovedOnUpgrade => false;
+
     public override async Task AfterPlayerTurnStartLate(PlayerChoiceContext context, Player player)
     {
         if (player != Owner) return;

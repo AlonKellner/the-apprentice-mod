@@ -15,9 +15,8 @@ public class Pastiche : ApprenticeCard
 {
     public const string CardId = "TheApprentice:Pastiche";
 
-    public Pastiche() : base(0, CardType.Skill, CardRarity.Uncommon, TargetType.None)
+    public Pastiche() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.None)
     {
-        WithKeyword(CardKeyword.Exhaust, ConstructedCardModel.UpgradeType.Remove);
         WithTip(new TooltipSource(_ => HoverTipFactory.FromCard<Potential>(upgrade: true)));
         WithPotentialKeywordTips();
     }

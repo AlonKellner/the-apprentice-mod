@@ -631,4 +631,33 @@ public class TooltipConsistencyTests
             "THEAPPRENTICE-SCAPEGOAT.description key not found in cards.json");
         Assert.DoesNotContain("Strength", desc, StringComparison.OrdinalIgnoreCase);
     }
+
+    // Fails before fix: AchingWish, Wishful, Passion, and Blueprint tie their Dream/Ambition
+    // preview tip to card.IsUpgraded via a conditional lambda (HoverTipFactory.FromCard<T>(upgrade:
+    // card.IsUpgraded)), which renders "Dream+"/"Ambition+" once the host card is upgraded. But
+    // none of these cards' OnPlay ever upgrades the Dream/Ambition token it creates — upgrading
+    // the host card only changes a count (3->4 Dreams) or another stat (damage/block), never the
+    // token's own upgrade state. The tip should therefore always preview the unupgraded token.
+    // Passes after fix: tip uses typeof(T), whose implicit conversion (see BaseLib's
+    // TooltipSource.implicit operator(Type)) always passes upgrade: false.
+    [Theory]
+    [InlineData(typeof(AchingWish), typeof(Dream))]
+    [InlineData(typeof(Wishful), typeof(Dream))]
+    [InlineData(typeof(Passion), typeof(Dream))]
+    [InlineData(typeof(Passion), typeof(Ambition))]
+    [InlineData(typeof(Blueprint), typeof(Dream))]
+    [InlineData(typeof(Blueprint), typeof(Ambition))]
+    public void Card_WhoseUpgradeNeverProducesUpgradedToken_UsesImplicitTypeConversionForTokenTip(
+        Type cardType, Type tokenType)
+    {
+        var card = (ConstructedCardModel)Activator.CreateInstance(cardType)!;
+        var tips = GetHoverTips(card);
+        var tip = tips.FirstOrDefault(t => GetTokenTypeFromTip(t) == tokenType);
+
+        Assert.NotNull(tip);
+        Assert.True(UsesImplicitTypeConversion(tip!),
+            $"{cardType.Name}'s {tokenType.Name} tip must use typeof({tokenType.Name}) (always " +
+            $"unupgraded) — {cardType.Name}'s own upgrade never causes the created {tokenType.Name} " +
+            "token to become upgraded.");
+    }
 }

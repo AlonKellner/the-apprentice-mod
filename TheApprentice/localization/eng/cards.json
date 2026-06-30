@@ -16,7 +16,7 @@
   "THEAPPRENTICE-NEW_PERSPECTIVE.description": "Discard all [gold]Unplayable[/gold] cards in your hand. Draw 1 per card discarded.",
 
   "THEAPPRENTICE-CONTEMPLATE.title": "Contemplate",
-  "THEAPPRENTICE-CONTEMPLATE.description": "Gain {Block:diff()} block. Apply [gold]Planned[/gold] to a card in your hand.",
+  "THEAPPRENTICE-CONTEMPLATE.description": "Gain {Block:diff()} [gold]Block[/gold]. Apply [gold]Planned[/gold] to a card in your hand.",
   "THEAPPRENTICE-CONTEMPLATE.selectionPrompt": "Choose a card to make Planned.",
 
   "THEAPPRENTICE-REALIZE.title": "Realize",
@@ -34,7 +34,7 @@
   "THEAPPRENTICE-IMPROVISE.description": "Remove [gold]Planned[/gold] from all cards in your hand. Draw 1 card for each.",
 
   "THEAPPRENTICE-CREATIVE_BLOCK.title": "Creative Block",
-  "THEAPPRENTICE-CREATIVE_BLOCK.description": "Gain {Block:diff()} block. If you have no [gold]Planned[/gold] cards, gain {Block:diff()} additional block.",
+  "THEAPPRENTICE-CREATIVE_BLOCK.description": "Gain {Block:diff()} [gold]Block[/gold]. If you have no [gold]Planned[/gold] cards, gain {Block:diff()} additional [gold]Block[/gold].",
 
   "THEAPPRENTICE-REHEARSAL.title": "Rehearsal",
   "THEAPPRENTICE-REHEARSAL.description": "#+Draw 2 cards. +Apply [gold]Planned[/gold] to all cards in your hand.",
@@ -291,7 +291,7 @@
   "THEAPPRENTICE-UNDERCURRENT.description": "#At the end of your turn, if you are [gold]Vulnerable[/gold], deal -8-+12+ damage to ALL enemies.",
 
   "THEAPPRENTICE-CATHARSIS.title": "Catharsis",
-  "THEAPPRENTICE-CATHARSIS.description": "Remove up to 3 [gold]Weak[/gold] and up to 3 [gold]Vulnerable[/gold]. Deal {IfUpgraded:show:10|8} damage to ALL enemies per stack removed.",
+  "THEAPPRENTICE-CATHARSIS.description": "Remove up to 3 [gold]Weak[/gold] and up to 3 [gold]Vulnerable[/gold]. Deal {IfUpgraded:show:10|8} damage to ALL enemies per Weak and Vulnerable removed.",
 
   "THEAPPRENTICE-TIRADE.title": "Tirade",
   "THEAPPRENTICE-TIRADE.description": "Remove all [gold]Block[/gold]. Deal {Damage:diff()} damage to ALL enemies. If you removed {IfUpgraded:show:12+|15+} [gold]Block[/gold], deal {IfUpgraded:show:25|20} more.",
@@ -301,7 +301,7 @@
   "THEAPPRENTICE-SCAPEGOAT.selectionPrompt": "Choose an enemy to receive your debuffs.",
 
   "THEAPPRENTICE-RECRIMINATION.title": "Recrimination",
-  "THEAPPRENTICE-RECRIMINATION.description": "At the start of your turn, apply your [gold]Vulnerable[/gold] and [gold]Weak[/gold] stacks to ALL enemies.",
+  "THEAPPRENTICE-RECRIMINATION.description": "At the start of your turn, apply your [gold]Vulnerable[/gold] and [gold]Weak[/gold] to ALL enemies.",
 
   "THEAPPRENTICE-FERMATA.title": "Fermata",
   "THEAPPRENTICE-FERMATA.description": "#[gold]Weak[/gold], [gold]Vulnerable[/gold], [gold]Unweak[/gold], and [gold]Unvulnerable[/gold] no longer decrease at the end of your turn.",
