@@ -37,7 +37,7 @@ public class TheApprenticeBCardPoolTests
     }
 
     [Fact]
-    public void BPool_HasExactly6CommonCards() => Assert.Equal(6, CountBCardsByRarity("Common"));
+    public void BPool_HasExactly8CommonCards() => Assert.Equal(8, CountBCardsByRarity("Common"));
 
     [Fact]
     public void BPool_HasExactly2UncommonCards() => Assert.Equal(2, CountBCardsByRarity("Uncommon"));

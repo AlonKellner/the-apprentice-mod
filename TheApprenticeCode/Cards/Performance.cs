@@ -37,7 +37,7 @@ public class Performance : ApprenticeCardB
 
         // Step 1: Play all currently-Planned cards in queue order, consuming each slot.
         // A card with two slots is played twice.
-        var allCardsList = player.Piles.SelectMany(p => p.Cards).ToList();
+        var allCardsList = PlannedModifier.RelevantCards(player).ToList();
         var planned = PlannedModifier.GetSorted(allCardsList);
         foreach (var (card, _, slotSeqIdx) in planned)
         {
@@ -48,16 +48,16 @@ public class Performance : ApprenticeCardB
 
         // Step 2: Apply Planned to 0-N cards selected from hand (sets up next turn's queue).
         var maxSelect = IsUpgraded ? 3 : 2;
-        var selected = await CardSelectCmd.FromHand(
+        var selectedRaw = await CardSelectCmd.FromHand(
             context,
             player,
             new CardSelectorPrefs(new LocString("cards", "THEAPPRENTICE-PERFORMANCE.selectionPrompt"), 0, maxSelect),
             c => c != this && PlannedModifier.CanApplyTo(c),
             this);
 
-        if (selected == null) return;
-        foreach (var card in selected)
-            PlannedModifier.Apply(card, player.Piles.SelectMany(p => p.Cards));
+        if (selectedRaw == null) return;
+        foreach (var card in selectedRaw)
+            PlannedModifier.Apply(card, PlannedModifier.RelevantCards(player));
 
         if (!player.Creature.Powers.Any(p => p is PlannedCounterPower))
             await PowerCmd.Apply<PlannedCounterPower>(context, player.Creature, 1m, player.Creature, cardPlay.Card, false);

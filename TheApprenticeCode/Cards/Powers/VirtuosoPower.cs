@@ -32,23 +32,23 @@ public class VirtuosoPower : CustomPowerModel
         PlayerChoiceContext context, CombatSide side, System.Collections.Generic.IEnumerable<Creature> creatures)
     {
         if (Amount == 0 && side == CombatSide.Player)
-            RemoveSpentFromHand();
+            RemoveUnplayableFromHand();
         return Task.CompletedTask;
     }
 
     public override Task AfterPlayerTurnStart(PlayerChoiceContext context, Player player)
     {
         if (Amount == 1 && player == Owner.Player)
-            RemoveSpentFromHand();
+            RemoveUnplayableFromHand();
         return Task.CompletedTask;
     }
 
-    private void RemoveSpentFromHand()
+    private void RemoveUnplayableFromHand()
     {
         var hand = Owner.Player!.Piles.FirstOrDefault(p => p.Type == PileType.Hand);
         if (hand == null) return;
         foreach (var card in hand.Cards.ToList())
-            if (card.TryGetModifier<ExpendModifier>(out var mod) && mod.IsSpent)
-                mod.Reset();
+            if (card.TryGetModifier<UnplayableModifier>(out var mod))
+                CardModifier.DirectModifiers(card).Remove(mod);
     }
 }

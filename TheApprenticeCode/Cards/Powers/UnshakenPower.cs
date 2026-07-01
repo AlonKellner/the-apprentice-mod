@@ -20,8 +20,8 @@ public class UnshakenPower : CustomPowerModel
 
     public override List<(string, string)> Localization => new PowerLoc(
         "Unshaken",
-        "At the start of your turn, remove [gold]Unplayable[/gold] from all [gold]Shaken[/gold] [gold]Attacks[/gold] and [gold]Skills[/gold] in your hand.",
-        "At the start of your turn, remove [gold]Unplayable[/gold] from all [gold]Shaken[/gold] [gold]Attacks[/gold] and [gold]Skills[/gold] in your hand.");
+        "At the start of your turn, remove [gold]Unplayable[/gold] from all [gold]Attacks[/gold] and [gold]Skills[/gold] in your hand.",
+        "At the start of your turn, remove [gold]Unplayable[/gold] from all [gold]Attacks[/gold] and [gold]Skills[/gold] in your hand.");
 
     public override async Task AfterPlayerTurnStart(PlayerChoiceContext context, Player player)
     {
@@ -30,8 +30,8 @@ public class UnshakenPower : CustomPowerModel
         if (hand == null) return;
         foreach (var card in hand.Cards.ToList().Where(c => c.Type == CardType.Attack || c.Type == CardType.Skill))
         {
-            if (card.TryGetModifier<ShakenModifier>(out var mod) && mod.IsActive)
-                mod.Reset();
+            if (card.TryGetModifier<UnplayableModifier>(out var mod))
+                CardModifier.DirectModifiers(card).Remove(mod);
         }
         await PowerCmd.Decrement(this);
     }

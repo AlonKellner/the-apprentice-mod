@@ -438,5 +438,13 @@
 
   "THEAPPRENTICE-INTENTION.title": "Intention",
   "THEAPPRENTICE-INTENTION.description": "Apply [gold]Intense[/gold] to up to {Select:diff()} attacks and skills.",
-  "THEAPPRENTICE-INTENTION.selectionPrompt": "Choose cards to make Intense."
+  "THEAPPRENTICE-INTENTION.selectionPrompt": "Choose cards to make Intense.",
+
+  "THEAPPRENTICE-RISTRETTO.title": "Ristretto",
+  "THEAPPRENTICE-RISTRETTO.description": "Remove [gold]Unplayable[/gold] from up to {Cards:diff()} cards in your hand.\nGain 1 [gold]Limited[/gold].",
+  "THEAPPRENTICE-RISTRETTO.selectionPrompt": "Choose Unplayable cards to unblock.",
+
+  "THEAPPRENTICE-APERTO.title": "Aperto",
+  "THEAPPRENTICE-APERTO.description": "Remove [gold]Unplayable[/gold] from up to {Cards:diff()} cards in your hand.\nConvert 1 [gold]Limited[/gold] to [gold]Unlimited[/gold].",
+  "THEAPPRENTICE-APERTO.selectionPrompt": "Choose Unplayable cards to unblock."
 }

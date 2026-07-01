@@ -34,10 +34,8 @@ public class ShakenPower : CustomPowerModel
             (c.Type == CardType.Attack || c.Type == CardType.Skill)
             && !c.Keywords.Contains(ApprenticeKeywords.Stable)))
         {
-            if (card.TryGetModifier<ShakenModifier>(out var mod))
-                mod.Activate();
-            else
-                CardModifier.AddModifier<ShakenModifier>(card);
+            if (!card.TryGetModifier<UnplayableModifier>(out _))
+                CardModifier.AddModifier<UnplayableModifier>(card);
         }
         await PowerCmd.Decrement(this);
     }

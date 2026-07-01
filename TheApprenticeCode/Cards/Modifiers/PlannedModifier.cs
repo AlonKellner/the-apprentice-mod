@@ -7,7 +7,6 @@ using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Models;
 using TheApprentice.TheApprenticeCode.Cards;
-using TheApprentice.TheApprenticeCode.Cards.Powers;
 using TheApprentice.TheApprenticeCode.Extensions;
 
 namespace TheApprentice.TheApprenticeCode.Cards.Modifiers;
@@ -16,12 +15,27 @@ public class PlannedModifier : CardModifier
 {
     public const string ModifierId = "TheApprentice:Planned";
 
+    // BaseLib clones modifier instances from a prototype via shallow copy, so auto-property
+    // initializers (= new()) produce shared collection references across all clones. We use
+    // private backing fields that can be reassigned by ReinitCollections() to break sharing.
+    private List<int> _sequenceIndices = new();
+    private Dictionary<int, int> _visualBySeq = new();
+
     // One entry per Planned "slot" this card occupies in the queue.
     // A card may be Planned #4 and #6 simultaneously by having two entries here.
-    public List<int> SequenceIndices { get; } = new();
+    public List<int> SequenceIndices => _sequenceIndices;
 
     // Maps seqIdx → 1-based visual display number. Populated by AssignVisualIndices.
-    public Dictionary<int, int> VisualBySeq { get; } = new();
+    public Dictionary<int, int> VisualBySeq => _visualBySeq;
+
+    // Replaces the collection instances with fresh ones, breaking any prototype sharing
+    // introduced by BaseLib's shallow-clone modifier creation. Called in Apply whenever
+    // a new modifier is attached so each card gets its own independent list and dict.
+    public void ReinitCollections()
+    {
+        _sequenceIndices = new List<int>();
+        _visualBySeq = new Dictionary<int, int>();
+    }
 
     public static event Action? Changed;
 
@@ -97,8 +111,15 @@ public class PlannedModifier : CardModifier
         {
             CardModifier.AddModifier<PlannedModifier>(card);
             card.TryGetModifier<PlannedModifier>(out mod);
+            // BaseLib shallow-clones modifier prototypes, so the new instance shares its
+            // SequenceIndices and VisualBySeq with every other clone. ReinitCollections()
+            // replaces both backing fields with fresh instances, breaking the sharing.
+            // This also discards any stale save data that LoadSaveData may have loaded.
+            mod!.ReinitCollections();
         }
         mod!.SequenceIndices.Add(max + 1);
+        if (!card.TryGetModifier<UnplayableModifier>(out _))
+            CardModifier.AddModifier<UnplayableModifier>(card);
         Changed?.Invoke();
     }
 
@@ -109,7 +130,11 @@ public class PlannedModifier : CardModifier
         {
             mod.SequenceIndices.Remove(slotSeqIdx);
             if (mod.SequenceIndices.Count == 0)
+            {
                 CardModifier.DirectModifiers(card).Remove(mod);
+                if (card.TryGetModifier<UnplayableModifier>(out var u))
+                    CardModifier.DirectModifiers(card).Remove(u);
+            }
         }
         RefreshVisualIndices(allCards);
         Changed?.Invoke();
@@ -119,7 +144,11 @@ public class PlannedModifier : CardModifier
     public static void Remove(CardModel card, IEnumerable<CardModel> allCards)
     {
         if (card.TryGetModifier<PlannedModifier>(out var mod))
+        {
             CardModifier.DirectModifiers(card).Remove(mod);
+            if (card.TryGetModifier<UnplayableModifier>(out var u))
+                CardModifier.DirectModifiers(card).Remove(u);
+        }
         RefreshVisualIndices(allCards);
         Changed?.Invoke();
     }
@@ -131,9 +160,6 @@ public class PlannedModifier : CardModifier
         if (card == Owner)
         {
             keywords.Add(ApprenticeKeywords.Planned);
-            bool virtuosoActive = card.Owner?.Creature?.Powers.OfType<VirtuosoPower>().Any() ?? false;
-            if (!virtuosoActive)
-                keywords.Add(CardKeyword.Unplayable);
             return true;
         }
         return false;
@@ -157,17 +183,19 @@ public class PlannedModifier : CardModifier
 
     public override void LoadSaveData(ModifierSave save)
     {
-        SequenceIndices.Clear();
+        // Assign a fresh list rather than clearing, in case this instance was created via
+        // BaseLib's shallow clone and still shares its backing list with the prototype.
+        _sequenceIndices = new List<int>();
         if (save.IntProperties.TryGetValue("seq_count", out int count))
         {
             for (int i = 0; i < count; i++)
                 if (save.IntProperties.TryGetValue($"seq_{i}", out int s))
-                    SequenceIndices.Add(s);
+                    _sequenceIndices.Add(s);
         }
         else if (save.IntProperties.TryGetValue("seq", out int oldSeq))
         {
             // Backward compatibility: saves created before multi-slot support
-            SequenceIndices.Add(oldSeq);
+            _sequenceIndices.Add(oldSeq);
         }
     }
 }

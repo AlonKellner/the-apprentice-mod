@@ -5,12 +5,13 @@ using MegaCrit.Sts2.Core.Models;
 
 namespace TheApprentice.TheApprenticeCode.Cards.Modifiers;
 
-public class SpentModifier : CardModifier
+public class UnplayableModifier : CardModifier
 {
-    public const string ModifierId = "TheApprentice:Spent";
+    public const string ModifierId = "TheApprentice:Unplayable";
 
     public override bool TryModifyKeywordsInCombat(CardModel card, ISet<CardKeyword> keywords)
     {
+        if (card == Owner) { keywords.Add(CardKeyword.Unplayable); return true; }
         return false;
     }
 }

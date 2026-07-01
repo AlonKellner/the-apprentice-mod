@@ -19,6 +19,9 @@ public class DestinedTests
         var mod = new ExpendModifier();
         CardModifier.AddModifier(card, mod);
         typeof(ExpendModifier).GetProperty(nameof(ExpendModifier.IsSpent))!.SetValue(mod, true);
+        // Unplayable is now tracked via UnplayableModifier; add it directly to simulate OnPlay.
+        var unplayable = new UnplayableModifier();
+        CardModifier.AddModifier(card, unplayable);
 
         Assert.True(card.IsUnplayable());
         // Planned now also accepts Attacks and Skills that are Unplayable (same type check).

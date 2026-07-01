@@ -347,6 +347,52 @@ public class PowerClassTests
     }
 
     [Fact]
+    public void LimitedPower_IsDebuff_Counter()
+    {
+        var p = new LimitedPower();
+        Assert.Equal(PowerType.Debuff, p.Type);
+        Assert.Equal(PowerStackType.Counter, p.StackType);
+    }
+
+    [Fact]
+    public void UnlimitedPower_IsBuff_Counter()
+    {
+        var p = new UnlimitedPower();
+        Assert.Equal(PowerType.Buff, p.Type);
+        Assert.Equal(PowerStackType.Counter, p.StackType);
+    }
+
+    [Fact]
+    public void LimitedPower_Localization_MentionsDrawFewer()
+    {
+        var p = new LimitedPower();
+        var descriptions = p.Localization.Where(e => e.Item1 == "description").Select(e => e.Item2);
+        Assert.All(descriptions, d => Assert.Contains("fewer", d, StringComparison.OrdinalIgnoreCase));
+    }
+
+    [Fact]
+    public void UnlimitedPower_Localization_MentionsDrawAdditional()
+    {
+        var p = new UnlimitedPower();
+        var descriptions = p.Localization.Where(e => e.Item1 == "description").Select(e => e.Item2);
+        Assert.All(descriptions, d => Assert.Contains("additional", d, StringComparison.OrdinalIgnoreCase));
+    }
+
+    [Fact]
+    public void LimitedPower_OverridesModifyHandDraw()
+    {
+        Assert.NotNull(typeof(LimitedPower).GetMethod(
+            "ModifyHandDraw", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly));
+    }
+
+    [Fact]
+    public void UnlimitedPower_OverridesModifyHandDraw()
+    {
+        Assert.NotNull(typeof(UnlimitedPower).GetMethod(
+            "ModifyHandDraw", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly));
+    }
+
+    [Fact]
     public void AllPowers_Localization_IsNonEmpty()
     {
         Assert.NotEmpty(new InTheZonePower().Localization);
@@ -371,6 +417,8 @@ public class PowerClassTests
         Assert.NotEmpty(new CadencePower().Localization);
         Assert.NotEmpty(new FortissimoPower().Localization);
         Assert.NotEmpty(new SuspensionPower().Localization);
+        Assert.NotEmpty(new LimitedPower().Localization);
+        Assert.NotEmpty(new UnlimitedPower().Localization);
     }
 
     [Fact]

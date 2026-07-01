@@ -95,14 +95,11 @@ public class IntenseModifier : CardModifier
 
     // ── Instance overrides ───────────────────────────────────────────────────────────────────
 
-    // Do NOT add ApprenticeKeywords.Intense as a keyword chip here — that would create a
-    // second un-numbered "Intense" badge alongside ModifyDescription's "Intense N." text.
-    // Only add Unplayable when spent (keeps the gameplay constraint intact).
+    // ApprenticeKeywords.Intense is NOT added here — that would create a second un-numbered
+    // "Intense" badge alongside ModifyDescription's "Intense N." text.
     public override bool TryModifyKeywordsInCombat(CardModel card, ISet<CardKeyword> keywords)
     {
-        if (card != Owner) return false;
-        if (IsSpent) keywords.Add(CardKeyword.Unplayable);
-        return true;
+        return false;
     }
 
     // Prepended BEFORE the card description (e.g. "Intense 2.\nDeal N damage.")
@@ -116,7 +113,12 @@ public class IntenseModifier : CardModifier
 
     public override async Task OnPlay(PlayerChoiceContext ctx, CardPlay cardPlay)
     {
-        if (cardPlay.Card == Owner) IsSpent = true;
+        if (cardPlay.Card == Owner)
+        {
+            IsSpent = true;
+            if (!Owner!.TryGetModifier<UnplayableModifier>(out _))
+                CardModifier.AddModifier<UnplayableModifier>(Owner!);
+        }
         await Task.CompletedTask;
     }
 
