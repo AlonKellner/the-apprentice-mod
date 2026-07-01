@@ -1,9 +1,11 @@
 using System.Linq;
 using BaseLib.Abstracts;
+using BaseLib.Utils;
 using MegaCrit.Sts2.Core.CardSelection;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization;
 using TheApprentice.TheApprenticeCode.Cards.Modifiers;
 
@@ -16,17 +18,17 @@ public class DrivenInspiration : ApprenticeCard
     public DrivenInspiration() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.None)
     {
         WithTip(ApprenticeKeywords.Planned);
-        WithDreamTips();
-        WithAmbitionTips();
+        WithTip(new TooltipSource(card => HoverTipFactory.FromCard<Dream>(upgrade: card.IsUpgraded)));
+        WithTip(new TooltipSource(card => HoverTipFactory.FromCard<Ambition>(upgrade: card.IsUpgraded)));
+        WithDreamKeywordTips();
+        WithAmbitionKeywordTips();
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
         var player = cardPlay.Card.Owner;
-        await DreamsAndAmbitions.AddDreams(player, CombatState!, 1);
-        await DreamsAndAmbitions.AddAmbitions(player, CombatState!, 1);
-        if (IsUpgraded)
-            await DreamsAndAmbitions.AddPotentials(player, CombatState!, 1);
+        await DreamsAndAmbitions.AddDreams(player, CombatState!, 1, IsUpgraded);
+        await DreamsAndAmbitions.AddAmbitions(player, CombatState!, 1, IsUpgraded);
 
         var selected = await CardSelectCmd.FromHand(
             context, player,

@@ -16,4 +16,10 @@ public static class ApprenticeKeywords
 
     [CustomEnum, KeywordProperties(AutoKeywordPosition.After)]
     public static CardKeyword Expend;
+
+    [CustomEnum, KeywordProperties(AutoKeywordPosition.Before)]
+    public static CardKeyword Intense;
+
+    [CustomEnum, KeywordProperties(AutoKeywordPosition.Before)]
+    public static CardKeyword Stable;
 }

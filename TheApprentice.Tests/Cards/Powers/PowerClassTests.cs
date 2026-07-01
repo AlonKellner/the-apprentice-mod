@@ -218,6 +218,26 @@ public class PowerClassTests
         Assert.All(descriptions, d => Assert.DoesNotContain("Strength", d, StringComparison.Ordinal));
     }
 
+    // Prodigy adding Dream/Ambition to hand created an infinite loop: playing a Dream adds an
+    // Ambition to hand, which can immediately be played, adding a Dream back to hand, forever.
+    // Targeting the discard pile instead breaks the loop (discarded cards aren't replayable
+    // until the next turn's draw).
+    [Fact]
+    public void ProdigyPower_Localization_MentionsDiscardPile()
+    {
+        var p = new ProdigyPower();
+        var descriptions = p.Localization.Where(e => e.Item1 is "description" or "smartDescription").Select(e => e.Item2);
+        Assert.All(descriptions, d => Assert.Contains("discard pile", d, StringComparison.OrdinalIgnoreCase));
+    }
+
+    [Fact]
+    public void ProdigyPower_Localization_DoesNotMentionHand()
+    {
+        var p = new ProdigyPower();
+        var descriptions = p.Localization.Where(e => e.Item1 is "description" or "smartDescription").Select(e => e.Item2);
+        Assert.All(descriptions, d => Assert.DoesNotContain("your hand", d, StringComparison.OrdinalIgnoreCase));
+    }
+
     // PowerModel.GetDumbHoverTip — used for typeof(T) tips shown on cards that merely reference
     // Tension (e.g. Tuning, Suspension) — reads the ModelDb *template* instance's Amount, which is
     // always 0 outside combat. The live stack count is already shown as a number badge on the

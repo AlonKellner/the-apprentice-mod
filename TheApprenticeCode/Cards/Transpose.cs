@@ -44,7 +44,11 @@ public class Transpose : ApprenticeCard
 
         if (aPlanned && bPlanned)
         {
-            (modA!.SequenceIndex, modB!.SequenceIndex) = (modB!.SequenceIndex, modA!.SequenceIndex);
+            var aSlots = modA!.SequenceIndices.ToList();
+            modA.SequenceIndices.Clear();
+            modA.SequenceIndices.AddRange(modB!.SequenceIndices);
+            modB.SequenceIndices.Clear();
+            modB.SequenceIndices.AddRange(aSlots);
             PlannedModifier.RefreshVisualIndices(allCards);
             PlannedModifier.InvokeChanged();
         }

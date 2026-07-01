@@ -23,23 +23,25 @@ public class PlannedModifierTests
     }
 
     [Fact]
-    public void SequenceIndex_DefaultsToZero()
+    public void SequenceIndices_DefaultsToEmpty()
     {
         var mod = new PlannedModifier();
-        Assert.Equal(0, mod.SequenceIndex);
+        Assert.Empty(mod.SequenceIndices);
     }
 
     [Fact]
-    public void SequenceIndex_CanBeSetExternally()
+    public void SequenceIndices_CanAddEntry()
     {
-        var mod = new PlannedModifier { SequenceIndex = 2 };
-        Assert.Equal(2, mod.SequenceIndex);
+        var mod = new PlannedModifier();
+        mod.SequenceIndices.Add(2);
+        Assert.Equal(2, mod.SequenceIndices[0]);
     }
 
     [Fact]
     public void ModifyDescriptionPost_UsesGoldFormatting()
     {
-        var mod = new PlannedModifier { SequenceIndex = 0 };
+        var mod = new PlannedModifier();
+        mod.SequenceIndices.Add(0);
         var args = new object?[] { null, "base" };
         typeof(PlannedModifier).GetMethod("ModifyDescriptionPost")!.Invoke(mod, args);
         Assert.Contains("[gold]Planned #", (string)args[1]!);
@@ -48,10 +50,24 @@ public class PlannedModifierTests
     [Fact]
     public void ModifyDescriptionPost_ShowsOneBased_Index()
     {
-        var mod = new PlannedModifier { SequenceIndex = 2 };
+        var mod = new PlannedModifier();
+        mod.SequenceIndices.Add(2);
         var args = new object?[] { null, "" };
         typeof(PlannedModifier).GetMethod("ModifyDescriptionPost")!.Invoke(mod, args);
         Assert.Contains("#3", (string)args[1]!);
+    }
+
+    [Fact]
+    public void ModifyDescriptionPost_ShowsBothSlots_WhenCardIsMultiPlanned()
+    {
+        var mod = new PlannedModifier();
+        mod.SequenceIndices.Add(3);
+        mod.SequenceIndices.Add(7);
+        var args = new object?[] { null, "" };
+        typeof(PlannedModifier).GetMethod("ModifyDescriptionPost")!.Invoke(mod, args);
+        var desc = (string)args[1]!;
+        Assert.Contains("#4", desc);
+        Assert.Contains("#8", desc);
     }
 
     [Fact]
@@ -70,9 +86,25 @@ public class PlannedModifierTests
     }
 
     [Fact]
-    public void CanApplyTo_FreshCard_ReturnsTrue()
+    public void CanApplyTo_AttackCard_ReturnsTrue()
     {
         Assert.True(PlannedModifier.CanApplyTo(new ApprenticeStrike()));
+    }
+
+    [Fact]
+    public void CanApplyTo_SkillCard_ReturnsTrue()
+    {
+        Assert.True(PlannedModifier.CanApplyTo(new ApprenticeDefend()));
+    }
+
+    [Fact]
+    public void CanApplyTo_AlreadyPlannedAttack_ReturnsTrue()
+    {
+        var card = new ApprenticeStrike();
+        var mod = new PlannedModifier();
+        mod.SequenceIndices.Add(0);
+        CardModifier.DirectModifiers(card).Add(mod);
+        Assert.True(PlannedModifier.CanApplyTo(card));
     }
 
     [Fact]
@@ -90,9 +122,34 @@ public class PlannedModifierTests
     }
 
     [Fact]
+    public void GetSorted_CardWithTwoSlots_ReturnsTwoEntries()
+    {
+        var card = new ApprenticeStrike();
+        var mod = new PlannedModifier();
+        mod.SequenceIndices.Add(0);
+        mod.SequenceIndices.Add(3);
+        CardModifier.DirectModifiers(card).Add(mod);
+        var sorted = PlannedModifier.GetSorted(new[] { card });
+        Assert.Equal(2, sorted.Count);
+        Assert.Equal(0, sorted[0].slotSeqIdx);
+        Assert.Equal(3, sorted[1].slotSeqIdx);
+    }
+
+    [Fact]
     public void CountIn_EmptyInput_ReturnsZero()
     {
         Assert.Equal(0, PlannedModifier.CountIn(Enumerable.Empty<CardModel>()));
+    }
+
+    [Fact]
+    public void CountIn_CountsDistinctCards_NotSlots()
+    {
+        var card = new ApprenticeStrike();
+        var mod = new PlannedModifier();
+        mod.SequenceIndices.Add(0);
+        mod.SequenceIndices.Add(3);
+        CardModifier.DirectModifiers(card).Add(mod);
+        Assert.Equal(1, PlannedModifier.CountIn(new[] { card }));
     }
 
     [Fact]
@@ -102,15 +159,17 @@ public class PlannedModifierTests
     }
 
     [Fact]
-    public void VisualIndex_DefaultsToZero()
+    public void VisualBySeq_DefaultsToEmpty()
     {
-        Assert.Equal(0, new PlannedModifier().VisualIndex);
+        Assert.Empty(new PlannedModifier().VisualBySeq);
     }
 
     [Fact]
     public void ModifyDescriptionPost_ShowsVisualIndexWhenSet()
     {
-        var mod = new PlannedModifier { SequenceIndex = 5, VisualIndex = 2 };
+        var mod = new PlannedModifier();
+        mod.SequenceIndices.Add(5);
+        mod.VisualBySeq[5] = 2;
         var args = new object?[] { null, "" };
         typeof(PlannedModifier).GetMethod("ModifyDescriptionPost")!.Invoke(mod, args);
         Assert.Contains("#2", (string)args[1]!);
@@ -125,10 +184,19 @@ public class PlannedModifierTests
     }
 
     [Fact]
+    public void RemoveSlot_IsStaticMethod()
+    {
+        var method = typeof(PlannedModifier).GetMethod(
+            "RemoveSlot", BindingFlags.Public | BindingFlags.Static);
+        Assert.NotNull(method);
+    }
+
+    [Fact]
     public void Remove_ClearsModifierFromCard()
     {
         var card = new ApprenticeStrike();
-        var mod = new PlannedModifier { SequenceIndex = 0 };
+        var mod = new PlannedModifier();
+        mod.SequenceIndices.Add(0);
         CardModifier.DirectModifiers(card).Add(mod);
 
         PlannedModifier.Remove(card, Enumerable.Empty<CardModel>());
@@ -137,10 +205,39 @@ public class PlannedModifierTests
     }
 
     [Fact]
+    public void RemoveSlot_RemovesSpecificSlot_KeepsOther()
+    {
+        var card = new ApprenticeStrike();
+        var mod = new PlannedModifier();
+        mod.SequenceIndices.Add(0);
+        mod.SequenceIndices.Add(3);
+        CardModifier.DirectModifiers(card).Add(mod);
+
+        PlannedModifier.RemoveSlot(card, 0, Enumerable.Empty<CardModel>());
+
+        Assert.True(card.TryGetModifier<PlannedModifier>(out var remaining));
+        Assert.Equal(new[] { 3 }, remaining!.SequenceIndices);
+    }
+
+    [Fact]
+    public void RemoveSlot_RemovesModifier_WhenLastSlotGone()
+    {
+        var card = new ApprenticeStrike();
+        var mod = new PlannedModifier();
+        mod.SequenceIndices.Add(0);
+        CardModifier.DirectModifiers(card).Add(mod);
+
+        PlannedModifier.RemoveSlot(card, 0, Enumerable.Empty<CardModel>());
+
+        Assert.False(card.TryGetModifier<PlannedModifier>(out _));
+    }
+
+    [Fact]
     public void Remove_FiresChangedEvent()
     {
         var card = new ApprenticeStrike();
-        var mod = new PlannedModifier { SequenceIndex = 0 };
+        var mod = new PlannedModifier();
+        mod.SequenceIndices.Add(0);
         CardModifier.DirectModifiers(card).Add(mod);
 
         bool fired = false;
@@ -154,5 +251,11 @@ public class PlannedModifierTests
         {
             PlannedModifier.Changed -= () => fired = true;
         }
+    }
+
+    [Fact]
+    public void RelevantCards_NullPlayer_ReturnsEmpty()
+    {
+        Assert.Empty(PlannedModifier.RelevantCards(null));
     }
 }

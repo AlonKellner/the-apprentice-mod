@@ -1,4 +1,8 @@
 {
   "TheApprentice:Planned.name": "Planned",
-  "TheApprentice:Planned.description": "This card cannot be played directly. Use [card]Execute Plans[/card] or [card]Scrap Plans[/card] to resolve it."
+  "TheApprentice:Planned.description": "This card cannot be played directly. Cards that play [gold]Planned[/gold] cards will execute it in sequence order.",
+  "TheApprentice:Intense.name": "Intense",
+  "TheApprentice:Intense.description": "Becomes [gold]Unplayable[/gold] after being played once. Can still be played via [gold]Planned[/gold].",
+  "TheApprentice:Shaken.name": "Shaken",
+  "TheApprentice:Shaken.description": "This card is [gold]Unplayable[/gold] due to [gold]Shaken[/gold]."
 }

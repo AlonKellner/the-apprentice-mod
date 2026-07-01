@@ -6,5 +6,8 @@
   "THEAPPRENTICE-POETIC_STRUGGLE.title": "Poetic Struggle",
   "THEAPPRENTICE-POETIC_STRUGGLE.description": "Start combat with 2 [blue]Unweak[/blue] and 2 [blue]Unvulnerable[/blue]. Choose the first card in your initial hand.",
   "THEAPPRENTICE-POETIC_STRUGGLE.selectionPrompt": "Select a card to add to your hand.",
-  "THEAPPRENTICE-POETIC_STRUGGLE.flavor": "What once weighed you down now lifts you up."
+  "THEAPPRENTICE-POETIC_STRUGGLE.flavor": "What once weighed you down now lifts you up.",
+  "THEAPPRENTICE-BLANK_SLATE.title": "Blank Slate",
+  "THEAPPRENTICE-BLANK_SLATE.description": "Does nothing.",
+  "THEAPPRENTICE-BLANK_SLATE.flavor": "A prototype, stripped to its essentials."
 }

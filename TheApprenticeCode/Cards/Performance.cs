@@ -1,27 +1,26 @@
+using System.Linq;
 using BaseLib.Abstracts;
 using BaseLib.Extensions;
 using BaseLib.Utils;
-using System.Linq;
 using MegaCrit.Sts2.Core.CardSelection;
-using MegaCrit.Sts2.Core.Localization;
-using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.Localization;
+using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using TheApprentice.TheApprenticeCode.Cards.Modifiers;
 using TheApprentice.TheApprenticeCode.Cards.Powers;
-using TheApprentice.TheApprenticeCode.Extensions;
 
 namespace TheApprentice.TheApprenticeCode.Cards;
 
-public class Plan : ApprenticeCard
+public class Performance : ApprenticeCardB
 {
-    public const string CardId = "TheApprentice:Plan";
+    public const string CardId = "TheApprentice:Performance";
 
-    public Plan() : base(0, CardType.Skill, CardRarity.Basic, TargetType.None, false)
+    public Performance() : base(0, CardType.Skill, CardRarity.Basic, TargetType.AnyEnemy, false)
     {
+        WithKeyword(ApprenticeKeywords.Stable, ConstructedCardModel.UpgradeType.None);
         WithKeyword(CardKeyword.Retain, ConstructedCardModel.UpgradeType.None);
-        WithCards(1);
         WithVars(new CardsVar("Select", 2));
         WithTip(ApprenticeKeywords.Planned);
     }
@@ -29,7 +28,6 @@ public class Plan : ApprenticeCard
     protected override void OnUpgrade()
     {
         base.OnUpgrade();
-        DynamicVars.Cards.UpgradeValueBy(1m);
         DynamicVars["Select"].UpgradeValueBy(1m);
     }
 
@@ -37,13 +35,23 @@ public class Plan : ApprenticeCard
     {
         var player = cardPlay.Card.Owner;
 
-        await CommonActions.Draw(this, context);
+        // Step 1: Play all currently-Planned cards in queue order, consuming each slot.
+        // A card with two slots is played twice.
+        var allCardsList = player.Piles.SelectMany(p => p.Cards).ToList();
+        var planned = PlannedModifier.GetSorted(allCardsList);
+        foreach (var (card, _, slotSeqIdx) in planned)
+        {
+            PlannedModifier.RemoveSlot(card, slotSeqIdx, allCardsList);
+            await CardCmd.AutoPlay(context, card, cardPlay.Target, AutoPlayType.None, false, false);
+        }
+        PlannedModifier.InvokeChanged();
 
+        // Step 2: Apply Planned to 0-N cards selected from hand (sets up next turn's queue).
         var maxSelect = IsUpgraded ? 3 : 2;
         var selected = await CardSelectCmd.FromHand(
             context,
             player,
-            new CardSelectorPrefs(new LocString("cards", "THEAPPRENTICE-PLAN.selectionPrompt"), 1, maxSelect),
+            new CardSelectorPrefs(new LocString("cards", "THEAPPRENTICE-PERFORMANCE.selectionPrompt"), 0, maxSelect),
             c => c != this && PlannedModifier.CanApplyTo(c),
             this);
 

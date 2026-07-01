@@ -178,4 +178,48 @@ public static class EmotionalExpression
         if (unvulDelta != 0)
             await PowerCmd.Apply<UnvulnerablePower>(ctx, creature, unvulDelta, creature, card, false);
     }
+
+    public static (int netShaken, int netUnshaken) ComputeNetShaken(int curShaken, int curUnshaken, int deltaShaken, int deltaUnshaken)
+    {
+        int totalShaken = curShaken + deltaShaken;
+        int totalUnshaken = curUnshaken + deltaUnshaken;
+        if (totalShaken >= totalUnshaken)
+            return (totalShaken - totalUnshaken, 0);
+        return (0, totalUnshaken - totalShaken);
+    }
+
+    public static (int netShaken, int netUnshaken) ComputeShakenConversion(int curShaken, int curUnshaken, int max)
+    {
+        int shakenAmount = Math.Min(curShaken, max);
+        if (shakenAmount <= 0) return (curShaken, curUnshaken);
+        return ComputeNetShaken(curShaken, curUnshaken, -shakenAmount, shakenAmount);
+    }
+
+    public static async Task ApplyShakenToSelf(PlayerChoiceContext ctx, Creature creature, int stacks, CardModel? card)
+    {
+        int curShaken = creature.GetPowerAmount<ShakenPower>();
+        int curUnshaken = creature.GetPowerAmount<UnshakenPower>();
+        var (netShaken, netUnshaken) = ComputeNetShaken(curShaken, curUnshaken, stacks, 0);
+        await AdjustShakenPowers(ctx, creature, card, curShaken, curUnshaken, netShaken, netUnshaken);
+    }
+
+    public static async Task ConvertShakenToUnshaken(PlayerChoiceContext ctx, Creature creature, int max = int.MaxValue)
+    {
+        int curShaken = creature.GetPowerAmount<ShakenPower>();
+        if (curShaken <= 0 || max <= 0) return;
+        int curUnshaken = creature.GetPowerAmount<UnshakenPower>();
+        var (netShaken, netUnshaken) = ComputeShakenConversion(curShaken, curUnshaken, max);
+        await AdjustShakenPowers(ctx, creature, null, curShaken, curUnshaken, netShaken, netUnshaken);
+    }
+
+    private static async Task AdjustShakenPowers(PlayerChoiceContext ctx, Creature creature, CardModel? card,
+        int curShaken, int curUnshaken, int netShaken, int netUnshaken)
+    {
+        int shakenDelta = netShaken - curShaken;
+        int unshakenDelta = netUnshaken - curUnshaken;
+        if (shakenDelta != 0)
+            await PowerCmd.Apply<ShakenPower>(ctx, creature, shakenDelta, creature, card, false);
+        if (unshakenDelta != 0)
+            await PowerCmd.Apply<UnshakenPower>(ctx, creature, unshakenDelta, creature, card, false);
+    }
 }

@@ -31,7 +31,7 @@ public class PlannedCounterPower : CustomPowerModel
         BaseDescription);
 
     public override int DisplayAmount => IsMutable
-        ? PlannedModifier.CountIn(Owner?.Player?.Piles.SelectMany(p => p.Cards) ?? Enumerable.Empty<CardModel>())
+        ? PlannedModifier.CountIn(PlannedModifier.RelevantCards(Owner?.Player))
         : 0;
 
     protected override bool IsVisibleInternal => true;
@@ -48,10 +48,10 @@ public class PlannedCounterPower : CustomPowerModel
 
     private void UpdateDisplayIfChanged()
     {
-        var allCards = Owner?.Player?.Piles.SelectMany(p => p.Cards) ?? Enumerable.Empty<CardModel>();
+        var allCards = PlannedModifier.RelevantCards(Owner?.Player).ToList();
         PlannedModifier.RefreshVisualIndices(allCards);
         var sorted = PlannedModifier.GetSorted(allCards);
-        var current = BuildPlanList(sorted.Select(x => x.card.Title));
+        var current = BuildPlanList(sorted.Select(x => x.card.Title)); // one entry per slot; multi-slot cards appear N times
         if (current == _lastPlanList) return;
         _lastPlanList = current;
         ((StringVar)DynamicVars["CardList"]).StringValue = current;
@@ -61,6 +61,12 @@ public class PlannedCounterPower : CustomPowerModel
     public override Task AfterApplied(Creature? creature, CardModel? card)
     {
         PlannedModifier.Changed += UpdateDisplayIfChanged;
+        // This power is applied lazily (ApprenticeCard.AfterPlayerTurnStartLate, on the first
+        // turn it's missing), well after pre-Planned cards (Signature, Prelude) may already have
+        // PlannedModifier attached from combat start. Subscribing alone only catches *future*
+        // Changed events — sync with whatever's already Planned right now, or the card list stays
+        // empty until something else happens to change Planned state.
+        UpdateDisplayIfChanged();
         return Task.CompletedTask;
     }
 

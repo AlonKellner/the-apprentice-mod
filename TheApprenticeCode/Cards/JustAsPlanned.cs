@@ -23,11 +23,12 @@ public class JustAsPlanned : ApprenticeCard
     {
         var player = cardPlay.Card.Owner;
 
-        var planned = PlannedModifier.GetSorted(player.Piles.SelectMany(p => p.Cards));
+        var allCardsList = player.Piles.SelectMany(p => p.Cards).ToList();
+        var planned = PlannedModifier.GetSorted(allCardsList);
 
-        foreach (var (card, mod) in planned)
+        foreach (var (card, _, slotSeqIdx) in planned)
         {
-            CardModifier.DirectModifiers(card).Remove(mod);
+            PlannedModifier.RemoveSlot(card, slotSeqIdx, allCardsList);
             await CardCmd.AutoPlay(context, card, cardPlay.Target, AutoPlayType.None, false, false);
         }
         PlannedModifier.InvokeChanged();

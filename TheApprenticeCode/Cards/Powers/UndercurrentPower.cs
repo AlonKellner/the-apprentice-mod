@@ -19,8 +19,8 @@ public class UndercurrentPower : CustomPowerModel
 
     public override List<(string, string)> Localization => new PowerLoc(
         "Undercurrent",
-        "At the end of your turn, if you are [gold]Vulnerable[/gold], deal 8 damage to all enemies.",
-        "At the end of your turn, if you are [gold]Vulnerable[/gold], deal 12 damage to all enemies.");
+        "At the end of your turn, if you are [gold]Vulnerable[/gold], deal 8 damage to ALL enemies.",
+        "At the end of your turn, if you are [gold]Vulnerable[/gold], deal 12 damage to ALL enemies.");
 
     public override async Task BeforeSideTurnEnd(PlayerChoiceContext context, CombatSide side, IEnumerable<Creature> creatures)
     {

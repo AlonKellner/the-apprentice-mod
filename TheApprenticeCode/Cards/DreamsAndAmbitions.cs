@@ -75,7 +75,7 @@ public static class DreamsAndAmbitions
         CardModifier.AddModifier<ExpendModifier>(card);
     }
 
-    public static async Task AddDreams(Player player, ICombatState combatState, int count, bool upgraded = false)
+    public static async Task AddDreams(Player player, ICombatState combatState, int count, bool upgraded = false, PileType pile = PileType.Hand)
     {
         if (count <= 0 || CombatManager.Instance.IsOverOrEnding) return;
         MaybeResetForCombat(combatState);
@@ -88,12 +88,12 @@ public static class DreamsAndAmbitions
             ApplyExpendModifier(card);
             cards.Add(card);
         }
-        await CardPileCmd.AddGeneratedCardsToCombat(cards, PileType.Hand, player);
+        await CardPileCmd.AddGeneratedCardsToCombat(cards, pile, player);
         _dreamsCreated += count;
         UpdateDreamyCards(player.Piles.SelectMany(p => p.Cards).ToList(), _dreamsCreated);
     }
 
-    public static async Task AddAmbitions(Player player, ICombatState combatState, int count, bool upgraded = false)
+    public static async Task AddAmbitions(Player player, ICombatState combatState, int count, bool upgraded = false, PileType pile = PileType.Hand)
     {
         if (count <= 0 || CombatManager.Instance.IsOverOrEnding) return;
         MaybeResetForCombat(combatState);
@@ -106,12 +106,12 @@ public static class DreamsAndAmbitions
             ApplyExpendModifier(card);
             cards.Add(card);
         }
-        await CardPileCmd.AddGeneratedCardsToCombat(cards, PileType.Hand, player);
+        await CardPileCmd.AddGeneratedCardsToCombat(cards, pile, player);
         _ambitionsCreated += count;
         UpdateAmbitousCards(player.Piles.SelectMany(p => p.Cards).ToList(), _ambitionsCreated);
     }
 
-    public static async Task AddPotentials(Player player, ICombatState combatState, int count, bool upgraded = false)
+    public static async Task AddPotentials(Player player, ICombatState combatState, int count, bool upgraded = false, PileType pile = PileType.Hand)
     {
         if (count <= 0 || CombatManager.Instance.IsOverOrEnding) return;
         MaybeResetForCombat(combatState);
@@ -125,7 +125,7 @@ public static class DreamsAndAmbitions
             ApplyExpendModifier(card);
             cards.Add(card);
         }
-        await CardPileCmd.AddGeneratedCardsToCombat(cards, PileType.Hand, player);
+        await CardPileCmd.AddGeneratedCardsToCombat(cards, pile, player);
         var allCards = player.Piles.SelectMany(p => p.Cards).ToList();
         UpdateDreamyCards(allCards, _dreamsCreated);
         UpdateAmbitousCards(allCards, _ambitionsCreated);

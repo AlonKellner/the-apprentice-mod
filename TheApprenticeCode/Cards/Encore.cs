@@ -24,9 +24,10 @@ public class Encore : ApprenticeCard
 
         var planned = PlannedModifier.GetSorted(player.Piles.SelectMany(p => p.Cards));
 
-        foreach (var (card, _) in planned)
+        foreach (var (card, _, _) in planned)
         {
-            // Execute but do NOT remove the PlannedModifier — cards stay Planned
+            // Execute but do NOT remove the PlannedModifier — cards stay Planned.
+            // A card with multiple slots is played once per slot.
             await CardCmd.AutoPlay(context, card, cardPlay.Target, AutoPlayType.None, false, false);
         }
     }

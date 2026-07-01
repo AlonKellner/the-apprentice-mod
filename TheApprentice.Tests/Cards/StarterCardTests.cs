@@ -17,6 +17,13 @@ public class StarterCardTests
     }
 
     [Fact]
+    public void Plan_HasRetain()
+    {
+        var c = new Plan();
+        Assert.Contains(c.Keywords, k => k == CardKeyword.Retain);
+    }
+
+    [Fact]
     public void JustAsPlanned_IsBasicRarity()
     {
         var c = new JustAsPlanned();

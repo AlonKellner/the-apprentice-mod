@@ -20,6 +20,11 @@ public class Coda : ApprenticeCard
         var creature = cardPlay.Card.Owner.Creature;
         int removed = await TensionHelper.RemoveTension(context, creature, cap, cardPlay.Card);
         if (removed <= 0) return;
-        await CommonActions.CardAttack(cardPlay.Card, cardPlay.Target, removed * 2m).Execute(context);
+        // Must be decimal — see Climax.cs for why: passing the bare int `removed` here would pick
+        // the (CardModel, Creature?, int hitCount) overload instead of the (..., decimal damage)
+        // one, and throw since Coda has no static WithDamage value.
+        decimal damage = removed;
+        for (int i = 0; i < 2; i++)
+            await CommonActions.CardAttack(cardPlay.Card, cardPlay.Target, damage).Execute(context);
     }
 }

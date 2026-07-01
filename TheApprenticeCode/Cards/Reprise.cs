@@ -19,10 +19,11 @@ public class Reprise : ApprenticeCard
         var creature = cardPlay.Card.Owner.Creature;
         int removed = await TensionHelper.RemoveAllTension(context, creature, cardPlay.Card);
         if (removed <= 0) return;
-        decimal damage = IsUpgraded ? removed * 2m : removed;
-        await DamageCmd.Attack(damage)
-            .FromCard(cardPlay.Card)
-            .TargetingAllOpponents(CombatState!)
-            .Execute(context);
+        int hits = IsUpgraded ? 2 : 1;
+        for (int i = 0; i < hits; i++)
+            await DamageCmd.Attack(removed)
+                .FromCard(cardPlay.Card)
+                .TargetingAllOpponents(CombatState!)
+                .Execute(context);
     }
 }

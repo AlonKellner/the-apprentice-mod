@@ -4,9 +4,9 @@ using Godot;
 
 namespace TheApprentice.TheApprenticeCode.Character;
 
-public class TheApprenticeCardPool : CustomCardPoolModel
+public class TheApprenticeBCardPool : CustomCardPoolModel
 {
-    public override string Title => TheApprentice.CharacterId;
+    public override string Title => TheApprenticeB.CharacterId;
 
     public override string BigEnergyIconPath => "charui/big_energy.png".ImagePath();
     public override string TextEnergyIconPath => "charui/text_energy.png".ImagePath();

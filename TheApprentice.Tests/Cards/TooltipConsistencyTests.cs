@@ -632,6 +632,52 @@ public class TooltipConsistencyTests
         Assert.DoesNotContain("Strength", desc, StringComparison.OrdinalIgnoreCase);
     }
 
+    // Prodigy adding Dream/Ambition to hand created an infinite loop (see ProdigyPower tests in
+    // PowerClassTests.cs) — the card's own description must match the fixed, discard-pile behavior.
+    [Fact]
+    public void Prodigy_DescriptionMentionsDiscardPile_NotHand()
+    {
+        var json = LoadCardsJson();
+        Assert.True(json.TryGetValue("THEAPPRENTICE-PRODIGY.description", out var desc),
+            "THEAPPRENTICE-PRODIGY.description key not found in cards.json");
+        Assert.Contains("discard pile", desc, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("your hand", desc, StringComparison.OrdinalIgnoreCase);
+    }
+
+    // Climax/Coda/Reprise described their Tension-removal payoff as a single hit scaled by a
+    // percentage/multiplier of the Tension removed ("300% of Tension removed", "twice the Tension
+    // removed"). That's both awkward to read and a poor match for the actual desired behavior:
+    // attacking multiple times for the removed amount (interacts properly with Block/Vulnerable
+    // per hit, matches the established "deal damage twice" phrasing used elsewhere, e.g. Marcato
+    // "4 times", Discord/Passion/Potential "twice").
+    [Theory]
+    [InlineData("THEAPPRENTICE-CLIMAX")]
+    [InlineData("THEAPPRENTICE-CODA")]
+    [InlineData("THEAPPRENTICE-REPRISE")]
+    public void TensionAttack_DescriptionDoesNotUsePercentOrMultiplierOfRemovedWording(string keyPrefix)
+    {
+        var json = LoadCardsJson();
+        Assert.True(json.TryGetValue($"{keyPrefix}.description", out var desc),
+            $"{keyPrefix}.description key not found in cards.json");
+        Assert.DoesNotContain("%", desc, StringComparison.Ordinal);
+        Assert.DoesNotContain("twice the", desc, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("double the", desc, StringComparison.OrdinalIgnoreCase);
+    }
+
+    // Vibrato's "half your Tension (rounded up)" / "ALL enemies" wording was simplified to a
+    // single-target attack dealing full Tension damage, twice when upgraded — dropping the
+    // fraction and the multi-target complexity.
+    [Fact]
+    public void Vibrato_DescriptionDoesNotMentionHalfOrAllEnemies()
+    {
+        var json = LoadCardsJson();
+        Assert.True(json.TryGetValue("THEAPPRENTICE-VIBRATO.description", out var desc),
+            "THEAPPRENTICE-VIBRATO.description key not found in cards.json");
+        Assert.DoesNotContain("half", desc, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("rounded", desc, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("ALL enemies", desc, StringComparison.Ordinal);
+    }
+
     // Fails before fix: AchingWish, Wishful, Passion, and Blueprint tie their Dream/Ambition
     // preview tip to card.IsUpgraded via a conditional lambda (HoverTipFactory.FromCard<T>(upgrade:
     // card.IsUpgraded)), which renders "Dream+"/"Ambition+" once the host card is upgraded. But
@@ -694,5 +740,30 @@ public class TooltipConsistencyTests
         var tips = GetHoverTips(card);
         Assert.True(HasTipForType(tips, typeof(TensionPower)),
             $"{cardType.Name} must still have a TensionPower tip explaining what Tension does.");
+    }
+
+    // Fails before fix: Driven Inspiration's upgrade now produces Dream+/Ambition+ instead of a
+    // third Potential token (see description change), so its Dream/Ambition tips must switch from
+    // the always-unupgraded typeof(T) shortcut (WithDreamTips/WithAmbitionTips) to a conditional
+    // lambda that reflects card.IsUpgraded — same reasoning as Prophecy/Nocturne/Manifesto/Drive.
+    [Theory]
+    [InlineData(typeof(Dream))]
+    [InlineData(typeof(Ambition))]
+    public void DrivenInspiration_TokenTip_IsUpgradeConditional_NotImplicitTypeConversion(Type tokenType)
+    {
+        var tips = GetHoverTips(new DrivenInspiration());
+        var tip = tips.FirstOrDefault(t => GetTokenTypeFromTip(t) == tokenType);
+
+        Assert.NotNull(tip);
+        Assert.False(UsesImplicitTypeConversion(tip!),
+            $"DrivenInspiration's {tokenType.Name} tip must be a conditional lambda (upgrade: " +
+            "card.IsUpgraded), not typeof(T) — its upgrade now produces an upgraded token.");
+    }
+
+    [Fact]
+    public void DrivenInspiration_HasNoPotentialTip()
+    {
+        var tips = GetHoverTips(new DrivenInspiration());
+        Assert.DoesNotContain(tips, t => GetTokenTypeFromTip(t) == typeof(Potential));
     }
 }

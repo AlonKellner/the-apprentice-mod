@@ -6,5 +6,9 @@
   "THEAPPRENTICE-AMBITOUS.title": "Ambitous",
   "THEAPPRENTICE-AMBITOUS.description": "Deal 1 additional damage for each [gold]Ambition[/gold] created this combat.",
   "THEAPPRENTICE-EXPEND.title": "Expend",
-  "THEAPPRENTICE-EXPEND.description": "Becomes [gold]Unplayable[/gold]."
+  "THEAPPRENTICE-EXPEND.description": "Becomes [gold]Unplayable[/gold].",
+  "THEAPPRENTICE-INTENSE.title": "Intense",
+  "THEAPPRENTICE-INTENSE.description": "Becomes [gold]Unplayable[/gold]. Gain 1 additional Block and deal 1 additional damage for each Intense applied this combat.",
+  "THEAPPRENTICE-STABLE.title": "Stable",
+  "THEAPPRENTICE-STABLE.description": "May not be modified during combat."
 }
