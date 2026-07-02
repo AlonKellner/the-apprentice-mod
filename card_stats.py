@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate statistics for The Apprentice card set."""
+"""Generate statistics for The Understudy card set."""
 
 import re
 import json
@@ -7,8 +7,8 @@ from pathlib import Path
 from collections import defaultdict
 
 ROOT = Path(__file__).parent
-CARDS_DIR = ROOT / "TheApprenticeCode" / "Cards"
-LOC_FILE = ROOT / "TheApprentice" / "localization" / "eng" / "cards.json"
+CARDS_DIR = ROOT / "TheUnderstudyCode" / "Cards"
+LOC_FILE = ROOT / "TheUnderstudy" / "localization" / "eng" / "cards.json"
 
 MECHANIC_KEYWORDS = {
     "Planned":                   ["Planned"],
@@ -32,7 +32,7 @@ def parse_cards() -> list[dict]:
     cards = []
     for cs_file in sorted(CARDS_DIR.glob("*.cs")):
         name = cs_file.stem
-        if name in ("ApprenticeCard", "ApprenticeKeywords", "DreamsAndAmbitions", "TensionHelper"):
+        if name in ("UnderstudyKeywords",):
             continue
         text = cs_file.read_text()
         m = CONSTRUCTOR_RE.search(text)
@@ -54,7 +54,7 @@ def load_descriptions() -> dict[str, str]:
     with open(LOC_FILE) as f:
         raw = json.load(f)
     return {
-        k.replace("THEAPPRENTICE-", "").replace(".description", ""): v
+        k.replace("THEUNDERSTUDY-", "").replace(".description", ""): v
         for k, v in raw.items()
         if k.endswith(".description")
     }
@@ -83,7 +83,7 @@ def section(title: str, width: int = 60) -> str:
 
 def report(cards: list[dict], descriptions: dict[str, str]) -> str:
     lines = []
-    lines.append("THE APPRENTICE — CARD STATISTICS REPORT")
+    lines.append("THE UNDERSTUDY — CARD STATISTICS REPORT")
     lines.append("=" * 60)
 
     all_cards = cards

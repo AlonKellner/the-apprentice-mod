@@ -1,8 +1,8 @@
 # STS2 Card Design: Deep-Dive Analysis
 
-A reference document for The Apprentice mod. Covers structural patterns, balance statistics,
+A reference document for The Understudy mod. Covers structural patterns, balance statistics,
 design principles, and best practices derived from decompiling all five STS2 characters.
-Applies to all current and future Apprentice mechanics: Planned, Dreams & Ambitions, Unplayable,
+Applies to all current and future Understudy mechanics: Planned, Dreams & Ambitions, Unplayable,
 Emotional Expression (debuffs), and future Music combos.
 
 Sources: ilspycmd decompilation of `sts2.dll`, card constructor analysis (435 cards parsed),
@@ -270,7 +270,7 @@ The most durable design principle in STS2 is the **Setup / Payoff** taxonomy
 
 Every card set should have all three types. A set that is all setup or all payoff will feel bad.
 
-**For The Apprentice specifically:**
+**For The Understudy specifically:**
 - Planned set: Contemplate/Realize (setup the sequence) + Groove/Epiphany (payoff from position).
 - Dreams & Ambitions: Dream/Ambition tokens (setup) + Sublimation/Pastiche (payoff from tokens).
 - Emotional Debuffs: SelfPity/PassionateStrike (setup by gaining debuffs) + Outpouring/Breakdown/Phoenix (payoff from debuff count).
@@ -312,7 +312,7 @@ are created by Skills, consumed or empowered by other Skills, and synergize with
 - Regent: Stars (resource spent for bonuses)
 - Necrobinder: Minions/Souls (summoned entities)
 
-The Apprentice's token mechanics: Dreams → Ambitions → Potentials (consumed) and Planned sequence.
+The Understudy's token mechanics: Dreams → Ambitions → Potentials (consumed) and Planned sequence.
 These follow the same paradigm.
 
 ---
@@ -358,7 +358,7 @@ Before adding any card, verify it satisfies these constraints:
 ### 9.2 Rules for Skills Specifically
 
 Skills are the most diverse type and the primary vehicle for character identity. Subcategories
-that every character includes, and The Apprentice should too:
+that every character includes, and The Understudy should too:
 
 1. **Defense anchor**: 1-cost skill that gives substantial block (~12-16). Every character has 2-3.
 2. **Draw engine**: A way to draw more cards each turn. At least 1 Common, 1-2 Uncommon.
@@ -389,7 +389,7 @@ For any Common card:
 - [ ] No condition required to play (self-explanatory at a glance)
 - [ ] Not a Power
 - [ ] The effect is useful even without any other synergy in your deck
-- [ ] The flavor/name matches the Apprentice's emotional/musical identity
+- [ ] The flavor/name matches the Understudy's emotional/musical identity
 
 ### 9.5 Rare Card Design Checklist
 
@@ -434,9 +434,9 @@ using these principles. Key compliance notes:
 
 ---
 
-## 11. The Apprentice Card Identity
+## 11. The Understudy Card Identity
 
-All Apprentice cards should feel like they belong to a character who is:
+All Understudy cards should feel like they belong to a character who is:
 1. Learning, practicing, and growing (Planned, D&A arc: preparation → realization)
 2. Emotionally intense, self-aware, sometimes self-destructive (debuffs arc: feeling → expression → release)
 3. Musical/artistic (future music arc: rhythm, harmony, resonance)
@@ -448,4 +448,4 @@ This identity means:
   or "lose Strength" (emotional drain), with recovery as catharsis
 
 When a new card set doesn't feel thematically connected to this arc, it likely doesn't belong
-in The Apprentice's identity — even if mechanically sound.
+in The Understudy's identity — even if mechanically sound.

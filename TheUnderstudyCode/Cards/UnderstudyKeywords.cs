@@ -1,0 +1,16 @@
+using BaseLib.Patches.Content;
+using MegaCrit.Sts2.Core.Entities.Cards;
+
+namespace TheUnderstudy.TheUnderstudyCode.Cards;
+
+public static class UnderstudyKeywords
+{
+    [CustomEnum]
+    public static CardKeyword Planned;
+
+    [CustomEnum, KeywordProperties(AutoKeywordPosition.Before)]
+    public static CardKeyword Intense;
+
+    [CustomEnum, KeywordProperties(AutoKeywordPosition.Before)]
+    public static CardKeyword Stable;
+}

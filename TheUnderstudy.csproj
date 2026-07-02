@@ -1,0 +1,139 @@
+<Project Sdk="Godot.NET.Sdk/4.5.1">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <NoWarn>$(NoWarn);MSB3270</NoWarn>
+    <!-- Godot source generators are not needed for mods -->
+    <GodotPluginsInitializer>false</GodotPluginsInitializer>
+  </PropertyGroup>
+
+  <!-- Exclude Godot asset folder and test project from compilation -->
+  <ItemGroup>
+    <Compile Remove="TheUnderstudy/**" />
+    <Compile Remove="TheUnderstudy.Tests/**" />
+    <Compile Remove="materials/**" />
+    <Compile Remove="shaders/**" />
+    <Compile Remove="images/**" />
+  </ItemGroup>
+
+  <!-- Expose localization JSON files to the Roslyn analyzer -->
+  <ItemGroup>
+    <AdditionalFiles Include="TheUnderstudy/localization/**/*.json" />
+  </ItemGroup>
+
+  <!-- Reference game DLLs when the data directory exists -->
+  <ItemGroup Condition="Exists('$(Sts2DataDir)')">
+    <Reference Include="0Harmony">
+      <HintPath>$(Sts2DataDir)/0Harmony.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="sts2">
+      <HintPath>$(Sts2DataDir)/sts2.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Alchyr.Sts2.BaseLib" Version="*" />
+    <PackageReference Include="Krafs.Publicizer" Version="2.3.0" />
+    <PackageReference Include="Alchyr.Sts2.ModAnalyzers" Version="*" />
+    <!-- Uncomment to enable .pck asset packing:
+    <PackageReference Include="BSchneppe.StS2.PckPacker" Version="*" />
+    -->
+  </ItemGroup>
+
+  <!-- Validate paths before building -->
+  <Target Name="CheckDependencyPaths" BeforeTargets="Build;Publish">
+    <Error
+      Condition="!Exists('$(Sts2DataDir)')"
+      Text="Slay the Spire 2 data directory not found at '$(Sts2DataDir)'. Check Sts2Path in Directory.Build.props or Sts2PathDiscovery.props." />
+  </Target>
+
+  <!-- Keep BaseLib version in manifest in sync with the installed NuGet version -->
+  <Target Name="UpdateDependencyVersions" AfterTargets="Build;Publish">
+    <PropertyGroup>
+      <_BaseLibVersion>@(PackageReference->'%(Version)', ',')</_BaseLibVersion>
+    </PropertyGroup>
+    <ItemGroup>
+      <_BaseLibPackage Include="@(PackageReference)" Condition="'%(Identity)' == 'Alchyr.Sts2.BaseLib'" />
+    </ItemGroup>
+  </Target>
+
+  <!-- Copy compiled mod files to StS2 mods folder after build.
+       Skipped when inside MegaDot's recursive dotnet publish (env var set by GodotPublish's Exec)
+       so MegaDot's x86_64-targeted DLL doesn't overwrite the AnyCPU one we already copied. -->
+  <Target Name="CopyToModsFolderOnBuild" AfterTargets="Build"
+          Condition="'$([System.Environment]::GetEnvironmentVariable(&quot;STS2_INSIDE_GODOT_PUBLISH&quot;))' != '1'">
+    <Copy
+      SourceFiles="$(OutputPath)$(AssemblyName).dll"
+      DestinationFolder="$(ModsPath)"
+      SkipUnchangedFiles="true"
+      Condition="Exists('$(ModsPath)')" />
+    <Copy
+      SourceFiles="$(OutputPath)$(AssemblyName).pdb"
+      DestinationFolder="$(ModsPath)"
+      SkipUnchangedFiles="true"
+      Condition="Exists('$(ModsPath)') AND Exists('$(OutputPath)$(AssemblyName).pdb')" />
+    <Copy
+      SourceFiles="$(MSBuildProjectDirectory)/$(AssemblyName).json"
+      DestinationFolder="$(ModsPath)"
+      SkipUnchangedFiles="true"
+      Condition="Exists('$(ModsPath)')" />
+  </Target>
+
+  <!-- Copy .pck to mods folder for quick code-only builds (reuses PCK from last publish) -->
+  <Target Name="CopyQuickPck" AfterTargets="Build"
+          Condition="'$([System.Environment]::GetEnvironmentVariable(&quot;STS2_INSIDE_GODOT_PUBLISH&quot;))' != '1'">
+    <Copy
+      SourceFiles="$(MSBuildProjectDirectory)/publish/$(AssemblyName).pck"
+      DestinationFolder="$(ModsPath)"
+      SkipUnchangedFiles="true"
+      Condition="Exists('$(ModsPath)') AND Exists('$(MSBuildProjectDirectory)/publish/$(AssemblyName).pck')" />
+  </Target>
+
+  <!-- Copy freshly exported .pck to mods folder after a full publish (runs after GodotPublish) -->
+  <Target Name="CopyFreshPck" AfterTargets="GodotPublish">
+    <Copy
+      SourceFiles="$(MSBuildProjectDirectory)/publish/$(AssemblyName).pck"
+      DestinationFolder="$(ModsPath)"
+      Condition="Exists('$(ModsPath)') AND Exists('$(MSBuildProjectDirectory)/publish/$(AssemblyName).pck')" />
+  </Target>
+
+  <!-- Export Godot .pck for publishing.
+       STS2_INSIDE_GODOT_PUBLISH=1 is passed to MegaDot's Exec so that its recursive dotnet publish
+       inherits the env var and skips this target — no OOM spawn loop, no stale lock files.
+       An import pass runs first so EditorSettings singletons are fully initialized before export-pack.
+       IgnoreExitCode + IgnoreStandardErrorWarningFormat on both Exec calls: Godot does its work
+       (import / savepack DONE) then crashes during shutdown with an EditorSettings singleton error
+       — the output is valid despite the non-zero exit. This shutdown crash can hit either
+       invocation, so both need IgnoreExitCode. Separately, MSBuild's Exec task scans every stderr
+       line for error-like text and promotes it to a build error (synthesized as "EXEC : error :
+       ...") independent of exit code — IgnoreStandardErrorWarningFormat disables that scan so the
+       crash's stderr text doesn't fail the build on its own. The subsequent <Error> task confirms
+       the .pck was actually created. -->
+  <Target Name="GodotPublish" AfterTargets="Publish"
+          Condition="'$([System.Environment]::GetEnvironmentVariable(&quot;STS2_INSIDE_GODOT_PUBLISH&quot;))' != '1'">
+    <Error
+      Condition="!Exists('$(GodotPath)')"
+      Text="MegaDot not found at '$(GodotPath)'. Update GodotPath in Directory.Build.props." />
+    <Exec
+      Condition="Exists('$(GodotPath)')"
+      Command="&quot;$(GodotPath)&quot; --headless --import"
+      WorkingDirectory="$(MSBuildProjectDirectory)"
+      EnvironmentVariables="STS2_INSIDE_GODOT_PUBLISH=1"
+      IgnoreExitCode="true"
+      IgnoreStandardErrorWarningFormat="true" />
+    <Exec
+      Condition="Exists('$(GodotPath)')"
+      Command="&quot;$(GodotPath)&quot; --headless --export-pack &quot;BasicExport&quot; &quot;$(MSBuildProjectDirectory)/publish/$(AssemblyName).pck&quot;"
+      WorkingDirectory="$(MSBuildProjectDirectory)"
+      EnvironmentVariables="STS2_INSIDE_GODOT_PUBLISH=1"
+      IgnoreExitCode="true"
+      IgnoreStandardErrorWarningFormat="true" />
+    <Error
+      Condition="Exists('$(GodotPath)') and !Exists('$(MSBuildProjectDirectory)/publish/$(AssemblyName).pck')"
+      Text="export-pack failed: publish/$(AssemblyName).pck was not created." />
+  </Target>
+</Project>

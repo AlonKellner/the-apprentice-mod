@@ -1,0 +1,16 @@
+{
+  "THEUNDERSTUDY-THE_UNDERSTUDY.title": "The Understudy",
+  "THEUNDERSTUDY-THE_UNDERSTUDY.titleObject": "the Understudy",
+  "THEUNDERSTUDY-THE_UNDERSTUDY.description": "A simplified prototype for validating core Planned + Intense mechanics.",
+  "THEUNDERSTUDY-THE_UNDERSTUDY.pronounObject": "them",
+  "THEUNDERSTUDY-THE_UNDERSTUDY.possessiveAdjective": "their",
+  "THEUNDERSTUDY-THE_UNDERSTUDY.pronounPossessive": "theirs",
+  "THEUNDERSTUDY-THE_UNDERSTUDY.pronounSubject": "they",
+  "THEUNDERSTUDY-THE_UNDERSTUDY.goldMonologue": "Knowledge... and coin.",
+  "THEUNDERSTUDY-THE_UNDERSTUDY.eventDeathPrevention": "Not yet...",
+  "THEUNDERSTUDY-THE_UNDERSTUDY.aromaPrinciple": "Knowledge",
+  "THEUNDERSTUDY-THE_UNDERSTUDY.cardsModifierTitle": "Understudy Cards",
+  "THEUNDERSTUDY-THE_UNDERSTUDY.cardsModifierDescription": "Understudy cards will now appear in rewards and shops.",
+  "THEUNDERSTUDY-THE_UNDERSTUDY.banter.alive.endTurnPing": "Still thinking...",
+  "THEUNDERSTUDY-THE_UNDERSTUDY.banter.dead.endTurnPing": "..."
+}

@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+    <!-- ScriptPathAttributeGenerator flows in transitively from Godot.NET.Sdk but has nothing
+         to do in the test project — suppress the 'GodotProjectDir is null' failure it emits. -->
+    <NoWarn>$(NoWarn);CS8785</NoWarn>
+  </PropertyGroup>
+
+  <!-- Expose localization JSON files to the ModAnalyzers Roslyn analyzer (suppresses STS002) -->
+  <ItemGroup>
+    <AdditionalFiles Include="../TheUnderstudy/localization/**/*.json" />
+  </ItemGroup>
+
+  <!-- Sts2PathDiscovery.props is already imported via Directory.Build.props -->
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+    <PackageReference Include="Krafs.Publicizer" Version="2.3.0" />
+    <PackageReference Include="xunit" Version="2.9.3" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <!-- Reference game DLLs so tests can use MegaCrit.* types and load them at runtime -->
+  <ItemGroup Condition="Exists('$(Sts2DataDir)')">
+    <Reference Include="sts2">
+      <HintPath>$(Sts2DataDir)/sts2.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../TheUnderstudy.csproj" />
+  </ItemGroup>
+</Project>
