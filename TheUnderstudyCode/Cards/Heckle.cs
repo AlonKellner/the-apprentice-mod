@@ -1,25 +1,25 @@
 using System.Linq;
 using BaseLib.Abstracts;
 using BaseLib.Extensions;
+using BaseLib.Utils;
 using MegaCrit.Sts2.Core.CardSelection;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization;
+using MegaCrit.Sts2.Core.Models.Powers;
 using TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
-using TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
-public class Aperto : UnderstudyCard
+public class Heckle : UnderstudyCard
 {
-    public const string CardId = "TheUnderstudy:Aperto";
+    public const string CardId = "TheUnderstudy:Heckle";
 
-    public Aperto() : base(1, CardType.Skill, CardRarity.Common, TargetType.None)
+    public Heckle() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.AnyEnemy)
     {
-        WithCards(1);
-        WithTip(typeof(LimitedPower));
-        WithTip(typeof(UnlimitedPower));
+        WithCards(2);
+        WithTip(typeof(WeakPower));
     }
 
     protected override void OnUpgrade()
@@ -31,12 +31,13 @@ public class Aperto : UnderstudyCard
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
         var player = cardPlay.Card.Owner;
-        int count = IsUpgraded ? 2 : 1;
+        int count = IsUpgraded ? 3 : 2;
 
         var selected = await CardSelectCmd.FromHand(
             context, player,
-            new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-APERTO.selectionPrompt"), 0, count),
-            c => c != this && c.Keywords.Contains(CardKeyword.Unplayable),
+            new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-HECKLE.selectionPrompt"), 0, count),
+            c => c != this && c.Keywords.Contains(CardKeyword.Unplayable)
+                && (c.Type == CardType.Attack || c.Type == CardType.Skill),
             this);
 
         if (selected != null)
@@ -45,10 +46,7 @@ public class Aperto : UnderstudyCard
                     CardModifier.DirectModifiers(card).Remove(mod);
 
         var creature = player.Creature;
-        if (creature.GetPowerAmount<LimitedPower>() > 0)
-        {
-            await PowerCmd.Apply<LimitedPower>(context, creature, -1m, creature, cardPlay.Card, false);
-            await PowerCmd.Apply<UnlimitedPower>(context, creature, 1m, creature, cardPlay.Card, false);
-        }
+        int amount = creature.GetPowerAmount<WeakPower>() + 1;
+        await PowerCmd.Apply<WeakPower>(context, cardPlay.Target!, amount, creature, cardPlay.Card, false);
     }
 }

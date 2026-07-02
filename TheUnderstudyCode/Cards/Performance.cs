@@ -20,7 +20,6 @@ public class Performance : UnderstudyCard
     public Performance() : base(0, CardType.Skill, CardRarity.Basic, TargetType.AnyEnemy, false)
     {
         WithKeyword(UnderstudyKeywords.Stable, ConstructedCardModel.UpgradeType.None);
-        WithKeyword(CardKeyword.Retain, ConstructedCardModel.UpgradeType.None);
         WithVars(new CardsVar("Select", 2));
         WithTip(UnderstudyKeywords.Planned);
     }
@@ -46,14 +45,14 @@ public class Performance : UnderstudyCard
         }
         PlannedModifier.InvokeChanged();
 
-        // Step 2: Apply Planned to 0-N cards selected from hand (sets up next turn's queue).
+        // Step 2: Apply Planned to 0-N cards selected from the discard pile (sets up next turn's queue).
         var maxSelect = IsUpgraded ? 3 : 2;
-        var selectedRaw = await CardSelectCmd.FromHand(
+        var selectedRaw = await CardSelectCmd.FromCombatPile(
             context,
+            PileType.Discard.GetPile(player),
             player,
             new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-PERFORMANCE.selectionPrompt"), 0, maxSelect),
-            c => c != this && PlannedModifier.CanApplyTo(c),
-            this);
+            c => c != this && PlannedModifier.CanApplyTo(c));
 
         if (selectedRaw == null) return;
         foreach (var card in selectedRaw)

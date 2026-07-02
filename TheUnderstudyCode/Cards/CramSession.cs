@@ -5,11 +5,11 @@ using TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
-public class Agitato : UnderstudyCard
+public class CramSession : UnderstudyCard
 {
-    public const string CardId = "TheUnderstudy:Agitato";
+    public const string CardId = "TheUnderstudy:CramSession";
 
-    public Agitato() : base(1, CardType.Skill, CardRarity.Common, TargetType.None)
+    public CramSession() : base(1, CardType.Skill, CardRarity.Common, TargetType.None)
     {
         WithCards(3);
         WithTip(typeof(ShakenPower));

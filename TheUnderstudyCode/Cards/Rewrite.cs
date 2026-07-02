@@ -11,11 +11,11 @@ using TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
-public class Ristretto : UnderstudyCard
+public class Rewrite : UnderstudyCard
 {
-    public const string CardId = "TheUnderstudy:Ristretto";
+    public const string CardId = "TheUnderstudy:Rewrite";
 
-    public Ristretto() : base(1, CardType.Skill, CardRarity.Common, TargetType.None)
+    public Rewrite() : base(1, CardType.Skill, CardRarity.Common, TargetType.None)
     {
         WithCards(3);
         WithTip(typeof(LimitedPower));
@@ -34,8 +34,9 @@ public class Ristretto : UnderstudyCard
 
         var selected = await CardSelectCmd.FromHand(
             context, player,
-            new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-RISTRETTO.selectionPrompt"), 0, count),
-            c => c != this && c.Keywords.Contains(CardKeyword.Unplayable),
+            new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-REWRITE.selectionPrompt"), 0, count),
+            c => c != this && c.Keywords.Contains(CardKeyword.Unplayable)
+                && (c.Type == CardType.Attack || c.Type == CardType.Skill),
             this);
 
         if (selected != null)

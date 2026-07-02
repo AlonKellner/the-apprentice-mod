@@ -214,4 +214,40 @@ public static class EmotionalExpression
         if (unshakenDelta != 0)
             await PowerCmd.Apply<UnshakenPower>(ctx, creature, unshakenDelta, creature, card, false);
     }
+
+    public static (int netLimited, int netUnlimited) ComputeNetLimited(int curLimited, int curUnlimited, int deltaLimited, int deltaUnlimited)
+    {
+        int totalLimited = curLimited + deltaLimited;
+        int totalUnlimited = curUnlimited + deltaUnlimited;
+        if (totalLimited >= totalUnlimited)
+            return (totalLimited - totalUnlimited, 0);
+        return (0, totalUnlimited - totalLimited);
+    }
+
+    public static (int netLimited, int netUnlimited) ComputeLimitedConversion(int curLimited, int curUnlimited, int max)
+    {
+        int limitedAmount = Math.Min(curLimited, max);
+        if (limitedAmount <= 0) return (curLimited, curUnlimited);
+        return ComputeNetLimited(curLimited, curUnlimited, -limitedAmount, limitedAmount);
+    }
+
+    public static async Task ConvertLimitedToUnlimited(PlayerChoiceContext ctx, Creature creature, int max = int.MaxValue)
+    {
+        int curLimited = creature.GetPowerAmount<LimitedPower>();
+        if (curLimited <= 0 || max <= 0) return;
+        int curUnlimited = creature.GetPowerAmount<UnlimitedPower>();
+        var (netLimited, netUnlimited) = ComputeLimitedConversion(curLimited, curUnlimited, max);
+        await AdjustLimitedPowers(ctx, creature, null, curLimited, curUnlimited, netLimited, netUnlimited);
+    }
+
+    private static async Task AdjustLimitedPowers(PlayerChoiceContext ctx, Creature creature, CardModel? card,
+        int curLimited, int curUnlimited, int netLimited, int netUnlimited)
+    {
+        int limitedDelta = netLimited - curLimited;
+        int unlimitedDelta = netUnlimited - curUnlimited;
+        if (limitedDelta != 0)
+            await PowerCmd.Apply<LimitedPower>(ctx, creature, limitedDelta, creature, card, false);
+        if (unlimitedDelta != 0)
+            await PowerCmd.Apply<UnlimitedPower>(ctx, creature, unlimitedDelta, creature, card, false);
+    }
 }

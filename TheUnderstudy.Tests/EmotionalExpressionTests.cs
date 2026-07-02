@@ -158,4 +158,52 @@ public class EmotionalExpressionTests
     [Fact]
     public void ComputeWeakCancellation_MoreUnweakThanWeak_BlocksAll() =>
         Assert.Equal((0, 2), EmotionalExpression.ComputeWeakCancellation(2, 5));
+
+    // ComputeLimitedConversion — mirror cases
+
+    [Fact]
+    public void ComputeLimitedConversion_Limited1_Max1_ConvertsFully() =>
+        Assert.Equal((0, 1), EmotionalExpression.ComputeLimitedConversion(1, 0, 1));
+
+    [Fact]
+    public void ComputeLimitedConversion_Limited2_Max1_RemainderCancelsNewUnlimited() =>
+        Assert.Equal((0, 0), EmotionalExpression.ComputeLimitedConversion(2, 0, 1));
+
+    [Fact]
+    public void ComputeLimitedConversion_Limited3_Max1_RemainderPartiallyCancels() =>
+        Assert.Equal((1, 0), EmotionalExpression.ComputeLimitedConversion(3, 0, 1));
+
+    [Fact]
+    public void ComputeLimitedConversion_Limited3_Max2_LeftoverLimited1CancelsOneNewUnlimited() =>
+        Assert.Equal((0, 1), EmotionalExpression.ComputeLimitedConversion(3, 0, 2));
+
+    [Fact]
+    public void ComputeLimitedConversion_Limited2_Max5_ConvertsAll_NoLeftover() =>
+        Assert.Equal((0, 2), EmotionalExpression.ComputeLimitedConversion(2, 0, 5));
+
+    [Fact]
+    public void ComputeLimitedConversion_NoLimited_NoOp() =>
+        Assert.Equal((0, 0), EmotionalExpression.ComputeLimitedConversion(0, 0, 1));
+
+    [Fact]
+    public void ComputeLimitedConversion_MaxZero_NoOp() =>
+        Assert.Equal((3, 0), EmotionalExpression.ComputeLimitedConversion(3, 0, 0));
+
+    // ComputeNetLimited — mirror cases
+
+    [Fact]
+    public void ComputeNetLimited_NoExisting_ApplyUnlimited2_YieldsUnlimited2() =>
+        Assert.Equal((0, 2), EmotionalExpression.ComputeNetLimited(0, 0, 0, 2));
+
+    [Fact]
+    public void ComputeNetLimited_Limited3_ApplyUnlimited2_LeavesLimited1() =>
+        Assert.Equal((1, 0), EmotionalExpression.ComputeNetLimited(3, 0, 0, 2));
+
+    [Fact]
+    public void ComputeNetLimited_Limited3_ApplyUnlimited3_LeavesBoth0() =>
+        Assert.Equal((0, 0), EmotionalExpression.ComputeNetLimited(3, 0, 0, 3));
+
+    [Fact]
+    public void ComputeNetLimited_Limited3_ApplyUnlimited4_LeavesUnlimited1() =>
+        Assert.Equal((0, 1), EmotionalExpression.ComputeNetLimited(3, 0, 0, 4));
 }

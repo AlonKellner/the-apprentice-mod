@@ -2,31 +2,29 @@ using BaseLib.Utils;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models.Powers;
-using TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
-public class Rallentando : UnderstudyCard
+public class StageFright : UnderstudyCard
 {
-    public const string CardId = "TheUnderstudy:Rallentando";
+    public const string CardId = "TheUnderstudy:StageFright";
 
-    public Rallentando() : base(1, CardType.Skill, CardRarity.Common, TargetType.None)
+    public StageFright() : base(1, CardType.Skill, CardRarity.Common, TargetType.None)
     {
-        WithBlock(3);
+        WithBlock(12);
         WithTip(typeof(WeakPower));
-        WithTip(typeof(UnweakPower));
     }
 
     protected override void OnUpgrade()
     {
         base.OnUpgrade();
-        DynamicVars.Block.UpgradeValueBy(2m);
+        DynamicVars.Block.UpgradeValueBy(4m);
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
         var creature = cardPlay.Card.Owner.Creature;
         await CommonActions.CardBlock(cardPlay.Card, cardPlay);
-        await EmotionalExpression.ConvertWeakToUnweak(context, creature, 1);
+        await EmotionalExpression.ApplyWeakToSelf(context, creature, 1, cardPlay.Card);
     }
 }

@@ -2,31 +2,29 @@ using BaseLib.Utils;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models.Powers;
-using TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
-public class Riposte : UnderstudyCard
+public class Improvise : UnderstudyCard
 {
-    public const string CardId = "TheUnderstudy:Riposte";
+    public const string CardId = "TheUnderstudy:Improvise";
 
-    public Riposte() : base(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
+    public Improvise() : base(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
     {
-        WithDamage(4);
+        WithDamage(16);
         WithTip(typeof(VulnerablePower));
-        WithTip(typeof(UnvulnerablePower));
     }
 
     protected override void OnUpgrade()
     {
         base.OnUpgrade();
-        DynamicVars.Damage.UpgradeValueBy(2m);
+        DynamicVars.Damage.UpgradeValueBy(4m);
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
         var creature = cardPlay.Card.Owner.Creature;
         await CommonActions.CardAttack(cardPlay.Card, cardPlay).Execute(context);
-        await EmotionalExpression.ConvertVulnerableToUnvulnerable(context, creature, 1);
+        await EmotionalExpression.ApplyVulnerableToSelf(context, creature, 1, cardPlay.Card);
     }
 }

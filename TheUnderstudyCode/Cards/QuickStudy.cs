@@ -1,19 +1,20 @@
 using BaseLib.Utils;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.Models.Powers;
 using TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
-public class Calando : UnderstudyCard
+public class QuickStudy : UnderstudyCard
 {
-    public const string CardId = "TheUnderstudy:Calando";
+    public const string CardId = "TheUnderstudy:QuickStudy";
 
-    public Calando() : base(1, CardType.Skill, CardRarity.Common, TargetType.None)
+    public QuickStudy() : base(1, CardType.Skill, CardRarity.Common, TargetType.None)
     {
         WithCards(1);
-        WithTip(typeof(ShakenPower));
-        WithTip(typeof(UnshakenPower));
+        WithTip(typeof(WeakPower));
+        WithTip(typeof(UnweakPower));
     }
 
     protected override void OnUpgrade() { base.OnUpgrade(); DynamicVars.Cards.UpgradeValueBy(1m); }
@@ -22,6 +23,6 @@ public class Calando : UnderstudyCard
     {
         var creature = cardPlay.Card.Owner.Creature;
         await CommonActions.Draw(this, context);
-        await EmotionalExpression.ConvertShakenToUnshaken(context, creature, 1);
+        await EmotionalExpression.ConvertWeakToUnweak(context, creature, 1);
     }
 }

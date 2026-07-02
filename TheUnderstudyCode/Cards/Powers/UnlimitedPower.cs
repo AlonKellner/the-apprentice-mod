@@ -1,7 +1,10 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using BaseLib.Abstracts;
+using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.Entities.Cards;
+using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
@@ -16,22 +19,21 @@ public class UnlimitedPower : CustomPowerModel
 
     public override List<(string, string)> Localization => new PowerLoc(
         "Unlimited",
-        "Draw 1 additional card at the start of your next turn.",
-        "Draw 1 additional card at the start of your next turn.");
-
-    private bool _appliedThisDraw;
+        "At the start of your next turn, draw until your hand is full.",
+        "At the start of your next turn, draw until your hand is full.");
 
     public override decimal ModifyHandDraw(Player player, decimal count)
     {
         if (player != Owner.Player) return count;
-        _appliedThisDraw = true;
-        return count + 1m;
+        // CardPileCmd.Draw already clamps its own draw loop to CardPile.MaxCardsInHand,
+        // stopping early once the hand is full — requesting the cap as the draw count is
+        // always enough to reach it (or drain the deck trying) without a manual hand-size read.
+        return Math.Max(count, CardPile.MaxCardsInHand);
     }
 
-    public override async Task AfterModifyingHandDraw()
+    public override async Task AfterSideTurnStart(CombatSide side, IReadOnlyList<Creature> participants, ICombatState combatState)
     {
-        if (!_appliedThisDraw) return;
-        _appliedThisDraw = false;
+        if (!participants.Contains(Owner)) return;
         Flash();
         await PowerCmd.Decrement(this);
     }

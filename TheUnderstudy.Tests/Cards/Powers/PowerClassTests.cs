@@ -65,11 +65,11 @@ public class PowerClassTests
     }
 
     [Fact]
-    public void UnlimitedPower_Localization_MentionsDrawAdditional()
+    public void UnlimitedPower_Localization_MentionsHandFull()
     {
         var p = new UnlimitedPower();
         var descriptions = p.Localization.Where(e => e.Item1 == "description").Select(e => e.Item2);
-        Assert.All(descriptions, d => Assert.Contains("additional", d, StringComparison.OrdinalIgnoreCase));
+        Assert.All(descriptions, d => Assert.Contains("full", d, StringComparison.OrdinalIgnoreCase));
     }
 
     [Fact]

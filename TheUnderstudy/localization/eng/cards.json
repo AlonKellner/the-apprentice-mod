@@ -1,27 +1,48 @@
 {
-  "THEUNDERSTUDY-BRAVURA.title": "Bravura",
-  "THEUNDERSTUDY-BRAVURA.description": "Deal {Damage:diff()} damage.\nBecome 1 [gold]Vulnerable[/gold].",
+  "THEUNDERSTUDY-IMPROVISE.title": "Improvise",
+  "THEUNDERSTUDY-IMPROVISE.description": "Deal {Damage:diff()} damage.\nBecome 1 [gold]Vulnerable[/gold].",
 
-  "THEUNDERSTUDY-RIPOSTE.title": "Riposte",
-  "THEUNDERSTUDY-RIPOSTE.description": "Deal {Damage:diff()} damage.\nConvert 1 [gold]Vulnerable[/gold] to [gold]Unvulnerable[/gold].",
+  "THEUNDERSTUDY-STEADY_HAND.title": "Steady Hand",
+  "THEUNDERSTUDY-STEADY_HAND.description": "Deal {Damage:diff()} damage.\nConvert 1 [gold]Shaken[/gold] to [gold]Unshaken[/gold].",
 
-  "THEUNDERSTUDY-PIANISSIMO.title": "Pianissimo",
-  "THEUNDERSTUDY-PIANISSIMO.description": "Gain {Block:diff()} [gold]Block[/gold].\nBecome 1 [gold]Weak[/gold].",
+  "THEUNDERSTUDY-OVERFLOW.title": "Overflow",
+  "THEUNDERSTUDY-OVERFLOW.description": "Deal {Damage:diff()} damage to all enemies.\nApply [gold]Vulnerable[/gold] to all enemies equal to your [gold]Limited[/gold] + 1.",
 
-  "THEUNDERSTUDY-RALLENTANDO.title": "Rallentando",
-  "THEUNDERSTUDY-RALLENTANDO.description": "Gain {Block:diff()} [gold]Block[/gold].\nConvert 1 [gold]Weak[/gold] to [gold]Unweak[/gold].",
+  "THEUNDERSTUDY-STAGE_FRIGHT.title": "Stage Fright",
+  "THEUNDERSTUDY-STAGE_FRIGHT.description": "Gain {Block:diff()} [gold]Block[/gold].\nBecome 1 [gold]Weak[/gold].",
 
-  "THEUNDERSTUDY-TACET.title": "Tacet",
-  "THEUNDERSTUDY-TACET.description": "Whenever a card becomes [gold]Unplayable[/gold], gain {IfUpgraded:show:3|2} [gold]Block[/gold].",
+  "THEUNDERSTUDY-OPEN_MIND.title": "Open Mind",
+  "THEUNDERSTUDY-OPEN_MIND.description": "Gain {Block:diff()} [gold]Block[/gold].\nConvert 1 [gold]Limited[/gold] to [gold]Unlimited[/gold].",
 
-  "THEUNDERSTUDY-BRIO.title": "Brio",
-  "THEUNDERSTUDY-BRIO.description": "Whenever a debuff is applied to you during your turn, gain {IfUpgraded:show:5|3} [gold]Vigor[/gold].",
+  "THEUNDERSTUDY-SPILLOVER.title": "Spillover",
+  "THEUNDERSTUDY-SPILLOVER.description": "Gain {Block:diff()} [gold]Block[/gold].\nApply [gold]Weak[/gold] to all enemies equal to your [gold]Shaken[/gold] + 1.",
 
-  "THEUNDERSTUDY-AGITATO.title": "Agitato",
-  "THEUNDERSTUDY-AGITATO.description": "Draw {Cards:diff()} cards.\nBecome 1 [gold]Shaken[/gold].",
+  "THEUNDERSTUDY-CRAM_SESSION.title": "Cram Session",
+  "THEUNDERSTUDY-CRAM_SESSION.description": "Draw {Cards:diff()} cards.\nBecome 1 [gold]Shaken[/gold].",
 
-  "THEUNDERSTUDY-CALANDO.title": "Calando",
-  "THEUNDERSTUDY-CALANDO.description": "Draw {Cards:diff()} -card-+cards+.\nConvert 1 [gold]Shaken[/gold] to [gold]Unshaken[/gold].",
+  "THEUNDERSTUDY-QUICK_STUDY.title": "Quick Study",
+  "THEUNDERSTUDY-QUICK_STUDY.description": "#Draw {Cards:diff()} -card-+cards+.\nConvert 1 [gold]Weak[/gold] to [gold]Unweak[/gold].",
+
+  "THEUNDERSTUDY-CRITIQUE.title": "Critique",
+  "THEUNDERSTUDY-CRITIQUE.description": "Draw {Cards:diff()} cards.\nApply [gold]Vulnerable[/gold] to target enemy equal to your [gold]Vulnerable[/gold] + 1.",
+
+  "THEUNDERSTUDY-REWRITE.title": "Rewrite",
+  "THEUNDERSTUDY-REWRITE.description": "Remove [gold]Unplayable[/gold] from up to {Cards:diff()} attacks and skills in your hand.\nGain 1 [gold]Limited[/gold].",
+  "THEUNDERSTUDY-REWRITE.selectionPrompt": "Choose Unplayable cards to clear.",
+
+  "THEUNDERSTUDY-TOUCH_UP.title": "Touch-Up",
+  "THEUNDERSTUDY-TOUCH_UP.description": "Remove [gold]Unplayable[/gold] from {Cards:diff()} attack or skill in your hand.\nConvert 1 [gold]Vulnerable[/gold] to [gold]Unvulnerable[/gold].",
+  "THEUNDERSTUDY-TOUCH_UP.selectionPrompt": "Choose Unplayable cards to clear.",
+
+  "THEUNDERSTUDY-HECKLE.title": "Heckle",
+  "THEUNDERSTUDY-HECKLE.description": "Remove [gold]Unplayable[/gold] from up to {Cards:diff()} attacks and skills in your hand.\nApply [gold]Weak[/gold] to target enemy equal to your [gold]Weak[/gold] + 1.",
+  "THEUNDERSTUDY-HECKLE.selectionPrompt": "Choose Unplayable cards to clear.",
+
+  "THEUNDERSTUDY-BENCHED.title": "Benched",
+  "THEUNDERSTUDY-BENCHED.description": "Whenever a card becomes [gold]Unplayable[/gold], gain {IfUpgraded:show:3|2} [gold]Block[/gold].",
+
+  "THEUNDERSTUDY-CHIP_ON_YOUR_SHOULDER.title": "Chip on Your Shoulder",
+  "THEUNDERSTUDY-CHIP_ON_YOUR_SHOULDER.description": "Whenever a debuff is applied to you during your turn, gain {IfUpgraded:show:5|3} [gold]Vigor[/gold].",
 
   "THEUNDERSTUDY-UNDERSTUDY_STRIKE.title": "Strike",
   "THEUNDERSTUDY-UNDERSTUDY_STRIKE.description": "Deal {Damage:diff()} damage.",
@@ -30,18 +51,10 @@
   "THEUNDERSTUDY-UNDERSTUDY_DEFEND.description": "Gain {Block:diff()} [gold]Block[/gold].",
 
   "THEUNDERSTUDY-PERFORMANCE.title": "Performance",
-  "THEUNDERSTUDY-PERFORMANCE.description": "Play all [gold]Planned[/gold] cards.\nApply [gold]Planned[/gold] to up to {Select:diff()} attacks and skills.",
+  "THEUNDERSTUDY-PERFORMANCE.description": "Play all [gold]Planned[/gold] cards.\nApply [gold]Planned[/gold] to up to {Select:diff()} attacks and skills in your discard pile.",
   "THEUNDERSTUDY-PERFORMANCE.selectionPrompt": "Choose cards to make Planned.",
 
   "THEUNDERSTUDY-INTENTION.title": "Intention",
   "THEUNDERSTUDY-INTENTION.description": "Apply [gold]Intense[/gold] to up to {Select:diff()} attacks and skills.",
-  "THEUNDERSTUDY-INTENTION.selectionPrompt": "Choose cards to make Intense.",
-
-  "THEUNDERSTUDY-RISTRETTO.title": "Ristretto",
-  "THEUNDERSTUDY-RISTRETTO.description": "Remove [gold]Unplayable[/gold] from up to {Cards:diff()} cards in your hand.\nGain 1 [gold]Limited[/gold].",
-  "THEUNDERSTUDY-RISTRETTO.selectionPrompt": "Choose Unplayable cards to unblock.",
-
-  "THEUNDERSTUDY-APERTO.title": "Aperto",
-  "THEUNDERSTUDY-APERTO.description": "Remove [gold]Unplayable[/gold] from up to {Cards:diff()} cards in your hand.\nConvert 1 [gold]Limited[/gold] to [gold]Unlimited[/gold].",
-  "THEUNDERSTUDY-APERTO.selectionPrompt": "Choose Unplayable cards to unblock."
+  "THEUNDERSTUDY-INTENTION.selectionPrompt": "Choose cards to make Intense."
 }

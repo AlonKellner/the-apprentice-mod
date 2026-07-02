@@ -84,6 +84,16 @@ public abstract class UnderstudyCard(
     public override Task AfterCardPlayed(PlayerChoiceContext context, CardPlay cardPlay)
     {
         RestoreIfStable();
+        // Safe to mutate DirectModifiers here: AfterCardPlayed fires once BaseLib's per-modifier
+        // OnPlay enumeration (BeforeAfterPlayHooks) has finished for this play, unlike a
+        // CardModifier's own OnPlay override, which runs inside that enumeration and throws
+        // "Collection was modified" if it tries to add a modifier to the same card.
+        // IsFinalIntensePlay gates this to the last CardPlay in a Replay series, so a card with
+        // Replay N only becomes Unplayable after all N+1 plays have resolved.
+        if (cardPlay.Card == this
+            && IntenseModifier.IsFinalIntensePlay(cardPlay)
+            && !this.TryGetModifier<UnplayableModifier>(out _))
+            CardModifier.AddModifier<UnplayableModifier>(this);
         return Task.CompletedTask;
     }
 

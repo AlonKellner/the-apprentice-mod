@@ -1,5 +1,8 @@
 using System.Reflection;
 using BaseLib.Abstracts;
+using BaseLib.Extensions;
+using MegaCrit.Sts2.Core.Entities.Cards;
+using MegaCrit.Sts2.Core.Models;
 using TheUnderstudy.TheUnderstudyCode.Cards;
 using TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
 using Xunit;
@@ -8,6 +11,17 @@ namespace TheUnderstudy.Tests.Modifiers;
 
 public class IntenseModifierTests
 {
+    private static CardPlay MakePlay(CardModel card, int index, int count) => new()
+    {
+        Card = card,
+        Target = null,
+        ResultPile = PileType.Discard,
+        Resources = default,
+        IsAutoPlay = false,
+        PlayIndex = index,
+        PlayCount = count,
+    };
+
     [Fact]
     public void ModifierId_IsExpected()
     {
@@ -83,10 +97,52 @@ public class IntenseModifierTests
     }
 
     [Fact]
-    public void IsSpent_DefaultsToFalse()
+    public void IsFinalIntensePlay_NoIntenseModifier_SinglePlay_ReturnsFalse()
     {
-        var mod = new IntenseModifier();
-        Assert.False(mod.IsSpent);
+        var card = new UnderstudyStrike();
+        Assert.False(IntenseModifier.IsFinalIntensePlay(MakePlay(card, 0, 1)));
+    }
+
+    [Fact]
+    public void IsFinalIntensePlay_HasIntense_SinglePlay_ReturnsTrue()
+    {
+        var card = new UnderstudyDefend();
+        CardModifier.AddModifier(card, new IntenseModifier());
+        Assert.True(IntenseModifier.IsFinalIntensePlay(MakePlay(card, 0, 1)));
+    }
+
+    [Fact]
+    public void IsFinalIntensePlay_HasIntense_Replay1_FirstPlay_ReturnsFalse()
+    {
+        var card = new UnderstudyDefend();
+        CardModifier.AddModifier(card, new IntenseModifier());
+        // Replay 1 -> PlayCount = 2; first play is PlayIndex 0.
+        Assert.False(IntenseModifier.IsFinalIntensePlay(MakePlay(card, 0, 2)));
+    }
+
+    [Fact]
+    public void IsFinalIntensePlay_HasIntense_Replay1_SecondPlay_ReturnsTrue()
+    {
+        var card = new UnderstudyDefend();
+        CardModifier.AddModifier(card, new IntenseModifier());
+        Assert.True(IntenseModifier.IsFinalIntensePlay(MakePlay(card, 1, 2)));
+    }
+
+    [Fact]
+    public void IsFinalIntensePlay_HasIntense_Replay2_MiddlePlay_ReturnsFalse()
+    {
+        var card = new UnderstudyDefend();
+        CardModifier.AddModifier(card, new IntenseModifier());
+        // Replay 2 -> PlayCount = 3; middle play is PlayIndex 1.
+        Assert.False(IntenseModifier.IsFinalIntensePlay(MakePlay(card, 1, 3)));
+    }
+
+    [Fact]
+    public void IsFinalIntensePlay_HasIntense_Replay2_FinalPlay_ReturnsTrue()
+    {
+        var card = new UnderstudyDefend();
+        CardModifier.AddModifier(card, new IntenseModifier());
+        Assert.True(IntenseModifier.IsFinalIntensePlay(MakePlay(card, 2, 3)));
     }
 
     [Fact]

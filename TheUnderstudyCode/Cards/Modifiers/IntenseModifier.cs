@@ -1,12 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using BaseLib.Abstracts;
 using BaseLib.Extensions;
 using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
-using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.ValueProps;
@@ -21,8 +19,13 @@ public class IntenseModifier : CardModifier
     // How many times Intense has been applied to this card (its "level").
     public int Stacks { get; private set; }
 
-    // True once the card has been played; adds Unplayable keyword like Expend.
-    public bool IsSpent { get; private set; }
+    // True exactly once per real card play: on the last CardPlay in a Replay series
+    // (PlayIndex == PlayCount - 1; a card with no Replay has PlayCount = 1, so its single
+    // play already satisfies this). Cards without IntenseModifier never qualify. Used by
+    // UnderstudyCard.AfterCardPlayed to decide when to attach UnplayableModifier, and by
+    // BenchedPower to know when an Intense card has finished being played.
+    public static bool IsFinalIntensePlay(CardPlay cardPlay) =>
+        cardPlay.IsLastInSeries && cardPlay.Card.TryGetModifier<IntenseModifier>(out _);
 
     // ── Combat-scoped counter ────────────────────────────────────────────────────────────────
     // Counts distinct cards that have received at least one Intense application this combat.
@@ -111,26 +114,13 @@ public class IntenseModifier : CardModifier
         description = $"[gold]Intense {Stacks}[/gold].\n" + description;
     }
 
-    public override async Task OnPlay(PlayerChoiceContext ctx, CardPlay cardPlay)
-    {
-        if (cardPlay.Card == Owner)
-        {
-            IsSpent = true;
-            if (!Owner!.TryGetModifier<UnplayableModifier>(out _))
-                CardModifier.AddModifier<UnplayableModifier>(Owner!);
-        }
-        await Task.CompletedTask;
-    }
-
     public override void StoreSaveData(ModifierSave save)
     {
-        save.IntProperties["spent"] = IsSpent ? 1 : 0;
         save.IntProperties["stacks"] = Stacks;
     }
 
     public override void LoadSaveData(ModifierSave save)
     {
-        if (save.IntProperties.TryGetValue("spent", out int v)) IsSpent = v != 0;
         if (save.IntProperties.TryGetValue("stacks", out int s)) Stacks = s;
     }
 }
