@@ -12,7 +12,7 @@ using MegaCrit.Sts2.Core.Models;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 
-public class UnjadedPower : CustomPowerModel
+public class UnjadedPower : UnderstudyPower
 {
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Counter;

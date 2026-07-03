@@ -15,7 +15,7 @@ using TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 
-public class ShakenPower : CustomPowerModel
+public class ShakenPower : UnderstudyPower
 {
     public override PowerType Type => PowerType.Debuff;
     public override PowerStackType StackType => PowerStackType.Counter;

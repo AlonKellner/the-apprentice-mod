@@ -15,7 +15,7 @@ namespace TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 // EmotionalExpression's "last modified invertible debuff" tracker — this is what lets an
 // enemy-inflicted (or relic-inflicted, or any other externally-caused) Weak/Vulnerable/etc.
 // register as "last modified" for Invert, not just this deck's own Apply/Convert calls.
-public class InvertTrackerPower : CustomPowerModel
+public class InvertTrackerPower : UnderstudyPower
 {
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Single;

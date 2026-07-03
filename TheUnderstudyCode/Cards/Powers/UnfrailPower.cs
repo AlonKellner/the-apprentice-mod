@@ -15,7 +15,7 @@ using MegaCrit.Sts2.Core.ValueProps;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 
-public class UnfrailPower : CustomPowerModel
+public class UnfrailPower : UnderstudyPower
 {
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Counter;

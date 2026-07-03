@@ -12,7 +12,7 @@ using MegaCrit.Sts2.Core.Localization;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 
-public class LimitedPower : CustomPowerModel
+public class LimitedPower : UnderstudyPower
 {
     public override PowerType Type => PowerType.Debuff;
     public override PowerStackType StackType => PowerStackType.Counter;
