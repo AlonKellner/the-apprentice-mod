@@ -36,7 +36,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Alchyr.Sts2.BaseLib" Version="*" />
+    <PackageReference Include="Alchyr.Sts2.BaseLib" Version="3.3.4" />
     <PackageReference Include="Krafs.Publicizer" Version="2.3.0" />
     <PackageReference Include="Alchyr.Sts2.ModAnalyzers" Version="*" />
     <!-- Uncomment to enable .pck asset packing:

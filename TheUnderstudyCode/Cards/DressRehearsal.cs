@@ -3,6 +3,8 @@ using BaseLib.Utils;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.HoverTips;
+using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models.Powers;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
@@ -14,6 +16,8 @@ public class DressRehearsal : UnderstudyCard
     public DressRehearsal() : base(0, CardType.Skill, CardRarity.Rare, TargetType.None)
     {
         WithCards(2);
+        WithVars(new EnergyVar(1));
+        WithTips(_ => new IHoverTip[] { EnergyHoverTip });
         WithKeyword(CardKeyword.Exhaust);
         WithTip(typeof(WeakPower));
         WithTip(typeof(VulnerablePower));
@@ -31,7 +35,7 @@ public class DressRehearsal : UnderstudyCard
         var creature = player.Creature;
 
         await CommonActions.Draw(this, context);
-        await PlayerCmd.GainEnergy(1m, player);
+        await PlayerCmd.GainEnergy(DynamicVars.Energy.BaseValue, player);
 
         await EmotionalExpression.ApplyWeakToSelf(context, creature, 1, this);
         await EmotionalExpression.ApplyVulnerableToSelf(context, creature, 1, this);

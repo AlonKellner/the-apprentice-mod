@@ -4,6 +4,7 @@ using BaseLib.Utils;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
+using TheUnderstudy.TheUnderstudyCode.Extensions;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
@@ -26,14 +27,16 @@ public class TakeYourBow : UnderstudyCard
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
         var player = cardPlay.Card.Owner;
-        var removed = PileType.Hand.GetPile(player).Cards
-            .Where(c => c != this && UnplayableModifier.CanApplyTo(c))
-            .ToList();
+        var handCards = PileType.Hand.GetPile(player).Cards.Where(c => c != this).ToList();
 
-        foreach (var card in removed)
+        // Damage counts every Unplayable card in hand, regardless of type — but only attacks and
+        // skills actually have their Unplayable removed (Planned/Intense/Free's usual scope).
+        int unplayableCount = handCards.Count(c => c.IsUnplayable());
+        var toFree = handCards.Where(UnplayableModifier.CanApplyTo).ToList();
+        foreach (var card in toFree)
             UnplayableModifier.Remove(card);
 
-        if (removed.Count == 0) return;
-        await CommonActions.CardAttack(cardPlay.Card, cardPlay, removed.Count).Execute(context);
+        if (unplayableCount == 0) return;
+        await CommonActions.CardAttack(cardPlay.Card, cardPlay, unplayableCount).Execute(context);
     }
 }

@@ -1,10 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using BaseLib.Abstracts;
-using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Commands;
-using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
@@ -17,21 +14,30 @@ public class JadedPower : CustomPowerModel
     public override PowerType Type => PowerType.Debuff;
     public override PowerStackType StackType => PowerStackType.Counter;
 
+    // Cards that reference this Power via WithTip(typeof(JadedPower)) render it through
+    // PowerModel.GetDumbHoverTip, whose variable set is hardcoded to Amount/singleStarIcon/
+    // energyPrefix only — it does NOT call DynamicVars.AddTo, so a custom CanonicalVars
+    // (e.g. an EnergyVar formatted with {Energy:energyIcons()}) fails there with "No source
+    // extension could handle the selector named Energy". energyPrefix IS present in that set,
+    // and EnergyIconsFormatter also accepts a plain string value with the icon count passed as
+    // a literal formatter argument — {energyPrefix:energyIcons(1)} — so the count no longer
+    // needs to be baked into the string via manual repetition.
     public override List<(string, string)> Localization => new PowerLoc(
         "Jaded",
-        "Start your next turn with 1 fewer Energy.",
-        "Start your next turn with 1 fewer Energy.");
+        "Lose {energyPrefix:energyIcons(1)} at the start of your next turn.",
+        "Lose {energyPrefix:energyIcons(1)} at the start of your next turn.");
 
-    public override decimal ModifyEnergyGain(Player player, decimal amount)
+    // The natural per-turn energy refill (PlayerCombatState.ResetEnergy/AddMaxEnergyToCurrent,
+    // called directly from CombatManager.SetupPlayerTurn) is a raw field mutation that bypasses
+    // PlayerCmd.GainEnergy entirely, so ModifyEnergyGain never actually fires for it — that hook
+    // only covers explicit mid-combat "gain N energy" effects (potions, relics, cards). Matches
+    // the base game's own pattern for this (see LightningRodPower): adjust Energy directly in
+    // AfterEnergyReset, right after the natural reset has already happened this turn.
+    public override async Task AfterEnergyReset(Player player)
     {
-        if (player != Owner.Player) return amount;
-        return Math.Max(0m, amount - 1m);
-    }
-
-    public override async Task AfterSideTurnStart(CombatSide side, IReadOnlyList<Creature> participants, ICombatState combatState)
-    {
-        if (!participants.Contains(Owner)) return;
+        if (player != Owner.Player || player.PlayerCombatState == null) return;
         Flash();
+        player.PlayerCombatState.LoseEnergy(Math.Min(1m, player.PlayerCombatState.Energy));
         if (!HeldNotePower.IsActive(Owner))
             await PowerCmd.Decrement(this);
     }

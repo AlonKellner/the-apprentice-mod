@@ -2,6 +2,7 @@ using BaseLib.Abstracts;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 
@@ -13,7 +14,8 @@ public class AllNighter : UnderstudyCard
 
     public AllNighter() : base(0, CardType.Skill, CardRarity.Uncommon, TargetType.None)
     {
-        WithVars(new IntVar("Jaded", 2));
+        WithVars(new IntVar("Jaded", 2), new EnergyVar(1));
+        WithTips(_ => new IHoverTip[] { EnergyHoverTip });
         WithTip(typeof(JadedPower));
     }
 
@@ -26,7 +28,7 @@ public class AllNighter : UnderstudyCard
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
         var player = cardPlay.Card.Owner;
-        await PlayerCmd.GainEnergy(1m, player);
+        await PlayerCmd.GainEnergy(DynamicVars.Energy.BaseValue, player);
         int jaded = (int)DynamicVars["Jaded"].BaseValue;
         await EmotionalExpression.ApplyJadedToSelf(context, player.Creature, jaded, this);
     }
