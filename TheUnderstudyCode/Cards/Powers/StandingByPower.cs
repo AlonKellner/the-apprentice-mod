@@ -24,10 +24,17 @@ public class StandingByPower : CustomPowerModel
     // it stays available.
     public bool ChoiceMode { get; set; }
 
-    public override List<(string, string)> Localization => new PowerLoc(
-        "Standing By",
-        "Whenever a card becomes [gold]Unplayable[/gold], remove [gold]Unplayable[/gold] from 1 other random attack or skill in hand.",
-        "Whenever a card becomes [gold]Unplayable[/gold], remove [gold]Unplayable[/gold] from 1 other attack or skill of your choice in hand.");
+    // PowerLoc's 2nd/3rd args are (Description, SmartDescription) — the "dumb" tip shown when
+    // another card previews this Power vs. the live in-combat tooltip on the actual applied
+    // instance — NOT a base/upgraded pair. Both need to reflect the live ChoiceMode here (the
+    // card's own cards.json description already handles the base-vs-upgraded preview via
+    // {IfUpgraded:show:...}), otherwise the in-combat tooltip would always claim "of your choice"
+    // even on an unupgraded (still-random) instance.
+    private string DescriptionText => ChoiceMode
+        ? "Whenever a card becomes [gold]Unplayable[/gold], remove [gold]Unplayable[/gold] from 1 attack or skill of your choice in hand."
+        : "Whenever a card becomes [gold]Unplayable[/gold], remove [gold]Unplayable[/gold] from 1 random attack or skill in hand.";
+
+    public override List<(string, string)> Localization => new PowerLoc("Standing By", DescriptionText, DescriptionText);
 
     private readonly List<CardModel> _pending = new();
 

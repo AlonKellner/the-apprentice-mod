@@ -10,7 +10,7 @@ namespace TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 public class TheFirstLessonPower : CustomPowerModel
 {
     public override PowerType Type => PowerType.Buff;
-    public override PowerStackType StackType => PowerStackType.Counter;
+    public override PowerStackType StackType => PowerStackType.Single;
 
     public override List<(string, string)> Localization => new PowerLoc(
         "The First Lesson",

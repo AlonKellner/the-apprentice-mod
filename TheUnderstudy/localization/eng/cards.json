@@ -101,7 +101,7 @@
   "THEUNDERSTUDY-DIMINUENDO.description": "Apply 2 [gold]Weak[/gold] to yourself.\nGain {Vigor:diff()} [gold]Vigor[/gold].",
 
   "THEUNDERSTUDY-FORTISSIMO.title": "Fortissimo",
-  "THEUNDERSTUDY-FORTISSIMO.description": "All [gold]invertible[/gold] buff and debuff gains are doubled.",
+  "THEUNDERSTUDY-FORTISSIMO.description": "All [gold]invertible[/gold] buff and debuff gains are applied {FortissimoPower:diff()} additional {FortissimoPower:plural:time|times}.",
 
   "THEUNDERSTUDY-TAKE_YOUR_BOW.title": "Take Your Bow",
   "THEUNDERSTUDY-TAKE_YOUR_BOW.description": "Deal {Damage:diff()} damage to a random enemy for each [gold]Unplayable[/gold] in hand.\nRemove [gold]Unplayable[/gold] from all attacks and skills in hand.",

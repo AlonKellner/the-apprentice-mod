@@ -13,7 +13,6 @@ public class Fortissimo : UnderstudyCard
     public Fortissimo() : base(1, CardType.Power, CardRarity.Rare, TargetType.None)
     {
         WithPower<FortissimoPower>(1, 1);
-        WithKeyword(CardKeyword.Innate, ConstructedCardModel.UpgradeType.Add);
         WithTip(UnderstudyKeywords.Invertible);
     }
 

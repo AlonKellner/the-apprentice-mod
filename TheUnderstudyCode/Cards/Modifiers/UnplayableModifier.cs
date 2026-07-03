@@ -15,7 +15,10 @@ public class UnplayableModifier : CardModifier
     // Only Attacks and Skills can ever become Unplayable via Planned/Intense, and "Remove
     // Unplayable" only ever targets those, so a card is only a valid target once it's actually
     // Unplayable (matches the wording used everywhere: "Remove Unplayable from N attacks and
-    // skills").
+    // skills"). CardExtensions.IsUnplayable() covers "functionally unplayable" broadly (Smog-style
+    // hook blocks, etc.), not just this modifier's own keyword — Remove() below only clears our
+    // own flag, so selecting a card made Unplayable some other way is a no-op for that card, same
+    // as it already was for natively Unplayable-keyworded cards before this was broadened.
     public static bool CanApplyTo(CardModel card) =>
         (card.Type == CardType.Attack || card.Type == CardType.Skill) && card.IsUnplayable();
 

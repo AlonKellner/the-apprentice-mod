@@ -63,8 +63,14 @@ public abstract class UnderstudyCard(
     }
 
     // Auto-attach the shared PlannedCounterPower so the queue UI badge is visible whenever
-    // Performance queues cards, and the hidden InvertTrackerPower so Invert can react to
-    // enemy-inflicted (not just self-applied) invertible debuffs.
+    // Performance queues cards, the hidden InvertTrackerPower so Invert can react to
+    // enemy-inflicted (not just self-applied) invertible debuffs, and all 6 Un-X powers so each
+    // one's own bidirectional TryModifyPowerAmountReceived is already registered before its first
+    // genuine gain arrives (see EmotionalExpression.EnsureAttached for why this matters — a power
+    // PowerCmd.Apply creates fresh can't intercept its own very first incoming gain). This is the
+    // routine per-turn safety net; EnsureAttached is also called directly from each
+    // EmotionalExpression.ConvertXToUnX for the narrower same-turn case where an Un-X power gets
+    // fully consumed and needs to exist again before this hook fires next turn.
     public override async Task AfterPlayerTurnStartLate(PlayerChoiceContext context, Player player)
     {
         RestoreIfStable();
@@ -73,6 +79,12 @@ public abstract class UnderstudyCard(
             await PowerCmd.Apply<PlannedCounterPower>(context, player.Creature, 1m, player.Creature, null, false);
         if (!player.Creature.Powers.Any(p => p is InvertTrackerPower))
             await PowerCmd.Apply<InvertTrackerPower>(context, player.Creature, 1m, player.Creature, null, false);
+        await EmotionalExpression.EnsureAttached<UnweakPower>(context, player.Creature);
+        await EmotionalExpression.EnsureAttached<UnvulnerablePower>(context, player.Creature);
+        await EmotionalExpression.EnsureAttached<UnshakenPower>(context, player.Creature);
+        await EmotionalExpression.EnsureAttached<UnlimitedPower>(context, player.Creature);
+        await EmotionalExpression.EnsureAttached<UnjadedPower>(context, player.Creature);
+        await EmotionalExpression.EnsureAttached<UnfrailPower>(context, player.Creature);
     }
 
     // Restore on every card-play and turn boundary so no window exists where a Stable card

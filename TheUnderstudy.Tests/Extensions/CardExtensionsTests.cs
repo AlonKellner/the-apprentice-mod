@@ -36,4 +36,44 @@ public class CardExtensionsTests
     {
         Assert.False(new PlayableCard().IsUnplayable());
     }
+
+    // IsFunctionallyUnplayableReason — pure bitmask predicate, no Card/CombatState needed.
+
+    [Fact]
+    public void IsFunctionallyUnplayableReason_None_ReturnsFalse() =>
+        Assert.False(CardExtensions.IsFunctionallyUnplayableReason(UnplayableReason.None));
+
+    [Fact]
+    public void IsFunctionallyUnplayableReason_EnergyCostTooHigh_ReturnsFalse() =>
+        Assert.False(CardExtensions.IsFunctionallyUnplayableReason(UnplayableReason.EnergyCostTooHigh));
+
+    [Fact]
+    public void IsFunctionallyUnplayableReason_StarCostTooHigh_ReturnsFalse() =>
+        Assert.False(CardExtensions.IsFunctionallyUnplayableReason(UnplayableReason.StarCostTooHigh));
+
+    [Fact]
+    public void IsFunctionallyUnplayableReason_BothCostReasons_ReturnsFalse() =>
+        Assert.False(CardExtensions.IsFunctionallyUnplayableReason(
+            UnplayableReason.EnergyCostTooHigh | UnplayableReason.StarCostTooHigh));
+
+    [Fact]
+    public void IsFunctionallyUnplayableReason_HasUnplayableKeyword_ReturnsTrue() =>
+        Assert.True(CardExtensions.IsFunctionallyUnplayableReason(UnplayableReason.HasUnplayableKeyword));
+
+    [Fact]
+    public void IsFunctionallyUnplayableReason_BlockedByHook_ReturnsTrue() =>
+        Assert.True(CardExtensions.IsFunctionallyUnplayableReason(UnplayableReason.BlockedByHook));
+
+    [Fact]
+    public void IsFunctionallyUnplayableReason_BlockedByCardLogic_ReturnsTrue() =>
+        Assert.True(CardExtensions.IsFunctionallyUnplayableReason(UnplayableReason.BlockedByCardLogic));
+
+    [Fact]
+    public void IsFunctionallyUnplayableReason_NoLivingAllies_ReturnsTrue() =>
+        Assert.True(CardExtensions.IsFunctionallyUnplayableReason(UnplayableReason.NoLivingAllies));
+
+    [Fact]
+    public void IsFunctionallyUnplayableReason_CostReasonPlusHookReason_ReturnsTrue() =>
+        Assert.True(CardExtensions.IsFunctionallyUnplayableReason(
+            UnplayableReason.EnergyCostTooHigh | UnplayableReason.BlockedByHook));
 }

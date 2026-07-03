@@ -1,6 +1,7 @@
 using System.Reflection;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.Models;
+using MegaCrit.Sts2.Core.Models.Powers;
 using TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 using Xunit;
 
@@ -138,6 +139,18 @@ public class PowerClassTests
     }
 
     [Fact]
+    public void StandingByPower_Localization_ReflectsLiveChoiceMode()
+    {
+        var p = new StandingByPower();
+        Assert.Contains("random", p.Localization[1].Item2);
+        Assert.Contains("random", p.Localization[2].Item2);
+
+        p.ChoiceMode = true;
+        Assert.Contains("of your choice", p.Localization[1].Item2);
+        Assert.Contains("of your choice", p.Localization[2].Item2);
+    }
+
+    [Fact]
     public void FortissimoPower_IsBuff_Counter()
     {
         var p = new FortissimoPower();
@@ -168,11 +181,11 @@ public class PowerClassTests
     }
 
     [Fact]
-    public void TheFirstLessonPower_IsBuff_Counter()
+    public void TheFirstLessonPower_IsBuff_Single()
     {
         var p = new TheFirstLessonPower();
         Assert.Equal(PowerType.Buff, p.Type);
-        Assert.Equal(PowerStackType.Counter, p.StackType);
+        Assert.Equal(PowerStackType.Single, p.StackType);
     }
 
     [Fact]
@@ -189,6 +202,88 @@ public class PowerClassTests
         var p = new UnfrailPower();
         Assert.Equal(PowerType.Buff, p.Type);
         Assert.Equal(PowerStackType.Counter, p.StackType);
+    }
+
+    // Bidirectional-interception structural checks, applied identically to all 6 Un-X powers:
+    // each must declare its own TryModifyPowerAmountReceived/AfterModifyingPowerAmountReceived
+    // (not just inherit the no-op base), and override IsVisibleInternal so it starts hidden at
+    // Amount 0 (now that all 6 are always-attached from combat start) and reveals itself once
+    // positive.
+
+    private static void AssertHasBidirectionalInterception(Type powerType)
+    {
+        Assert.NotNull(powerType.GetMethod(
+            "TryModifyPowerAmountReceived", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly));
+        Assert.NotNull(powerType.GetMethod(
+            "AfterModifyingPowerAmountReceived", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly));
+        Assert.NotNull(powerType.GetProperty(
+            "IsVisibleInternal", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly));
+    }
+
+    private static void AssertHiddenAtZero_VisibleWhenPositive(PowerModel p)
+    {
+        var prop = p.GetType().GetProperty("IsVisibleInternal", BindingFlags.NonPublic | BindingFlags.Instance)!;
+        Assert.Equal(0, p.Amount);
+        Assert.Equal(false, prop.GetValue(p));
+    }
+
+    [Fact]
+    public void UnfrailPower_HasBidirectionalInterception_HiddenAtZero()
+    {
+        AssertHasBidirectionalInterception(typeof(UnfrailPower));
+        AssertHiddenAtZero_VisibleWhenPositive(new UnfrailPower());
+    }
+
+    [Fact]
+    public void UnweakPower_HasBidirectionalInterception_HiddenAtZero()
+    {
+        AssertHasBidirectionalInterception(typeof(UnweakPower));
+        AssertHiddenAtZero_VisibleWhenPositive(new UnweakPower());
+    }
+
+    [Fact]
+    public void UnvulnerablePower_HasBidirectionalInterception_HiddenAtZero()
+    {
+        AssertHasBidirectionalInterception(typeof(UnvulnerablePower));
+        AssertHiddenAtZero_VisibleWhenPositive(new UnvulnerablePower());
+    }
+
+    [Fact]
+    public void UnshakenPower_HasBidirectionalInterception_HiddenAtZero()
+    {
+        AssertHasBidirectionalInterception(typeof(UnshakenPower));
+        AssertHiddenAtZero_VisibleWhenPositive(new UnshakenPower());
+    }
+
+    [Fact]
+    public void UnlimitedPower_HasBidirectionalInterception_HiddenAtZero()
+    {
+        AssertHasBidirectionalInterception(typeof(UnlimitedPower));
+        AssertHiddenAtZero_VisibleWhenPositive(new UnlimitedPower());
+    }
+
+    [Fact]
+    public void UnjadedPower_HasBidirectionalInterception_HiddenAtZero()
+    {
+        AssertHasBidirectionalInterception(typeof(UnjadedPower));
+        AssertHiddenAtZero_VisibleWhenPositive(new UnjadedPower());
+    }
+
+    [Fact]
+    public void FortissimoPower_HasRawAmountCapture()
+    {
+        Assert.NotNull(typeof(FortissimoPower).GetMethod(
+            "BeforePowerAmountChanged", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly));
+    }
+
+    [Fact]
+    public void FortissimoPower_IsInvertiblePower_IncludesFrailAndUnfrail()
+    {
+        var method = typeof(FortissimoPower).GetMethod(
+            "IsInvertiblePower", BindingFlags.NonPublic | BindingFlags.Static);
+        Assert.NotNull(method);
+        Assert.Equal(true, method!.Invoke(null, new object[] { new FrailPower() }));
+        Assert.Equal(true, method.Invoke(null, new object[] { new UnfrailPower() }));
     }
 
     [Fact]
