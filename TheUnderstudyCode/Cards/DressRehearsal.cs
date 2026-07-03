@@ -6,6 +6,7 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models.Powers;
+using TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
@@ -21,6 +22,9 @@ public class DressRehearsal : UnderstudyCard
         WithKeyword(CardKeyword.Exhaust);
         WithTip(typeof(WeakPower));
         WithTip(typeof(VulnerablePower));
+        WithTip(typeof(ShakenPower));
+        WithTip(typeof(JadedPower));
+        WithTip(typeof(LimitedPower));
     }
 
     protected override void OnUpgrade()

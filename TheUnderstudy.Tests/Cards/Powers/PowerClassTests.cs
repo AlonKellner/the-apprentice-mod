@@ -184,6 +184,14 @@ public class PowerClassTests
     }
 
     [Fact]
+    public void UnfrailPower_IsBuff_Counter()
+    {
+        var p = new UnfrailPower();
+        Assert.Equal(PowerType.Buff, p.Type);
+        Assert.Equal(PowerStackType.Counter, p.StackType);
+    }
+
+    [Fact]
     public void NewPowers_Localization_IsNonEmpty()
     {
         Assert.NotEmpty(new JadedPower().Localization);
@@ -195,5 +203,6 @@ public class PowerClassTests
         Assert.NotEmpty(new HeldNotePower().Localization);
         Assert.NotEmpty(new TheFirstLessonPower().Localization);
         Assert.NotEmpty(new FullVoicePower().Localization);
+        Assert.NotEmpty(new UnfrailPower().Localization);
     }
 }

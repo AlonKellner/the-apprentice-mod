@@ -13,6 +13,7 @@ public class StandingBy : UnderstudyCard
     public StandingBy() : base(1, CardType.Power, CardRarity.Uncommon, TargetType.None)
     {
         WithPower<StandingByPower>(1, 1);
+        WithTip(CardKeyword.Unplayable);
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)

@@ -14,6 +14,7 @@ public class Fortissimo : UnderstudyCard
     {
         WithPower<FortissimoPower>(1, 1);
         WithKeyword(CardKeyword.Innate, ConstructedCardModel.UpgradeType.Add);
+        WithTip(UnderstudyKeywords.Invertible);
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)

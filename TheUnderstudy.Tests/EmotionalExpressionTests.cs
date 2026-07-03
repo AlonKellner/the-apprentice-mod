@@ -255,6 +255,54 @@ public class EmotionalExpressionTests
     public void ComputeNetJaded_Jaded3_ApplyUnjaded4_LeavesUnjaded1() =>
         Assert.Equal((0, 1), EmotionalExpression.ComputeNetJaded(3, 0, 0, 4));
 
+    // ComputeFrailConversion — mirror cases (Frail/Unfrail follows the same shape as the other 4 pairs)
+
+    [Fact]
+    public void ComputeFrailConversion_Frail1_Max1_ConvertsFully() =>
+        Assert.Equal((0, 1), EmotionalExpression.ComputeFrailConversion(1, 0, 1));
+
+    [Fact]
+    public void ComputeFrailConversion_Frail2_Max1_RemainderCancelsNewUnfrail() =>
+        Assert.Equal((0, 0), EmotionalExpression.ComputeFrailConversion(2, 0, 1));
+
+    [Fact]
+    public void ComputeFrailConversion_Frail3_Max1_RemainderPartiallyCancels() =>
+        Assert.Equal((1, 0), EmotionalExpression.ComputeFrailConversion(3, 0, 1));
+
+    [Fact]
+    public void ComputeFrailConversion_Frail3_Max2_LeftoverFrail1CancelsOneNewUnfrail() =>
+        Assert.Equal((0, 1), EmotionalExpression.ComputeFrailConversion(3, 0, 2));
+
+    [Fact]
+    public void ComputeFrailConversion_Frail2_Max5_ConvertsAll_NoLeftover() =>
+        Assert.Equal((0, 2), EmotionalExpression.ComputeFrailConversion(2, 0, 5));
+
+    [Fact]
+    public void ComputeFrailConversion_NoFrail_NoOp() =>
+        Assert.Equal((0, 0), EmotionalExpression.ComputeFrailConversion(0, 0, 1));
+
+    [Fact]
+    public void ComputeFrailConversion_MaxZero_NoOp() =>
+        Assert.Equal((3, 0), EmotionalExpression.ComputeFrailConversion(3, 0, 0));
+
+    // ComputeNetFrail — mirror cases
+
+    [Fact]
+    public void ComputeNetFrail_NoExisting_ApplyUnfrail2_YieldsUnfrail2() =>
+        Assert.Equal((0, 2), EmotionalExpression.ComputeNetFrail(0, 0, 0, 2));
+
+    [Fact]
+    public void ComputeNetFrail_Frail3_ApplyUnfrail2_LeavesFrail1() =>
+        Assert.Equal((1, 0), EmotionalExpression.ComputeNetFrail(3, 0, 0, 2));
+
+    [Fact]
+    public void ComputeNetFrail_Frail3_ApplyUnfrail3_LeavesBoth0() =>
+        Assert.Equal((0, 0), EmotionalExpression.ComputeNetFrail(3, 0, 0, 3));
+
+    [Fact]
+    public void ComputeNetFrail_Frail3_ApplyUnfrail4_LeavesUnfrail1() =>
+        Assert.Equal((0, 1), EmotionalExpression.ComputeNetFrail(3, 0, 0, 4));
+
     // ComputeSignFlip — Strength/Dexterity same-Power sign-flip, worked examples from the plan
 
     [Fact]

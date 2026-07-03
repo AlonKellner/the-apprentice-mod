@@ -352,6 +352,58 @@ public static class EmotionalExpression
         await RaiseClearedIfZeroed(ctx, creature, curJaded, netJaded);
     }
 
+    // Frail/Unfrail — same shape as Weak/Unweak, reducing Block gain instead of dealt damage.
+    // No Understudy card applies Frail directly; this exists purely so Invert (and the
+    // Invert-each variant on Coda) behaves correctly if something external inflicts it.
+
+    public static (int netFrail, int netUnfrail) ComputeNetFrail(int curFrail, int curUnfrail, int deltaFrail, int deltaUnfrail)
+    {
+        int totalFrail = curFrail + deltaFrail;
+        int totalUnfrail = curUnfrail + deltaUnfrail;
+        if (totalFrail >= totalUnfrail)
+            return (totalFrail - totalUnfrail, 0);
+        return (0, totalUnfrail - totalFrail);
+    }
+
+    public static (int netFrail, int netUnfrail) ComputeFrailConversion(int curFrail, int curUnfrail, int max)
+    {
+        int frailAmount = Math.Min(curFrail, max);
+        if (frailAmount <= 0) return (curFrail, curUnfrail);
+        return ComputeNetFrail(curFrail, curUnfrail, -frailAmount, frailAmount);
+    }
+
+    // Apply Frail to self. Cancels against existing Unfrail.
+    public static async Task ApplyFrailToSelf(PlayerChoiceContext ctx, Creature creature, int stacks, CardModel? card)
+    {
+        int curFrail = creature.GetPowerAmount<FrailPower>();
+        int curUnfrail = creature.GetPowerAmount<UnfrailPower>();
+        var (netFrail, netUnfrail) = ComputeNetFrail(curFrail, curUnfrail, stacks, 0);
+        await AdjustFrailPowers(ctx, creature, card, curFrail, curUnfrail, netFrail, netUnfrail);
+    }
+
+    public static async Task ConvertFrailToUnfrail(PlayerChoiceContext ctx, Creature creature, int max = int.MaxValue)
+    {
+        int curFrail = creature.GetPowerAmount<FrailPower>();
+        if (curFrail <= 0 || max <= 0) return;
+        int curUnfrail = creature.GetPowerAmount<UnfrailPower>();
+        var (netFrail, netUnfrail) = ComputeFrailConversion(curFrail, curUnfrail, max);
+        await AdjustFrailPowers(ctx, creature, null, curFrail, curUnfrail, netFrail, netUnfrail);
+    }
+
+    private static async Task AdjustFrailPowers(PlayerChoiceContext ctx, Creature creature, CardModel? card,
+        int curFrail, int curUnfrail, int netFrail, int netUnfrail)
+    {
+        int frailDelta = netFrail - curFrail;
+        int unfrailDelta = netUnfrail - curUnfrail;
+        if (frailDelta != 0)
+            await PowerCmd.Apply<FrailPower>(ctx, creature, frailDelta, creature, card, false);
+        if (unfrailDelta != 0)
+            await PowerCmd.Apply<UnfrailPower>(ctx, creature, unfrailDelta, creature, card, false);
+        if (frailDelta != 0 || unfrailDelta != 0)
+            RecordModified(creature, InvertibleDebuff.Frail);
+        await RaiseClearedIfZeroed(ctx, creature, curFrail, netFrail);
+    }
+
     // Sum of the 5 self-debuff flavors currently on a creature — the scaling metric used by
     // "Project"-style cards (Apply [Debuff] equal to the sum of your invertible debuffs).
     // Deliberately only the 5 flavors the Understudy's own cards generate (Weak, Vulnerable,
@@ -425,6 +477,7 @@ public static class EmotionalExpression
                 await PowerCmd.Apply<UnjadedPower>(ctx, creature, bonus, creature, null, false);
                 break;
             case InvertibleDebuff.Frail:
+                await PowerCmd.Apply<UnfrailPower>(ctx, creature, bonus, creature, null, false);
                 break;
             case InvertibleDebuff.Strength:
                 await PowerCmd.Apply<StrengthPower>(ctx, creature, bonus, creature, null, false);
@@ -463,7 +516,7 @@ public static class EmotionalExpression
                 await ConvertJadedToUnjaded(ctx, creature, max);
                 break;
             case InvertibleDebuff.Frail:
-                // Not implemented in this codebase yet — no-op until a Frail/Unfrail pair exists.
+                await ConvertFrailToUnfrail(ctx, creature, max);
                 break;
             case InvertibleDebuff.Strength:
                 await InvertStrengthSign(ctx, creature, max);
