@@ -1,16 +1,16 @@
+using BaseLib.Abstracts;
 using BaseLib.Utils;
-using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models.Powers;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
-public class Critique : UnderstudyCard
+public class Unguarded : UnderstudyCard
 {
-    public const string CardId = "TheUnderstudy:Critique";
+    public const string CardId = "TheUnderstudy:Unguarded";
 
-    public Critique() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.AnyEnemy)
+    public Unguarded() : base(0, CardType.Skill, CardRarity.Uncommon, TargetType.None)
     {
         WithCards(2);
         WithTip(typeof(VulnerablePower));
@@ -24,9 +24,7 @@ public class Critique : UnderstudyCard
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
-        var creature = cardPlay.Card.Owner.Creature;
+        await EmotionalExpression.ApplyVulnerableToSelf(context, cardPlay.Card.Owner.Creature, 2, this);
         await CommonActions.Draw(this, context);
-        int amount = creature.GetPowerAmount<VulnerablePower>() + 1;
-        await PowerCmd.Apply<VulnerablePower>(context, cardPlay.Target!, amount, creature, cardPlay.Card, false);
     }
 }

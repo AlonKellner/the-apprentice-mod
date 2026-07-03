@@ -37,6 +37,7 @@ public class ShakenPower : CustomPowerModel
             if (!card.TryGetModifier<UnplayableModifier>(out _))
                 CardModifier.AddModifier<UnplayableModifier>(card);
         }
-        await PowerCmd.Decrement(this);
+        if (!HeldNotePower.IsActive(Owner))
+            await PowerCmd.Decrement(this);
     }
 }

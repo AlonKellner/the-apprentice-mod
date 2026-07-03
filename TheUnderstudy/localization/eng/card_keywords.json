@@ -4,5 +4,9 @@
   "THEUNDERSTUDY-INTENSE.title": "Intense",
   "THEUNDERSTUDY-INTENSE.description": "Becomes [gold]Unplayable[/gold] whenever played. Gain 1 additional Block and deal 1 additional damage for each Intense applied this combat.",
   "THEUNDERSTUDY-STABLE.title": "Stable",
-  "THEUNDERSTUDY-STABLE.description": "May not be modified during combat."
+  "THEUNDERSTUDY-STABLE.description": "May not be modified during combat.",
+  "THEUNDERSTUDY-INVERT.title": "Invert",
+  "THEUNDERSTUDY-INVERT.description": "Convert a debuff to a buff. Not all debuffs are invertible.",
+  "THEUNDERSTUDY-INVERTIBLE.title": "Invertible",
+  "THEUNDERSTUDY-INVERTIBLE.description": "A debuff that can be converted into a buff. Not all debuffs are invertible."
 }

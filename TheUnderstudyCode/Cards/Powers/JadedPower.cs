@@ -12,20 +12,20 @@ using MegaCrit.Sts2.Core.Localization;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 
-public class LimitedPower : CustomPowerModel
+public class JadedPower : CustomPowerModel
 {
     public override PowerType Type => PowerType.Debuff;
     public override PowerStackType StackType => PowerStackType.Counter;
 
     public override List<(string, string)> Localization => new PowerLoc(
-        "Limited",
-        "Draw 1 fewer card at the start of your next turn.",
-        "Draw 1 fewer card at the start of your next turn.");
+        "Jaded",
+        "Start your next turn with 1 fewer Energy.",
+        "Start your next turn with 1 fewer Energy.");
 
-    public override decimal ModifyHandDraw(Player player, decimal count)
+    public override decimal ModifyEnergyGain(Player player, decimal amount)
     {
-        if (player != Owner.Player) return count;
-        return Math.Max(0m, count - 1m);
+        if (player != Owner.Player) return amount;
+        return Math.Max(0m, amount - 1m);
     }
 
     public override async Task AfterSideTurnStart(CombatSide side, IReadOnlyList<Creature> participants, ICombatState combatState)

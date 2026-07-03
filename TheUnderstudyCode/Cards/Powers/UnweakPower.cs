@@ -55,7 +55,7 @@ public class UnweakPower : CustomPowerModel
 
     public override async Task AfterSideTurnEnd(PlayerChoiceContext choiceContext, CombatSide side, IEnumerable<Creature> participants)
     {
-        if (side == CombatSide.Enemy)
+        if (side == CombatSide.Enemy && !HeldNotePower.IsActive(Owner))
             await PowerCmd.TickDownDuration(this);
     }
 }

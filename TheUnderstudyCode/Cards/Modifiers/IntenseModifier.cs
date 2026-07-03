@@ -58,6 +58,10 @@ public class IntenseModifier : CardModifier
         return hasPoweredDamage || hasPoweredBlock;
     }
 
+    // Raised the first time a card receives Intense (not on subsequent re-Intensifies of the
+    // same card) — Master Form's "whenever you apply... Intense... that doesn't have Replay" trigger.
+    public static event Action<CardModel>? Applied;
+
     public static void Apply(CardModel card, ICombatState combat, IEnumerable<CardModel> allCards)
     {
         MaybeResetForCombat(combat);
@@ -68,6 +72,7 @@ public class IntenseModifier : CardModifier
             CardModifier.AddModifier<IntenseModifier>(card);
             card.TryGetModifier<IntenseModifier>(out mod);
             _intenseCreated++;
+            Applied?.Invoke(card);
         }
 
         mod!.Stacks++;

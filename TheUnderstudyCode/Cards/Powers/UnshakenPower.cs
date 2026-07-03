@@ -33,6 +33,7 @@ public class UnshakenPower : CustomPowerModel
             if (card.TryGetModifier<UnplayableModifier>(out var mod))
                 CardModifier.DirectModifiers(card).Remove(mod);
         }
-        await PowerCmd.Decrement(this);
+        if (!HeldNotePower.IsActive(Owner))
+            await PowerCmd.Decrement(this);
     }
 }

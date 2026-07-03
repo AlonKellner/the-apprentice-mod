@@ -35,6 +35,7 @@ public class UnlimitedPower : CustomPowerModel
     {
         if (!participants.Contains(Owner)) return;
         Flash();
-        await PowerCmd.Decrement(this);
+        if (!HeldNotePower.IsActive(Owner))
+            await PowerCmd.Decrement(this);
     }
 }

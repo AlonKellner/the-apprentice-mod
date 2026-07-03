@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using BaseLib.Abstracts;
@@ -12,20 +11,20 @@ using MegaCrit.Sts2.Core.Localization;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 
-public class LimitedPower : CustomPowerModel
+public class UnjadedPower : CustomPowerModel
 {
-    public override PowerType Type => PowerType.Debuff;
+    public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Counter;
 
     public override List<(string, string)> Localization => new PowerLoc(
-        "Limited",
-        "Draw 1 fewer card at the start of your next turn.",
-        "Draw 1 fewer card at the start of your next turn.");
+        "Unjaded",
+        "At the start of your next turn, gain 3 additional Energy.",
+        "At the start of your next turn, gain 3 additional Energy.");
 
-    public override decimal ModifyHandDraw(Player player, decimal count)
+    public override decimal ModifyEnergyGain(Player player, decimal amount)
     {
-        if (player != Owner.Player) return count;
-        return Math.Max(0m, count - 1m);
+        if (player != Owner.Player) return amount;
+        return amount + 3m;
     }
 
     public override async Task AfterSideTurnStart(CombatSide side, IReadOnlyList<Creature> participants, ICombatState combatState)

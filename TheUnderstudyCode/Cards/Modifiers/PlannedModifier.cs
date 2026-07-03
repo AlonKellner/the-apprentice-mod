@@ -39,6 +39,10 @@ public class PlannedModifier : CardModifier
 
     public static event Action? Changed;
 
+    // Raised the first time a card receives a Planned slot (not on subsequent re-Plans of the
+    // same card) — Master Form's "whenever you apply Planned... that doesn't have Replay" trigger.
+    public static event Action<CardModel>? Applied;
+
     // Player.Piles includes the Deck pile (the persistent, between-combats card list) alongside
     // the real combat piles (Draw/Hand/Discard/Exhaust/Play). Combat start clones every Deck card
     // into the draw pile rather than moving it, so a card present in the deck still shows up in
@@ -115,6 +119,7 @@ public class PlannedModifier : CardModifier
             // replaces both backing fields with fresh instances, breaking the sharing.
             // This also discards any stale save data that LoadSaveData may have loaded.
             mod!.ReinitCollections();
+            Applied?.Invoke(card);
         }
         mod!.SequenceIndices.Add(max + 1);
         if (!card.TryGetModifier<UnplayableModifier>(out _))

@@ -103,4 +103,97 @@ public class PowerClassTests
             .GetMethod("UpdateDisplayIfChanged", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly);
         Assert.NotNull(method);
     }
+
+    [Fact]
+    public void JadedPower_IsDebuff_Counter()
+    {
+        var p = new JadedPower();
+        Assert.Equal(PowerType.Debuff, p.Type);
+        Assert.Equal(PowerStackType.Counter, p.StackType);
+    }
+
+    [Fact]
+    public void UnjadedPower_IsBuff_Counter()
+    {
+        var p = new UnjadedPower();
+        Assert.Equal(PowerType.Buff, p.Type);
+        Assert.Equal(PowerStackType.Counter, p.StackType);
+    }
+
+    [Fact]
+    public void TakeNotesPower_IsBuff_Counter()
+    {
+        var p = new TakeNotesPower();
+        Assert.Equal(PowerType.Buff, p.Type);
+        Assert.Equal(PowerStackType.Counter, p.StackType);
+    }
+
+    [Fact]
+    public void StandingByPower_IsBuff_Counter()
+    {
+        var p = new StandingByPower();
+        Assert.Equal(PowerType.Buff, p.Type);
+        Assert.Equal(PowerStackType.Counter, p.StackType);
+        Assert.False(p.ChoiceMode);
+    }
+
+    [Fact]
+    public void FortissimoPower_IsBuff_Counter()
+    {
+        var p = new FortissimoPower();
+        Assert.Equal(PowerType.Buff, p.Type);
+        Assert.Equal(PowerStackType.Counter, p.StackType);
+    }
+
+    [Fact]
+    public void MasterFormPower_IsBuff_Counter()
+    {
+        var p = new MasterFormPower();
+        Assert.Equal(PowerType.Buff, p.Type);
+        Assert.Equal(PowerStackType.Counter, p.StackType);
+    }
+
+    [Fact]
+    public void HeldNotePower_IsBuff_Counter()
+    {
+        var p = new HeldNotePower();
+        Assert.Equal(PowerType.Buff, p.Type);
+        Assert.Equal(PowerStackType.Counter, p.StackType);
+    }
+
+    [Fact]
+    public void HeldNotePower_IsActive_FalseForNullCreature()
+    {
+        Assert.False(HeldNotePower.IsActive(null));
+    }
+
+    [Fact]
+    public void TheFirstLessonPower_IsBuff_Counter()
+    {
+        var p = new TheFirstLessonPower();
+        Assert.Equal(PowerType.Buff, p.Type);
+        Assert.Equal(PowerStackType.Counter, p.StackType);
+    }
+
+    [Fact]
+    public void FullVoicePower_IsBuff_Counter()
+    {
+        var p = new FullVoicePower();
+        Assert.Equal(PowerType.Buff, p.Type);
+        Assert.Equal(PowerStackType.Counter, p.StackType);
+    }
+
+    [Fact]
+    public void NewPowers_Localization_IsNonEmpty()
+    {
+        Assert.NotEmpty(new JadedPower().Localization);
+        Assert.NotEmpty(new UnjadedPower().Localization);
+        Assert.NotEmpty(new TakeNotesPower().Localization);
+        Assert.NotEmpty(new StandingByPower().Localization);
+        Assert.NotEmpty(new FortissimoPower().Localization);
+        Assert.NotEmpty(new MasterFormPower().Localization);
+        Assert.NotEmpty(new HeldNotePower().Localization);
+        Assert.NotEmpty(new TheFirstLessonPower().Localization);
+        Assert.NotEmpty(new FullVoicePower().Localization);
+    }
 }

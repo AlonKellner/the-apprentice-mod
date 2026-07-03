@@ -1,3 +1,4 @@
+using System.Linq;
 using BaseLib.Abstracts;
 using BaseLib.Utils;
 using MegaCrit.Sts2.Core.CardSelection;
@@ -9,14 +10,14 @@ using TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
-public class Rewrite : UnderstudyCard
+public class Arrangement : UnderstudyCard
 {
-    public const string CardId = "TheUnderstudy:Rewrite";
+    public const string CardId = "TheUnderstudy:Arrangement";
 
-    public Rewrite() : base(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
+    public Arrangement() : base(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
     {
         WithDamage(9);
-        WithTip(CardKeyword.Unplayable);
+        WithTip(UnderstudyKeywords.Planned);
     }
 
     protected override void OnUpgrade()
@@ -33,12 +34,13 @@ public class Rewrite : UnderstudyCard
         var selected = await CardSelectCmd.FromHand(
             context,
             player,
-            new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-REWRITE.selectionPrompt"), 0, 2),
-            c => c != this && UnplayableModifier.CanApplyTo(c),
+            new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-ARRANGEMENT.selectionPrompt"), 0, 2),
+            c => c != this && PlannedModifier.CanApplyTo(c),
             this);
 
         if (selected == null) return;
+        var allCards = PlannedModifier.RelevantCards(player).ToList();
         foreach (var card in selected)
-            UnplayableModifier.Remove(card);
+            PlannedModifier.Apply(card, allCards);
     }
 }

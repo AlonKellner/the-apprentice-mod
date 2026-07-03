@@ -1,3 +1,4 @@
+using BaseLib.Abstracts;
 using BaseLib.Utils;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
@@ -5,27 +6,25 @@ using TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
-public class SteadyHand : UnderstudyCard
+public class QuickNap : UnderstudyCard
 {
-    public const string CardId = "TheUnderstudy:SteadyHand";
+    public const string CardId = "TheUnderstudy:QuickNap";
 
-    public SteadyHand() : base(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
+    public QuickNap() : base(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
     {
-        WithDamage(4);
-        WithTip(typeof(ShakenPower));
-        WithTip(typeof(UnshakenPower));
+        WithDamage(14);
+        WithTip(typeof(JadedPower));
     }
 
     protected override void OnUpgrade()
     {
         base.OnUpgrade();
-        DynamicVars.Damage.UpgradeValueBy(1m);
+        DynamicVars.Damage.UpgradeValueBy(4m);
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
-        var creature = cardPlay.Card.Owner.Creature;
         await CommonActions.CardAttack(cardPlay.Card, cardPlay).Execute(context);
-        await EmotionalExpression.ConvertShakenToUnshaken(context, creature, 1);
+        await EmotionalExpression.ApplyJadedToSelf(context, cardPlay.Card.Owner.Creature, 1, this);
     }
 }

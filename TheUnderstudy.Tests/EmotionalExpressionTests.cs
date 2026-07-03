@@ -206,4 +206,86 @@ public class EmotionalExpressionTests
     [Fact]
     public void ComputeNetLimited_Limited3_ApplyUnlimited4_LeavesUnlimited1() =>
         Assert.Equal((0, 1), EmotionalExpression.ComputeNetLimited(3, 0, 0, 4));
+
+    // ComputeJadedConversion — mirror cases (Jaded/Unjaded follows the same shape as Limited/Unlimited)
+
+    [Fact]
+    public void ComputeJadedConversion_Jaded1_Max1_ConvertsFully() =>
+        Assert.Equal((0, 1), EmotionalExpression.ComputeJadedConversion(1, 0, 1));
+
+    [Fact]
+    public void ComputeJadedConversion_Jaded2_Max1_RemainderCancelsNewUnjaded() =>
+        Assert.Equal((0, 0), EmotionalExpression.ComputeJadedConversion(2, 0, 1));
+
+    [Fact]
+    public void ComputeJadedConversion_Jaded3_Max1_RemainderPartiallyCancels() =>
+        Assert.Equal((1, 0), EmotionalExpression.ComputeJadedConversion(3, 0, 1));
+
+    [Fact]
+    public void ComputeJadedConversion_Jaded3_Max2_LeftoverJaded1CancelsOneNewUnjaded() =>
+        Assert.Equal((0, 1), EmotionalExpression.ComputeJadedConversion(3, 0, 2));
+
+    [Fact]
+    public void ComputeJadedConversion_Jaded2_Max5_ConvertsAll_NoLeftover() =>
+        Assert.Equal((0, 2), EmotionalExpression.ComputeJadedConversion(2, 0, 5));
+
+    [Fact]
+    public void ComputeJadedConversion_NoJaded_NoOp() =>
+        Assert.Equal((0, 0), EmotionalExpression.ComputeJadedConversion(0, 0, 1));
+
+    [Fact]
+    public void ComputeJadedConversion_MaxZero_NoOp() =>
+        Assert.Equal((3, 0), EmotionalExpression.ComputeJadedConversion(3, 0, 0));
+
+    // ComputeNetJaded — mirror cases
+
+    [Fact]
+    public void ComputeNetJaded_NoExisting_ApplyUnjaded2_YieldsUnjaded2() =>
+        Assert.Equal((0, 2), EmotionalExpression.ComputeNetJaded(0, 0, 0, 2));
+
+    [Fact]
+    public void ComputeNetJaded_Jaded3_ApplyUnjaded2_LeavesJaded1() =>
+        Assert.Equal((1, 0), EmotionalExpression.ComputeNetJaded(3, 0, 0, 2));
+
+    [Fact]
+    public void ComputeNetJaded_Jaded3_ApplyUnjaded3_LeavesBoth0() =>
+        Assert.Equal((0, 0), EmotionalExpression.ComputeNetJaded(3, 0, 0, 3));
+
+    [Fact]
+    public void ComputeNetJaded_Jaded3_ApplyUnjaded4_LeavesUnjaded1() =>
+        Assert.Equal((0, 1), EmotionalExpression.ComputeNetJaded(3, 0, 0, 4));
+
+    // ComputeSignFlip — Strength/Dexterity same-Power sign-flip, worked examples from the plan
+
+    [Fact]
+    public void ComputeSignFlip_Positive5_Invert5_Unaffected() =>
+        Assert.Equal((0, 5), EmotionalExpression.ComputeSignFlip(5, 5));
+
+    [Fact]
+    public void ComputeSignFlip_NegativeOne_Invert5_YieldsPositiveOne() =>
+        Assert.Equal((1, 1), EmotionalExpression.ComputeSignFlip(-1, 5));
+
+    [Fact]
+    public void ComputeSignFlip_NegativeThree_Invert5_YieldsPositiveThree() =>
+        Assert.Equal((3, 3), EmotionalExpression.ComputeSignFlip(-3, 5));
+
+    [Fact]
+    public void ComputeSignFlip_NegativeFive_Invert5_YieldsPositiveFive() =>
+        Assert.Equal((5, 5), EmotionalExpression.ComputeSignFlip(-5, 5));
+
+    [Fact]
+    public void ComputeSignFlip_NegativeSix_Invert5_YieldsPositiveFour() =>
+        Assert.Equal((5, 4), EmotionalExpression.ComputeSignFlip(-6, 5));
+
+    [Fact]
+    public void ComputeSignFlip_NegativeTen_Invert5_YieldsZero() =>
+        Assert.Equal((5, 0), EmotionalExpression.ComputeSignFlip(-10, 5));
+
+    [Fact]
+    public void ComputeSignFlip_NegativeTwenty_Invert5_YieldsNegativeTen() =>
+        Assert.Equal((5, -10), EmotionalExpression.ComputeSignFlip(-20, 5));
+
+    [Fact]
+    public void ComputeSignFlip_Zero_NoOp() =>
+        Assert.Equal((0, 0), EmotionalExpression.ComputeSignFlip(0, 5));
 }

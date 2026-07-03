@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
@@ -8,6 +9,21 @@ using MegaCrit.Sts2.Core.Models.Powers;
 using TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
+
+// Every debuff/buff pair that the Invert keyword can act on. Weak/Vulnerable/Shaken/Limited/Jaded
+// are this deck's own flavors; Frail/Strength/Dexterity are never applied by an Understudy card,
+// but Invert must still recognize them if something external (an enemy, a relic) inflicts them.
+public enum InvertibleDebuff
+{
+    Weak,
+    Vulnerable,
+    Shaken,
+    Limited,
+    Jaded,
+    Frail,
+    Strength,
+    Dexterity
+}
 
 public static class EmotionalExpression
 {
@@ -149,6 +165,20 @@ public static class EmotionalExpression
         }
     }
 
+    // Invoked whenever one of the 5 self-debuffs transitions from present (>0) to fully cleared (0)
+    // as a direct result of one of this class's own Apply/Invert calls — e.g. Take Notes' "whenever
+    // a debuff of yours clears, gain Vigor." A Func rather than a true multicast event since it
+    // needs to be awaited with the live PlayerChoiceContext (only one subscriber is expected at a
+    // time in practice). Known limitation, same shape as the "last modified" tracker: only
+    // observes this class's own operations, not natural per-turn decay or anything enemy-inflicted.
+    public static Func<PlayerChoiceContext, Creature, Task>? DebuffCleared;
+
+    private static async Task RaiseClearedIfZeroed(PlayerChoiceContext ctx, Creature creature, int curDebuff, int netDebuff)
+    {
+        if (curDebuff > 0 && netDebuff == 0 && DebuffCleared != null)
+            await DebuffCleared(ctx, creature);
+    }
+
     private static async Task AdjustWeakPowers(PlayerChoiceContext ctx, Creature creature, CardModel? card,
         int curWeak, int curUnweak, int netWeak, int netUnweak)
     {
@@ -158,6 +188,9 @@ public static class EmotionalExpression
             await PowerCmd.Apply<WeakPower>(ctx, creature, weakDelta, creature, card, false);
         if (unweakDelta != 0)
             await PowerCmd.Apply<UnweakPower>(ctx, creature, unweakDelta, creature, card, false);
+        if (weakDelta != 0 || unweakDelta != 0)
+            RecordModified(creature, InvertibleDebuff.Weak);
+        await RaiseClearedIfZeroed(ctx, creature, curWeak, netWeak);
     }
 
     private static async Task AdjustVulnerablePowers(PlayerChoiceContext ctx, Creature creature, CardModel? card,
@@ -169,6 +202,9 @@ public static class EmotionalExpression
             await PowerCmd.Apply<VulnerablePower>(ctx, creature, vulDelta, creature, card, false);
         if (unvulDelta != 0)
             await PowerCmd.Apply<UnvulnerablePower>(ctx, creature, unvulDelta, creature, card, false);
+        if (vulDelta != 0 || unvulDelta != 0)
+            RecordModified(creature, InvertibleDebuff.Vulnerable);
+        await RaiseClearedIfZeroed(ctx, creature, curVul, netVul);
     }
 
     public static (int netShaken, int netUnshaken) ComputeNetShaken(int curShaken, int curUnshaken, int deltaShaken, int deltaUnshaken)
@@ -213,6 +249,9 @@ public static class EmotionalExpression
             await PowerCmd.Apply<ShakenPower>(ctx, creature, shakenDelta, creature, card, false);
         if (unshakenDelta != 0)
             await PowerCmd.Apply<UnshakenPower>(ctx, creature, unshakenDelta, creature, card, false);
+        if (shakenDelta != 0 || unshakenDelta != 0)
+            RecordModified(creature, InvertibleDebuff.Shaken);
+        await RaiseClearedIfZeroed(ctx, creature, curShaken, netShaken);
     }
 
     public static (int netLimited, int netUnlimited) ComputeNetLimited(int curLimited, int curUnlimited, int deltaLimited, int deltaUnlimited)
@@ -229,6 +268,15 @@ public static class EmotionalExpression
         int limitedAmount = Math.Min(curLimited, max);
         if (limitedAmount <= 0) return (curLimited, curUnlimited);
         return ComputeNetLimited(curLimited, curUnlimited, -limitedAmount, limitedAmount);
+    }
+
+    // Apply Limited to self. Cancels against existing Unlimited.
+    public static async Task ApplyLimitedToSelf(PlayerChoiceContext ctx, Creature creature, int stacks, CardModel? card)
+    {
+        int curLimited = creature.GetPowerAmount<LimitedPower>();
+        int curUnlimited = creature.GetPowerAmount<UnlimitedPower>();
+        var (netLimited, netUnlimited) = ComputeNetLimited(curLimited, curUnlimited, stacks, 0);
+        await AdjustLimitedPowers(ctx, creature, card, curLimited, curUnlimited, netLimited, netUnlimited);
     }
 
     public static async Task ConvertLimitedToUnlimited(PlayerChoiceContext ctx, Creature creature, int max = int.MaxValue)
@@ -249,5 +297,208 @@ public static class EmotionalExpression
             await PowerCmd.Apply<LimitedPower>(ctx, creature, limitedDelta, creature, card, false);
         if (unlimitedDelta != 0)
             await PowerCmd.Apply<UnlimitedPower>(ctx, creature, unlimitedDelta, creature, card, false);
+        if (limitedDelta != 0 || unlimitedDelta != 0)
+            RecordModified(creature, InvertibleDebuff.Limited);
+        await RaiseClearedIfZeroed(ctx, creature, curLimited, netLimited);
+    }
+
+    // Jaded/Unjaded — same shape as Limited/Unlimited, throttling next turn's Energy instead of draw.
+
+    public static (int netJaded, int netUnjaded) ComputeNetJaded(int curJaded, int curUnjaded, int deltaJaded, int deltaUnjaded)
+    {
+        int totalJaded = curJaded + deltaJaded;
+        int totalUnjaded = curUnjaded + deltaUnjaded;
+        if (totalJaded >= totalUnjaded)
+            return (totalJaded - totalUnjaded, 0);
+        return (0, totalUnjaded - totalJaded);
+    }
+
+    public static (int netJaded, int netUnjaded) ComputeJadedConversion(int curJaded, int curUnjaded, int max)
+    {
+        int jadedAmount = Math.Min(curJaded, max);
+        if (jadedAmount <= 0) return (curJaded, curUnjaded);
+        return ComputeNetJaded(curJaded, curUnjaded, -jadedAmount, jadedAmount);
+    }
+
+    // Apply Jaded to self. Cancels against existing Unjaded.
+    public static async Task ApplyJadedToSelf(PlayerChoiceContext ctx, Creature creature, int stacks, CardModel? card)
+    {
+        int curJaded = creature.GetPowerAmount<JadedPower>();
+        int curUnjaded = creature.GetPowerAmount<UnjadedPower>();
+        var (netJaded, netUnjaded) = ComputeNetJaded(curJaded, curUnjaded, stacks, 0);
+        await AdjustJadedPowers(ctx, creature, card, curJaded, curUnjaded, netJaded, netUnjaded);
+    }
+
+    public static async Task ConvertJadedToUnjaded(PlayerChoiceContext ctx, Creature creature, int max = int.MaxValue)
+    {
+        int curJaded = creature.GetPowerAmount<JadedPower>();
+        if (curJaded <= 0 || max <= 0) return;
+        int curUnjaded = creature.GetPowerAmount<UnjadedPower>();
+        var (netJaded, netUnjaded) = ComputeJadedConversion(curJaded, curUnjaded, max);
+        await AdjustJadedPowers(ctx, creature, null, curJaded, curUnjaded, netJaded, netUnjaded);
+    }
+
+    private static async Task AdjustJadedPowers(PlayerChoiceContext ctx, Creature creature, CardModel? card,
+        int curJaded, int curUnjaded, int netJaded, int netUnjaded)
+    {
+        int jadedDelta = netJaded - curJaded;
+        int unjadedDelta = netUnjaded - curUnjaded;
+        if (jadedDelta != 0)
+            await PowerCmd.Apply<JadedPower>(ctx, creature, jadedDelta, creature, card, false);
+        if (unjadedDelta != 0)
+            await PowerCmd.Apply<UnjadedPower>(ctx, creature, unjadedDelta, creature, card, false);
+        if (jadedDelta != 0 || unjadedDelta != 0)
+            RecordModified(creature, InvertibleDebuff.Jaded);
+        await RaiseClearedIfZeroed(ctx, creature, curJaded, netJaded);
+    }
+
+    // Sum of the 5 self-debuff flavors currently on a creature — the scaling metric used by
+    // "Project"-style cards (Apply [Debuff] equal to the sum of your invertible debuffs).
+    // Deliberately only the 5 flavors the Understudy's own cards generate (Weak, Vulnerable,
+    // Shaken, Limited, Jaded) — Frail/Strength/Dexterity are Invert-recognized but never part of
+    // this sum, matching how the mechanic has been scoped throughout design.
+    public static int SumOfInvertibleDebuffs(Creature creature) =>
+        creature.GetPowerAmount<WeakPower>()
+        + creature.GetPowerAmount<VulnerablePower>()
+        + creature.GetPowerAmount<ShakenPower>()
+        + creature.GetPowerAmount<LimitedPower>()
+        + creature.GetPowerAmount<JadedPower>();
+
+    // ── Invert dispatcher ────────────────────────────────────────────────────────────────────
+    //
+    // "Last modified invertible debuff" tracking, combat-scoped like IntenseModifier's own static
+    // counter. Updated by every Adjust*Powers method above whenever it actually changes something,
+    // covering every Understudy card's own self-application/inversion. Known limitation: this does
+    // NOT observe debuffs inflicted by an enemy or another mod directly on the corresponding base
+    // Power classes (WeakPower/VulnerablePower are base-game types we can't add hooks to) — only
+    // this deck's own Apply/Convert calls update the tracker. Acceptable for now; broadening this
+    // to a fully general "any source" observer would need a dedicated always-attached Power
+    // overriding AfterModifyingPowerAmountReceived, which is a larger lift than this pass covers.
+    private static ICombatState? _lastCombat;
+    private static InvertibleDebuff? _lastModifiedDebuff;
+
+    private static void RecordModified(Creature creature, InvertibleDebuff debuff)
+    {
+        var combat = creature.CombatState;
+        if (!ReferenceEquals(combat, _lastCombat))
+            _lastCombat = combat;
+        _lastModifiedDebuff = debuff;
+    }
+
+    // Invert up to `max` stacks of whichever invertible debuff was last modified (by any of this
+    // class's own Apply/Convert calls) in the current combat. No-op if nothing has been modified
+    // yet, or if tracked state belongs to a different (e.g. already-ended) combat.
+    public static async Task InvertLastModified(PlayerChoiceContext ctx, Creature creature, int max)
+    {
+        if (_lastModifiedDebuff == null || !ReferenceEquals(_lastCombat, creature.CombatState)) return;
+        await InvertDebuff(ctx, creature, _lastModifiedDebuff.Value, max);
+    }
+
+    // Invert the last modified invertible debuff (as InvertLastModified), then grant `bonus`
+    // additional stacks of whichever buff was just gained by that inversion — Everything I've
+    // Got's "gain X more stacks of the buff gained this way."
+    public static async Task InvertLastModifiedWithBonus(PlayerChoiceContext ctx, Creature creature, int invertMax, int bonus)
+    {
+        if (_lastModifiedDebuff == null || !ReferenceEquals(_lastCombat, creature.CombatState)) return;
+        var debuff = _lastModifiedDebuff.Value;
+        await InvertDebuff(ctx, creature, debuff, invertMax);
+        if (bonus > 0) await GrantBonusBuff(ctx, creature, debuff, bonus);
+    }
+
+    private static async Task GrantBonusBuff(PlayerChoiceContext ctx, Creature creature, InvertibleDebuff debuff, int bonus)
+    {
+        switch (debuff)
+        {
+            case InvertibleDebuff.Weak:
+                await PowerCmd.Apply<UnweakPower>(ctx, creature, bonus, creature, null, false);
+                break;
+            case InvertibleDebuff.Vulnerable:
+                await PowerCmd.Apply<UnvulnerablePower>(ctx, creature, bonus, creature, null, false);
+                break;
+            case InvertibleDebuff.Shaken:
+                await PowerCmd.Apply<UnshakenPower>(ctx, creature, bonus, creature, null, false);
+                break;
+            case InvertibleDebuff.Limited:
+                await PowerCmd.Apply<UnlimitedPower>(ctx, creature, bonus, creature, null, false);
+                break;
+            case InvertibleDebuff.Jaded:
+                await PowerCmd.Apply<UnjadedPower>(ctx, creature, bonus, creature, null, false);
+                break;
+            case InvertibleDebuff.Frail:
+                break;
+            case InvertibleDebuff.Strength:
+                await PowerCmd.Apply<StrengthPower>(ctx, creature, bonus, creature, null, false);
+                break;
+            case InvertibleDebuff.Dexterity:
+                await PowerCmd.Apply<DexterityPower>(ctx, creature, bonus, creature, null, false);
+                break;
+        }
+    }
+
+    // Invert up to `maxEach` stacks of every invertible debuff the creature currently has any
+    // stacks of (Coda's "each invertible debuff you have").
+    public static async Task InvertEach(PlayerChoiceContext ctx, Creature creature, int maxEach)
+    {
+        foreach (InvertibleDebuff debuff in Enum.GetValues<InvertibleDebuff>())
+            await InvertDebuff(ctx, creature, debuff, maxEach);
+    }
+
+    private static async Task InvertDebuff(PlayerChoiceContext ctx, Creature creature, InvertibleDebuff debuff, int max)
+    {
+        switch (debuff)
+        {
+            case InvertibleDebuff.Weak:
+                await ConvertWeakToUnweak(ctx, creature, max);
+                break;
+            case InvertibleDebuff.Vulnerable:
+                await ConvertVulnerableToUnvulnerable(ctx, creature, max);
+                break;
+            case InvertibleDebuff.Shaken:
+                await ConvertShakenToUnshaken(ctx, creature, max);
+                break;
+            case InvertibleDebuff.Limited:
+                await ConvertLimitedToUnlimited(ctx, creature, max);
+                break;
+            case InvertibleDebuff.Jaded:
+                await ConvertJadedToUnjaded(ctx, creature, max);
+                break;
+            case InvertibleDebuff.Frail:
+                // Not implemented in this codebase yet — no-op until a Frail/Unfrail pair exists.
+                break;
+            case InvertibleDebuff.Strength:
+                await InvertStrengthSign(ctx, creature, max);
+                break;
+            case InvertibleDebuff.Dexterity:
+                await InvertDexteritySign(ctx, creature, max);
+                break;
+        }
+    }
+
+    // ── Strength/Dexterity same-Power sign-flip ─────────────────────────────────────────────
+    //
+    // Unlike the 5 pairs above, Strength/Dexterity have no separate "Un-" Power — only negative
+    // stacks on the same Power convert, positive stacks are untouched. Confirmed formula: for
+    // Invert N against a Power currently at value V, convert = min(N, max(0, -V)),
+    // newValue = V + 2*convert (each converted stack removes 1 negative and adds 1 positive).
+    public static (int converted, int newValue) ComputeSignFlip(int current, int max)
+    {
+        int converted = Math.Min(max, Math.Max(0, -current));
+        return (converted, current + 2 * converted);
+    }
+
+    public static async Task InvertStrengthSign(PlayerChoiceContext ctx, Creature creature, int max)
+    {
+        int cur = creature.GetPowerAmount<StrengthPower>();
+        var (converted, _) = ComputeSignFlip(cur, max);
+        if (converted <= 0) return;
+        await PowerCmd.Apply<StrengthPower>(ctx, creature, 2 * converted, creature, null, false);
+    }
+
+    public static async Task InvertDexteritySign(PlayerChoiceContext ctx, Creature creature, int max)
+    {
+        int cur = creature.GetPowerAmount<DexterityPower>();
+        var (converted, _) = ComputeSignFlip(cur, max);
+        if (converted <= 0) return;
+        await PowerCmd.Apply<DexterityPower>(ctx, creature, 2 * converted, creature, null, false);
     }
 }
