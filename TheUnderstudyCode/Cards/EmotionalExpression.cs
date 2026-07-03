@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Commands;
@@ -419,31 +420,67 @@ public static class EmotionalExpression
     // ── Invert dispatcher ────────────────────────────────────────────────────────────────────
     //
     // "Last modified invertible debuff" tracking, combat-scoped like IntenseModifier's own static
-    // counter. Updated by every Adjust*Powers method above whenever it actually changes something,
-    // covering every Understudy card's own self-application/inversion. Known limitation: this does
-    // NOT observe debuffs inflicted by an enemy or another mod directly on the corresponding base
-    // Power classes (WeakPower/VulnerablePower are base-game types we can't add hooks to) — only
-    // this deck's own Apply/Convert calls update the tracker. Acceptable for now; broadening this
-    // to a fully general "any source" observer would need a dedicated always-attached Power
-    // overriding AfterModifyingPowerAmountReceived, which is a larger lift than this pass covers.
+    // counter. `_modificationOrder` holds every category touched this combat, most-recent-first.
+    // Updated two ways: (1) every Adjust*Powers method above calls RecordModified directly for
+    // this deck's own self-application/inversion, and (2) InvertTrackerPower — a hidden Power
+    // silently auto-attached to the player (see UnderstudyCard.AfterPlayerTurnStartLate, mirroring
+    // PlannedCounterPower) — observes MegaCrit.Sts2.Core.Hooks.Hook.AfterPowerAmountChanged, a
+    // global broadcast fired for every power amount change regardless of source, and calls
+    // RecordModified for enemy-inflicted or otherwise externally-applied changes too. (1) is
+    // technically redundant with (2) now but kept as a belt-and-suspenders direct call.
     private static ICombatState? _lastCombat;
-    private static InvertibleDebuff? _lastModifiedDebuff;
+    private static readonly List<InvertibleDebuff> _modificationOrder = new();
 
-    private static void RecordModified(Creature creature, InvertibleDebuff debuff)
+    public static void RecordModified(Creature creature, InvertibleDebuff debuff)
     {
         var combat = creature.CombatState;
         if (!ReferenceEquals(combat, _lastCombat))
+        {
             _lastCombat = combat;
-        _lastModifiedDebuff = debuff;
+            _modificationOrder.Clear();
+        }
+        _modificationOrder.Remove(debuff);
+        _modificationOrder.Insert(0, debuff);
     }
 
-    // Invert up to `max` stacks of whichever invertible debuff was last modified (by any of this
-    // class's own Apply/Convert calls) in the current combat. No-op if nothing has been modified
-    // yet, or if tracked state belongs to a different (e.g. already-ended) combat.
+    private static bool IsPresent(Creature creature, InvertibleDebuff debuff) => debuff switch
+    {
+        InvertibleDebuff.Weak => creature.GetPowerAmount<WeakPower>() > 0,
+        InvertibleDebuff.Vulnerable => creature.GetPowerAmount<VulnerablePower>() > 0,
+        InvertibleDebuff.Shaken => creature.GetPowerAmount<ShakenPower>() > 0,
+        InvertibleDebuff.Limited => creature.GetPowerAmount<LimitedPower>() > 0,
+        InvertibleDebuff.Jaded => creature.GetPowerAmount<JadedPower>() > 0,
+        InvertibleDebuff.Frail => creature.GetPowerAmount<FrailPower>() > 0,
+        InvertibleDebuff.Strength => creature.GetPowerAmount<StrengthPower>() < 0,
+        InvertibleDebuff.Dexterity => creature.GetPowerAmount<DexterityPower>() < 0,
+        _ => false
+    };
+
+    // Picks which invertible debuff Invert should act on: the most recently modified one that's
+    // still actually present (walking back through modification history, since the very latest
+    // entry may have already been fully cleared by something else), or — if nothing tracked is
+    // present, e.g. tracking missed it or nothing has been modified yet this combat — falls back
+    // to any currently-present invertible debuff at all, in fixed enum order. Returns null only
+    // if the creature has no invertible debuff whatsoever right now.
+    private static InvertibleDebuff? PickDebuffToInvert(Creature creature)
+    {
+        if (ReferenceEquals(_lastCombat, creature.CombatState))
+            foreach (var debuff in _modificationOrder)
+                if (IsPresent(creature, debuff)) return debuff;
+
+        foreach (InvertibleDebuff debuff in Enum.GetValues<InvertibleDebuff>())
+            if (IsPresent(creature, debuff)) return debuff;
+
+        return null;
+    }
+
+    // Invert up to `max` stacks of whichever invertible debuff Invert should currently act on
+    // (see PickDebuffToInvert). No-op only if the creature has no invertible debuff at all.
     public static async Task InvertLastModified(PlayerChoiceContext ctx, Creature creature, int max)
     {
-        if (_lastModifiedDebuff == null || !ReferenceEquals(_lastCombat, creature.CombatState)) return;
-        await InvertDebuff(ctx, creature, _lastModifiedDebuff.Value, max);
+        var debuff = PickDebuffToInvert(creature);
+        if (debuff == null) return;
+        await InvertDebuff(ctx, creature, debuff.Value, max);
     }
 
     // Invert the last modified invertible debuff (as InvertLastModified), then grant `bonus`
@@ -451,10 +488,10 @@ public static class EmotionalExpression
     // Got's "gain X more stacks of the buff gained this way."
     public static async Task InvertLastModifiedWithBonus(PlayerChoiceContext ctx, Creature creature, int invertMax, int bonus)
     {
-        if (_lastModifiedDebuff == null || !ReferenceEquals(_lastCombat, creature.CombatState)) return;
-        var debuff = _lastModifiedDebuff.Value;
-        await InvertDebuff(ctx, creature, debuff, invertMax);
-        if (bonus > 0) await GrantBonusBuff(ctx, creature, debuff, bonus);
+        var debuff = PickDebuffToInvert(creature);
+        if (debuff == null) return;
+        await InvertDebuff(ctx, creature, debuff.Value, invertMax);
+        if (bonus > 0) await GrantBonusBuff(ctx, creature, debuff.Value, bonus);
     }
 
     private static async Task GrantBonusBuff(PlayerChoiceContext ctx, Creature creature, InvertibleDebuff debuff, int bonus)

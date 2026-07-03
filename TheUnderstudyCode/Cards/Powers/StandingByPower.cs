@@ -26,8 +26,8 @@ public class StandingByPower : CustomPowerModel
 
     public override List<(string, string)> Localization => new PowerLoc(
         "Standing By",
-        "Whenever a card becomes Unplayable, remove Unplayable from 1 other random attack or skill in hand.",
-        "Whenever a card becomes Unplayable, remove Unplayable from 1 other attack or skill of your choice in hand.");
+        "Whenever a card becomes [gold]Unplayable[/gold], remove [gold]Unplayable[/gold] from 1 other random attack or skill in hand.",
+        "Whenever a card becomes [gold]Unplayable[/gold], remove [gold]Unplayable[/gold] from 1 other attack or skill of your choice in hand.");
 
     private readonly List<CardModel> _pending = new();
 

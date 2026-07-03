@@ -67,11 +67,11 @@
 
   "THEUNDERSTUDY-REWRITE.title": "Rewrite",
   "THEUNDERSTUDY-REWRITE.description": "Deal {Damage:diff()} damage.\nRemove [gold]Unplayable[/gold] from 2 attacks and skills in hand.",
-  "THEUNDERSTUDY-REWRITE.selectionPrompt": "Choose cards to remove Unplayable.",
+  "THEUNDERSTUDY-REWRITE.selectionPrompt": "Choose cards to remove [gold]Unplayable[/gold].",
 
   "THEUNDERSTUDY-TAKE_TWO.title": "Take Two",
   "THEUNDERSTUDY-TAKE_TWO.description": "Remove [gold]Unplayable[/gold] from {Select:diff()} attack or skill in hand.",
-  "THEUNDERSTUDY-TAKE_TWO.selectionPrompt": "Choose cards to remove Unplayable.",
+  "THEUNDERSTUDY-TAKE_TWO.selectionPrompt": "Choose cards to remove [gold]Unplayable[/gold].",
 
   "THEUNDERSTUDY-FLOURISH.title": "Flourish",
   "THEUNDERSTUDY-FLOURISH.description": "Deal {Damage:diff()} damage twice.\nApply 1 [gold]Limited[/gold] to yourself.",
@@ -85,7 +85,7 @@
 
   "THEUNDERSTUDY-STANDING_BY.title": "Standing By",
   "THEUNDERSTUDY-STANDING_BY.description": "Whenever a card becomes [gold]Unplayable[/gold], remove [gold]Unplayable[/gold] from 1 {IfUpgraded:show:attack or skill of your choice|random attack or skill} in hand.",
-  "THEUNDERSTUDY-STANDING_BY.selectionPrompt": "Choose a card to remove Unplayable from.",
+  "THEUNDERSTUDY-STANDING_BY.selectionPrompt": "Choose a card to remove [gold]Unplayable[/gold] from.",
 
   "THEUNDERSTUDY-ARRANGEMENT.title": "Arrangement",
   "THEUNDERSTUDY-ARRANGEMENT.description": "Deal {Damage:diff()} damage.\nApply [gold]Planned[/gold] to 2 attacks and skills in hand.",
@@ -113,7 +113,7 @@
   "THEUNDERSTUDY-CODA.description": "Deal {Damage:diff()} damage.\n[gold]Invert[/gold] 3 of each [gold]invertible[/gold] debuff you have.",
 
   "THEUNDERSTUDY-DRESS_REHEARSAL.title": "Dress Rehearsal",
-  "THEUNDERSTUDY-DRESS_REHEARSAL.description": "Draw {Cards:diff()} cards.\nGain {Energy:energyIcons()}. Apply 1 [gold]Weak[/gold], 1 [gold]Vulnerable[/gold], 1 [gold]Shaken[/gold], 1 [gold]Jaded[/gold], and 1 [gold]Limited[/gold] to yourself.",
+  "THEUNDERSTUDY-DRESS_REHEARSAL.description": "Draw {Cards:diff()} cards. Gain {Energy:energyIcons()}.\nApply 1 [gold]Weak[/gold], 1 [gold]Vulnerable[/gold], 1 [gold]Shaken[/gold], 1 [gold]Jaded[/gold], and 1 [gold]Limited[/gold] to yourself.",
 
   "THEUNDERSTUDY-MASTER_FORM.title": "Master Form",
   "THEUNDERSTUDY-MASTER_FORM.description": "Whenever you apply [gold]Planned[/gold] or [gold]Intense[/gold] to an attack or skill that doesn't have Replay, it gains Replay 1.",
@@ -135,7 +135,7 @@
 
   "THEUNDERSTUDY-TOUCH_UP.title": "Touch Up",
   "THEUNDERSTUDY-TOUCH_UP.description": "Remove [gold]Unplayable[/gold] from 1 attack or skill in hand.\nApply [gold]Intense[/gold] to {IntenseSelect:diff()} attack or skill in hand.",
-  "THEUNDERSTUDY-TOUCH_UP.freeSelectionPrompt": "Choose a card to remove Unplayable from.",
+  "THEUNDERSTUDY-TOUCH_UP.freeSelectionPrompt": "Choose a card to remove [gold]Unplayable[/gold] from.",
   "THEUNDERSTUDY-TOUCH_UP.intenseSelectionPrompt": "Choose cards to make Intense.",
 
   "THEUNDERSTUDY-WIDE_OPEN.title": "Wide Open",

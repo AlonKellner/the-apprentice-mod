@@ -192,6 +192,18 @@ public class PowerClassTests
     }
 
     [Fact]
+    public void InvertTrackerPower_IsBuff_Single_Hidden()
+    {
+        var p = new InvertTrackerPower();
+        Assert.Equal(PowerType.Buff, p.Type);
+        Assert.Equal(PowerStackType.Single, p.StackType);
+        var isVisibleInternal = typeof(InvertTrackerPower)
+            .GetProperty("IsVisibleInternal", BindingFlags.NonPublic | BindingFlags.Instance)!
+            .GetValue(p);
+        Assert.Equal(false, isVisibleInternal);
+    }
+
+    [Fact]
     public void NewPowers_Localization_IsNonEmpty()
     {
         Assert.NotEmpty(new JadedPower().Localization);
@@ -204,5 +216,6 @@ public class PowerClassTests
         Assert.NotEmpty(new TheFirstLessonPower().Localization);
         Assert.NotEmpty(new FullVoicePower().Localization);
         Assert.NotEmpty(new UnfrailPower().Localization);
+        Assert.NotEmpty(new InvertTrackerPower().Localization);
     }
 }
