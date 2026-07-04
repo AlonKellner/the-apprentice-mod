@@ -116,7 +116,7 @@
   "THEUNDERSTUDY-DRESS_REHEARSAL.description": "Draw {Cards:diff()} cards. Gain {Energy:energyIcons()}.\nApply 1 [gold]Weak[/gold], 1 [gold]Vulnerable[/gold], 1 [gold]Shaken[/gold], 1 [gold]Jaded[/gold], and 1 [gold]Limited[/gold] to yourself.",
 
   "THEUNDERSTUDY-MASTER_FORM.title": "Master Form",
-  "THEUNDERSTUDY-MASTER_FORM.description": "Whenever you apply [gold]Planned[/gold] or [gold]Intense[/gold] to an attack or skill that doesn't have Replay, it gains Replay 1.",
+  "THEUNDERSTUDY-MASTER_FORM.description": "Whenever an attack or skill that doesn't have Replay becomes [gold]Unplayable[/gold], it gains Replay 1.",
 
   "THEUNDERSTUDY-HELD_NOTE.title": "Held Note",
   "THEUNDERSTUDY-HELD_NOTE.description": "[gold]Invertible[/gold] debuffs and buffs no longer decrease by 1 each turn.",

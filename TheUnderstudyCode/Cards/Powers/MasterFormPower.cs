@@ -15,24 +15,22 @@ public class MasterFormPower : UnderstudyPower
 
     public override List<(string, string)> Localization => new PowerLoc(
         "Master Form",
-        "Whenever you apply [gold]Planned[/gold] or [gold]Intense[/gold] to an attack or skill that doesn't have Replay, it gains Replay 1.",
-        "Whenever you apply [gold]Planned[/gold] or [gold]Intense[/gold] to an attack or skill that doesn't have Replay, it gains Replay 1.");
+        "Whenever an attack or skill that doesn't have Replay becomes [gold]Unplayable[/gold], it gains Replay 1.",
+        "Whenever an attack or skill that doesn't have Replay becomes [gold]Unplayable[/gold], it gains Replay 1.");
 
     public override Task AfterApplied(Creature? creature, CardModel? cardSource)
     {
-        PlannedModifier.Applied += OnApplied;
-        IntenseModifier.Applied += OnApplied;
+        UnplayableModifier.Applied += OnUnplayableApplied;
         return Task.CompletedTask;
     }
 
     public override Task AfterRemoved(Creature oldOwner)
     {
-        PlannedModifier.Applied -= OnApplied;
-        IntenseModifier.Applied -= OnApplied;
+        UnplayableModifier.Applied -= OnUnplayableApplied;
         return Task.CompletedTask;
     }
 
-    private void OnApplied(CardModel card)
+    private void OnUnplayableApplied(CardModel card)
     {
         if (card.Owner?.Creature != Owner) return;
         if (card.BaseReplayCount == 0) card.BaseReplayCount = 1;

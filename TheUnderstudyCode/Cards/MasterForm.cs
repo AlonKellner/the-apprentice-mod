@@ -14,8 +14,7 @@ public class MasterForm : UnderstudyCard
     {
         WithCostUpgradeBy(-1);
         WithPower<MasterFormPower>(1, 1);
-        WithTip(UnderstudyKeywords.Planned);
-        WithTip(UnderstudyKeywords.Intense);
+        WithTip(CardKeyword.Unplayable);
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
