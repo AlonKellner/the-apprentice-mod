@@ -5,9 +5,9 @@ using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
-using MegaCrit.Sts2.Core.Logging;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Powers;
+using TheUnderstudy.TheUnderstudyCode.Extensions;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 
@@ -55,7 +55,11 @@ public class FortissimoPower : UnderstudyPower
     public override Task BeforePowerAmountChanged(PowerModel power, decimal amount, Creature target, Creature? applier, CardModel? cardSource)
     {
         if (!_isRepeating && applier == Owner && amount > 0m && IsInvertiblePower(power))
+        {
+            Invariants.Check(_capturedRawAmount == null, nameof(FortissimoPower) + "." + nameof(BeforePowerAmountChanged),
+                $"a previous capture ({_capturedRawAmount}) was never consumed before a new invertible gain started — nested/overlapping capture");
             _capturedRawAmount = amount;
+        }
         return Task.CompletedTask;
     }
 
@@ -70,12 +74,9 @@ public class FortissimoPower : UnderstudyPower
     {
         if (_isRepeating || applier != Owner || amount <= 0m || !IsInvertiblePower(power)) return;
 
-        if (_capturedRawAmount == null)
-        {
-            Log.Error("FortissimoPower: AfterPowerAmountChanged fired for an invertible gain with no " +
-                      "raw amount captured by BeforePowerAmountChanged — hook ordering assumption broke; " +
-                      "falling back to the post-interception amount, which may under-count repeats.");
-        }
+        Invariants.Check(_capturedRawAmount != null, nameof(FortissimoPower) + "." + nameof(AfterPowerAmountChanged),
+            "fired for an invertible gain with no raw amount captured by BeforePowerAmountChanged — hook " +
+            "ordering assumption broke; falling back to the post-interception amount, which may under-count repeats.");
         decimal rawAmount = _capturedRawAmount ?? amount;
         _capturedRawAmount = null;
 

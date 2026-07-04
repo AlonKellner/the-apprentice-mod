@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using BaseLib.Abstracts;
 using BaseLib.Utils;
@@ -11,7 +12,9 @@ using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Entities.Relics;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization;
+using MegaCrit.Sts2.Core.Logging;
 using TheUnderstudy.TheUnderstudyCode.Character;
+using TheUnderstudy.TheUnderstudyCode.Extensions;
 
 namespace TheUnderstudy.TheUnderstudyCode.Relics;
 
@@ -52,6 +55,10 @@ public abstract class UnderstudyStarterRelic : CustomRelicModel
             await CardPileCmd.Add(card, PileType.Hand, CardPilePosition.Top);
             _grantedThisSetup++;
         }
+
+        Log.Info($"{GetType().Name}.BeforeHandDraw: granted {_grantedThisSetup} card(s) directly to hand (requested {SelectCount})");
+        Invariants.CheckEqual(selected.Count(), _grantedThisSetup, GetType().Name + "." + nameof(BeforeHandDraw),
+            "cards selected vs. cards actually granted to hand");
 
         await ApplyOnTurnOneSetup(choiceContext, player.Creature);
     }

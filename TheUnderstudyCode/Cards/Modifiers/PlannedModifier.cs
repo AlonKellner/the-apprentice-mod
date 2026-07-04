@@ -5,6 +5,7 @@ using BaseLib.Extensions;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Players;
+using MegaCrit.Sts2.Core.Logging;
 using MegaCrit.Sts2.Core.Models;
 using TheUnderstudy.TheUnderstudyCode.Cards;
 using TheUnderstudy.TheUnderstudyCode.Extensions;
@@ -95,6 +96,9 @@ public class PlannedModifier : CardModifier
             var (_, mod, slotSeqIdx) = sorted[i];
             mod.VisualBySeq[slotSeqIdx] = i + 1;
         }
+        int totalVisual = sorted.Select(x => x.mod).Distinct().Sum(m => m.VisualBySeq.Count);
+        Invariants.CheckEqual(sorted.Count, totalVisual, nameof(PlannedModifier) + "." + nameof(AssignVisualIndices),
+            "plan slots vs assigned visual indices");
     }
 
     public static void RefreshVisualIndices(IEnumerable<CardModel> allCards)
@@ -121,9 +125,14 @@ public class PlannedModifier : CardModifier
             mod!.ReinitCollections();
             Applied?.Invoke(card);
         }
-        mod!.SequenceIndices.Add(max + 1);
+        int newSlot = max + 1;
+        mod!.SequenceIndices.Add(newSlot);
+        Invariants.Check(mod.SequenceIndices.Distinct().Count() == mod.SequenceIndices.Count,
+            nameof(PlannedModifier) + "." + nameof(Apply),
+            $"{card.Id} picked up duplicate slot index {newSlot} — SequenceIndices: [{string.Join(",", mod.SequenceIndices)}]");
         if (!card.TryGetModifier<UnplayableModifier>(out _))
             CardModifier.AddModifier<UnplayableModifier>(card);
+        Log.Info($"PlannedModifier.Apply: {card.Id} took slot {newSlot} ({mod.SequenceIndices.Count} slot(s) total on this card)");
         Changed?.Invoke();
     }
 
@@ -132,13 +141,20 @@ public class PlannedModifier : CardModifier
     {
         if (card.TryGetModifier<PlannedModifier>(out var mod))
         {
-            mod.SequenceIndices.Remove(slotSeqIdx);
+            bool removed = mod.SequenceIndices.Remove(slotSeqIdx);
+            Invariants.Check(removed, nameof(PlannedModifier) + "." + nameof(RemoveSlot),
+                $"{card.Id} was asked to remove slot {slotSeqIdx} but it wasn't present — SequenceIndices: [{string.Join(",", mod.SequenceIndices)}]");
             if (mod.SequenceIndices.Count == 0)
             {
                 CardModifier.DirectModifiers(card).Remove(mod);
                 if (card.TryGetModifier<UnplayableModifier>(out var u))
                     CardModifier.DirectModifiers(card).Remove(u);
             }
+        }
+        else
+        {
+            Invariants.Check(false, nameof(PlannedModifier) + "." + nameof(RemoveSlot),
+                $"{card.Id} was asked to remove slot {slotSeqIdx} but has no PlannedModifier at all");
         }
         RefreshVisualIndices(allCards);
         Changed?.Invoke();

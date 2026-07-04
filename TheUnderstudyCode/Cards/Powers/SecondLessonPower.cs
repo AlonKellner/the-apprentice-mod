@@ -13,6 +13,7 @@ using MegaCrit.Sts2.Core.Logging;
 using MegaCrit.Sts2.Core.Models;
 using TheUnderstudy.TheUnderstudyCode.Cards.Afflictions;
 using TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
+using TheUnderstudy.TheUnderstudyCode.Extensions;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 
@@ -67,6 +68,9 @@ public class SecondLessonPower : UnderstudyPower
         Log.Info($"SecondLessonPower[turn {turn}]: AfterPlayerTurnStartLate firing; " +
                   $"Rewarded={Owner.GetPowerAmount<RewardedPower>()}, Punished={Owner.GetPowerAmount<PunishedPower>()}, " +
                   $"drawnThisTurn={_drawnThisTurn.Count}, activeOrders={_activeOrders.Count}");
+        Invariants.CheckEqual(_activeOrders.Count, _activeOrders.Count(c => c.TryGetModifier<OrderModifier>(out _)),
+            nameof(SecondLessonPower) + "." + nameof(AfterPlayerTurnStartLate),
+            "tracked active-Order cards vs. cards still actually carrying OrderModifier");
 
         await ResolveRewardTurn(context, turn);
         await ResolvePunishTurn(context, turn);
@@ -133,6 +137,9 @@ public class SecondLessonPower : UnderstudyPower
         if (side != CombatSide.Player) return;
 
         int turn = Owner.Player?.PlayerCombatState?.TurnNumber ?? -1;
+        Invariants.CheckEqual(_activeOrders.Count, _activeOrders.Count(c => c.TryGetModifier<OrderModifier>(out _)),
+            nameof(SecondLessonPower) + "." + nameof(BeforeSideTurnEnd),
+            "tracked active-Order cards vs. cards still actually carrying OrderModifier");
         foreach (var card in _activeOrders)
         {
             if (card.TryGetModifier<OrderModifier>(out var mod) && !mod!.Resolved)

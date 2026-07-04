@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BaseLib.Abstracts;
+using BaseLib.Extensions;
 using MegaCrit.Sts2.Core.CardSelection;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -11,6 +12,7 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Models;
 using TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
+using TheUnderstudy.TheUnderstudyCode.Extensions;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 
@@ -63,9 +65,17 @@ public class StandingByPower : UnderstudyPower
         var triggers = _pending.ToList();
         _pending.Clear();
 
+        Invariants.Check(triggers.Distinct().Count() == triggers.Count,
+            nameof(StandingByPower) + "." + nameof(AfterCardPlayed),
+            "the pending trigger queue has duplicate cards — OnUnplayableApplied fired twice for the same card");
+
         var player = Owner.Player;
         foreach (var triggeringCard in triggers)
         {
+            Invariants.Check(triggeringCard.TryGetModifier<UnplayableModifier>(out _),
+                nameof(StandingByPower) + "." + nameof(AfterCardPlayed),
+                $"{triggeringCard.Id} queued this trigger by becoming Unplayable, but no longer carries UnplayableModifier by drain time");
+
             var candidates = PileType.Hand.GetPile(player).Cards
                 .Where(c => c != triggeringCard && UnplayableModifier.CanApplyTo(c))
                 .ToList();

@@ -8,6 +8,7 @@ using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.ValueProps;
+using TheUnderstudy.TheUnderstudyCode.Extensions;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 
@@ -47,6 +48,8 @@ public class FinalLessonPower : UnderstudyPower
         if (side != CombatSide.Player || Owner == null) return;
         var owner = Owner;
         var (_, shouldDie) = ComputeCountdown(Amount);
+        Invariants.Check(Amount > 0, nameof(FinalLessonPower) + "." + nameof(BeforeSideTurnEnd),
+            "about to decrement a Counter power that is already at 0 or below");
         await PowerCmd.Decrement(this);
         if (shouldDie) await CreatureCmd.Kill(owner, force: true);
     }

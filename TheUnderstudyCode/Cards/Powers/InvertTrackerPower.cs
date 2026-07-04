@@ -5,9 +5,9 @@ using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
-using MegaCrit.Sts2.Core.Logging;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Powers;
+using TheUnderstudy.TheUnderstudyCode.Extensions;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 
@@ -94,6 +94,10 @@ public class InvertTrackerPower : UnderstudyPower
     {
         modifiedAmount = amount;
         if (target != Owner) return false;
+
+        Invariants.Check(_pending.Consumed <= 0 && _pendingPairSwap == null && _pendingSignFlipSwap == null,
+            nameof(InvertTrackerPower) + "." + nameof(TryModifyPowerAmountReceived),
+            "a previous interception is still pending when a new one is starting — re-entrancy assumption violated");
 
         // Strength/Dexterity sign-flip swap must run before the amount > 0 gate below: a "debuff"
         // gain here is a *negative* amount to this same power, not a positive gain to a separate
@@ -228,9 +232,9 @@ public class InvertTrackerPower : UnderstudyPower
         var toDecrement = ResolvePower(debuff, consumeDebuffSide);
         if (toDecrement == null)
         {
-            Log.Error($"InvertTrackerPower consumed {consumed} stock of {debuff} " +
-                      $"({(consumeDebuffSide ? "debuff" : "buff")} side) via interception, but that " +
-                      "power is now gone — the two are out of sync.");
+            Invariants.Check(false, nameof(InvertTrackerPower) + "." + nameof(AfterModifyingPowerAmountReceived),
+                $"consumed {consumed} stock of {debuff} ({(consumeDebuffSide ? "debuff" : "buff")} side) via " +
+                "interception, but that power is now gone — the two are out of sync.");
             return;
         }
         for (int i = 0; i < consumed; i++)

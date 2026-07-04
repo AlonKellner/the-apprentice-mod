@@ -9,6 +9,7 @@ using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization;
+using TheUnderstudy.TheUnderstudyCode.Extensions;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 
@@ -36,6 +37,10 @@ public class UnlimitedPower : UnderstudyPower
         if (!participants.Contains(Owner)) return;
         Flash();
         if (!HeldNotePower.IsActive(Owner))
+        {
+            Invariants.Check(Amount > 0, nameof(UnlimitedPower) + "." + nameof(AfterSideTurnStart),
+                "about to decrement a Counter power that is already at 0 or below");
             await PowerCmd.Decrement(this);
+        }
     }
 }

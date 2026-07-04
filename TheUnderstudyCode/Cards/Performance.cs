@@ -8,8 +8,10 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
+using MegaCrit.Sts2.Core.Logging;
 using TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
 using TheUnderstudy.TheUnderstudyCode.Cards.Powers;
+using TheUnderstudy.TheUnderstudyCode.Extensions;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
@@ -38,11 +40,17 @@ public class Performance : UnderstudyCard
         // A card with two slots is played twice.
         var allCardsList = PlannedModifier.RelevantCards(player).ToList();
         var planned = PlannedModifier.GetSorted(allCardsList);
+        int expectedPlays = planned.Count;
+        int actualPlays = 0;
+        Log.Info($"Performance.OnPlay: playing {expectedPlays} Planned slot(s)");
         foreach (var (card, _, slotSeqIdx) in planned)
         {
             PlannedModifier.RemoveSlot(card, slotSeqIdx, allCardsList);
             await CardCmd.AutoPlay(context, card, cardPlay.Target, AutoPlayType.None, false, false);
+            actualPlays++;
         }
+        Invariants.CheckEqual(expectedPlays, actualPlays, nameof(Performance) + "." + nameof(OnPlay),
+            "Planned cards auto-played");
         PlannedModifier.InvokeChanged();
 
         // Step 2: Apply Planned to 0-N cards selected from the discard pile (sets up next turn's queue).

@@ -10,6 +10,7 @@ using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization;
 using TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
+using TheUnderstudy.TheUnderstudyCode.Extensions;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 
@@ -34,6 +35,10 @@ public class UnshakenPower : UnderstudyPower
                 CardModifier.DirectModifiers(card).Remove(mod);
         }
         if (!HeldNotePower.IsActive(Owner))
+        {
+            Invariants.Check(Amount > 0, nameof(UnshakenPower) + "." + nameof(AfterPlayerTurnStart),
+                "about to decrement a Counter power that is already at 0 or below");
             await PowerCmd.Decrement(this);
+        }
     }
 }

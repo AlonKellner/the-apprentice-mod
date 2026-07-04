@@ -11,6 +11,7 @@ using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Rooms;
 using TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
+using TheUnderstudy.TheUnderstudyCode.Extensions;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 
@@ -51,6 +52,10 @@ public class PlannedCounterPower : UnderstudyPower
         var allCards = PlannedModifier.RelevantCards(Owner?.Player).ToList();
         PlannedModifier.RefreshVisualIndices(allCards);
         var sorted = PlannedModifier.GetSorted(allCards);
+        int distinctPlannedCards = sorted.Select(x => x.card).Distinct().Count();
+        Invariants.CheckEqual(PlannedModifier.CountIn(allCards), distinctPlannedCards,
+            nameof(PlannedCounterPower) + "." + nameof(UpdateDisplayIfChanged),
+            "Planned card count (CountIn) vs distinct cards appearing in the sorted slot list");
         var current = BuildPlanList(sorted.Select(x => x.card.Title)); // one entry per slot; multi-slot cards appear N times
         if (current == _lastPlanList) return;
         _lastPlanList = current;
