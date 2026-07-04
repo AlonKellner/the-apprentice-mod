@@ -41,6 +41,28 @@ public static class EmotionalExpression
         return (weakApplied - consumed, consumed);
     }
 
+    // Which of the 6 same-shape X/Un-X pairs canonicalPower belongs to, and whether the gain lands on
+    // the debuff (X) side or buff (Un-X) side. Null for anything else, including Strength/Dexterity —
+    // those are sign-flip powers with no separate Un-X type, handled by a distinct mechanism (see
+    // My Own Lesson's use of this in InvertTrackerPower, which branches on StrengthPower/DexterityPower
+    // separately before falling back to this lookup).
+    public static (InvertibleDebuff Debuff, bool IsDebuffSide)? IdentifyPair(PowerModel canonicalPower) => canonicalPower switch
+    {
+        WeakPower => (InvertibleDebuff.Weak, true),
+        UnweakPower => (InvertibleDebuff.Weak, false),
+        VulnerablePower => (InvertibleDebuff.Vulnerable, true),
+        UnvulnerablePower => (InvertibleDebuff.Vulnerable, false),
+        ShakenPower => (InvertibleDebuff.Shaken, true),
+        UnshakenPower => (InvertibleDebuff.Shaken, false),
+        LimitedPower => (InvertibleDebuff.Limited, true),
+        UnlimitedPower => (InvertibleDebuff.Limited, false),
+        JadedPower => (InvertibleDebuff.Jaded, true),
+        UnjadedPower => (InvertibleDebuff.Jaded, false),
+        FrailPower => (InvertibleDebuff.Frail, true),
+        UnfrailPower => (InvertibleDebuff.Frail, false),
+        _ => null
+    };
+
     // Apply Weak to self. InvertTrackerPower's bidirectional interception (canonicalPower is
     // WeakPower) reduces this by any existing Unweak stock and consumes it — no local netting
     // needed here.
@@ -303,36 +325,73 @@ public static class EmotionalExpression
         var debuff = PickDebuffToInvert(creature);
         if (debuff == null) return;
         await InvertDebuff(ctx, creature, debuff.Value, invertMax);
-        if (bonus > 0) await GrantBonusBuff(ctx, creature, debuff.Value, bonus);
+        if (bonus > 0) await ApplyBuffSide(ctx, creature, debuff.Value, bonus);
     }
 
-    private static async Task GrantBonusBuff(PlayerChoiceContext ctx, Creature creature, InvertibleDebuff debuff, int bonus)
+    // Apply `stacks` of the buff side of one of the 8 invertible pairs (the 6 real Un-X powers, or a
+    // positive Strength/Dexterity gain). Used by InvertLastModifiedWithBonus above, and reused by
+    // My Own Lesson's InvertTrackerPower swap and Second Lesson's Rewarded resolution.
+    public static async Task ApplyBuffSide(PlayerChoiceContext ctx, Creature creature, InvertibleDebuff debuff, int stacks)
     {
         switch (debuff)
         {
             case InvertibleDebuff.Weak:
-                await PowerCmd.Apply<UnweakPower>(ctx, creature, bonus, creature, null, false);
+                await PowerCmd.Apply<UnweakPower>(ctx, creature, stacks, creature, null, false);
                 break;
             case InvertibleDebuff.Vulnerable:
-                await PowerCmd.Apply<UnvulnerablePower>(ctx, creature, bonus, creature, null, false);
+                await PowerCmd.Apply<UnvulnerablePower>(ctx, creature, stacks, creature, null, false);
                 break;
             case InvertibleDebuff.Shaken:
-                await PowerCmd.Apply<UnshakenPower>(ctx, creature, bonus, creature, null, false);
+                await PowerCmd.Apply<UnshakenPower>(ctx, creature, stacks, creature, null, false);
                 break;
             case InvertibleDebuff.Limited:
-                await PowerCmd.Apply<UnlimitedPower>(ctx, creature, bonus, creature, null, false);
+                await PowerCmd.Apply<UnlimitedPower>(ctx, creature, stacks, creature, null, false);
                 break;
             case InvertibleDebuff.Jaded:
-                await PowerCmd.Apply<UnjadedPower>(ctx, creature, bonus, creature, null, false);
+                await PowerCmd.Apply<UnjadedPower>(ctx, creature, stacks, creature, null, false);
                 break;
             case InvertibleDebuff.Frail:
-                await PowerCmd.Apply<UnfrailPower>(ctx, creature, bonus, creature, null, false);
+                await PowerCmd.Apply<UnfrailPower>(ctx, creature, stacks, creature, null, false);
                 break;
             case InvertibleDebuff.Strength:
-                await PowerCmd.Apply<StrengthPower>(ctx, creature, bonus, creature, null, false);
+                await PowerCmd.Apply<StrengthPower>(ctx, creature, stacks, creature, null, false);
                 break;
             case InvertibleDebuff.Dexterity:
-                await PowerCmd.Apply<DexterityPower>(ctx, creature, bonus, creature, null, false);
+                await PowerCmd.Apply<DexterityPower>(ctx, creature, stacks, creature, null, false);
+                break;
+        }
+    }
+
+    // Mirror of ApplyBuffSide for the debuff side of one of the 8 invertible pairs (the 6 real X
+    // powers, or a negative Strength/Dexterity gain). Reuses the existing per-pair Apply*ToSelf
+    // methods above for the 6 real pairs (also recording modification history for Invert).
+    public static async Task ApplyDebuffSide(PlayerChoiceContext ctx, Creature creature, InvertibleDebuff debuff, int stacks)
+    {
+        switch (debuff)
+        {
+            case InvertibleDebuff.Weak:
+                await ApplyWeakToSelf(ctx, creature, stacks, null);
+                break;
+            case InvertibleDebuff.Vulnerable:
+                await ApplyVulnerableToSelf(ctx, creature, stacks, null);
+                break;
+            case InvertibleDebuff.Shaken:
+                await ApplyShakenToSelf(ctx, creature, stacks, null);
+                break;
+            case InvertibleDebuff.Limited:
+                await ApplyLimitedToSelf(ctx, creature, stacks, null);
+                break;
+            case InvertibleDebuff.Jaded:
+                await ApplyJadedToSelf(ctx, creature, stacks, null);
+                break;
+            case InvertibleDebuff.Frail:
+                await ApplyFrailToSelf(ctx, creature, stacks, null);
+                break;
+            case InvertibleDebuff.Strength:
+                await PowerCmd.Apply<StrengthPower>(ctx, creature, -stacks, creature, null, false);
+                break;
+            case InvertibleDebuff.Dexterity:
+                await PowerCmd.Apply<DexterityPower>(ctx, creature, -stacks, creature, null, false);
                 break;
         }
     }
@@ -404,5 +463,97 @@ public static class EmotionalExpression
         var (converted, _) = ComputeSignFlip(cur, max);
         if (converted <= 0) return;
         await PowerCmd.Apply<DexterityPower>(ctx, creature, 2 * converted, creature, null, false);
+    }
+
+    // ── Second Lesson's Reward/Punish priority-based pair selection ────────────────────────────
+    //
+    // Every turn, Rewarded/Punished each apply N stacks (N = their own Amount) to one of the 8
+    // invertible pairs, chosen by priority rather than pure chance: Reward prefers an untouched
+    // pair, then one that already has the buff (top it up), and only as a last resort one that
+    // currently has the debuff; Punish mirrors this (untouched, then already-debuffed, then
+    // override an existing buff). Within whichever priority tier is non-empty, the actual pair is
+    // picked at random — this keeps "applies N of *a random* buff/debuff" true while still
+    // respecting the priority rule.
+
+    public enum PairCategory
+    {
+        None,
+        BuffPresent,
+        DebuffPresent
+    }
+
+    public static readonly IReadOnlyList<PairCategory> RewardPriority =
+        new[] { PairCategory.None, PairCategory.BuffPresent, PairCategory.DebuffPresent };
+
+    public static readonly IReadOnlyList<PairCategory> PunishPriority =
+        new[] { PairCategory.None, PairCategory.DebuffPresent, PairCategory.BuffPresent };
+
+    // Pure: given a pair's current debuff-side/buff-side stack amounts, which category it's in.
+    // In steady state a pair is never both (InvertTrackerPower's bidirectional cancellation nets
+    // them down to at most one side), but debuff wins if both are somehow nonzero rather than
+    // silently picking one.
+    public static PairCategory Categorize(int debuffAmount, int buffAmount) =>
+        debuffAmount > 0 ? PairCategory.DebuffPresent : (buffAmount > 0 ? PairCategory.BuffPresent : PairCategory.None);
+
+    // Pure: same 3-way categorization for Strength/Dexterity, whose sign already encodes buff vs
+    // debuff on a single Power (see the sign-flip section above).
+    public static PairCategory CategorizeSigned(int amount) =>
+        amount < 0 ? PairCategory.DebuffPresent : (amount > 0 ? PairCategory.BuffPresent : PairCategory.None);
+
+    // Thin, non-pure wrapper built from live creature state for a single pair — Categorize/
+    // CategorizeSigned above carry the actual logic and are what's unit-tested.
+    public static PairCategory CategorizeForCreature(Creature creature, InvertibleDebuff debuff) => debuff switch
+    {
+        InvertibleDebuff.Weak => Categorize(creature.GetPowerAmount<WeakPower>(), creature.GetPowerAmount<UnweakPower>()),
+        InvertibleDebuff.Vulnerable => Categorize(creature.GetPowerAmount<VulnerablePower>(), creature.GetPowerAmount<UnvulnerablePower>()),
+        InvertibleDebuff.Shaken => Categorize(creature.GetPowerAmount<ShakenPower>(), creature.GetPowerAmount<UnshakenPower>()),
+        InvertibleDebuff.Limited => Categorize(creature.GetPowerAmount<LimitedPower>(), creature.GetPowerAmount<UnlimitedPower>()),
+        InvertibleDebuff.Jaded => Categorize(creature.GetPowerAmount<JadedPower>(), creature.GetPowerAmount<UnjadedPower>()),
+        InvertibleDebuff.Frail => Categorize(creature.GetPowerAmount<FrailPower>(), creature.GetPowerAmount<UnfrailPower>()),
+        InvertibleDebuff.Strength => CategorizeSigned(creature.GetPowerAmount<StrengthPower>()),
+        InvertibleDebuff.Dexterity => CategorizeSigned(creature.GetPowerAmount<DexterityPower>()),
+        _ => PairCategory.None
+    };
+
+    // Builds the full 8-pair category map for a creature, for Reward's selection (or Punish's,
+    // before the First-Lesson exclusion below is applied).
+    public static Dictionary<InvertibleDebuff, PairCategory> BuildCategories(Creature creature)
+    {
+        var result = new Dictionary<InvertibleDebuff, PairCategory>();
+        foreach (InvertibleDebuff debuff in Enum.GetValues<InvertibleDebuff>())
+            result[debuff] = CategorizeForCreature(creature, debuff);
+        return result;
+    }
+
+    // While The First Lesson is active, TheFirstLessonPower zeroes any incoming Weak/Vulnerable
+    // gain outright, so Punish applying either would be a silent no-op — exclude them from Punish's
+    // candidate pool entirely (not just deprioritize) whenever that's the case. Reward's own pool
+    // is never filtered this way: The First Lesson only blocks the debuff side, and Unweak/
+    // Unvulnerable as buffs are never blocked.
+    public static IReadOnlyDictionary<InvertibleDebuff, PairCategory> ExcludeForPunishIfFirstLessonActive(
+        IReadOnlyDictionary<InvertibleDebuff, PairCategory> categories, bool firstLessonActive)
+    {
+        if (!firstLessonActive) return categories;
+        var filtered = new Dictionary<InvertibleDebuff, PairCategory>(categories);
+        filtered.Remove(InvertibleDebuff.Weak);
+        filtered.Remove(InvertibleDebuff.Vulnerable);
+        return filtered;
+    }
+
+    // Searches priorityOrder in order for the first non-empty category, then hands its candidates
+    // to picker (the actual randomness lives outside this pure function, injected as a seam for
+    // testing). Given categories always partitions its keys across the 3 PairCategory values, some
+    // tier is always non-empty as long as categories itself is non-empty.
+    public static InvertibleDebuff PickByPriority(
+        IReadOnlyDictionary<InvertibleDebuff, PairCategory> categories,
+        IReadOnlyList<PairCategory> priorityOrder,
+        Func<IReadOnlyList<InvertibleDebuff>, InvertibleDebuff> picker)
+    {
+        foreach (var category in priorityOrder)
+        {
+            var candidates = categories.Where(kv => kv.Value == category).Select(kv => kv.Key).ToList();
+            if (candidates.Count > 0) return picker(candidates);
+        }
+        throw new InvalidOperationException("PickByPriority: categories did not contain any of the given priority tiers.");
     }
 }

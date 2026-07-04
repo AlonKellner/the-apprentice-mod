@@ -29,6 +29,8 @@ public class CardTooltipKeywordSyncTests
         ["Invert"] = "UnderstudyKeywords.Invert)",
         ["Invertible"] = "UnderstudyKeywords.Invertible)",
         ["Unplayable"] = "CardKeyword.Unplayable)",
+        ["Rewarded"] = "typeof(RewardedPower)",
+        ["Punished"] = "typeof(PunishedPower)",
     };
 
     // Gold-highlighted terms that are just prose emphasis, not mechanics with their own tip

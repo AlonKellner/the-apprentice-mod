@@ -17,6 +17,7 @@ public class TheFirstLesson : UnderstudyCard
         WithPower<TheFirstLessonPower>(1, 1);
         WithTip(typeof(WeakPower));
         WithTip(typeof(VulnerablePower));
+        WithKeyword(CardKeyword.Innate, ConstructedCardModel.UpgradeType.Add);
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)

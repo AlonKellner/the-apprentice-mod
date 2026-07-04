@@ -2,6 +2,7 @@ using System.Reflection;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Powers;
+using TheUnderstudy.TheUnderstudyCode.Cards;
 using TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 using Xunit;
 
@@ -291,4 +292,92 @@ public class PowerClassTests
         Assert.NotEmpty(new UnfrailPower().Localization);
         Assert.NotEmpty(new InvertTrackerPower().Localization);
     }
+
+    [Fact]
+    public void FinalLessonPower_IsBuff_Counter()
+    {
+        var p = new FinalLessonPower();
+        Assert.Equal(PowerType.Buff, p.Type);
+        Assert.Equal(PowerStackType.Counter, p.StackType);
+        Assert.NotEmpty(p.Localization);
+    }
+
+    [Fact]
+    public void FinalLessonPower_OverridesModifyHpLostAfterOstyLate()
+    {
+        Assert.NotNull(typeof(FinalLessonPower).GetMethod(
+            "ModifyHpLostAfterOstyLate", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly));
+    }
+
+    [Fact]
+    public void FinalLessonPower_OverridesBeforeSideTurnEnd()
+    {
+        Assert.NotNull(typeof(FinalLessonPower).GetMethod(
+            "BeforeSideTurnEnd", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly));
+    }
+
+    [Fact]
+    public void MyOwnLessonPower_IsBuff_Single()
+    {
+        var p = new MyOwnLessonPower();
+        Assert.Equal(PowerType.Buff, p.Type);
+        Assert.Equal(PowerStackType.Single, p.StackType);
+        Assert.NotEmpty(p.Localization);
+    }
+
+    // Proves the swap logic correctly stayed centralized on InvertTrackerPower rather than
+    // splitting into a second, competing TryModifyPowerAmountReceived listener (which would race
+    // InvertTrackerPower for interception order with no reliable way to control who wins).
+    [Fact]
+    public void MyOwnLessonPower_HasNoInterceptionOverrides() => AssertHasNoInterceptionOverrides(typeof(MyOwnLessonPower));
+
+    [Fact]
+    public void ApplyBuffSide_And_ApplyDebuffSide_Exist()
+    {
+        Assert.NotNull(typeof(EmotionalExpression).GetMethod("ApplyBuffSide", BindingFlags.Public | BindingFlags.Static));
+        Assert.NotNull(typeof(EmotionalExpression).GetMethod("ApplyDebuffSide", BindingFlags.Public | BindingFlags.Static));
+    }
+
+    [Fact]
+    public void SecondLessonPower_IsBuff_Single()
+    {
+        var p = new SecondLessonPower();
+        Assert.Equal(PowerType.Buff, p.Type);
+        Assert.Equal(PowerStackType.Single, p.StackType);
+        Assert.NotEmpty(p.Localization);
+    }
+
+    [Fact]
+    public void RewardedPower_IsBuff_Counter()
+    {
+        var p = new RewardedPower();
+        Assert.Equal(PowerType.Buff, p.Type);
+        Assert.Equal(PowerStackType.Counter, p.StackType);
+        Assert.NotEmpty(p.Localization);
+    }
+
+    [Fact]
+    public void PunishedPower_IsDebuff_Counter()
+    {
+        var p = new PunishedPower();
+        Assert.Equal(PowerType.Debuff, p.Type);
+        Assert.Equal(PowerStackType.Counter, p.StackType);
+        Assert.NotEmpty(p.Localization);
+    }
+
+    // Plain data-holder Counter powers — proves the per-turn Reward/Punish logic stayed
+    // centralized on SecondLessonPower rather than each power independently reacting to its own
+    // turn-start hook (which would make "Reward resolves first" depend on cross-power hook
+    // iteration order, the same hazard already avoided for My Own Lesson).
+    [Fact]
+    public void RewardedPower_HasNoOverriddenHooks() =>
+        Assert.DoesNotContain(
+            typeof(RewardedPower).GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly),
+            m => !m.IsSpecialName);
+
+    [Fact]
+    public void PunishedPower_HasNoOverriddenHooks() =>
+        Assert.DoesNotContain(
+            typeof(PunishedPower).GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly),
+            m => !m.IsSpecialName);
 }

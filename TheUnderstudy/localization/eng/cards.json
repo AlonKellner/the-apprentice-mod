@@ -157,5 +157,14 @@
   "THEUNDERSTUDY-NIGHT_SHIFT.description": "Deal {Damage:diff()} damage.\nGain {Energy:energyIcons()}.\nApply 1 [gold]Jaded[/gold] to yourself.",
 
   "THEUNDERSTUDY-REMIX.title": "Remix",
-  "THEUNDERSTUDY-REMIX.description": "Play all [gold]Planned[/gold] attacks and skills in a random order."
+  "THEUNDERSTUDY-REMIX.description": "Play all [gold]Planned[/gold] attacks and skills in a random order.",
+
+  "THEUNDERSTUDY-THE_SECOND_LESSON.title": "The Second Lesson",
+  "THEUNDERSTUDY-THE_SECOND_LESSON.description": "Each turn, give an [gold]Order[/gold] to cards you draw. Obeying an Order grants [gold]Rewarded[/gold]; disobeying one grants [gold]Punished[/gold].",
+
+  "THEUNDERSTUDY-THE_FINAL_LESSON.title": "The Final Lesson",
+  "THEUNDERSTUDY-THE_FINAL_LESSON.description": "You cannot lose HP.\nAt the end of your turn, if this is your 3rd turn since playing this, you die.",
+
+  "THEUNDERSTUDY-MY_OWN_LESSON.title": "My Own Lesson",
+  "THEUNDERSTUDY-MY_OWN_LESSON.description": "Whenever you gain an [gold]Invertible[/gold] debuff, gain a buff instead.\nWhenever you gain an [gold]Invertible[/gold] buff, gain a debuff instead."
 }

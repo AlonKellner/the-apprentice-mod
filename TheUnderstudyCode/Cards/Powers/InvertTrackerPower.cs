@@ -66,6 +66,23 @@ public class InvertTrackerPower : UnderstudyPower
     // that same event), so a single pending slot suffices rather than one field per pair.
     private (InvertibleDebuff Debuff, bool ConsumeDebuffSide, int Consumed) _pending;
 
+    // My Own Lesson support ("the roles of invertible buffs and debuffs are reversed"): while
+    // Owner has MyOwnLessonPower, an incoming gain to one of the 8 invertible pairs gets fully
+    // redirected to its opposite instead of net-cancelled against existing stock. Two separate
+    // pending-swap slots because the correction takes a different shape for each case:
+    //  - the 6 real pairs redirect to a *different* power type (Weak -> Unweak), so
+    //    _pendingPairSwap records which pair and which side to land on;
+    //  - Strength/Dexterity have no separate Un-X power — a "debuff" there is just a negative
+    //    amount applied to the *same* power (see EmotionalExpression.TransferDebuffsTo's own
+    //    precedent), so the correction is simply negating the raw amount, tracked by
+    //    _pendingSignFlipSwap.
+    // _isSwapping guards against the corrective PowerCmd.Apply below (which re-enters this same
+    // method for the power it just landed on) re-triggering the reversed branch again, which would
+    // otherwise ping-pong forever.
+    private (InvertibleDebuff Debuff, bool ApplyToDebuffSide, int RawAmount)? _pendingPairSwap;
+    private (bool IsStrength, int RawAmount)? _pendingSignFlipSwap;
+    private bool _isSwapping;
+
     // canonicalPower is whichever of the 12 powers (6 pairs) is receiving a gain right now. Work
     // out which pair it belongs to and which side is on the receiving end, then reduce the
     // incoming amount by the *opposing* side's current stock, consuming that much of it via
@@ -76,7 +93,31 @@ public class InvertTrackerPower : UnderstudyPower
         PowerModel canonicalPower, Creature target, decimal amount, Creature? applier, out decimal modifiedAmount)
     {
         modifiedAmount = amount;
-        if (target != Owner || amount <= 0m) return false;
+        if (target != Owner) return false;
+
+        // Strength/Dexterity sign-flip swap must run before the amount > 0 gate below: a "debuff"
+        // gain here is a *negative* amount to this same power, not a positive gain to a separate
+        // power, so it would otherwise never reach the reversed-mode logic at all.
+        if (!_isSwapping && amount != 0m && canonicalPower is StrengthPower or DexterityPower
+            && Owner.GetPowerAmount<MyOwnLessonPower>() > 0)
+        {
+            _pendingSignFlipSwap = (canonicalPower is StrengthPower, (int)amount);
+            modifiedAmount = 0m;
+            return true;
+        }
+
+        if (amount <= 0m) return false;
+
+        if (!_isSwapping && Owner.GetPowerAmount<MyOwnLessonPower>() > 0)
+        {
+            var pair = EmotionalExpression.IdentifyPair(canonicalPower);
+            if (pair != null)
+            {
+                _pendingPairSwap = (pair.Value.Debuff, !pair.Value.IsDebuffSide, (int)amount);
+                modifiedAmount = 0m;
+                return true;
+            }
+        }
 
         (int reduced, int consumed) result;
         switch (canonicalPower)
@@ -140,6 +181,46 @@ public class InvertTrackerPower : UnderstudyPower
 
     public override async Task AfterModifyingPowerAmountReceived(PowerModel power)
     {
+        if (_pendingSignFlipSwap != null)
+        {
+            var (isStrength, rawAmount) = _pendingSignFlipSwap.Value;
+            _pendingSignFlipSwap = null;
+            _isSwapping = true;
+            try
+            {
+                var ctx = new ThrowingPlayerChoiceContext();
+                if (isStrength)
+                    await PowerCmd.Apply<StrengthPower>(ctx, Owner, -rawAmount, Owner, null, false);
+                else
+                    await PowerCmd.Apply<DexterityPower>(ctx, Owner, -rawAmount, Owner, null, false);
+            }
+            finally
+            {
+                _isSwapping = false;
+            }
+            return;
+        }
+
+        if (_pendingPairSwap != null)
+        {
+            var (debuffPair, applyToDebuffSide, rawAmount) = _pendingPairSwap.Value;
+            _pendingPairSwap = null;
+            _isSwapping = true;
+            try
+            {
+                var ctx = new ThrowingPlayerChoiceContext();
+                if (applyToDebuffSide)
+                    await EmotionalExpression.ApplyDebuffSide(ctx, Owner, debuffPair, rawAmount);
+                else
+                    await EmotionalExpression.ApplyBuffSide(ctx, Owner, debuffPair, rawAmount);
+            }
+            finally
+            {
+                _isSwapping = false;
+            }
+            return;
+        }
+
         if (_pending.Consumed <= 0) return;
         var (debuff, consumeDebuffSide, consumed) = _pending;
         _pending = default;
