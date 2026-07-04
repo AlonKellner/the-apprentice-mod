@@ -87,27 +87,29 @@ public static class EmotionalExpression
     // at the moment this call (and each Fortissimo repeat of it) actually lands. This is what makes
     // the amount of cancellation depend on how much debuff is left over after a capped Invert,
     // instead of a single precomputed net.
-    public static async Task ConvertWeakToUnweak(PlayerChoiceContext ctx, Creature creature, int max = int.MaxValue)
+    public static async Task<int> ConvertWeakToUnweak(PlayerChoiceContext ctx, Creature creature, int max = int.MaxValue)
     {
         int curWeak = creature.GetPowerAmount<WeakPower>();
         int removeAmount = Math.Min(curWeak, max);
-        if (removeAmount <= 0) return;
+        if (removeAmount <= 0) return 0;
         await PowerCmd.Apply<WeakPower>(ctx, creature, -removeAmount, creature, null, false);
         await PowerCmd.Apply<UnweakPower>(ctx, creature, removeAmount, creature, null, false);
         RecordModified(creature, InvertibleDebuff.Weak);
         await RaiseClearedIfZeroed(ctx, creature, curWeak, creature.GetPowerAmount<WeakPower>());
+        return removeAmount;
     }
 
     // Mirror of ConvertWeakToUnweak for Vulnerable/Unvulnerable.
-    public static async Task ConvertVulnerableToUnvulnerable(PlayerChoiceContext ctx, Creature creature, int max = int.MaxValue)
+    public static async Task<int> ConvertVulnerableToUnvulnerable(PlayerChoiceContext ctx, Creature creature, int max = int.MaxValue)
     {
         int curVul = creature.GetPowerAmount<VulnerablePower>();
         int removeAmount = Math.Min(curVul, max);
-        if (removeAmount <= 0) return;
+        if (removeAmount <= 0) return 0;
         await PowerCmd.Apply<VulnerablePower>(ctx, creature, -removeAmount, creature, null, false);
         await PowerCmd.Apply<UnvulnerablePower>(ctx, creature, removeAmount, creature, null, false);
         RecordModified(creature, InvertibleDebuff.Vulnerable);
         await RaiseClearedIfZeroed(ctx, creature, curVul, creature.GetPowerAmount<VulnerablePower>());
+        return removeAmount;
     }
 
     // Remove up to max Weak from source and apply to target.
@@ -166,15 +168,16 @@ public static class EmotionalExpression
         RecordModified(creature, InvertibleDebuff.Shaken);
     }
 
-    public static async Task ConvertShakenToUnshaken(PlayerChoiceContext ctx, Creature creature, int max = int.MaxValue)
+    public static async Task<int> ConvertShakenToUnshaken(PlayerChoiceContext ctx, Creature creature, int max = int.MaxValue)
     {
         int curShaken = creature.GetPowerAmount<ShakenPower>();
         int removeAmount = Math.Min(curShaken, max);
-        if (removeAmount <= 0) return;
+        if (removeAmount <= 0) return 0;
         await PowerCmd.Apply<ShakenPower>(ctx, creature, -removeAmount, creature, null, false);
         await PowerCmd.Apply<UnshakenPower>(ctx, creature, removeAmount, creature, null, false);
         RecordModified(creature, InvertibleDebuff.Shaken);
         await RaiseClearedIfZeroed(ctx, creature, curShaken, creature.GetPowerAmount<ShakenPower>());
+        return removeAmount;
     }
 
     // Limited/Unlimited — same shape as Weak/Unweak, throttling draw instead of dealt damage.
@@ -186,15 +189,16 @@ public static class EmotionalExpression
         RecordModified(creature, InvertibleDebuff.Limited);
     }
 
-    public static async Task ConvertLimitedToUnlimited(PlayerChoiceContext ctx, Creature creature, int max = int.MaxValue)
+    public static async Task<int> ConvertLimitedToUnlimited(PlayerChoiceContext ctx, Creature creature, int max = int.MaxValue)
     {
         int curLimited = creature.GetPowerAmount<LimitedPower>();
         int removeAmount = Math.Min(curLimited, max);
-        if (removeAmount <= 0) return;
+        if (removeAmount <= 0) return 0;
         await PowerCmd.Apply<LimitedPower>(ctx, creature, -removeAmount, creature, null, false);
         await PowerCmd.Apply<UnlimitedPower>(ctx, creature, removeAmount, creature, null, false);
         RecordModified(creature, InvertibleDebuff.Limited);
         await RaiseClearedIfZeroed(ctx, creature, curLimited, creature.GetPowerAmount<LimitedPower>());
+        return removeAmount;
     }
 
     // Jaded/Unjaded — same shape as Limited/Unlimited, throttling next turn's Energy instead of draw.
@@ -206,15 +210,16 @@ public static class EmotionalExpression
         RecordModified(creature, InvertibleDebuff.Jaded);
     }
 
-    public static async Task ConvertJadedToUnjaded(PlayerChoiceContext ctx, Creature creature, int max = int.MaxValue)
+    public static async Task<int> ConvertJadedToUnjaded(PlayerChoiceContext ctx, Creature creature, int max = int.MaxValue)
     {
         int curJaded = creature.GetPowerAmount<JadedPower>();
         int removeAmount = Math.Min(curJaded, max);
-        if (removeAmount <= 0) return;
+        if (removeAmount <= 0) return 0;
         await PowerCmd.Apply<JadedPower>(ctx, creature, -removeAmount, creature, null, false);
         await PowerCmd.Apply<UnjadedPower>(ctx, creature, removeAmount, creature, null, false);
         RecordModified(creature, InvertibleDebuff.Jaded);
         await RaiseClearedIfZeroed(ctx, creature, curJaded, creature.GetPowerAmount<JadedPower>());
+        return removeAmount;
     }
 
     // Frail/Unfrail — same shape as Weak/Unweak, reducing Block gain instead of dealt damage.
@@ -228,15 +233,16 @@ public static class EmotionalExpression
         RecordModified(creature, InvertibleDebuff.Frail);
     }
 
-    public static async Task ConvertFrailToUnfrail(PlayerChoiceContext ctx, Creature creature, int max = int.MaxValue)
+    public static async Task<int> ConvertFrailToUnfrail(PlayerChoiceContext ctx, Creature creature, int max = int.MaxValue)
     {
         int curFrail = creature.GetPowerAmount<FrailPower>();
         int removeAmount = Math.Min(curFrail, max);
-        if (removeAmount <= 0) return;
+        if (removeAmount <= 0) return 0;
         await PowerCmd.Apply<FrailPower>(ctx, creature, -removeAmount, creature, null, false);
         await PowerCmd.Apply<UnfrailPower>(ctx, creature, removeAmount, creature, null, false);
         RecordModified(creature, InvertibleDebuff.Frail);
         await RaiseClearedIfZeroed(ctx, creature, curFrail, creature.GetPowerAmount<FrailPower>());
+        return removeAmount;
     }
 
     // Sum of the 5 self-debuff flavors currently on a creature — the scaling metric used by
@@ -317,15 +323,19 @@ public static class EmotionalExpression
         await InvertDebuff(ctx, creature, debuff.Value, max);
     }
 
-    // Invert the last modified invertible debuff (as InvertLastModified), then grant `bonus`
-    // additional stacks of whichever buff was just gained by that inversion — Everything I've
-    // Got's "gain X more stacks of the buff gained this way."
-    public static async Task InvertLastModifiedWithBonus(PlayerChoiceContext ctx, Creature creature, int invertMax, int bonus)
+    // Invert the last modified invertible debuff (as InvertLastModified), then re-gain that same
+    // buff, at the same amount just converted, `repeats` additional times as separate applications
+    // — Everything I've Got's "gain the same inverted buff X more times." Separate applications
+    // (rather than one lump sum) so once-per-application triggers (e.g. Full Voice) see `repeats`
+    // distinct events, matching the Fortissimo repeat idiom.
+    public static async Task InvertLastModifiedWithBonus(PlayerChoiceContext ctx, Creature creature, int invertMax, int repeats)
     {
         var debuff = PickDebuffToInvert(creature);
         if (debuff == null) return;
-        await InvertDebuff(ctx, creature, debuff.Value, invertMax);
-        if (bonus > 0) await ApplyBuffSide(ctx, creature, debuff.Value, bonus);
+        int converted = await InvertDebuff(ctx, creature, debuff.Value, invertMax);
+        if (converted <= 0) return;
+        for (int i = 0; i < repeats; i++)
+            await ApplyBuffSide(ctx, creature, debuff.Value, converted);
     }
 
     // Apply `stacks` of the buff side of one of the 8 invertible pairs (the 6 real Un-X powers, or a
@@ -404,36 +414,18 @@ public static class EmotionalExpression
             await InvertDebuff(ctx, creature, debuff, maxEach);
     }
 
-    private static async Task InvertDebuff(PlayerChoiceContext ctx, Creature creature, InvertibleDebuff debuff, int max)
+    private static async Task<int> InvertDebuff(PlayerChoiceContext ctx, Creature creature, InvertibleDebuff debuff, int max) => debuff switch
     {
-        switch (debuff)
-        {
-            case InvertibleDebuff.Weak:
-                await ConvertWeakToUnweak(ctx, creature, max);
-                break;
-            case InvertibleDebuff.Vulnerable:
-                await ConvertVulnerableToUnvulnerable(ctx, creature, max);
-                break;
-            case InvertibleDebuff.Shaken:
-                await ConvertShakenToUnshaken(ctx, creature, max);
-                break;
-            case InvertibleDebuff.Limited:
-                await ConvertLimitedToUnlimited(ctx, creature, max);
-                break;
-            case InvertibleDebuff.Jaded:
-                await ConvertJadedToUnjaded(ctx, creature, max);
-                break;
-            case InvertibleDebuff.Frail:
-                await ConvertFrailToUnfrail(ctx, creature, max);
-                break;
-            case InvertibleDebuff.Strength:
-                await InvertStrengthSign(ctx, creature, max);
-                break;
-            case InvertibleDebuff.Dexterity:
-                await InvertDexteritySign(ctx, creature, max);
-                break;
-        }
-    }
+        InvertibleDebuff.Weak => await ConvertWeakToUnweak(ctx, creature, max),
+        InvertibleDebuff.Vulnerable => await ConvertVulnerableToUnvulnerable(ctx, creature, max),
+        InvertibleDebuff.Shaken => await ConvertShakenToUnshaken(ctx, creature, max),
+        InvertibleDebuff.Limited => await ConvertLimitedToUnlimited(ctx, creature, max),
+        InvertibleDebuff.Jaded => await ConvertJadedToUnjaded(ctx, creature, max),
+        InvertibleDebuff.Frail => await ConvertFrailToUnfrail(ctx, creature, max),
+        InvertibleDebuff.Strength => await InvertStrengthSign(ctx, creature, max),
+        InvertibleDebuff.Dexterity => await InvertDexteritySign(ctx, creature, max),
+        _ => 0
+    };
 
     // ── Strength/Dexterity same-Power sign-flip ─────────────────────────────────────────────
     //
@@ -449,20 +441,22 @@ public static class EmotionalExpression
         return (converted, current + 2 * converted);
     }
 
-    public static async Task InvertStrengthSign(PlayerChoiceContext ctx, Creature creature, int max)
+    public static async Task<int> InvertStrengthSign(PlayerChoiceContext ctx, Creature creature, int max)
     {
         int cur = creature.GetPowerAmount<StrengthPower>();
         var (converted, _) = ComputeSignFlip(cur, max);
-        if (converted <= 0) return;
+        if (converted <= 0) return 0;
         await PowerCmd.Apply<StrengthPower>(ctx, creature, 2 * converted, creature, null, false);
+        return converted;
     }
 
-    public static async Task InvertDexteritySign(PlayerChoiceContext ctx, Creature creature, int max)
+    public static async Task<int> InvertDexteritySign(PlayerChoiceContext ctx, Creature creature, int max)
     {
         int cur = creature.GetPowerAmount<DexterityPower>();
         var (converted, _) = ComputeSignFlip(cur, max);
-        if (converted <= 0) return;
+        if (converted <= 0) return 0;
         await PowerCmd.Apply<DexterityPower>(ctx, creature, 2 * converted, creature, null, false);
+        return converted;
     }
 
     // ── Second Lesson's Reward/Punish priority-based pair selection ────────────────────────────

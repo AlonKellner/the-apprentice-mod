@@ -116,7 +116,7 @@
   "THEUNDERSTUDY-DRESS_REHEARSAL.description": "Draw {Cards:diff()} cards. Gain {Energy:energyIcons()}.\nApply 1 [gold]Weak[/gold], 1 [gold]Vulnerable[/gold], 1 [gold]Shaken[/gold], 1 [gold]Jaded[/gold], and 1 [gold]Limited[/gold] to yourself.",
 
   "THEUNDERSTUDY-MASTER_FORM.title": "Master Form",
-  "THEUNDERSTUDY-MASTER_FORM.description": "Whenever an attack or skill that doesn't have Replay becomes [gold]Unplayable[/gold], it gains Replay 1.",
+  "THEUNDERSTUDY-MASTER_FORM.description": "Whenever an attack or skill without Replay becomes [gold]Unplayable[/gold], it gains Replay 1.",
 
   "THEUNDERSTUDY-HELD_NOTE.title": "Held Note",
   "THEUNDERSTUDY-HELD_NOTE.description": "[gold]Invertible[/gold] debuffs and buffs no longer decrease by 1 each turn.",
@@ -128,7 +128,7 @@
   "THEUNDERSTUDY-FINAL_BAR.description": "Deal {ExtraDamage:diff()} damage for each [gold]Planned[/gold] attack or skill you have.\nExhaust all [gold]Planned[/gold] attacks and skills.",
 
   "THEUNDERSTUDY-EVERYTHING_IVE_GOT.title": "Everything I've Got",
-  "THEUNDERSTUDY-EVERYTHING_IVE_GOT.description": "[gold]Invert[/gold] {IfUpgraded:show:2|1} of the last modified [gold]invertible[/gold] debuff.\nGain X more stacks of the buff gained this way.",
+  "THEUNDERSTUDY-EVERYTHING_IVE_GOT.description": "[gold]Invert[/gold] {IfUpgraded:show:2|1} of the last modified [gold]invertible[/gold] debuff.\nGain the same inverted buff X more times.",
 
   "THEUNDERSTUDY-BIG_BREAK.title": "Big Break",
   "THEUNDERSTUDY-BIG_BREAK.description": "Gain {IfUpgraded:show:3|2} [gold]Vigor[/gold], X times.",
@@ -160,11 +160,11 @@
   "THEUNDERSTUDY-REMIX.description": "Play all [gold]Planned[/gold] attacks and skills in a random order.",
 
   "THEUNDERSTUDY-THE_SECOND_LESSON.title": "The Second Lesson",
-  "THEUNDERSTUDY-THE_SECOND_LESSON.description": "Each turn, give an [gold]Order[/gold] to cards you draw. Obeying an Order grants [gold]Rewarded[/gold]; disobeying one grants [gold]Punished[/gold].",
+  "THEUNDERSTUDY-THE_SECOND_LESSON.description": "Obey my [gold]Orders[/gold].\nIf you do, you'll be [gold]Rewarded[/gold].\nOtherwise, you'll be [gold]Punished[/gold].",
 
   "THEUNDERSTUDY-THE_FINAL_LESSON.title": "The Final Lesson",
-  "THEUNDERSTUDY-THE_FINAL_LESSON.description": "You cannot lose HP.\nAt the end of your turn, if this is your 3rd turn since playing this, you die.",
+  "THEUNDERSTUDY-THE_FINAL_LESSON.description": "Why are you hurting? Stop getting hurt.\nThis will all be over soon. To the count of 3.",
 
   "THEUNDERSTUDY-MY_OWN_LESSON.title": "My Own Lesson",
-  "THEUNDERSTUDY-MY_OWN_LESSON.description": "Whenever you gain an [gold]Invertible[/gold] debuff, gain a buff instead.\nWhenever you gain an [gold]Invertible[/gold] buff, gain a debuff instead."
+  "THEUNDERSTUDY-MY_OWN_LESSON.description": "[gold]Invertible[/gold] debuff gains become buffs.\n[gold]Invertible[/gold] buff gains become debuffs."
 }
