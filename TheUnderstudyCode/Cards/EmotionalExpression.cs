@@ -81,6 +81,14 @@ public static class EmotionalExpression
         RecordModified(creature, InvertibleDebuff.Vulnerable);
     }
 
+    // Apply Unweak to self. Mirror of ApplyWeakToSelf (Unweak is the buff side of the same pair).
+    public static async Task ApplyUnweakToSelf(PlayerChoiceContext ctx, Creature creature, int stacks, CardModel? card)
+    {
+        if (stacks <= 0) return;
+        await PowerCmd.Apply<UnweakPower>(ctx, creature, stacks, creature, card, false);
+        RecordModified(creature, InvertibleDebuff.Weak);
+    }
+
     // Convert up to max WeakPower to UnweakPower. The raw removeAmount (not a pre-reduced value)
     // is what's granted to Unweak — InvertTrackerPower's interception (canonicalPower is
     // UnweakPower) reduces that raw amount by whatever Weak remains after the removal above, live,

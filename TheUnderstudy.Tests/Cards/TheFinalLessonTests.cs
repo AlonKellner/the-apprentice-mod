@@ -20,10 +20,10 @@ public class TheFinalLessonTests
     }
 
     [Fact]
-    public void TheFinalLesson_HasRetainImmediately()
+    public void TheFinalLesson_BaseCard_DoesNotHaveRetain()
     {
         var card = new TheFinalLesson();
-        Assert.Contains(CardKeyword.Retain, card.Keywords);
+        Assert.DoesNotContain(CardKeyword.Retain, card.Keywords);
     }
 
     [Fact]
@@ -34,7 +34,7 @@ public class TheFinalLessonTests
     }
 
     [Fact]
-    public void TheFinalLesson_QueuesInnateKeywordToAddOnUpgrade()
+    public void TheFinalLesson_QueuesRetainKeywordToAddOnUpgrade()
     {
         var card = new TheFinalLesson();
         var field = typeof(ConstructedCardModel).GetField("UpgradeKeywords", BindingFlags.NonPublic | BindingFlags.Instance);
@@ -47,10 +47,24 @@ public class TheFinalLessonTests
             var entryType = entry.GetType();
             var keyword = (CardKeyword)entryType.GetField("Item1")!.GetValue(entry)!;
             int upgradeType = Convert.ToInt32(entryType.GetField("Item2")!.GetValue(entry));
-            if (keyword == CardKeyword.Innate && upgradeType == 1 /* ConstructedCardModel.UpgradeType.Add */)
+            if (keyword == CardKeyword.Retain && upgradeType == 1 /* ConstructedCardModel.UpgradeType.Add */)
                 found = true;
         }
 
-        Assert.True(found, "Expected TheFinalLesson to queue CardKeyword.Innate with UpgradeType.Add.");
+        Assert.True(found, "Expected TheFinalLesson to queue CardKeyword.Retain with UpgradeType.Add.");
+    }
+
+    [Fact]
+    public void TheFinalLesson_DoesNotQueueInnateKeywordOnUpgrade()
+    {
+        var card = new TheFinalLesson();
+        var field = typeof(ConstructedCardModel).GetField("UpgradeKeywords", BindingFlags.NonPublic | BindingFlags.Instance);
+        var upgradeKeywords = (IEnumerable)field!.GetValue(card)!;
+        foreach (var entry in upgradeKeywords)
+        {
+            var entryType = entry.GetType();
+            var keyword = (CardKeyword)entryType.GetField("Item1")!.GetValue(entry)!;
+            Assert.NotEqual(CardKeyword.Innate, keyword);
+        }
     }
 }

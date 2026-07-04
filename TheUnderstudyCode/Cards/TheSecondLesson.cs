@@ -12,8 +12,8 @@ public class TheSecondLesson : UnderstudyCard
 
     public TheSecondLesson() : base(2, CardType.Power, CardRarity.Rare, TargetType.None)
     {
-        WithKeyword(CardKeyword.Innate, ConstructedCardModel.UpgradeType.Add);
-        WithPower<SecondLessonPower>(1, 1);
+        WithKeyword(CardKeyword.Retain, ConstructedCardModel.UpgradeType.Add);
+        WithPower<SecondLessonPower>(1);
         WithTip(typeof(RewardedPower));
         WithTip(typeof(PunishedPower));
     }

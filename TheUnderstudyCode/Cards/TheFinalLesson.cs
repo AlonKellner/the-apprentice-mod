@@ -12,9 +12,8 @@ public class TheFinalLesson : UnderstudyCard
 
     public TheFinalLesson() : base(3, CardType.Power, CardRarity.Rare, TargetType.None)
     {
-        WithKeyword(CardKeyword.Retain, ConstructedCardModel.UpgradeType.None);
-        WithKeyword(CardKeyword.Innate, ConstructedCardModel.UpgradeType.Add);
-        WithPower<FinalLessonPower>(3, 3);
+        WithKeyword(CardKeyword.Retain, ConstructedCardModel.UpgradeType.Add);
+        WithPower<FinalLessonPower>(3);
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)

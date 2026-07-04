@@ -29,8 +29,8 @@ public class SecondLessonPower : UnderstudyPower
 
     public override List<(string, string)> Localization => new PowerLoc(
         "The Second Lesson",
-        "Each turn, give an [gold]Order[/gold] to cards you draw. Obeying grants [gold]Rewarded[/gold]; disobeying grants [gold]Punished[/gold].",
-        "Each turn, give an [gold]Order[/gold] to cards you draw. Obeying grants [gold]Rewarded[/gold]; disobeying grants [gold]Punished[/gold].");
+        "Each turn, some cards will have an [gold]Order[/gold]. Obeying grants [gold]Rewarded[/gold]; disobeying grants [gold]Punished[/gold].",
+        "Each turn, some cards will have an [gold]Order[/gold]. Obeying grants [gold]Rewarded[/gold]; disobeying grants [gold]Punished[/gold].");
 
     private readonly List<CardModel> _drawnThisTurn = new();
 
