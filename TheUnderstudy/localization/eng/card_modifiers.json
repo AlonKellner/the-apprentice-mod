@@ -1,6 +1,6 @@
 {
   "TheUnderstudy:Planned.name": "Planned",
-  "TheUnderstudy:Planned.description": "When a card becomes [gold]Planned[/gold], it also becomes [gold]Unplayable[/gold]. Some cards can play all Planned cards in the order they were planned.",
+  "TheUnderstudy:Planned.description": "When a card becomes [gold]Planned[/gold], it also becomes [gold]Unplayable[/gold]. Some cards can play all [gold]Planned[/gold] cards in the order they were planned.",
   "TheUnderstudy:Intense.name": "Intense",
   "TheUnderstudy:Intense.description": "Becomes [gold]Unplayable[/gold] after being played once. Can still be played via [gold]Planned[/gold].",
   "TheUnderstudy:Unplayable.name": "Unplayable",

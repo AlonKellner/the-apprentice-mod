@@ -7,11 +7,11 @@
 
   "THEUNDERSTUDY-PERFORMANCE.title": "Performance",
   "THEUNDERSTUDY-PERFORMANCE.description": "Play all [gold]Planned[/gold] cards.\nApply [gold]Planned[/gold] to {Select:diff()} attacks and skills in your discard pile.",
-  "THEUNDERSTUDY-PERFORMANCE.selectionPrompt": "Choose cards to make Planned.",
+  "THEUNDERSTUDY-PERFORMANCE.selectionPrompt": "Choose cards to make [gold]Planned[/gold].",
 
   "THEUNDERSTUDY-INTENTION.title": "Intention",
   "THEUNDERSTUDY-INTENTION.description": "Apply [gold]Intense[/gold] to {Select:diff()} attacks and skills.",
-  "THEUNDERSTUDY-INTENTION.selectionPrompt": "Choose cards to make Intense.",
+  "THEUNDERSTUDY-INTENTION.selectionPrompt": "Choose cards to make [gold]Intense[/gold].",
 
   "THEUNDERSTUDY-FREEZE_UP.title": "Freeze Up",
   "THEUNDERSTUDY-FREEZE_UP.description": "Gain {Block:diff()} [gold]Block[/gold].\nApply 1 [gold]Weak[/gold] to yourself.",
@@ -39,16 +39,16 @@
 
   "THEUNDERSTUDY-CUE.title": "Cue",
   "THEUNDERSTUDY-CUE.description": "Draw 1 card.\nApply [gold]Planned[/gold] to {Select:diff()} attack or skill in your hand.",
-  "THEUNDERSTUDY-CUE.selectionPrompt": "Choose cards to make Planned.",
+  "THEUNDERSTUDY-CUE.selectionPrompt": "Choose cards to make [gold]Planned[/gold].",
 
   "THEUNDERSTUDY-REHEARSE.title": "Rehearse",
   "THEUNDERSTUDY-REHEARSE.description": "Apply [gold]Intense[/gold] to {Select:diff()} attacks and skills in your hand.",
-  "THEUNDERSTUDY-REHEARSE.selectionPrompt": "Choose cards to make Intense.",
+  "THEUNDERSTUDY-REHEARSE.selectionPrompt": "Choose cards to make [gold]Intense[/gold].",
 
   "THEUNDERSTUDY-CRAM_SESSION.title": "Cram Session",
   "THEUNDERSTUDY-CRAM_SESSION.description": "Apply [gold]Planned[/gold] to 1 attack or skill in hand.\nApply [gold]Intense[/gold] to {IntenseSelect:diff()} attacks and skills in hand.",
-  "THEUNDERSTUDY-CRAM_SESSION.planSelectionPrompt": "Choose a card to make Planned.",
-  "THEUNDERSTUDY-CRAM_SESSION.intenseSelectionPrompt": "Choose cards to make Intense.",
+  "THEUNDERSTUDY-CRAM_SESSION.planSelectionPrompt": "Choose a card to make [gold]Planned[/gold].",
+  "THEUNDERSTUDY-CRAM_SESSION.intenseSelectionPrompt": "Choose cards to make [gold]Intense[/gold].",
 
   "THEUNDERSTUDY-OVEREXERT.title": "Overexert",
   "THEUNDERSTUDY-OVEREXERT.description": "Gain {Block:diff()} [gold]Block[/gold].\nApply 2 [gold]Limited[/gold] to yourself.",
@@ -81,7 +81,7 @@
 
   "THEUNDERSTUDY-FORESHADOW.title": "Foreshadow",
   "THEUNDERSTUDY-FORESHADOW.description": "Gain {Block:diff()} [gold]Block[/gold].\nApply [gold]Planned[/gold] to {Select:diff()} attack or skill in your draw pile.",
-  "THEUNDERSTUDY-FORESHADOW.selectionPrompt": "Choose cards to make Planned.",
+  "THEUNDERSTUDY-FORESHADOW.selectionPrompt": "Choose cards to make [gold]Planned[/gold].",
 
   "THEUNDERSTUDY-STANDING_BY.title": "Standing By",
   "THEUNDERSTUDY-STANDING_BY.description": "Whenever a card becomes [gold]Unplayable[/gold], remove [gold]Unplayable[/gold] from 1 {IfUpgraded:show:attack or skill of your choice|random attack or skill} in hand.",
@@ -89,13 +89,13 @@
 
   "THEUNDERSTUDY-ARRANGEMENT.title": "Arrangement",
   "THEUNDERSTUDY-ARRANGEMENT.description": "Deal {Damage:diff()} damage.\nApply [gold]Planned[/gold] to 2 attacks and skills in hand.",
-  "THEUNDERSTUDY-ARRANGEMENT.selectionPrompt": "Choose cards to make Planned.",
+  "THEUNDERSTUDY-ARRANGEMENT.selectionPrompt": "Choose cards to make [gold]Planned[/gold].",
 
   "THEUNDERSTUDY-DA_CAPO.title": "Da Capo",
   "THEUNDERSTUDY-DA_CAPO.description": "Deal {Damage:diff()} damage {Repeat:diff()} times.\nApply [gold]Intense[/gold] to this card.",
 
   "THEUNDERSTUDY-ENCORE.title": "Encore",
-  "THEUNDERSTUDY-ENCORE.description": "Play all [gold]Planned[/gold] attacks and skills.\nApply [gold]Planned[/gold] to each attack or skill played this way.",
+  "THEUNDERSTUDY-ENCORE.description": "Play all [gold]Planned[/gold] cards.\nApply [gold]Planned[/gold] to each card played this way.",
 
   "THEUNDERSTUDY-DIMINUENDO.title": "Diminuendo",
   "THEUNDERSTUDY-DIMINUENDO.description": "Apply 2 [gold]Weak[/gold] to yourself.\nGain {Vigor:diff()} [gold]Vigor[/gold].",
@@ -122,10 +122,10 @@
   "THEUNDERSTUDY-HELD_NOTE.description": "[gold]Invertible[/gold] debuffs and buffs no longer decrease by 1 each turn.",
 
   "THEUNDERSTUDY-CURTAIN_CALL.title": "Curtain Call",
-  "THEUNDERSTUDY-CURTAIN_CALL.description": "Play all [gold]Planned[/gold] attacks and skills.",
+  "THEUNDERSTUDY-CURTAIN_CALL.description": "Play all [gold]Planned[/gold] cards.",
 
   "THEUNDERSTUDY-FINAL_BAR.title": "Final Bar",
-  "THEUNDERSTUDY-FINAL_BAR.description": "Deal {ExtraDamage:diff()} damage for each [gold]Planned[/gold] attack or skill you have.\nExhaust all [gold]Planned[/gold] attacks and skills.",
+  "THEUNDERSTUDY-FINAL_BAR.description": "Deal {ExtraDamage:diff()} damage for each [gold]Planned[/gold] card you have.\nExhaust all [gold]Planned[/gold] cards.",
 
   "THEUNDERSTUDY-EVERYTHING_IVE_GOT.title": "Everything I've Got",
   "THEUNDERSTUDY-EVERYTHING_IVE_GOT.description": "[gold]Invert[/gold] {IfUpgraded:show:2|1} of the last modified [gold]invertible[/gold] debuff.\nGain the same inverted buff X more times.",
@@ -136,7 +136,7 @@
   "THEUNDERSTUDY-TOUCH_UP.title": "Touch Up",
   "THEUNDERSTUDY-TOUCH_UP.description": "Remove [gold]Unplayable[/gold] from 1 attack or skill in hand.\nApply [gold]Intense[/gold] to {IntenseSelect:diff()} attack or skill in hand.",
   "THEUNDERSTUDY-TOUCH_UP.freeSelectionPrompt": "Choose a card to remove [gold]Unplayable[/gold] from.",
-  "THEUNDERSTUDY-TOUCH_UP.intenseSelectionPrompt": "Choose cards to make Intense.",
+  "THEUNDERSTUDY-TOUCH_UP.intenseSelectionPrompt": "Choose cards to make [gold]Intense[/gold].",
 
   "THEUNDERSTUDY-WIDE_OPEN.title": "Wide Open",
   "THEUNDERSTUDY-WIDE_OPEN.description": "Deal {Damage:diff()} damage to ALL enemies.\nApply 1 [gold]Vulnerable[/gold] to yourself.",
@@ -157,10 +157,10 @@
   "THEUNDERSTUDY-NIGHT_SHIFT.description": "Deal {Damage:diff()} damage.\nGain {Energy:energyIcons()}.\nApply 1 [gold]Jaded[/gold] to yourself.",
 
   "THEUNDERSTUDY-REMIX.title": "Remix",
-  "THEUNDERSTUDY-REMIX.description": "Play all [gold]Planned[/gold] attacks and skills in a random order.",
+  "THEUNDERSTUDY-REMIX.description": "Play all [gold]Planned[/gold] cards in a random order.",
 
   "THEUNDERSTUDY-THE_SECOND_LESSON.title": "The Second Lesson",
-  "THEUNDERSTUDY-THE_SECOND_LESSON.description": "Obey my [gold]Orders[/gold].\nIf you do, you'll be [gold]Rewarded[/gold].\nOtherwise, you'll be [gold]Punished[/gold].",
+  "THEUNDERSTUDY-THE_SECOND_LESSON.description": "Obey my [red]Orders[/red], and be [gold]Rewarded[/gold].\nOtherwise, you'll be [gold]Punished[/gold].",
 
   "THEUNDERSTUDY-THE_FINAL_LESSON.title": "The Final Lesson",
   "THEUNDERSTUDY-THE_FINAL_LESSON.description": "Why are you hurting? Stop getting hurt.\nThis will all be over soon. To the count of 3.",

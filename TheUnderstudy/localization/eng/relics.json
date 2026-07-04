@@ -1,11 +1,11 @@
 {
   "THEUNDERSTUDY-CONSTANT_STRUGGLE.title": "Constant Struggle",
-  "THEUNDERSTUDY-CONSTANT_STRUGGLE.description": "Start each combat [gold]Weak[/gold]. Select the first card of your initial hand.",
+  "THEUNDERSTUDY-CONSTANT_STRUGGLE.description": "Start each combat [gold]Weak[/gold].\nSelect the first card of your initial hand.",
   "THEUNDERSTUDY-CONSTANT_STRUGGLE.selectionPrompt": "Select a card to add to your hand.",
   "THEUNDERSTUDY-CONSTANT_STRUGGLE.flavor": "The cost of knowing exactly what you need.",
 
   "THEUNDERSTUDY-CONSTANT_GROWTH.title": "Constant Growth",
-  "THEUNDERSTUDY-CONSTANT_GROWTH.description": "Start each combat with 2 [gold]Unweak[/gold]. Select the first 2 cards of your initial hand.",
+  "THEUNDERSTUDY-CONSTANT_GROWTH.description": "Start each combat with 2 [gold]Unweak[/gold].\nSelect the first 2 cards of your initial hand.",
   "THEUNDERSTUDY-CONSTANT_GROWTH.selectionPrompt": "Select 2 cards to add to your hand.",
   "THEUNDERSTUDY-CONSTANT_GROWTH.flavor": "What once weighed you down now lifts you up."
 }

@@ -38,7 +38,16 @@ public class CardTooltipKeywordSyncTests
     // keyword/power name).
     private static readonly HashSet<string> ExcludedTerms = new(StringComparer.OrdinalIgnoreCase) { "Block", "debuff" };
 
+    // Order/Orders (The Second Lesson's per-card affliction) has no ModelDb-backed type BaseLib's
+    // WithTip(...) can resolve — AfflictionModel isn't PowerModel/CardModel/PotionModel/
+    // EnchantmentModel — so it can never satisfy TermToTipSubstring. Instead it's tagged [red]
+    // rather than [gold] to visually mark it as "no hover tip available", and that tagging is
+    // enforced by Card_OrderMentions_AreTaggedRedNotGold below.
     private static readonly Regex GoldTagPattern = new(@"\[gold\](.*?)\[/gold\]", RegexOptions.Compiled);
+    private static readonly Regex RedTagPattern = new(@"\[red\](.*?)\[/red\]", RegexOptions.Compiled);
+    // Capital-O only: distinguishes the Order keyword/affliction from ordinary English word "order"
+    // (e.g. Remix's "in a random order").
+    private static readonly Regex OrderWordPattern = new(@"\bOrders?\b", RegexOptions.Compiled);
 
     private static string RepoRoot => Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", ".."));
 
@@ -120,5 +129,29 @@ public class CardTooltipKeywordSyncTests
         }
 
         Assert.True(mismatches.Count == 0, $"{className}: " + string.Join("; ", mismatches));
+    }
+
+    // Order/Orders must always be tagged [red], never [gold] — it's the one term with no
+    // WithTip(...)-able backing type (see comment on RedTagPattern above), so [red] is how the
+    // description signals "this won't show a hover tip". Applies to every Lesson card (and any
+    // future card) that mentions the word, not just The Second Lesson.
+    [Theory]
+    [MemberData(nameof(AllCardFiles))]
+    public void Card_OrderMentions_AreTaggedRedNotGold(string filePath)
+    {
+        string className = Path.GetFileNameWithoutExtension(filePath);
+        var descriptions = LoadDescriptions();
+        string key = "THEUNDERSTUDY-" + ToScreamingSnakeCase(className);
+        if (!descriptions.TryGetValue(key, out var description)) return;
+
+        var goldTerms = GoldTagPattern.Matches(description!).Select(m => m.Groups[1].Value);
+        Assert.True(goldTerms.All(t => !OrderWordPattern.IsMatch(t)),
+            $"{className}: description tags Order/Orders as [gold] instead of [red]");
+
+        if (!OrderWordPattern.IsMatch(description!)) return;
+
+        var redTerms = RedTagPattern.Matches(description!).Select(m => m.Groups[1].Value);
+        Assert.True(redTerms.Any(t => OrderWordPattern.IsMatch(t)),
+            $"{className}: description mentions Order/Orders but not wrapped in [red]...[/red]");
     }
 }

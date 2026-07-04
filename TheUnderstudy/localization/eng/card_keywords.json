@@ -1,8 +1,8 @@
 {
   "THEUNDERSTUDY-PLANNED.title": "Planned",
-  "THEUNDERSTUDY-PLANNED.description": "When a card becomes [gold]Planned[/gold], it also becomes [gold]Unplayable[/gold]. Some cards can play all Planned cards in the order they were planned.",
+  "THEUNDERSTUDY-PLANNED.description": "When a card becomes [gold]Planned[/gold], it also becomes [gold]Unplayable[/gold]. Some cards can play all [gold]Planned[/gold] cards in the order they were planned.",
   "THEUNDERSTUDY-INTENSE.title": "Intense",
-  "THEUNDERSTUDY-INTENSE.description": "Becomes [gold]Unplayable[/gold] whenever played. Gain 1 additional Block and deal 1 additional damage for each Intense applied this combat.",
+  "THEUNDERSTUDY-INTENSE.description": "Becomes [gold]Unplayable[/gold] whenever played. Gain 1 additional Block and deal 1 additional damage for each [gold]Intense[/gold] applied this combat.",
   "THEUNDERSTUDY-STABLE.title": "Stable",
   "THEUNDERSTUDY-STABLE.description": "May not be modified during combat.",
   "THEUNDERSTUDY-INVERT.title": "Invert",

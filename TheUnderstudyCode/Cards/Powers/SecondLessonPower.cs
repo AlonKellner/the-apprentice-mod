@@ -9,6 +9,7 @@ using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.Logging;
 using MegaCrit.Sts2.Core.Models;
 using TheUnderstudy.TheUnderstudyCode.Cards.Afflictions;
 using TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
@@ -29,8 +30,8 @@ public class SecondLessonPower : UnderstudyPower
 
     public override List<(string, string)> Localization => new PowerLoc(
         "The Second Lesson",
-        "Each turn, some cards will have an [gold]Order[/gold]. Obeying grants [gold]Rewarded[/gold]; disobeying grants [gold]Punished[/gold].",
-        "Each turn, some cards will have an [gold]Order[/gold]. Obeying grants [gold]Rewarded[/gold]; disobeying grants [gold]Punished[/gold].");
+        "Each turn, some cards will have an [red]Order[/red]. Obeying grants [gold]Rewarded[/gold]; disobeying grants [gold]Punished[/gold].",
+        "Each turn, some cards will have an [red]Order[/red]. Obeying grants [gold]Rewarded[/gold]; disobeying grants [gold]Punished[/gold].");
 
     private readonly List<CardModel> _drawnThisTurn = new();
 
@@ -62,23 +63,29 @@ public class SecondLessonPower : UnderstudyPower
     {
         if (player != Owner.Player) return;
 
-        await ResolveRewardTurn(context);
-        await ResolvePunishTurn(context);
-        await AssignOrders(context, player);
+        int turn = player.PlayerCombatState?.TurnNumber ?? -1;
+        Log.Info($"SecondLessonPower[turn {turn}]: AfterPlayerTurnStartLate firing; " +
+                  $"Rewarded={Owner.GetPowerAmount<RewardedPower>()}, Punished={Owner.GetPowerAmount<PunishedPower>()}, " +
+                  $"drawnThisTurn={_drawnThisTurn.Count}, activeOrders={_activeOrders.Count}");
+
+        await ResolveRewardTurn(context, turn);
+        await ResolvePunishTurn(context, turn);
+        await AssignOrders(context, player, turn);
 
         _drawnThisTurn.Clear();
     }
 
-    private async Task ResolveRewardTurn(PlayerChoiceContext ctx)
+    private async Task ResolveRewardTurn(PlayerChoiceContext ctx, int turn)
     {
         var rewarded = Owner.GetPower<RewardedPower>();
         if (rewarded == null || rewarded.Amount <= 0) return;
         var categories = EmotionalExpression.BuildCategories(Owner);
         var debuff = EmotionalExpression.PickByPriority(categories, EmotionalExpression.RewardPriority, PickRandom);
+        Log.Info($"SecondLessonPower[turn {turn}]: applying Reward buff {debuff} x{rewarded.Amount}");
         await EmotionalExpression.ApplyBuffSide(ctx, Owner, debuff, rewarded.Amount);
     }
 
-    private async Task ResolvePunishTurn(PlayerChoiceContext ctx)
+    private async Task ResolvePunishTurn(PlayerChoiceContext ctx, int turn)
     {
         var punished = Owner.GetPower<PunishedPower>();
         if (punished == null || punished.Amount <= 0) return;
@@ -86,28 +93,29 @@ public class SecondLessonPower : UnderstudyPower
         bool firstLessonActive = Owner.GetPowerAmount<TheFirstLessonPower>() > 0;
         var filtered = EmotionalExpression.ExcludeForPunishIfFirstLessonActive(categories, firstLessonActive);
         var debuff = EmotionalExpression.PickByPriority(filtered, EmotionalExpression.PunishPriority, PickRandom);
+        Log.Info($"SecondLessonPower[turn {turn}]: applying Punish debuff {debuff} x{punished.Amount}");
         await EmotionalExpression.ApplyDebuffSide(ctx, Owner, debuff, punished.Amount);
     }
 
     private InvertibleDebuff PickRandom(IReadOnlyList<InvertibleDebuff> candidates) =>
         Owner.Player!.RunState.Rng.CombatCardSelection.NextItem(candidates);
 
-    private async Task AssignOrders(PlayerChoiceContext ctx, Player player)
+    private async Task AssignOrders(PlayerChoiceContext ctx, Player player, int turn)
     {
         var (playThis, dontPlayThis, remaining) = SelectFirstTwoEligible(_drawnThisTurn);
 
-        if (playThis != null) await AttachOrder(playThis, OrderModifier.Kind.PlayThis, null);
-        if (dontPlayThis != null) await AttachOrder(dontPlayThis, OrderModifier.Kind.DontPlayThis, null);
+        if (playThis != null) await AttachOrder(playThis, OrderModifier.Kind.PlayThis, null, turn);
+        if (dontPlayThis != null) await AttachOrder(dontPlayThis, OrderModifier.Kind.DontPlayThis, null, turn);
 
         if (remaining.Count > 0 && player.RunState.Rng.CombatCardSelection.NextInt(4) == 0)
         {
             var flavorCard = player.RunState.Rng.CombatCardSelection.NextItem(remaining)!;
             var flavorText = player.RunState.Rng.CombatCardSelection.NextItem(OrderModifier.FlavorLines)!;
-            await AttachOrder(flavorCard, OrderModifier.Kind.FlavorOnly, flavorText);
+            await AttachOrder(flavorCard, OrderModifier.Kind.FlavorOnly, flavorText, turn);
         }
     }
 
-    private async Task AttachOrder(CardModel card, OrderModifier.Kind kind, string? flavorText)
+    private async Task AttachOrder(CardModel card, OrderModifier.Kind kind, string? flavorText, int turn)
     {
         CardModifier.AddModifier<OrderModifier>(card);
         if (card.TryGetModifier<OrderModifier>(out var mod))
@@ -117,17 +125,20 @@ public class SecondLessonPower : UnderstudyPower
         }
         await CardCmd.Afflict<Order>(card, 1);
         _activeOrders.Add(card);
+        Log.Info($"SecondLessonPower[turn {turn}]: attached Order({kind}) to {card.Id}");
     }
 
     public override async Task BeforeSideTurnEnd(PlayerChoiceContext context, CombatSide side, IEnumerable<Creature> creatures)
     {
         if (side != CombatSide.Player) return;
 
+        int turn = Owner.Player?.PlayerCombatState?.TurnNumber ?? -1;
         foreach (var card in _activeOrders)
         {
             if (card.TryGetModifier<OrderModifier>(out var mod) && !mod!.Resolved)
             {
                 var resolution = OrderModifier.OnTurnEndIfUnresolved(mod.OrderKind);
+                Log.Info($"SecondLessonPower[turn {turn}]: {card.Id}'s Order({mod.OrderKind}) went unresolved to turn end -> {resolution}");
                 if (resolution == OrderModifier.Resolution.Reward)
                     await PowerCmd.Apply<RewardedPower>(context, Owner, 1, Owner, null, false);
                 else if (resolution == OrderModifier.Resolution.Punish)

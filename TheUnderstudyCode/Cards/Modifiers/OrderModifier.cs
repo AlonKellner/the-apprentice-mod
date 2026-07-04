@@ -3,6 +3,7 @@ using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.Logging;
 using MegaCrit.Sts2.Core.Models;
 using TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 
@@ -87,6 +88,8 @@ public class OrderModifier : CardModifier
     {
         WasPlayed = true;
         var resolution = OnCardPlayed(OrderKind);
+        int turn = cardPlay.Card.Owner.Creature.Player?.PlayerCombatState?.TurnNumber ?? -1;
+        Log.Info($"OrderModifier[turn {turn}]: {cardPlay.Card.Id} with Order({OrderKind}) was played -> {resolution}");
         if (resolution == Resolution.None) return;
         Resolved = true;
 
