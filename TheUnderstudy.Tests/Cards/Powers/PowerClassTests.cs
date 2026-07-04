@@ -204,69 +204,47 @@ public class PowerClassTests
         Assert.Equal(PowerStackType.Counter, p.StackType);
     }
 
-    // Bidirectional-interception structural checks, applied identically to all 6 Un-X powers:
-    // each must declare its own TryModifyPowerAmountReceived/AfterModifyingPowerAmountReceived
-    // (not just inherit the no-op base), and override IsVisibleInternal so it starts hidden at
-    // Amount 0 (now that all 6 are always-attached from combat start) and reveals itself once
-    // positive.
+    // Cancellation logic now lives centrally on InvertTrackerPower (see below), not on the 6 Un-X
+    // powers themselves — each Un-X power is a plain buff again: no TryModifyPowerAmountReceived/
+    // AfterModifyingPowerAmountReceived of its own, and no IsVisibleInternal override (so the base
+    // "always visible once attached" applies, matching Strength/Dexterity — they're never attached
+    // while empty anymore, so there's nothing to hide).
 
-    private static void AssertHasBidirectionalInterception(Type powerType)
+    private static void AssertHasNoInterceptionOverrides(Type powerType)
     {
-        Assert.NotNull(powerType.GetMethod(
+        Assert.Null(powerType.GetMethod(
             "TryModifyPowerAmountReceived", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly));
-        Assert.NotNull(powerType.GetMethod(
+        Assert.Null(powerType.GetMethod(
             "AfterModifyingPowerAmountReceived", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly));
-        Assert.NotNull(powerType.GetProperty(
+        Assert.Null(powerType.GetProperty(
             "IsVisibleInternal", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly));
     }
 
-    private static void AssertHiddenAtZero_VisibleWhenPositive(PowerModel p)
-    {
-        var prop = p.GetType().GetProperty("IsVisibleInternal", BindingFlags.NonPublic | BindingFlags.Instance)!;
-        Assert.Equal(0, p.Amount);
-        Assert.Equal(false, prop.GetValue(p));
-    }
+    [Fact]
+    public void UnfrailPower_HasNoInterceptionOverrides() => AssertHasNoInterceptionOverrides(typeof(UnfrailPower));
 
     [Fact]
-    public void UnfrailPower_HasBidirectionalInterception_HiddenAtZero()
-    {
-        AssertHasBidirectionalInterception(typeof(UnfrailPower));
-        AssertHiddenAtZero_VisibleWhenPositive(new UnfrailPower());
-    }
+    public void UnweakPower_HasNoInterceptionOverrides() => AssertHasNoInterceptionOverrides(typeof(UnweakPower));
 
     [Fact]
-    public void UnweakPower_HasBidirectionalInterception_HiddenAtZero()
-    {
-        AssertHasBidirectionalInterception(typeof(UnweakPower));
-        AssertHiddenAtZero_VisibleWhenPositive(new UnweakPower());
-    }
+    public void UnvulnerablePower_HasNoInterceptionOverrides() => AssertHasNoInterceptionOverrides(typeof(UnvulnerablePower));
 
     [Fact]
-    public void UnvulnerablePower_HasBidirectionalInterception_HiddenAtZero()
-    {
-        AssertHasBidirectionalInterception(typeof(UnvulnerablePower));
-        AssertHiddenAtZero_VisibleWhenPositive(new UnvulnerablePower());
-    }
+    public void UnshakenPower_HasNoInterceptionOverrides() => AssertHasNoInterceptionOverrides(typeof(UnshakenPower));
 
     [Fact]
-    public void UnshakenPower_HasBidirectionalInterception_HiddenAtZero()
-    {
-        AssertHasBidirectionalInterception(typeof(UnshakenPower));
-        AssertHiddenAtZero_VisibleWhenPositive(new UnshakenPower());
-    }
+    public void UnlimitedPower_HasNoInterceptionOverrides() => AssertHasNoInterceptionOverrides(typeof(UnlimitedPower));
 
     [Fact]
-    public void UnlimitedPower_HasBidirectionalInterception_HiddenAtZero()
-    {
-        AssertHasBidirectionalInterception(typeof(UnlimitedPower));
-        AssertHiddenAtZero_VisibleWhenPositive(new UnlimitedPower());
-    }
+    public void UnjadedPower_HasNoInterceptionOverrides() => AssertHasNoInterceptionOverrides(typeof(UnjadedPower));
 
     [Fact]
-    public void UnjadedPower_HasBidirectionalInterception_HiddenAtZero()
+    public void InvertTrackerPower_HasBidirectionalInterception()
     {
-        AssertHasBidirectionalInterception(typeof(UnjadedPower));
-        AssertHiddenAtZero_VisibleWhenPositive(new UnjadedPower());
+        Assert.NotNull(typeof(InvertTrackerPower).GetMethod(
+            "TryModifyPowerAmountReceived", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly));
+        Assert.NotNull(typeof(InvertTrackerPower).GetMethod(
+            "AfterModifyingPowerAmountReceived", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly));
     }
 
     [Fact]

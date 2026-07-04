@@ -1,12 +1,10 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
-using MegaCrit.Sts2.Core.Logging;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Powers;
 using TheUnderstudy.TheUnderstudyCode.Cards.Powers;
@@ -43,36 +41,9 @@ public static class EmotionalExpression
         return (weakApplied - consumed, consumed);
     }
 
-    // Un-X powers must already be attached (even at Amount 0) before a genuine gain lands on them,
-    // so their own TryModifyPowerAmountReceived can intercept that gain in real time: a power that
-    // PowerCmd.Apply creates fresh (because none existed yet) isn't registered as a hook listener
-    // until after ModifyPowerAmountReceived has already run for that same call, so it can't catch
-    // its own very first incoming gain (confirmed by decompiling PowerModel.ApplyInternal/
-    // PowerCmd.Apply — attachment happens strictly after the interception hooks fire). Without
-    // this, a single Invert play (no Fortissimo repeats to "self-heal" the miss across multiple
-    // applications) would apply its full raw gain unreduced the first time a pair is ever touched
-    // in a combat.
-    //
-    // PowerCmd.Apply no-ops entirely when amount == 0m (checked before anything else runs), so it
-    // can't be used to seed a fresh instance at a true Amount of 0 directly. Amount is stored as an
-    // int, cast from the decimal offset — applying a non-zero decimal that truncates to 0 (0.5m)
-    // satisfies the "not exactly 0m" guard while leaving the stored stack at exactly 0. This is a
-    // specific truncation behavior, not a documented contract, hence the assertion below: if a
-    // future engine update changes it, this should fail loudly during playtesting rather than
-    // silently leaving an Un-X power un-attached (and therefore unable to self-intercept).
-    public static async Task EnsureAttached<T>(PlayerChoiceContext ctx, Creature creature) where T : PowerModel
-    {
-        if (creature.Powers.Any(p => p is T)) return;
-        await PowerCmd.Apply<T>(ctx, creature, 0.5m, creature, null, false);
-        int seeded = creature.GetPowerAmount<T>();
-        if (seeded != 0)
-            Log.Error($"EmotionalExpression.EnsureAttached<{typeof(T).Name}>: expected a seeded " +
-                      $"Amount of 0 but got {seeded} — the 0.5m truncation-to-zero assumption no " +
-                      "longer holds; Invert/Fortissimo cancellation math will be wrong.");
-    }
-
-    // Apply Weak to self. The interception hook on UnweakPower (canonicalPower is WeakPower)
-    // reduces this by any existing Unweak stock and consumes it — no local netting needed here.
+    // Apply Weak to self. InvertTrackerPower's bidirectional interception (canonicalPower is
+    // WeakPower) reduces this by any existing Unweak stock and consumes it — no local netting
+    // needed here.
     public static async Task ApplyWeakToSelf(PlayerChoiceContext ctx, Creature creature, int stacks, CardModel? card)
     {
         if (stacks <= 0) return;
@@ -89,17 +60,16 @@ public static class EmotionalExpression
     }
 
     // Convert up to max WeakPower to UnweakPower. The raw removeAmount (not a pre-reduced value)
-    // is what's granted to Unweak — UnweakPower's own interception (canonicalPower is itself)
-    // reduces that raw amount by whatever Weak remains after the removal above, live, at the
-    // moment this call (and each Fortissimo repeat of it) actually lands. This is what makes the
-    // amount of cancellation depend on how much debuff is left over after a capped Invert, instead
-    // of a single precomputed net.
+    // is what's granted to Unweak — InvertTrackerPower's interception (canonicalPower is
+    // UnweakPower) reduces that raw amount by whatever Weak remains after the removal above, live,
+    // at the moment this call (and each Fortissimo repeat of it) actually lands. This is what makes
+    // the amount of cancellation depend on how much debuff is left over after a capped Invert,
+    // instead of a single precomputed net.
     public static async Task ConvertWeakToUnweak(PlayerChoiceContext ctx, Creature creature, int max = int.MaxValue)
     {
         int curWeak = creature.GetPowerAmount<WeakPower>();
         int removeAmount = Math.Min(curWeak, max);
         if (removeAmount <= 0) return;
-        await EnsureAttached<UnweakPower>(ctx, creature);
         await PowerCmd.Apply<WeakPower>(ctx, creature, -removeAmount, creature, null, false);
         await PowerCmd.Apply<UnweakPower>(ctx, creature, removeAmount, creature, null, false);
         RecordModified(creature, InvertibleDebuff.Weak);
@@ -112,7 +82,6 @@ public static class EmotionalExpression
         int curVul = creature.GetPowerAmount<VulnerablePower>();
         int removeAmount = Math.Min(curVul, max);
         if (removeAmount <= 0) return;
-        await EnsureAttached<UnvulnerablePower>(ctx, creature);
         await PowerCmd.Apply<VulnerablePower>(ctx, creature, -removeAmount, creature, null, false);
         await PowerCmd.Apply<UnvulnerablePower>(ctx, creature, removeAmount, creature, null, false);
         RecordModified(creature, InvertibleDebuff.Vulnerable);
@@ -180,7 +149,6 @@ public static class EmotionalExpression
         int curShaken = creature.GetPowerAmount<ShakenPower>();
         int removeAmount = Math.Min(curShaken, max);
         if (removeAmount <= 0) return;
-        await EnsureAttached<UnshakenPower>(ctx, creature);
         await PowerCmd.Apply<ShakenPower>(ctx, creature, -removeAmount, creature, null, false);
         await PowerCmd.Apply<UnshakenPower>(ctx, creature, removeAmount, creature, null, false);
         RecordModified(creature, InvertibleDebuff.Shaken);
@@ -201,7 +169,6 @@ public static class EmotionalExpression
         int curLimited = creature.GetPowerAmount<LimitedPower>();
         int removeAmount = Math.Min(curLimited, max);
         if (removeAmount <= 0) return;
-        await EnsureAttached<UnlimitedPower>(ctx, creature);
         await PowerCmd.Apply<LimitedPower>(ctx, creature, -removeAmount, creature, null, false);
         await PowerCmd.Apply<UnlimitedPower>(ctx, creature, removeAmount, creature, null, false);
         RecordModified(creature, InvertibleDebuff.Limited);
@@ -222,7 +189,6 @@ public static class EmotionalExpression
         int curJaded = creature.GetPowerAmount<JadedPower>();
         int removeAmount = Math.Min(curJaded, max);
         if (removeAmount <= 0) return;
-        await EnsureAttached<UnjadedPower>(ctx, creature);
         await PowerCmd.Apply<JadedPower>(ctx, creature, -removeAmount, creature, null, false);
         await PowerCmd.Apply<UnjadedPower>(ctx, creature, removeAmount, creature, null, false);
         RecordModified(creature, InvertibleDebuff.Jaded);
@@ -245,7 +211,6 @@ public static class EmotionalExpression
         int curFrail = creature.GetPowerAmount<FrailPower>();
         int removeAmount = Math.Min(curFrail, max);
         if (removeAmount <= 0) return;
-        await EnsureAttached<UnfrailPower>(ctx, creature);
         await PowerCmd.Apply<FrailPower>(ctx, creature, -removeAmount, creature, null, false);
         await PowerCmd.Apply<UnfrailPower>(ctx, creature, removeAmount, creature, null, false);
         RecordModified(creature, InvertibleDebuff.Frail);
