@@ -61,7 +61,7 @@ public class OrderModifierTests
         var mod = new OrderModifier { OrderKind = OrderModifier.Kind.PlayThis };
         var args = new object?[] { null, "base description" };
         typeof(OrderModifier).GetMethod("ModifyDescriptionPost")!.Invoke(mod, args);
-        Assert.Equal("[gold][sine]Play this card.[/sine][/gold]\nbase description", (string)args[1]!);
+        Assert.Equal("[red][sine]Play this card.[/sine][/red]\nbase description", (string)args[1]!);
     }
 
     [Fact]
@@ -70,7 +70,7 @@ public class OrderModifierTests
         var mod = new OrderModifier { OrderKind = OrderModifier.Kind.DontPlayThis };
         var args = new object?[] { null, "base description" };
         typeof(OrderModifier).GetMethod("ModifyDescriptionPost")!.Invoke(mod, args);
-        Assert.Equal("[gold][sine]Don't play this card.[/sine][/gold]\nbase description", (string)args[1]!);
+        Assert.Equal("[red][sine]Don't play this card.[/sine][/red]\nbase description", (string)args[1]!);
     }
 
     [Fact]
@@ -79,7 +79,7 @@ public class OrderModifierTests
         var mod = new OrderModifier { OrderKind = OrderModifier.Kind.FlavorOnly, FlavorText = "Stand still." };
         var args = new object?[] { null, "base description" };
         typeof(OrderModifier).GetMethod("ModifyDescriptionPost")!.Invoke(mod, args);
-        Assert.Equal("[gold][sine]Stand still.[/sine][/gold]\nbase description", (string)args[1]!);
+        Assert.Equal("[red][sine]Stand still.[/sine][/red]\nbase description", (string)args[1]!);
     }
 
     [Fact]

@@ -110,6 +110,6 @@ public class OrderModifier : CardModifier
             _ => ""
         };
         if (string.IsNullOrEmpty(text)) return;
-        description = $"[gold][sine]{text}[/sine][/gold]\n" + description;
+        description = $"[red][sine]{text}[/sine][/red]\n" + description;
     }
 }
