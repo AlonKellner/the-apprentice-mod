@@ -15,8 +15,8 @@ public class MasterFormPower : UnderstudyPower
 
     public override List<(string, string)> Localization => new PowerLoc(
         "Master Form",
-        "Whenever an attack or skill that doesn't have Replay becomes [gold]Unplayable[/gold], it gains Replay 1.",
-        "Whenever an attack or skill that doesn't have Replay becomes [gold]Unplayable[/gold], it gains Replay 1.");
+        "When attacks or skills without [gold]Replay[/gold] become [gold]Unplayable[/gold], they gain [gold]Replay[/gold].",
+        "When attacks or skills without [gold]Replay[/gold] become [gold]Unplayable[/gold], they gain [gold]Replay[/gold] [blue]{Amount}[/blue].");
 
     public override Task AfterApplied(Creature? creature, CardModel? cardSource)
     {
@@ -33,6 +33,6 @@ public class MasterFormPower : UnderstudyPower
     private void OnUnplayableApplied(CardModel card)
     {
         if (card.Owner?.Creature != Owner) return;
-        if (card.BaseReplayCount == 0) card.BaseReplayCount = 1;
+        if (card.BaseReplayCount == 0) card.BaseReplayCount = Amount;
     }
 }
