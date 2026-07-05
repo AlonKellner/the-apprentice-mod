@@ -146,6 +146,37 @@ public class IntenseModifierTests
     }
 
     [Fact]
+    public void IsFinalIntensePlay_GrantedAfterOwnCheckThisSamePlay_ReturnsFalse()
+    {
+        // Da Capo's case: Intense was granted after this exact play's own attack, so it
+        // shouldn't lock the card up for THIS play.
+        var card = new UnderstudyStrike();
+        var mod = new IntenseModifier();
+        CardModifier.AddModifier(card, mod);
+        var play = MakePlay(card, 0, 1);
+        typeof(IntenseModifier)
+            .GetField("_grantedAfterOwnCheckDuringPlay", BindingFlags.NonPublic | BindingFlags.Instance)!
+            .SetValue(mod, play);
+        Assert.False(IntenseModifier.IsFinalIntensePlay(play));
+    }
+
+    [Fact]
+    public void IsFinalIntensePlay_GrantedAfterOwnCheckOnAnEarlierPlay_ReturnsTrue()
+    {
+        // The next time the card is played, Intense was already active before this new play's
+        // own check ran, so the normal locking rule applies again.
+        var card = new UnderstudyStrike();
+        var mod = new IntenseModifier();
+        CardModifier.AddModifier(card, mod);
+        var firstPlay = MakePlay(card, 0, 1);
+        typeof(IntenseModifier)
+            .GetField("_grantedAfterOwnCheckDuringPlay", BindingFlags.NonPublic | BindingFlags.Instance)!
+            .SetValue(mod, firstPlay);
+        var secondPlay = MakePlay(card, 0, 1);
+        Assert.True(IntenseModifier.IsFinalIntensePlay(secondPlay));
+    }
+
+    [Fact]
     public void ModifyDamageAdditive_IsVirtualMethod()
     {
         // IntenseModifier provides the Strength-style damage bonus hook.

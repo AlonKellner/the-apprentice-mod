@@ -20,13 +20,27 @@ public class IntenseModifier : CardModifier
     // How many times Intense has been applied to this card (its "level").
     public int Stacks { get; private set; }
 
+    // Set only when a card's FIRST-EVER Intense stack is granted "after the check" — i.e. after
+    // that same play's own attack/block calculation (ModifyDamageAdditive/ModifyBlockAdditive)
+    // already ran, so the newly granted stack had no effect on this play (Da Capo: it grants
+    // itself Intense only after its own attack resolves). Stores the exact CardPlay this happened
+    // during, compared by reference in IsFinalIntensePlay below, so it only suppresses locking for
+    // THIS specific play — the very next time the card is played, it already carries Intense
+    // before that play's own check runs, so the normal rule (lock on the play after Intense is
+    // already active) applies again.
+    private CardPlay? _grantedAfterOwnCheckDuringPlay;
+
     // True exactly once per real card play: on the last CardPlay in a Replay series
     // (PlayIndex == PlayCount - 1; a card with no Replay has PlayCount = 1, so its single
-    // play already satisfies this). Cards without IntenseModifier never qualify. Used by
+    // play already satisfies this). Cards without IntenseModifier never qualify, and a card whose
+    // only Intense stack was granted after its own check this same play (see
+    // _grantedAfterOwnCheckDuringPlay above) doesn't qualify for THIS play either. Used by
     // UnderstudyCard.AfterCardPlayed to decide when to attach UnplayableModifier, and by
     // BenchedPower to know when an Intense card has finished being played.
     public static bool IsFinalIntensePlay(CardPlay cardPlay) =>
-        cardPlay.IsLastInSeries && cardPlay.Card.TryGetModifier<IntenseModifier>(out _);
+        cardPlay.IsLastInSeries
+        && cardPlay.Card.TryGetModifier<IntenseModifier>(out var mod)
+        && !ReferenceEquals(mod!._grantedAfterOwnCheckDuringPlay, cardPlay);
 
     // ── Combat-scoped counter ────────────────────────────────────────────────────────────────
     // Counts distinct cards that have received at least one Intense application this combat.
@@ -63,11 +77,18 @@ public class IntenseModifier : CardModifier
     // same card) — Master Form's "whenever you apply... Intense... that doesn't have Replay" trigger.
     public static event Action<CardModel>? Applied;
 
-    public static void Apply(CardModel card, ICombatState combat, IEnumerable<CardModel> allCards)
+    // grantedAfterOwnCheck: pass the current CardPlay when this call happens after that same
+    // card's own attack/block for THIS play has already been calculated — i.e. the card is
+    // granting Intense to itself, too late for it to have counted this play (Da Capo is currently
+    // the only card that does this). Leave null for the normal case of applying Intense to a
+    // different card (CramSession/Rehearse/TouchUp/Intention), where timing-within-this-play is
+    // irrelevant since that other card isn't the one currently resolving.
+    public static void Apply(CardModel card, ICombatState combat, IEnumerable<CardModel> allCards, CardPlay? grantedAfterOwnCheck = null)
     {
         MaybeResetForCombat(combat);
 
-        if (!card.TryGetModifier<IntenseModifier>(out var mod))
+        bool firstApplication = !card.TryGetModifier<IntenseModifier>(out var mod);
+        if (firstApplication)
         {
             // First application to this card: count it as a new Intense card.
             CardModifier.AddModifier<IntenseModifier>(card);
@@ -77,6 +98,8 @@ public class IntenseModifier : CardModifier
         }
 
         mod!.Stacks++;
+        if (firstApplication && grantedAfterOwnCheck != null)
+            mod._grantedAfterOwnCheckDuringPlay = grantedAfterOwnCheck;
         // No explicit BaseValue update needed — ModifyDamageAdditive / ModifyBlockAdditive
         // inject the bonus at calculation time (same mechanism as Strength / Dexterity).
 

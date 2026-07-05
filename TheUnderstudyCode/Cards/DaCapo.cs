@@ -35,6 +35,9 @@ public class DaCapo : UnderstudyCard
 
         var player = cardPlay.Card.Owner;
         var allCards = player.Piles.SelectMany(p => p.Cards);
-        IntenseModifier.Apply(this, CombatState!, allCards);
+        // Granted after the attack above, so this play's damage didn't benefit from it — pass
+        // cardPlay so a first-ever application doesn't lock this card up for THIS play (see
+        // IntenseModifier.Apply's grantedAfterOwnCheck doc).
+        IntenseModifier.Apply(this, CombatState!, allCards, cardPlay);
     }
 }
