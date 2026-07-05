@@ -20,13 +20,10 @@ public class StandingBy : UnderstudyCard
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
         var creature = cardPlay.Card.Owner.Creature;
-        await CommonActions.Apply<StandingByPower>(context, creature, this);
-        if (cardPlay.Card.IsUpgraded)
-        {
-            var power = creature.GetPower<StandingByPower>();
-            Invariants.Check(power != null, nameof(StandingBy) + "." + nameof(OnPlay),
-                "StandingByPower must exist immediately after Apply — an upgraded copy's ChoiceMode would be silently dropped");
-            if (power != null) power.ChoiceMode = true;
-        }
+        var power = await CommonActions.Apply<StandingByPower>(context, creature, this);
+        Invariants.Check(power != null, nameof(StandingBy) + "." + nameof(OnPlay),
+            "StandingByPower must exist immediately after Apply — an upgraded copy's ChoiceMode would be silently dropped");
+        power?.ResetTracking();
+        if (cardPlay.Card.IsUpgraded && power != null) power.ChoiceMode = true;
     }
 }

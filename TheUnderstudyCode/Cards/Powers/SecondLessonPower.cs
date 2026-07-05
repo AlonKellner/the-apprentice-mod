@@ -19,10 +19,21 @@ namespace TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 
 // "Obey my Orders. When you do, you'll be Rewarded. When you don't, you'll be Punished."
 //
-// Every player turn, in AfterPlayerTurnStartLate (after energy refill and draw have already
-// happened — deliberately, so a fresh Reward/Punish debuff/buff never bites the turn it's
-// granted, only the next one): resolve Reward, then Punish (in that fixed order, both from this
-// one method, so the ordering can't depend on cross-power hook iteration), then assign this
+// Orders are assigned post-draw, in AfterPlayerTurnStartLate (after energy refill and draw have
+// already happened — deliberately, so a fresh Reward/Punish debuff/buff never bites the turn it's
+// granted, only the next one), from the cards actually drawn this turn (_drawnThisTurn, tracked via
+// AfterCardDrawn). This used to be done pre-draw instead (peeking the draw pile in
+// BeforeHandDrawLate before the turn's hand draw), to avoid the overlay popping in a frame late —
+// but CardPileCmd.Draw can reshuffle the discard pile into the draw pile mid-draw, strictly after
+// that peek, so it could under-count eligible cards and silently skip an Order for the turn
+// (observed in-game: a turn with only PlayThis assigned, breaking the invariant that
+// Rewarded+Punished always grows by exactly 2 per turn — see the even-sum Invariants.Check below).
+// Post-draw assignment can't miss this way, since it only ever looks at cards that were actually
+// drawn. The pop-in is instead smoothed over by OrderOverlayPatch fading the overlay in rather than
+// snapping it to full opacity.
+//
+// Also in AfterPlayerTurnStartLate: resolve Reward, then Punish (in that fixed order, both from
+// this one method, so the ordering can't depend on cross-power hook iteration), then assign this
 // turn's new Orders to cards drawn this turn.
 public class SecondLessonPower : UnderstudyPower
 {
@@ -31,8 +42,8 @@ public class SecondLessonPower : UnderstudyPower
 
     public override List<(string, string)> Localization => new PowerLoc(
         "The Second Lesson",
-        "Each turn, some cards will have an [red]Order[/red]. Obeying grants [gold]Rewarded[/gold]; disobeying grants [gold]Punished[/gold].",
-        "Each turn, some cards will have an [red]Order[/red]. Obeying grants [gold]Rewarded[/gold]; disobeying grants [gold]Punished[/gold].");
+        "Each turn, some cards will have an [red][sine]Order[/sine][/red]. Obeying grants [gold]Rewarded[/gold]; disobeying grants [gold]Punished[/gold].",
+        "Each turn, some cards will have an [red][sine]Order[/sine][/red]. Obeying grants [gold]Rewarded[/gold]; disobeying grants [gold]Punished[/gold].");
 
     private readonly List<CardModel> _drawnThisTurn = new();
 
@@ -45,6 +56,28 @@ public class SecondLessonPower : UnderstudyPower
     {
         if (fromHandDraw && card.Owner == Owner.Player) _drawnThisTurn.Add(card);
         return Task.CompletedTask;
+    }
+
+    // Defensive reset, called every time TheSecondLesson is played (see TheSecondLesson.OnPlay).
+    // PowerCmd.Apply<T> reuses an existing same-type Power instance for stacking
+    // (FindExistingInstanceForStacking) rather than always constructing fresh — observed in-game: a
+    // combat retried/reloaded after Orders had already been assigned in an abandoned prior attempt
+    // left a leftover SecondLessonPower instance whose _activeOrders still referenced that attempt's
+    // cards; playing the card again in the new attempt reused that same instance, and those stale
+    // Orders immediately "resolved as unresolved" at the very next turn end. Clearing both tracking
+    // lists AND stripping the OrderModifier/Order affliction they reference keeps a card from being
+    // stuck showing an Order overlay that nothing would otherwise ever resolve or remove.
+    public void ResetTracking()
+    {
+        foreach (var card in _activeOrders)
+        {
+            if (card.TryGetModifier<OrderModifier>(out var mod))
+                CardModifier.DirectModifiers(card).Remove(mod!);
+            if (card.Affliction is Order)
+                CardCmd.ClearAffliction(card);
+        }
+        _activeOrders.Clear();
+        _drawnThisTurn.Clear();
     }
 
     // Pure: given the ordered list of cards drawn this turn, which gets "Play this card" (the
@@ -65,12 +98,20 @@ public class SecondLessonPower : UnderstudyPower
         if (player != Owner.Player) return;
 
         int turn = player.PlayerCombatState?.TurnNumber ?? -1;
+        int rewarded = Owner.GetPowerAmount<RewardedPower>();
+        int punished = Owner.GetPowerAmount<PunishedPower>();
         Log.Info($"SecondLessonPower[turn {turn}]: AfterPlayerTurnStartLate firing; " +
-                  $"Rewarded={Owner.GetPowerAmount<RewardedPower>()}, Punished={Owner.GetPowerAmount<PunishedPower>()}, " +
+                  $"Rewarded={rewarded}, Punished={punished}, " +
                   $"drawnThisTurn={_drawnThisTurn.Count}, activeOrders={_activeOrders.Count}");
         Invariants.CheckEqual(_activeOrders.Count, _activeOrders.Count(c => c.TryGetModifier<OrderModifier>(out _)),
             nameof(SecondLessonPower) + "." + nameof(AfterPlayerTurnStartLate),
             "tracked active-Order cards vs. cards still actually carrying OrderModifier");
+        // Every assigned Order (PlayThis/DontPlayThis; FlavorOnly always resolves to
+        // Resolution.None) always grants exactly one Reward or Punish stack, and exactly two of
+        // those roles are assigned per active turn — so the sum can only ever grow by 2 at a time.
+        Invariants.Check((rewarded + punished) % 2 == 0,
+            nameof(SecondLessonPower) + "." + nameof(AfterPlayerTurnStartLate),
+            $"Rewarded+Punished must stay even (two Orders resolve per turn) — got Rewarded={rewarded}, Punished={punished}");
 
         await ResolveRewardTurn(context, turn);
         await ResolvePunishTurn(context, turn);

@@ -26,10 +26,10 @@
   "THEUNDERSTUDY-UNGUARDED.description": "Apply 2 [gold]Vulnerable[/gold] to yourself.\nDraw {Cards:diff()} cards.",
 
   "THEUNDERSTUDY-TAKE_A_BREATH.title": "Take a Breath",
-  "THEUNDERSTUDY-TAKE_A_BREATH.description": "Deal {Damage:diff()} damage.\n[gold]Invert[/gold] 2 of the last modified [gold]invertible[/gold] debuff.",
+  "THEUNDERSTUDY-TAKE_A_BREATH.description": "Deal {Damage:diff()} damage.\n[gold]Invert[/gold] 2 of the last modified invertible debuff.",
 
   "THEUNDERSTUDY-REPRISE.title": "Reprise",
-  "THEUNDERSTUDY-REPRISE.description": "Deal {Damage:diff()} damage.\n[gold]Invert[/gold] 3 of the last modified [gold]invertible[/gold] debuff.",
+  "THEUNDERSTUDY-REPRISE.description": "Deal {Damage:diff()} damage.\n[gold]Invert[/gold] 3 of the last modified invertible debuff.",
 
   "THEUNDERSTUDY-TELL_IT_LIKE_IT_IS.title": "Tell It Like It Is",
   "THEUNDERSTUDY-TELL_IT_LIKE_IT_IS.description": "Gain {Block:diff()} [gold]Block[/gold].\nApply [gold]Weak[/gold] equal to the sum of your [gold]invertible[/gold] debuffs.",
@@ -107,10 +107,10 @@
   "THEUNDERSTUDY-TAKE_YOUR_BOW.description": "Deal {Damage:diff()} damage to a random enemy for each [gold]Unplayable[/gold] in hand.\nRemove [gold]Unplayable[/gold] from all attacks and skills in hand.",
 
   "THEUNDERSTUDY-STEADY_NOW.title": "Steady Now",
-  "THEUNDERSTUDY-STEADY_NOW.description": "Gain {Block:diff()} [gold]Block[/gold].\n[gold]Invert[/gold] 2 of the last modified [gold]invertible[/gold] debuff.",
+  "THEUNDERSTUDY-STEADY_NOW.description": "Gain {Block:diff()} [gold]Block[/gold].\n[gold]Invert[/gold] 2 of the last modified invertible debuff.",
 
   "THEUNDERSTUDY-CODA.title": "Coda",
-  "THEUNDERSTUDY-CODA.description": "Deal {Damage:diff()} damage.\n[gold]Invert[/gold] 3 of each [gold]invertible[/gold] debuff you have.",
+  "THEUNDERSTUDY-CODA.description": "Deal {Damage:diff()} damage.\n[gold]Invert[/gold] 3 of each invertible debuff you have.",
 
   "THEUNDERSTUDY-DRESS_REHEARSAL.title": "Dress Rehearsal",
   "THEUNDERSTUDY-DRESS_REHEARSAL.description": "Draw {Cards:diff()} cards. Gain {Energy:energyIcons()}.\nApply 1 [gold]Weak[/gold], 1 [gold]Vulnerable[/gold], 1 [gold]Shaken[/gold], 1 [gold]Jaded[/gold], and 1 [gold]Limited[/gold] to yourself.",
@@ -125,10 +125,10 @@
   "THEUNDERSTUDY-CURTAIN_CALL.description": "Play all [gold]Planned[/gold] cards.",
 
   "THEUNDERSTUDY-FINAL_BAR.title": "Final Bar",
-  "THEUNDERSTUDY-FINAL_BAR.description": "Deal {ExtraDamage:diff()} damage for each [gold]Planned[/gold] card you have.\nExhaust all [gold]Planned[/gold] cards.",
+  "THEUNDERSTUDY-FINAL_BAR.description": "Deal {Damage:diff()} damage for each [gold]Planned[/gold] card you have.\nExhaust all [gold]Planned[/gold] cards.",
 
   "THEUNDERSTUDY-EVERYTHING_IVE_GOT.title": "Everything I've Got",
-  "THEUNDERSTUDY-EVERYTHING_IVE_GOT.description": "[gold]Invert[/gold] {IfUpgraded:show:2|1} of the last modified [gold]invertible[/gold] debuff.\nGain the same inverted buff X more times.",
+  "THEUNDERSTUDY-EVERYTHING_IVE_GOT.description": "[gold]Invert[/gold] {IfUpgraded:show:2|1} of the last modified invertible debuff.\nGain the same inverted buff X more times.",
 
   "THEUNDERSTUDY-BIG_BREAK.title": "Big Break",
   "THEUNDERSTUDY-BIG_BREAK.description": "Gain {IfUpgraded:show:6|4} [gold]Vigor[/gold], X times.",
@@ -163,7 +163,7 @@
   "THEUNDERSTUDY-THE_SECOND_LESSON.description": "Obey my [red][sine]Orders[/sine][/red], and be [gold]Rewarded[/gold].\nOtherwise, you'll be [gold]Punished[/gold].",
 
   "THEUNDERSTUDY-THE_FINAL_LESSON.title": "The Final Lesson",
-  "THEUNDERSTUDY-THE_FINAL_LESSON.description": "Why are you hurting? Stop getting hurt.\nThis will all be over soon. To the count of 3.",
+  "THEUNDERSTUDY-THE_FINAL_LESSON.description": "Why are you hurting?\n[red][jitter]Stop getting hurt[/jitter][/red].\nThis will all be over soon. To the count of [red][jitter]3[/jitter][/red].",
 
   "THEUNDERSTUDY-MY_OWN_LESSON.title": "My Own Lesson",
   "THEUNDERSTUDY-MY_OWN_LESSON.description": "[gold]Invertible[/gold] debuff gains become buffs.\n[gold]Invertible[/gold] buff gains become debuffs."

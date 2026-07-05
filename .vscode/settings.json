@@ -1,5 +1,5 @@
 {
     "claudeCode.allowDangerouslySkipPermissions": true,
     "dotnet.defaultSolution": "TheUnderstudy.sln",
-    "godotTools.editorPath.godot4": "${env:HOME}/Applications/MegaDot.app/Contents/MacOS/Godot"
+    "godotTools.editorPath.godot4": "/Applications/Godot.app/Contents/MacOS/Godot"
 }

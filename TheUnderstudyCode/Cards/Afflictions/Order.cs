@@ -4,16 +4,17 @@ using MegaCrit.Sts2.Core.Models;
 namespace TheUnderstudy.TheUnderstudyCode.Cards.Afflictions;
 
 // Visual-only companion to OrderModifier — has no logic of its own (same shape as the base game's
-// own Smog affliction), purely here to unlock AfflictionModel.OverlayPath/CreateOverlay() for the
-// golden shimmer overlay. All differentiating text/state lives on OrderModifier instead, since
+// own Smog affliction), purely here so TheUnderstudyCode/Patches/OrderOverlayPatch.cs has an
+// AfflictionModel type to key off of (Model.Affliction is Order) when attaching the red shimmer
+// overlay. All differentiating text/state lives on OrderModifier instead, since
 // AfflictionModel.Title/Description/ExtraCardText are fixed per-type via the "afflictions" loc
 // table and can't vary per instance the way a CardModifier's own description hook can.
 //
-// NOTE: AfflictionModel.OverlayPath is NOT virtual — it's always
-// "res://scenes/cards/overlays/afflictions/" + Id.Entry.ToLowerInvariant() + ".tscn", so there is
-// no override here. Id.Entry = StringHelper.Slugify(type.Name) with no mod-namespace prefix, so
-// for this class it resolves to "order" — the scene lives at
-// scenes/cards/overlays/afflictions/order.tscn (see generate_order_overlay.py).
+// NOTE: this class deliberately does NOT rely on AfflictionModel.OverlayPath/CreateOverlay() (the
+// scene+PreloadManager convention) — that path never produced a visible overlay in-game for
+// unknown reasons, even once the scene was correctly named and preloaded. OrderOverlayPatch attaches
+// the overlay directly in code instead (GD.Load<Shader> + ShaderMaterial on a plain ColorRect), per
+// https://github.com/Alchyr/ModTemplate-StS2/wiki/Shaders.
 public sealed class Order : AfflictionModel
 {
     public override bool CanAfflictCardType(CardType cardType) =>

@@ -13,7 +13,6 @@ public class SteadyNow : UnderstudyCard
     {
         WithBlock(9);
         WithTip(UnderstudyKeywords.Invert);
-        WithTip(UnderstudyKeywords.Invertible);
     }
 
     protected override void OnUpgrade()

@@ -1,5 +1,6 @@
 using System.Linq;
 using BaseLib.Abstracts;
+using BaseLib.Extensions;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
@@ -13,7 +14,9 @@ public class Remix : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:Remix";
 
-    public Remix() : base(0, CardType.Skill, CardRarity.Uncommon, TargetType.AnyEnemy)
+    // Never targeted by the player — every card in the plan gets its own independently
+    // randomized target below, so there's nothing for a player-picked target to feed into.
+    public Remix() : base(0, CardType.Skill, CardRarity.Uncommon, TargetType.None)
     {
         WithKeyword(CardKeyword.Exhaust, ConstructedCardModel.UpgradeType.Remove);
         WithTip(UnderstudyKeywords.Planned);
@@ -28,11 +31,21 @@ public class Remix : UnderstudyCard
         player.RunState.Rng.CombatCardSelection.Shuffle(planned);
         int expectedPlays = planned.Count;
         int actualPlays = 0;
-        Log.Info($"Remix.OnPlay: playing {expectedPlays} Planned slot(s) in shuffled order");
+        Log.Info($"Remix.OnPlay: playing {expectedPlays} Planned slot(s) in shuffled order, each independently retargeted");
         foreach (var (card, _, slotSeqIdx) in planned)
         {
             PlannedModifier.RemoveSlot(card, slotSeqIdx, allCardsList);
-            await CardCmd.AutoPlay(context, card, cardPlay.Target, AutoPlayType.None, false, false);
+            // RemoveSlot only clears UnplayableModifier once ALL of a card's Planned slots are
+            // gone, but a multi-slot card must still be playable on EACH of its own plays in this
+            // loop — CardCmd.AutoPlay silently no-ops if the card still carries Unplayable.
+            if (card.TryGetModifier<UnplayableModifier>(out var stillUnplayable))
+                CardModifier.DirectModifiers(card).Remove(stillUnplayable);
+
+            // Always pass null rather than reusing any target across cards: CardCmd.AutoPlay
+            // itself rolls a fresh random living enemy for an AnyEnemy card whenever its target
+            // argument is null, so this re-randomizes independently for every single card played,
+            // not just when the previous target has died.
+            await CardCmd.AutoPlay(context, card, null, AutoPlayType.None, false, false);
             actualPlays++;
         }
         Invariants.CheckEqual(expectedPlays, actualPlays, nameof(Remix) + "." + nameof(OnPlay),

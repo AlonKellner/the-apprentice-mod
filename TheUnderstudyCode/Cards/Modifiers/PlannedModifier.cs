@@ -67,6 +67,13 @@ public class PlannedModifier : CardModifier
     public static int CountIn(IEnumerable<CardModel> cards) =>
         cards.Count(c => c.TryGetModifier<PlannedModifier>(out _));
 
+    // Total queue slots across all cards — a card with two slots (e.g. Planned #1 and #3
+    // simultaneously) counts as 2 here, unlike CountIn (which counts distinct cards, so that same
+    // card counts as 1). This is what PlannedCounterPower's badge number should show, since its own
+    // description lists one line per slot (GetSorted), not one line per distinct card.
+    public static int TotalSlotCount(IEnumerable<CardModel> cards) =>
+        cards.Sum(c => c.TryGetModifier<PlannedModifier>(out var mod) ? mod.SequenceIndices.Count : 0);
+
     // Whether the queue contains a card that needs the player to pick a single enemy — used by
     // CurtainCall/Performance/Encore to skip the targeting prompt when nothing queued needs it
     // (empty plan, or only AoE/self/no-target cards, e.g. two Defends).

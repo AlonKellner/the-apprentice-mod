@@ -13,7 +13,6 @@ public class EverythingIveGot : UnderstudyCard
     public EverythingIveGot() : base(0, CardType.Skill, CardRarity.Uncommon, TargetType.None)
     {
         WithTip(UnderstudyKeywords.Invert);
-        WithTip(UnderstudyKeywords.Invertible);
     }
 
     protected override bool ShouldGlowGoldInternal => EmotionalExpression.HasAnyInvertibleDebuffPresent(Owner.Creature);

@@ -13,7 +13,6 @@ public class Coda : UnderstudyCard
     {
         WithDamage(10);
         WithTip(UnderstudyKeywords.Invert);
-        WithTip(UnderstudyKeywords.Invertible);
     }
 
     protected override void OnUpgrade()

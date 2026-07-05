@@ -32,7 +32,7 @@ public class PlannedCounterPower : UnderstudyPower
         BaseDescription);
 
     public override int DisplayAmount => IsMutable
-        ? PlannedModifier.CountIn(PlannedModifier.RelevantCards(Owner?.Player))
+        ? PlannedModifier.TotalSlotCount(PlannedModifier.RelevantCards(Owner?.Player))
         : 0;
 
     protected override bool IsVisibleInternal => true;
@@ -52,10 +52,17 @@ public class PlannedCounterPower : UnderstudyPower
         var allCards = PlannedModifier.RelevantCards(Owner?.Player).ToList();
         PlannedModifier.RefreshVisualIndices(allCards);
         var sorted = PlannedModifier.GetSorted(allCards);
-        int distinctPlannedCards = sorted.Select(x => x.card).Distinct().Count();
-        Invariants.CheckEqual(PlannedModifier.CountIn(allCards), distinctPlannedCards,
+        // DisplayAmount (the badge number) is TotalSlotCount, computed independently by summing
+        // each card's own SequenceIndices.Count — this checks it actually agrees with the number of
+        // slots GetSorted enumerates, i.e. the badge number matches how many lines CardList lists
+        // below it. (A previous version of this check compared CountIn, distinct-card count, against
+        // a Distinct()-collapsed version of this same sorted list — which are tautologically always
+        // equal by construction, so it could never have caught a badge-vs-list-length mismatch; this
+        // is what let a real one through silently — see PlannedCounterPowerTests for the multi-slot
+        // regression case.)
+        Invariants.CheckEqual(PlannedModifier.TotalSlotCount(allCards), sorted.Count,
             nameof(PlannedCounterPower) + "." + nameof(UpdateDisplayIfChanged),
-            "Planned card count (CountIn) vs distinct cards appearing in the sorted slot list");
+            "Planned total slot count (badge number) vs slots actually listed in the description");
         var current = BuildPlanList(sorted.Select(x => x.card.Title)); // one entry per slot; multi-slot cards appear N times
         if (current == _lastPlanList) return;
         _lastPlanList = current;

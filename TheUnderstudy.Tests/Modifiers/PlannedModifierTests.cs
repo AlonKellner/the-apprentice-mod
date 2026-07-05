@@ -153,6 +153,35 @@ public class PlannedModifierTests
     }
 
     [Fact]
+    public void TotalSlotCount_EmptyInput_ReturnsZero()
+    {
+        Assert.Equal(0, PlannedModifier.TotalSlotCount(Enumerable.Empty<CardModel>()));
+    }
+
+    // Regression case for the bug this was added to fix: a plan of length 3 where one card holds
+    // 2 of those slots and another card holds the 3rd. PlannedCounterPower.DisplayAmount must show
+    // 3 (matching the 3 lines CardList lists), not 2 (the distinct-card count CountIn would give).
+    [Fact]
+    public void TotalSlotCount_OneCardWithTwoSlotsPlusAnotherWithOne_CountsAllSlots()
+    {
+        var multiSlotCard = new UnderstudyStrike();
+        var multiSlotMod = new PlannedModifier();
+        multiSlotMod.SequenceIndices.Add(0);
+        multiSlotMod.SequenceIndices.Add(2);
+        CardModifier.DirectModifiers(multiSlotCard).Add(multiSlotMod);
+
+        var singleSlotCard = new UnderstudyDefend();
+        var singleSlotMod = new PlannedModifier();
+        singleSlotMod.SequenceIndices.Add(1);
+        CardModifier.DirectModifiers(singleSlotCard).Add(singleSlotMod);
+
+        var cards = new CardModel[] { multiSlotCard, singleSlotCard };
+        Assert.Equal(3, PlannedModifier.TotalSlotCount(cards));
+        Assert.Equal(2, PlannedModifier.CountIn(cards));
+        Assert.Equal(3, PlannedModifier.GetSorted(cards).Count);
+    }
+
+    [Fact]
     public void AnyIn_EmptyInput_ReturnsFalse()
     {
         Assert.False(PlannedModifier.AnyIn(Enumerable.Empty<CardModel>()));

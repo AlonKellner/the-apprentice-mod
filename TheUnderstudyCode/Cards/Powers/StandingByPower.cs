@@ -42,6 +42,14 @@ public class StandingByPower : UnderstudyPower
 
     private readonly List<CardModel> _pending = new();
 
+    // Defensive reset, called every time StandingBy is played (see StandingBy.OnPlay). PowerCmd.Apply
+    // reuses an existing same-type Power instance for stacking (FindExistingInstanceForStacking)
+    // rather than always constructing fresh — see SecondLessonPower.ResetTracking for the same fix
+    // applied there, and the in-game bug it was found from (a combat retried/reloaded after some
+    // state had already accumulated on a leftover instance, which then got acted on again in the new
+    // attempt). ChoiceMode is intentionally NOT reset — it's meant to stay sticky once unlocked.
+    public void ResetTracking() => _pending.Clear();
+
     public override Task AfterApplied(Creature? creature, CardModel? cardSource)
     {
         UnplayableModifier.Applied += OnUnplayableApplied;

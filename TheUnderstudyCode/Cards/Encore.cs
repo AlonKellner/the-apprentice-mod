@@ -1,5 +1,6 @@
 using System.Linq;
 using BaseLib.Abstracts;
+using BaseLib.Extensions;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
@@ -33,16 +34,34 @@ public class Encore : UnderstudyCard
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
         var player = cardPlay.Card.Owner;
+        var combatState = player.Creature.CombatState!;
 
         var allCardsList = PlannedModifier.RelevantCards(player).ToList();
         var planned = PlannedModifier.GetSorted(allCardsList);
         int expectedPlays = planned.Count;
         int actualPlays = 0;
         Log.Info($"Encore.OnPlay: playing {expectedPlays} Planned slot(s), re-queuing eligible cards afterward");
+        var currentTarget = cardPlay.Target;
         foreach (var (card, _, slotSeqIdx) in planned)
         {
             PlannedModifier.RemoveSlot(card, slotSeqIdx, allCardsList);
-            await CardCmd.AutoPlay(context, card, cardPlay.Target, AutoPlayType.None, false, false);
+            // RemoveSlot only clears UnplayableModifier once ALL of a card's Planned slots are
+            // gone, but a multi-slot card must still be playable on EACH of its own plays in this
+            // loop — CardCmd.AutoPlay silently no-ops if the card still carries Unplayable.
+            if (card.TryGetModifier<UnplayableModifier>(out var stillUnplayable))
+                CardModifier.DirectModifiers(card).Remove(stillUnplayable);
+
+            // Re-target to a fresh random living enemy if the current one has died partway
+            // through the plan, until that one also dies.
+            if (card.TargetType == TargetType.AnyEnemy && (currentTarget == null || currentTarget.IsDead))
+            {
+                var previousTarget = currentTarget;
+                currentTarget = player.RunState.Rng.CombatTargets.NextItem(combatState.HittableEnemies);
+                Log.Info($"Encore.OnPlay: target {previousTarget?.LogName ?? "(none)"} is no longer available — " +
+                          $"re-targeted to {currentTarget?.LogName ?? "(none)"}");
+            }
+
+            await CardCmd.AutoPlay(context, card, currentTarget, AutoPlayType.None, false, false);
             actualPlays++;
             if (PlannedModifier.CanApplyTo(card))
                 PlannedModifier.Apply(card, PlannedModifier.RelevantCards(player));

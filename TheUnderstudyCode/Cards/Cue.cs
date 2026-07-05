@@ -17,6 +17,7 @@ public class Cue : UnderstudyCard
 
     public Cue() : base(1, CardType.Skill, CardRarity.Common, TargetType.None)
     {
+        WithCards(1);
         WithVars(new CardsVar("Select", 1));
         WithTip(UnderstudyKeywords.Planned);
     }

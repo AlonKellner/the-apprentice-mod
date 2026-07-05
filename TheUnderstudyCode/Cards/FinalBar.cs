@@ -5,11 +5,8 @@ using BaseLib.Utils;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
-using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Logging;
-using MegaCrit.Sts2.Core.ValueProps;
 using TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
-using TheUnderstudy.TheUnderstudyCode.Extensions;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
@@ -19,12 +16,14 @@ public class FinalBar : UnderstudyCard
 
     public FinalBar() : base(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
     {
-        WithVars(
-            new CalculationBaseVar(0m),
-            new ExtraDamageVar(5m).WithUpgrade(2m),
-            new CalculatedDamageVar(ValueProp.Move).WithMultiplier(static (card, _) =>
-                PlannedModifier.CountIn(PlannedModifier.RelevantCards(card.Owner))));
+        WithDamage(5);
         WithTip(UnderstudyKeywords.Planned);
+    }
+
+    protected override void OnUpgrade()
+    {
+        base.OnUpgrade();
+        DynamicVars.Damage.UpgradeValueBy(2m);
     }
 
     protected override bool ShouldGlowGoldInternal => PlannedModifier.AnyIn(PlannedModifier.RelevantCards(Owner));
@@ -32,23 +31,19 @@ public class FinalBar : UnderstudyCard
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
         var player = cardPlay.Card.Owner;
-        // Snapshot the same count CalculatedDamageVar's multiplier lambda used to scale this
-        // attack's damage. The attack itself doesn't mutate Planned state, so the strip loop
-        // below must remove exactly this many cards.
-        int damageScalingCount = PlannedModifier.CountIn(PlannedModifier.RelevantCards(player));
-
-        await CommonActions.CardAttack(cardPlay.Card, cardPlay).Execute(context);
-
         var allCardsList = PlannedModifier.RelevantCards(player).ToList();
         var plannedCards = allCardsList.Where(c => c.TryGetModifier<PlannedModifier>(out _)).ToList();
-        Log.Info($"FinalBar.OnPlay: stripping Planned from {plannedCards.Count} card(s) without playing them");
-        Invariants.CheckEqual(damageScalingCount, plannedCards.Count, nameof(FinalBar) + "." + nameof(OnPlay),
-            "Planned count used for damage scaling vs. Planned cards stripped afterward");
+
+        // One hit per Planned card, rather than a single hit scaled by the count.
+        if (plannedCards.Count > 0)
+            await CommonActions.CardAttack(cardPlay.Card, cardPlay, plannedCards.Count).Execute(context);
+
+        // Exhausting does NOT strip PlannedModifier — a Planned card keeps its queue slot(s) even
+        // while sitting in the exhaust pile (IsCombatPile covers Exhaust), so CurtainCall/
+        // Performance/Encore can still find and play it later via PlannedModifier.RelevantCards.
+        Log.Info($"FinalBar.OnPlay: exhausting {plannedCards.Count} Planned card(s), keeping their Planned status");
         foreach (var card in plannedCards)
-        {
-            PlannedModifier.Remove(card, allCardsList);
             if (card.Pile?.Type is PileType.Hand or PileType.Draw or PileType.Discard)
                 await CardCmd.Exhaust(context, card);
-        }
     }
 }

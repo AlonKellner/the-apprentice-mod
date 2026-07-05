@@ -54,7 +54,7 @@ public class NewDeckCardsTests
     [InlineData(typeof(HouseLights), "TheUnderstudy:HouseLights", CardType.Skill, CardRarity.Uncommon, TargetType.None)]
     [InlineData(typeof(FullVoice), "TheUnderstudy:FullVoice", CardType.Power, CardRarity.Uncommon, TargetType.None)]
     [InlineData(typeof(NightShift), "TheUnderstudy:NightShift", CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)]
-    [InlineData(typeof(Remix), "TheUnderstudy:Remix", CardType.Skill, CardRarity.Uncommon, TargetType.AnyEnemy)]
+    [InlineData(typeof(Remix), "TheUnderstudy:Remix", CardType.Skill, CardRarity.Uncommon, TargetType.None)]
     public void Card_ConstructsWithExpectedShape(
         System.Type cardType, string expectedId, CardType expectedType, CardRarity expectedRarity, TargetType expectedTarget)
     {

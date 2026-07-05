@@ -13,7 +13,6 @@ public class Reprise : UnderstudyCard
     {
         WithDamage(14);
         WithTip(UnderstudyKeywords.Invert);
-        WithTip(UnderstudyKeywords.Invertible);
     }
 
     protected override void OnUpgrade()

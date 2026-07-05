@@ -45,7 +45,7 @@ public abstract class UnderstudyCard(
             {
                 new HoverTip(
                     new LocString("card_keywords", "THEUNDERSTUDY-INTENSE.title"),
-                    $"Deal {s} additional damage and gain {s} additional [gold]Block[/gold] for each card with [gold]Intense[/gold]."
+                    $"Increase [gold]Block[/gold] and damage by {s} for each card with [gold]Intense[/gold]."
                 )
             };
         });

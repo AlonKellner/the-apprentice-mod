@@ -13,7 +13,6 @@ public class TakeABreath : UnderstudyCard
     {
         WithDamage(3);
         WithTip(UnderstudyKeywords.Invert);
-        WithTip(UnderstudyKeywords.Invertible);
     }
 
     protected override void OnUpgrade()

@@ -44,6 +44,7 @@ public class Performance : UnderstudyCard
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
         var player = cardPlay.Card.Owner;
+        var combatState = player.Creature.CombatState!;
 
         // Step 1: Play all currently-Planned cards in queue order, consuming each slot.
         // A card with two slots is played twice.
@@ -52,10 +53,33 @@ public class Performance : UnderstudyCard
         int expectedPlays = planned.Count;
         int actualPlays = 0;
         Log.Info($"Performance.OnPlay: playing {expectedPlays} Planned slot(s)");
+        var currentTarget = cardPlay.Target;
         foreach (var (card, _, slotSeqIdx) in planned)
         {
             PlannedModifier.RemoveSlot(card, slotSeqIdx, allCardsList);
-            await CardCmd.AutoPlay(context, card, cardPlay.Target, AutoPlayType.None, false, false);
+            // RemoveSlot only clears UnplayableModifier once ALL of a card's Planned slots are
+            // gone (correctly so in general — a card with a remaining slot must still refuse a
+            // manual player click) but a multi-slot card (e.g. Planned #2 and #3) must still be
+            // playable on EACH of its own plays in this loop, not just its last. CardCmd.AutoPlay
+            // silently no-ops (MoveToResultPileWithoutPlaying, no error) if the card still carries
+            // CardKeyword.Unplayable, which is exactly what happened: the first of two plays got
+            // discarded with no effect because the card's OTHER remaining slot kept it Unplayable.
+            if (card.TryGetModifier<UnplayableModifier>(out var stillUnplayable))
+                CardModifier.DirectModifiers(card).Remove(stillUnplayable);
+
+            // If the enemy we were targeting has since died partway through the plan, re-target to
+            // a fresh random living enemy for this and all subsequent AnyEnemy cards, until that one
+            // also dies. Matches CardCmd.AutoPlay's own null-target fallback (same RNG stream), just
+            // resolved here so it can be reused across multiple plays instead of re-rolling every time.
+            if (card.TargetType == TargetType.AnyEnemy && (currentTarget == null || currentTarget.IsDead))
+            {
+                var previousTarget = currentTarget;
+                currentTarget = player.RunState.Rng.CombatTargets.NextItem(combatState.HittableEnemies);
+                Log.Info($"Performance.OnPlay: target {previousTarget?.LogName ?? "(none)"} is no longer available — " +
+                          $"re-targeted to {currentTarget?.LogName ?? "(none)"}");
+            }
+
+            await CardCmd.AutoPlay(context, card, currentTarget, AutoPlayType.None, false, false);
             actualPlays++;
         }
         Invariants.CheckEqual(expectedPlays, actualPlays, nameof(Performance) + "." + nameof(OnPlay),
