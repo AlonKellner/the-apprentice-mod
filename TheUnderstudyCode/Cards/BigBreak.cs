@@ -20,7 +20,7 @@ public class BigBreak : UnderstudyCard
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
         int x = ResolveEnergyXValue();
-        int perStack = IsUpgraded ? 3 : 2;
+        int perStack = IsUpgraded ? 6 : 4;
         var creature = cardPlay.Card.Owner.Creature;
         await PowerCmd.Apply<VigorPower>(context, creature, perStack * x, creature, this, false);
     }

@@ -116,7 +116,7 @@
   "THEUNDERSTUDY-DRESS_REHEARSAL.description": "Draw {Cards:diff()} cards. Gain {Energy:energyIcons()}.\nApply 1 [gold]Weak[/gold], 1 [gold]Vulnerable[/gold], 1 [gold]Shaken[/gold], 1 [gold]Jaded[/gold], and 1 [gold]Limited[/gold] to yourself.",
 
   "THEUNDERSTUDY-MASTER_FORM.title": "Master Form",
-  "THEUNDERSTUDY-MASTER_FORM.description": "Whenever an attack or skill without Replay becomes [gold]Unplayable[/gold], it gains Replay 1.",
+  "THEUNDERSTUDY-MASTER_FORM.description": "When attacks or skills without [gold]Replay[/gold] become [gold]Unplayable[/gold], they gain [gold]Replay[/gold] 1.",
 
   "THEUNDERSTUDY-HELD_NOTE.title": "Held Note",
   "THEUNDERSTUDY-HELD_NOTE.description": "[gold]Invertible[/gold] debuffs and buffs no longer decrease by 1 each turn.",
@@ -131,7 +131,7 @@
   "THEUNDERSTUDY-EVERYTHING_IVE_GOT.description": "[gold]Invert[/gold] {IfUpgraded:show:2|1} of the last modified [gold]invertible[/gold] debuff.\nGain the same inverted buff X more times.",
 
   "THEUNDERSTUDY-BIG_BREAK.title": "Big Break",
-  "THEUNDERSTUDY-BIG_BREAK.description": "Gain {IfUpgraded:show:3|2} [gold]Vigor[/gold], X times.",
+  "THEUNDERSTUDY-BIG_BREAK.description": "Gain {IfUpgraded:show:6|4} [gold]Vigor[/gold], X times.",
 
   "THEUNDERSTUDY-TOUCH_UP.title": "Touch Up",
   "THEUNDERSTUDY-TOUCH_UP.description": "Remove [gold]Unplayable[/gold] from 1 attack or skill in hand.\nApply [gold]Intense[/gold] to {IntenseSelect:diff()} attack or skill in hand.",
@@ -160,7 +160,7 @@
   "THEUNDERSTUDY-REMIX.description": "Play all [gold]Planned[/gold] cards in a random order.",
 
   "THEUNDERSTUDY-THE_SECOND_LESSON.title": "The Second Lesson",
-  "THEUNDERSTUDY-THE_SECOND_LESSON.description": "Obey my [red]Orders[/red], and be [gold]Rewarded[/gold].\nOtherwise, you'll be [gold]Punished[/gold].",
+  "THEUNDERSTUDY-THE_SECOND_LESSON.description": "Obey my [red][sine]Orders[/sine][/red], and be [gold]Rewarded[/gold].\nOtherwise, you'll be [gold]Punished[/gold].",
 
   "THEUNDERSTUDY-THE_FINAL_LESSON.title": "The Final Lesson",
   "THEUNDERSTUDY-THE_FINAL_LESSON.description": "Why are you hurting? Stop getting hurt.\nThis will all be over soon. To the count of 3.",
