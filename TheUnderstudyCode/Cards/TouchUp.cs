@@ -27,6 +27,9 @@ public class TouchUp : UnderstudyCard
         DynamicVars["IntenseSelect"].UpgradeValueBy(1m);
     }
 
+    protected override bool ShouldGlowGoldInternal =>
+        UnplayableModifier.AnyIn(PileType.Hand.GetPile(Owner).Cards.Where(c => c != this));
+
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
         var player = cardPlay.Card.Owner;

@@ -26,6 +26,15 @@ public class Performance : UnderstudyCard
         WithTip(UnderstudyKeywords.Planned);
     }
 
+    // Only require a target when the queue actually has a card that needs one — an empty plan,
+    // or a plan of only AoE/self/no-target cards, should just play with no reticle. Owner throws
+    // on a canonical (not-yet-instantiated) card model, so fall back to the constructor-seeded
+    // value there (bare-construction tests, card library previews, etc).
+    public override TargetType TargetType =>
+        IsMutable
+            ? (PlannedModifier.QueueNeedsEnemyTarget(PlannedModifier.RelevantCards(Owner)) ? TargetType.AnyEnemy : TargetType.None)
+            : base.TargetType;
+
     protected override void OnUpgrade()
     {
         base.OnUpgrade();

@@ -24,6 +24,8 @@ public class BareItAll : UnderstudyCard
         DynamicVars.Damage.UpgradeValueBy(4m);
     }
 
+    protected override bool ShouldGlowGoldInternal => EmotionalExpression.SumOfInvertibleDebuffs(Owner.Creature) > 0;
+
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
         await CommonActions.CardAttack(cardPlay.Card, cardPlay).Execute(context);

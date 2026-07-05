@@ -16,6 +16,8 @@ public class EverythingIveGot : UnderstudyCard
         WithTip(UnderstudyKeywords.Invertible);
     }
 
+    protected override bool ShouldGlowGoldInternal => EmotionalExpression.HasAnyInvertibleDebuffPresent(Owner.Creature);
+
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
         int x = ResolveEnergyXValue();

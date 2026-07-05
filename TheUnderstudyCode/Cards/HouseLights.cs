@@ -24,6 +24,8 @@ public class HouseLights : UnderstudyCard
         DynamicVars.Block.UpgradeValueBy(3m);
     }
 
+    protected override bool ShouldGlowGoldInternal => EmotionalExpression.SumOfInvertibleDebuffs(Owner.Creature) > 0;
+
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
         await CommonActions.CardBlock(this, cardPlay);

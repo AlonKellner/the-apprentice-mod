@@ -24,6 +24,9 @@ public class TakeYourBow : UnderstudyCard
         DynamicVars.Damage.UpgradeValueBy(2m);
     }
 
+    protected override bool ShouldGlowGoldInternal =>
+        CardExtensions.AnyUnplayable(PileType.Hand.GetPile(Owner).Cards.Where(c => c != this));
+
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
         var player = cardPlay.Card.Owner;

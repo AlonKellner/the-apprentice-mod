@@ -1,5 +1,6 @@
 using BaseLib.Abstracts;
 using MegaCrit.Sts2.Core.Entities.Cards;
+using MegaCrit.Sts2.Core.Models;
 using TheUnderstudy.TheUnderstudyCode.Cards;
 using TheUnderstudy.TheUnderstudyCode.Extensions;
 using Xunit;
@@ -76,4 +77,19 @@ public class CardExtensionsTests
     public void IsFunctionallyUnplayableReason_CostReasonPlusHookReason_ReturnsTrue() =>
         Assert.True(CardExtensions.IsFunctionallyUnplayableReason(
             UnplayableReason.EnergyCostTooHigh | UnplayableReason.BlockedByHook));
+
+    // AnyUnplayable — broader than UnplayableModifier.AnyIn (any card type, matching
+    // TakeYourBow's existing damage-counting scope).
+
+    [Fact]
+    public void AnyUnplayable_EmptyInput_ReturnsFalse() =>
+        Assert.False(CardExtensions.AnyUnplayable(System.Array.Empty<CardModel>()));
+
+    [Fact]
+    public void AnyUnplayable_NoUnplayableCards_ReturnsFalse() =>
+        Assert.False(CardExtensions.AnyUnplayable(new CardModel[] { new PlayableCard(), new PlayableCard() }));
+
+    [Fact]
+    public void AnyUnplayable_OneUnplayableCard_ReturnsTrue() =>
+        Assert.True(CardExtensions.AnyUnplayable(new CardModel[] { new PlayableCard(), new NativelyUnplayableCard() }));
 }

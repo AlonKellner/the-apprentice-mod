@@ -258,4 +258,60 @@ public class PlannedModifierTests
     {
         Assert.Empty(PlannedModifier.RelevantCards(null));
     }
+
+    // QueueNeedsEnemyTarget — whether the Planned queue contains a card that needs the player to
+    // pick a single enemy, used by CurtainCall/Performance/Encore to skip the targeting prompt
+    // when nothing queued needs it (empty plan, or only AoE/self/no-target cards).
+
+    [Fact]
+    public void QueueNeedsEnemyTarget_EmptyInput_ReturnsFalse()
+    {
+        Assert.False(PlannedModifier.QueueNeedsEnemyTarget(Enumerable.Empty<CardModel>()));
+    }
+
+    [Fact]
+    public void QueueNeedsEnemyTarget_OnlyPlannedDefend_ReturnsFalse()
+    {
+        var defend = new UnderstudyDefend();
+        var mod = new PlannedModifier();
+        mod.SequenceIndices.Add(0);
+        CardModifier.DirectModifiers(defend).Add(mod);
+
+        Assert.False(PlannedModifier.QueueNeedsEnemyTarget(new[] { defend }));
+    }
+
+    [Fact]
+    public void QueueNeedsEnemyTarget_PlannedStrike_ReturnsTrue()
+    {
+        var strike = new UnderstudyStrike();
+        var mod = new PlannedModifier();
+        mod.SequenceIndices.Add(0);
+        CardModifier.DirectModifiers(strike).Add(mod);
+
+        Assert.True(PlannedModifier.QueueNeedsEnemyTarget(new[] { strike }));
+    }
+
+    [Fact]
+    public void QueueNeedsEnemyTarget_MixedPlannedDefendAndStrike_ReturnsTrue()
+    {
+        var defend = new UnderstudyDefend();
+        var defendMod = new PlannedModifier();
+        defendMod.SequenceIndices.Add(0);
+        CardModifier.DirectModifiers(defend).Add(defendMod);
+
+        var strike = new UnderstudyStrike();
+        var strikeMod = new PlannedModifier();
+        strikeMod.SequenceIndices.Add(1);
+        CardModifier.DirectModifiers(strike).Add(strikeMod);
+
+        Assert.True(PlannedModifier.QueueNeedsEnemyTarget(new CardModel[] { defend, strike }));
+    }
+
+    [Fact]
+    public void QueueNeedsEnemyTarget_UnplannedStrike_ReturnsFalse()
+    {
+        // A card with TargetType.AnyEnemy that isn't actually in the Planned queue must not count.
+        var strike = new UnderstudyStrike();
+        Assert.False(PlannedModifier.QueueNeedsEnemyTarget(new[] { strike }));
+    }
 }

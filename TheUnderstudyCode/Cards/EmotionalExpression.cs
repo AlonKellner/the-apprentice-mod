@@ -283,6 +283,25 @@ public static class EmotionalExpression
         return sum;
     }
 
+    // Whether Invert would have anything at all to act on right now — all 8 invertible pairs
+    // (the 5 self-debuffs plus Frail/Strength/Dexterity, matching PickDebuffToInvert's/IsPresent's
+    // scope below, which is broader than SumOfInvertibleDebuffs' 5-flavor sum). Used by relevance
+    // highlighting on Coda/Reprise/SteadyNow/TakeABreath/EverythingIveGot.
+    public static bool HasAnyInvertibleDebuffPresent(
+        int weak, int vulnerable, int shaken, int limited, int jaded, int frail, int strength, int dexterity) =>
+        weak > 0 || vulnerable > 0 || shaken > 0 || limited > 0 || jaded > 0 || frail > 0
+        || strength < 0 || dexterity < 0;
+
+    public static bool HasAnyInvertibleDebuffPresent(Creature creature) => HasAnyInvertibleDebuffPresent(
+        creature.GetPowerAmount<WeakPower>(),
+        creature.GetPowerAmount<VulnerablePower>(),
+        creature.GetPowerAmount<ShakenPower>(),
+        creature.GetPowerAmount<LimitedPower>(),
+        creature.GetPowerAmount<JadedPower>(),
+        creature.GetPowerAmount<FrailPower>(),
+        creature.GetPowerAmount<StrengthPower>(),
+        creature.GetPowerAmount<DexterityPower>());
+
     // ── Invert dispatcher ────────────────────────────────────────────────────────────────────
     //
     // "Last modified invertible debuff" tracking, combat-scoped like IntenseModifier's own static

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using BaseLib.Abstracts;
 using BaseLib.Extensions;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -21,6 +22,10 @@ public class UnplayableModifier : CardModifier
     // as it already was for natively Unplayable-keyworded cards before this was broadened.
     public static bool CanApplyTo(CardModel card) =>
         (card.Type == CardType.Attack || card.Type == CardType.Skill) && card.IsUnplayable();
+
+    // Whether any card in the given set is a valid "remove Unplayable" target — used by
+    // TakeTwo/Rewrite/TouchUp to glow gold only when they'd actually have something to free.
+    public static bool AnyIn(IEnumerable<CardModel> cards) => cards.Any(CanApplyTo);
 
     // Removes the standalone Unplayable flag. Does not touch PlannedModifier/IntenseModifier —
     // a card can still be Planned/Intense afterward, it just stops being forced Unplayable by

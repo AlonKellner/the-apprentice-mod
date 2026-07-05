@@ -22,6 +22,8 @@ public class Coda : UnderstudyCard
         DynamicVars.Damage.UpgradeValueBy(4m);
     }
 
+    protected override bool ShouldGlowGoldInternal => EmotionalExpression.HasAnyInvertibleDebuffPresent(Owner.Creature);
+
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
         await CommonActions.CardAttack(cardPlay.Card, cardPlay).Execute(context);

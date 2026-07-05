@@ -67,6 +67,12 @@ public class PlannedModifier : CardModifier
     public static int CountIn(IEnumerable<CardModel> cards) =>
         cards.Count(c => c.TryGetModifier<PlannedModifier>(out _));
 
+    // Whether the queue contains a card that needs the player to pick a single enemy — used by
+    // CurtainCall/Performance/Encore to skip the targeting prompt when nothing queued needs it
+    // (empty plan, or only AoE/self/no-target cards, e.g. two Defends).
+    public static bool QueueNeedsEnemyTarget(IEnumerable<CardModel> cards) =>
+        cards.Any(c => c.TryGetModifier<PlannedModifier>(out _) && c.TargetType == TargetType.AnyEnemy);
+
     // Returns one entry per queue slot. A card with two slots appears twice.
     // Sorted by slotSeqIdx ascending, then by deck position as a tiebreaker.
     public static List<(CardModel card, PlannedModifier mod, int slotSeqIdx)> GetSorted(IEnumerable<CardModel> cards)

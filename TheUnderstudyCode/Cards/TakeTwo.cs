@@ -1,3 +1,4 @@
+using System.Linq;
 using BaseLib.Abstracts;
 using MegaCrit.Sts2.Core.CardSelection;
 using MegaCrit.Sts2.Core.Commands;
@@ -24,6 +25,9 @@ public class TakeTwo : UnderstudyCard
         base.OnUpgrade();
         DynamicVars["Select"].UpgradeValueBy(1m);
     }
+
+    protected override bool ShouldGlowGoldInternal =>
+        UnplayableModifier.AnyIn(PileType.Hand.GetPile(Owner).Cards.Where(c => c != this));
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {

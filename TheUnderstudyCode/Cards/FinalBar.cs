@@ -27,6 +27,8 @@ public class FinalBar : UnderstudyCard
         WithTip(UnderstudyKeywords.Planned);
     }
 
+    protected override bool ShouldGlowGoldInternal => PlannedModifier.AnyIn(PlannedModifier.RelevantCards(Owner));
+
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
         var player = cardPlay.Card.Owner;

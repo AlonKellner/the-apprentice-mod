@@ -89,6 +89,55 @@ public class EmotionalExpressionTests
     public void ComputeSignFlip_Zero_NoOp() =>
         Assert.Equal((0, 0), EmotionalExpression.ComputeSignFlip(0, 5));
 
+    // HasAnyInvertibleDebuffPresent — pure core behind the "is there anything for Invert to act
+    // on right now" check, used by relevance-highlighting on Coda/Reprise/SteadyNow/TakeABreath/
+    // EverythingIveGot. Covers all 8 invertible pairs (the 5 self-debuffs Understudy's own cards
+    // generate, plus Frail/Strength/Dexterity which Invert must still recognize).
+
+    [Fact]
+    public void HasAnyInvertibleDebuffPresent_AllZero_ReturnsFalse() =>
+        Assert.False(EmotionalExpression.HasAnyInvertibleDebuffPresent(0, 0, 0, 0, 0, 0, 0, 0));
+
+    [Fact]
+    public void HasAnyInvertibleDebuffPresent_OnlyWeak_ReturnsTrue() =>
+        Assert.True(EmotionalExpression.HasAnyInvertibleDebuffPresent(3, 0, 0, 0, 0, 0, 0, 0));
+
+    [Fact]
+    public void HasAnyInvertibleDebuffPresent_OnlyVulnerable_ReturnsTrue() =>
+        Assert.True(EmotionalExpression.HasAnyInvertibleDebuffPresent(0, 2, 0, 0, 0, 0, 0, 0));
+
+    [Fact]
+    public void HasAnyInvertibleDebuffPresent_OnlyShaken_ReturnsTrue() =>
+        Assert.True(EmotionalExpression.HasAnyInvertibleDebuffPresent(0, 0, 1, 0, 0, 0, 0, 0));
+
+    [Fact]
+    public void HasAnyInvertibleDebuffPresent_OnlyLimited_ReturnsTrue() =>
+        Assert.True(EmotionalExpression.HasAnyInvertibleDebuffPresent(0, 0, 0, 1, 0, 0, 0, 0));
+
+    [Fact]
+    public void HasAnyInvertibleDebuffPresent_OnlyJaded_ReturnsTrue() =>
+        Assert.True(EmotionalExpression.HasAnyInvertibleDebuffPresent(0, 0, 0, 0, 1, 0, 0, 0));
+
+    [Fact]
+    public void HasAnyInvertibleDebuffPresent_OnlyFrail_ReturnsTrue() =>
+        Assert.True(EmotionalExpression.HasAnyInvertibleDebuffPresent(0, 0, 0, 0, 0, 1, 0, 0));
+
+    [Fact]
+    public void HasAnyInvertibleDebuffPresent_NegativeStrength_ReturnsTrue() =>
+        Assert.True(EmotionalExpression.HasAnyInvertibleDebuffPresent(0, 0, 0, 0, 0, 0, -1, 0));
+
+    [Fact]
+    public void HasAnyInvertibleDebuffPresent_PositiveStrength_ReturnsFalse() =>
+        Assert.False(EmotionalExpression.HasAnyInvertibleDebuffPresent(0, 0, 0, 0, 0, 0, 3, 0));
+
+    [Fact]
+    public void HasAnyInvertibleDebuffPresent_NegativeDexterity_ReturnsTrue() =>
+        Assert.True(EmotionalExpression.HasAnyInvertibleDebuffPresent(0, 0, 0, 0, 0, 0, 0, -1));
+
+    [Fact]
+    public void HasAnyInvertibleDebuffPresent_PositiveDexterity_ReturnsFalse() =>
+        Assert.False(EmotionalExpression.HasAnyInvertibleDebuffPresent(0, 0, 0, 0, 0, 0, 0, 2));
+
     // IdentifyPair — used by My Own Lesson's reversed-mode swap on InvertTrackerPower to find the
     // opposite power for one of the 6 real X/Un-X pairs. Strength/Dexterity deliberately return null
     // here (no separate Un-X power to redirect to — handled by a distinct sign-flip branch instead).
