@@ -11,9 +11,9 @@ namespace TheUnderstudy.TheUnderstudyCode.Cards.Afflictions;
 //
 // NOTE: AfflictionModel.OverlayPath is NOT virtual — it's always
 // "res://scenes/cards/overlays/afflictions/" + Id.Entry.ToLowerInvariant() + ".tscn", so there is
-// no override here. The generated scene must be placed at whatever path that computes to for this
-// class (see tools/generate_order_overlay.py's output path) — verify this in the Godot editor or
-// in-game, since it can't be confirmed from static analysis alone.
+// no override here. Id.Entry = StringHelper.Slugify(type.Name) with no mod-namespace prefix, so
+// for this class it resolves to "order" — the scene lives at
+// scenes/cards/overlays/afflictions/order.tscn (see generate_order_overlay.py).
 public sealed class Order : AfflictionModel
 {
     public override bool CanAfflictCardType(CardType cardType) =>

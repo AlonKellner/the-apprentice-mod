@@ -12,11 +12,10 @@ Writes two files:
                                        Instantiate<Control>() expectation)
 
 AfflictionModel.OverlayPath is NOT virtual and is always computed as
-"res://scenes/cards/overlays/afflictions/" + Id.Entry.ToLowerInvariant() + ".tscn". The default
---entry value here ("theunderstudy-order") is a best-effort static-analysis guess at what Id.Entry
-resolves to for the Order affliction class (BaseLib prefixes custom model IDs with
-"{ROOT_NAMESPACE_UPPER}-"), not a confirmed value — verify in the Godot editor or in-game and
-re-run with --entry corrected if the overlay doesn't appear.
+"res://scenes/cards/overlays/afflictions/" + Id.Entry.ToLowerInvariant() + ".tscn". Id.Entry comes
+from ModelDb.GetEntry(type) = StringHelper.Slugify(type.Name) with no mod-namespace prefix (traced
+through AbstractModel's constructor and ModelDb.GetId — no BaseLib patch touches this), so for the
+Order affliction class Id.Entry resolves to "order", which is the default --entry value here.
 
 Re-run with different flags any time to tune the look; both output files are fully regenerated.
 """
@@ -117,7 +116,7 @@ def main() -> None:
     parser.add_argument("--speed", type=float, default=0.15, help="animation speed through the 3rd noise axis")
     parser.add_argument("--octaves", type=int, default=3, help="fbm octave count, baked in at generation time")
     parser.add_argument(
-        "--entry", default="theunderstudy-order",
+        "--entry", default="order",
         help="lowercased Id.Entry the scene must be named after (see module docstring)")
     args = parser.parse_args()
 
