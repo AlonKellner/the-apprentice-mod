@@ -31,6 +31,11 @@ public class CardTooltipKeywordSyncTests
         ["Unplayable"] = "CardKeyword.Unplayable)",
         ["Rewarded"] = "typeof(RewardedPower)",
         ["Punished"] = "typeof(PunishedPower)",
+        ["Unweak"] = "typeof(UnweakPower)",
+        ["Unvulnerable"] = "typeof(UnvulnerablePower)",
+        ["Unshaken"] = "typeof(UnshakenPower)",
+        ["Unjaded"] = "typeof(UnjadedPower)",
+        ["Unlimited"] = "typeof(UnlimitedPower)",
     };
 
     // Gold-highlighted terms that are just prose emphasis, not mechanics with their own tip
