@@ -9,6 +9,7 @@ using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.ValueProps;
 using TheUnderstudy.TheUnderstudyCode.Cards;
+using TheUnderstudy.TheUnderstudyCode.Extensions;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
 
@@ -78,6 +79,10 @@ public class IntenseModifier : CardModifier
         mod!.Stacks++;
         // No explicit BaseValue update needed — ModifyDamageAdditive / ModifyBlockAdditive
         // inject the bonus at calculation time (same mechanism as Strength / Dexterity).
+
+        Invariants.CheckEqual(_intenseCreated, allCards.Count(c => c.TryGetModifier<IntenseModifier>(out _)),
+            nameof(IntenseModifier) + "." + nameof(Apply),
+            "distinct cards carrying IntenseModifier this combat vs. _intenseCreated");
     }
 
     // ── Strength/Dexterity-style hook overrides ──────────────────────────────────────────────
@@ -90,6 +95,9 @@ public class IntenseModifier : CardModifier
     {
         if (cardSource != Owner) return 0m;
         if (!props.IsPoweredAttack()) return 0m;
+        Invariants.Check(ReferenceEquals(_lastCombat, cardSource?.CombatState),
+            nameof(IntenseModifier) + "." + nameof(ModifyDamageAdditive),
+            "_intenseCreated may be stale — this ran before any IntenseModifier.Apply call this combat");
         return Stacks * _intenseCreated;
     }
 
@@ -98,6 +106,9 @@ public class IntenseModifier : CardModifier
     {
         if (cardSource != Owner) return 0m;
         if (!props.IsPoweredCardOrMonsterMoveBlock()) return 0m;
+        Invariants.Check(ReferenceEquals(_lastCombat, cardSource?.CombatState),
+            nameof(IntenseModifier) + "." + nameof(ModifyBlockAdditive),
+            "_intenseCreated may be stale — this ran before any IntenseModifier.Apply call this combat");
         return Stacks * _intenseCreated;
     }
 

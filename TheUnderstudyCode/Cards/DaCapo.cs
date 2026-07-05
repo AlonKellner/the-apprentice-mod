@@ -5,6 +5,7 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
+using TheUnderstudy.TheUnderstudyCode.Extensions;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
@@ -28,6 +29,8 @@ public class DaCapo : UnderstudyCard
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
         int hitCount = (int)DynamicVars["Repeat"].BaseValue;
+        Invariants.Check(hitCount > 0, nameof(DaCapo) + "." + nameof(OnPlay),
+            $"Repeat resolved to {hitCount} hits — must be positive before attacking and applying Intense");
         await CommonActions.CardAttack(cardPlay.Card, cardPlay, hitCount).Execute(context);
 
         var player = cardPlay.Card.Owner;

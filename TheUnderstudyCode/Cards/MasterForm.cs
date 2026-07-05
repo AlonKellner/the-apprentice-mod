@@ -12,7 +12,7 @@ public class MasterForm : UnderstudyCard
 
     public MasterForm() : base(3, CardType.Power, CardRarity.Rare, TargetType.None)
     {
-        WithCostUpgradeBy(-1);
+        WithKeyword(CardKeyword.Retain, ConstructedCardModel.UpgradeType.Add);
         WithPower<MasterFormPower>(1);
         WithTip(CardKeyword.Unplayable);
     }

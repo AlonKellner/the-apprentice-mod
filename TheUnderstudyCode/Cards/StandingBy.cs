@@ -3,6 +3,7 @@ using BaseLib.Utils;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using TheUnderstudy.TheUnderstudyCode.Cards.Powers;
+using TheUnderstudy.TheUnderstudyCode.Extensions;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
@@ -23,6 +24,8 @@ public class StandingBy : UnderstudyCard
         if (cardPlay.Card.IsUpgraded)
         {
             var power = creature.GetPower<StandingByPower>();
+            Invariants.Check(power != null, nameof(StandingBy) + "." + nameof(OnPlay),
+                "StandingByPower must exist immediately after Apply — an upgraded copy's ChoiceMode would be silently dropped");
             if (power != null) power.ChoiceMode = true;
         }
     }

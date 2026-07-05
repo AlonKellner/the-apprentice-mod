@@ -33,6 +33,8 @@ public class TakeYourBow : UnderstudyCard
         // skills actually have their Unplayable removed (Planned/Intense/Free's usual scope).
         int unplayableCount = handCards.Count(c => c.IsUnplayable());
         var toFree = handCards.Where(UnplayableModifier.CanApplyTo).ToList();
+        Invariants.Check(toFree.Count <= unplayableCount, nameof(TakeYourBow) + "." + nameof(OnPlay),
+            $"freeing {toFree.Count} card(s), more than the {unplayableCount} counted for damage — toFree must be a subset");
         foreach (var card in toFree)
             UnplayableModifier.Remove(card);
 

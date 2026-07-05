@@ -8,6 +8,7 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Powers;
 using TheUnderstudy.TheUnderstudyCode.Cards.Powers;
+using TheUnderstudy.TheUnderstudyCode.Extensions;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
@@ -101,6 +102,8 @@ public static class EmotionalExpression
         int removeAmount = Math.Min(curWeak, max);
         if (removeAmount <= 0) return 0;
         await PowerCmd.Apply<WeakPower>(ctx, creature, -removeAmount, creature, null, false);
+        Invariants.CheckEqual(curWeak - removeAmount, creature.GetPowerAmount<WeakPower>(),
+            nameof(EmotionalExpression) + "." + nameof(ConvertWeakToUnweak), "Weak after removal");
         await PowerCmd.Apply<UnweakPower>(ctx, creature, removeAmount, creature, null, false);
         RecordModified(creature, InvertibleDebuff.Weak);
         await RaiseClearedIfZeroed(ctx, creature, curWeak, creature.GetPowerAmount<WeakPower>());
@@ -114,6 +117,8 @@ public static class EmotionalExpression
         int removeAmount = Math.Min(curVul, max);
         if (removeAmount <= 0) return 0;
         await PowerCmd.Apply<VulnerablePower>(ctx, creature, -removeAmount, creature, null, false);
+        Invariants.CheckEqual(curVul - removeAmount, creature.GetPowerAmount<VulnerablePower>(),
+            nameof(EmotionalExpression) + "." + nameof(ConvertVulnerableToUnvulnerable), "Vulnerable after removal");
         await PowerCmd.Apply<UnvulnerablePower>(ctx, creature, removeAmount, creature, null, false);
         RecordModified(creature, InvertibleDebuff.Vulnerable);
         await RaiseClearedIfZeroed(ctx, creature, curVul, creature.GetPowerAmount<VulnerablePower>());
@@ -182,6 +187,8 @@ public static class EmotionalExpression
         int removeAmount = Math.Min(curShaken, max);
         if (removeAmount <= 0) return 0;
         await PowerCmd.Apply<ShakenPower>(ctx, creature, -removeAmount, creature, null, false);
+        Invariants.CheckEqual(curShaken - removeAmount, creature.GetPowerAmount<ShakenPower>(),
+            nameof(EmotionalExpression) + "." + nameof(ConvertShakenToUnshaken), "Shaken after removal");
         await PowerCmd.Apply<UnshakenPower>(ctx, creature, removeAmount, creature, null, false);
         RecordModified(creature, InvertibleDebuff.Shaken);
         await RaiseClearedIfZeroed(ctx, creature, curShaken, creature.GetPowerAmount<ShakenPower>());
@@ -203,6 +210,8 @@ public static class EmotionalExpression
         int removeAmount = Math.Min(curLimited, max);
         if (removeAmount <= 0) return 0;
         await PowerCmd.Apply<LimitedPower>(ctx, creature, -removeAmount, creature, null, false);
+        Invariants.CheckEqual(curLimited - removeAmount, creature.GetPowerAmount<LimitedPower>(),
+            nameof(EmotionalExpression) + "." + nameof(ConvertLimitedToUnlimited), "Limited after removal");
         await PowerCmd.Apply<UnlimitedPower>(ctx, creature, removeAmount, creature, null, false);
         RecordModified(creature, InvertibleDebuff.Limited);
         await RaiseClearedIfZeroed(ctx, creature, curLimited, creature.GetPowerAmount<LimitedPower>());
@@ -224,6 +233,8 @@ public static class EmotionalExpression
         int removeAmount = Math.Min(curJaded, max);
         if (removeAmount <= 0) return 0;
         await PowerCmd.Apply<JadedPower>(ctx, creature, -removeAmount, creature, null, false);
+        Invariants.CheckEqual(curJaded - removeAmount, creature.GetPowerAmount<JadedPower>(),
+            nameof(EmotionalExpression) + "." + nameof(ConvertJadedToUnjaded), "Jaded after removal");
         await PowerCmd.Apply<UnjadedPower>(ctx, creature, removeAmount, creature, null, false);
         RecordModified(creature, InvertibleDebuff.Jaded);
         await RaiseClearedIfZeroed(ctx, creature, curJaded, creature.GetPowerAmount<JadedPower>());
@@ -247,6 +258,8 @@ public static class EmotionalExpression
         int removeAmount = Math.Min(curFrail, max);
         if (removeAmount <= 0) return 0;
         await PowerCmd.Apply<FrailPower>(ctx, creature, -removeAmount, creature, null, false);
+        Invariants.CheckEqual(curFrail - removeAmount, creature.GetPowerAmount<FrailPower>(),
+            nameof(EmotionalExpression) + "." + nameof(ConvertFrailToUnfrail), "Frail after removal");
         await PowerCmd.Apply<UnfrailPower>(ctx, creature, removeAmount, creature, null, false);
         RecordModified(creature, InvertibleDebuff.Frail);
         await RaiseClearedIfZeroed(ctx, creature, curFrail, creature.GetPowerAmount<FrailPower>());
@@ -258,12 +271,17 @@ public static class EmotionalExpression
     // Deliberately only the 5 flavors the Understudy's own cards generate (Weak, Vulnerable,
     // Shaken, Limited, Jaded) — Frail/Strength/Dexterity are Invert-recognized but never part of
     // this sum, matching how the mechanic has been scoped throughout design.
-    public static int SumOfInvertibleDebuffs(Creature creature) =>
-        creature.GetPowerAmount<WeakPower>()
-        + creature.GetPowerAmount<VulnerablePower>()
-        + creature.GetPowerAmount<ShakenPower>()
-        + creature.GetPowerAmount<LimitedPower>()
-        + creature.GetPowerAmount<JadedPower>();
+    public static int SumOfInvertibleDebuffs(Creature creature)
+    {
+        int sum = creature.GetPowerAmount<WeakPower>()
+            + creature.GetPowerAmount<VulnerablePower>()
+            + creature.GetPowerAmount<ShakenPower>()
+            + creature.GetPowerAmount<LimitedPower>()
+            + creature.GetPowerAmount<JadedPower>();
+        Invariants.Check(sum >= 0, nameof(EmotionalExpression) + "." + nameof(SumOfInvertibleDebuffs),
+            $"sum of invertible debuffs is negative ({sum}) — a source power must have gone negative");
+        return sum;
+    }
 
     // ── Invert dispatcher ────────────────────────────────────────────────────────────────────
     //

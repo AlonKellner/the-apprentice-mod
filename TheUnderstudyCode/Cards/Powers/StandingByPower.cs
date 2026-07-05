@@ -8,8 +8,10 @@ using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Powers;
+using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization;
+using MegaCrit.Sts2.Core.Logging;
 using MegaCrit.Sts2.Core.Models;
 using TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
 using TheUnderstudy.TheUnderstudyCode.Extensions;
@@ -57,23 +59,46 @@ public class StandingByPower : UnderstudyPower
         if (card.Owner?.Creature == Owner) _pending.Add(card);
     }
 
-    // Checked once per real card play — by then every UnplayableModifier attached during that
-    // play's resolution (Planned/Intense included) has already fired OnUnplayableApplied above.
-    public override async Task AfterCardPlayed(PlayerChoiceContext context, CardPlay cardPlay)
+    private static int CountUnplayableInHand(Player player) =>
+        PileType.Hand.GetPile(player).Cards.Count(UnplayableModifier.CanApplyTo);
+
+    // "The rest of the deck" — every other combat pile. This power only ever removes Unplayable
+    // from a card in Hand, so this count must never decrease as a result of its own action.
+    private static int CountUnplayableOutsideHand(Player player) =>
+        CardPile.GetCards(player, PileType.Draw, PileType.Discard, PileType.Exhaust, PileType.Play)
+            .Count(UnplayableModifier.CanApplyTo);
+
+    // Must run in the *Late* pass, not the main AfterCardPlayed pass: CombatState.IterateHookListeners
+    // enumerates each creature's Powers before its cards (see CombatState's hook-listener builder),
+    // so this Power's own AfterCardPlayed would fire BEFORE the just-played card's own AfterCardPlayed
+    // override — the one that attaches UnplayableModifier when a card's own final Intense play just
+    // completed (UnderstudyCard.AfterCardPlayed's IsFinalIntensePlay check). That self-triggered
+    // OnUnplayableApplied call would arrive one play too late for a same-pass drain, so the card
+    // that JUST became Unplayable by playing itself would only free a hand card on the NEXT play,
+    // not this one. AfterCardPlayedLate runs in a second, separate pass after every listener's
+    // AfterCardPlayed (cards and powers alike) has already completed, so by the time this fires,
+    // any Unplayable attached during this same play — including the just-played card's own — has
+    // already fired OnUnplayableApplied above.
+    public override async Task AfterCardPlayedLate(PlayerChoiceContext context, CardPlay cardPlay)
     {
         if (_pending.Count == 0 || Owner?.Player == null) return;
         var triggers = _pending.ToList();
         _pending.Clear();
 
         Invariants.Check(triggers.Distinct().Count() == triggers.Count,
-            nameof(StandingByPower) + "." + nameof(AfterCardPlayed),
+            nameof(StandingByPower) + "." + nameof(AfterCardPlayedLate),
             "the pending trigger queue has duplicate cards — OnUnplayableApplied fired twice for the same card");
 
         var player = Owner.Player;
+        int handBefore = CountUnplayableInHand(player);
+        int restBefore = CountUnplayableOutsideHand(player);
+        Log.Info($"StandingByPower.AfterCardPlayedLate: draining {triggers.Count} trigger(s), " +
+                 $"{handBefore} Unplayable in hand, {restBefore} Unplayable in the rest of the deck");
+
         foreach (var triggeringCard in triggers)
         {
             Invariants.Check(triggeringCard.TryGetModifier<UnplayableModifier>(out _),
-                nameof(StandingByPower) + "." + nameof(AfterCardPlayed),
+                nameof(StandingByPower) + "." + nameof(AfterCardPlayedLate),
                 $"{triggeringCard.Id} queued this trigger by becoming Unplayable, but no longer carries UnplayableModifier by drain time");
 
             var candidates = PileType.Hand.GetPile(player).Cards
@@ -81,6 +106,7 @@ public class StandingByPower : UnderstudyPower
                 .ToList();
             if (candidates.Count == 0) continue;
 
+            CardModel? chosen;
             if (ChoiceMode)
             {
                 var selected = await CardSelectCmd.FromHand(
@@ -89,14 +115,29 @@ public class StandingByPower : UnderstudyPower
                     new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-STANDING_BY.selectionPrompt"), 0, 1),
                     c => candidates.Contains(c),
                     this);
-                var chosen = selected?.FirstOrDefault();
-                if (chosen != null) UnplayableModifier.Remove(chosen);
+                // ChoiceMode allows a legitimate decline (CardSelectorPrefs's MinSelect is 0), so
+                // chosen == null here is not itself an invariant violation.
+                chosen = selected?.FirstOrDefault();
             }
             else
             {
-                var chosen = player.RunState.Rng.CombatCardSelection.NextItem(candidates);
-                if (chosen != null) UnplayableModifier.Remove(chosen);
+                chosen = player.RunState.Rng.CombatCardSelection.NextItem(candidates);
+                Invariants.Check(chosen != null,
+                    nameof(StandingByPower) + "." + nameof(AfterCardPlayedLate),
+                    "a non-empty candidate list must always yield a pick on the random (non-ChoiceMode) path");
             }
+
+            if (chosen == null) continue;
+            UnplayableModifier.Remove(chosen);
+            Invariants.Check(!chosen.TryGetModifier<UnplayableModifier>(out _),
+                nameof(StandingByPower) + "." + nameof(AfterCardPlayedLate),
+                $"{chosen.Id} was chosen to be freed but still carries UnplayableModifier after Remove");
         }
+
+        int restAfter = CountUnplayableOutsideHand(player);
+        Invariants.Check(restAfter >= restBefore,
+            nameof(StandingByPower) + "." + nameof(AfterCardPlayedLate),
+            $"Unplayable count outside hand decreased ({restBefore} -> {restAfter}) — this power must never " +
+            "remove Unplayable from anything but a card in hand");
     }
 }
