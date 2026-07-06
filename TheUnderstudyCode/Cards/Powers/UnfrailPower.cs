@@ -20,8 +20,8 @@ public class UnfrailPower : UnderstudyPower
 
     public override List<(string, string)> Localization => new PowerLoc(
         "Unfrail",
-        "Unfrail creatures gain [blue]25%[/blue] more Block. Cancels out with Frail.",
-        "Unfrail creatures gain [blue]25%[/blue] more Block. Cancels out with Frail.");
+        "Unfrail creatures gain [blue]25%[/blue] more Block. Cancels out with Frail. [gold]Invertible[/gold].",
+        "Unfrail creatures gain [blue]25%[/blue] more Block. Cancels out with Frail. [gold]Invertible[/gold].");
 
     public override decimal ModifyBlockMultiplicative(Creature target, decimal block, ValueProp props, CardModel? cardSource, CardPlay? cardPlay)
     {

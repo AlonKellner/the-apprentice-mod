@@ -1,0 +1,48 @@
+using System.Linq;
+using BaseLib.Abstracts;
+using BaseLib.Utils;
+using MegaCrit.Sts2.Core.CardSelection;
+using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.Entities.Cards;
+using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.Localization;
+using TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
+
+namespace TheUnderstudy.TheUnderstudyCode.Cards;
+
+public class Prompt : UnderstudyCard
+{
+    public const string CardId = "TheUnderstudy:Prompt";
+
+    public Prompt() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.None)
+    {
+        WithCards(2);
+        WithTip(CardKeyword.Unplayable);
+    }
+
+    protected override void OnUpgrade()
+    {
+        base.OnUpgrade();
+        DynamicVars.Cards.UpgradeValueBy(1m);
+    }
+
+    protected override bool ShouldGlowGoldInternal =>
+        UnplayableModifier.AnyIn(PileType.Hand.GetPile(Owner).Cards.Where(c => c != this));
+
+    protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
+    {
+        await CommonActions.Draw(this, context);
+
+        var player = cardPlay.Card.Owner;
+        var selected = await CardSelectCmd.FromHand(
+            context,
+            player,
+            new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-PROMPT.selectionPrompt"), 0, 1),
+            c => c != this && UnplayableModifier.CanApplyTo(c),
+            this);
+
+        if (selected == null) return;
+        foreach (var card in selected)
+            UnplayableModifier.Remove(card);
+    }
+}

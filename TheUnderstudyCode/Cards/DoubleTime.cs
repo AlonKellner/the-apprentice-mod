@@ -6,11 +6,11 @@ using TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
-public class Fortissimo : UnderstudyCard
+public class DoubleTime : UnderstudyCard
 {
-    public const string CardId = "TheUnderstudy:Fortissimo";
+    public const string CardId = "TheUnderstudy:DoubleTime";
 
-    public Fortissimo() : base(1, CardType.Power, CardRarity.Rare, TargetType.None)
+    public DoubleTime() : base(1, CardType.Power, CardRarity.Rare, TargetType.None)
     {
         WithPower<FortissimoPower>(1, 1);
         WithTip(UnderstudyKeywords.Invertible);

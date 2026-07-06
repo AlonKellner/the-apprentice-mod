@@ -20,8 +20,8 @@ public class UnlimitedPower : UnderstudyPower
 
     public override List<(string, string)> Localization => new PowerLoc(
         "Unlimited",
-        "At the start of your next turn, draw until your hand is full.",
-        "At the start of your next turn, draw until your hand is full.");
+        "At the start of your next turn, draw until your hand is full. [gold]Invertible[/gold].",
+        "At the start of your next turn, draw until your hand is full. [gold]Invertible[/gold].");
 
     public override decimal ModifyHandDraw(Player player, decimal count)
     {

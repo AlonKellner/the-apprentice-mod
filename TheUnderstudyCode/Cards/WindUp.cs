@@ -7,11 +7,11 @@ using MegaCrit.Sts2.Core.Models.Powers;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
-public class Diminuendo : UnderstudyCard
+public class WindUp : UnderstudyCard
 {
-    public const string CardId = "TheUnderstudy:Diminuendo";
+    public const string CardId = "TheUnderstudy:WindUp";
 
-    public Diminuendo() : base(0, CardType.Skill, CardRarity.Common, TargetType.None)
+    public WindUp() : base(0, CardType.Skill, CardRarity.Common, TargetType.None)
     {
         WithVars(new IntVar("Vigor", 4));
         WithTip(typeof(WeakPower));
@@ -21,7 +21,7 @@ public class Diminuendo : UnderstudyCard
     protected override void OnUpgrade()
     {
         base.OnUpgrade();
-        DynamicVars["Vigor"].UpgradeValueBy(1m);
+        DynamicVars["Vigor"].UpgradeValueBy(2m);
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)

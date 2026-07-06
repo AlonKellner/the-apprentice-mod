@@ -35,8 +35,8 @@ public class NewDeckCardsTests
     [InlineData(typeof(Arrangement), "TheUnderstudy:Arrangement", CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)]
     [InlineData(typeof(DaCapo), "TheUnderstudy:DaCapo", CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)]
     [InlineData(typeof(Encore), "TheUnderstudy:Encore", CardType.Skill, CardRarity.Rare, TargetType.AnyEnemy)]
-    [InlineData(typeof(Diminuendo), "TheUnderstudy:Diminuendo", CardType.Skill, CardRarity.Common, TargetType.None)]
-    [InlineData(typeof(Fortissimo), "TheUnderstudy:Fortissimo", CardType.Power, CardRarity.Rare, TargetType.None)]
+    [InlineData(typeof(WindUp), "TheUnderstudy:WindUp", CardType.Skill, CardRarity.Common, TargetType.None)]
+    [InlineData(typeof(DoubleTime), "TheUnderstudy:DoubleTime", CardType.Power, CardRarity.Rare, TargetType.None)]
     [InlineData(typeof(TakeYourBow), "TheUnderstudy:TakeYourBow", CardType.Attack, CardRarity.Uncommon, TargetType.RandomEnemy)]
     [InlineData(typeof(SteadyNow), "TheUnderstudy:SteadyNow", CardType.Skill, CardRarity.Common, TargetType.None)]
     [InlineData(typeof(Coda), "TheUnderstudy:Coda", CardType.Attack, CardRarity.Rare, TargetType.AllEnemies)]
@@ -58,8 +58,16 @@ public class NewDeckCardsTests
     [InlineData(typeof(StandingRoom), "TheUnderstudy:StandingRoom", CardType.Attack, CardRarity.Uncommon, TargetType.AllEnemies)]
     [InlineData(typeof(HouseLights), "TheUnderstudy:HouseLights", CardType.Skill, CardRarity.Uncommon, TargetType.None)]
     [InlineData(typeof(FullVoice), "TheUnderstudy:FullVoice", CardType.Power, CardRarity.Uncommon, TargetType.None)]
-    [InlineData(typeof(NightShift), "TheUnderstudy:NightShift", CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)]
+    [InlineData(typeof(Showstopper), "TheUnderstudy:Showstopper", CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)]
     [InlineData(typeof(Remix), "TheUnderstudy:Remix", CardType.Skill, CardRarity.Uncommon, TargetType.None)]
+    [InlineData(typeof(Overcommit), "TheUnderstudy:Overcommit", CardType.Skill, CardRarity.Uncommon, TargetType.None)]
+    [InlineData(typeof(FastForward), "TheUnderstudy:FastForward", CardType.Skill, CardRarity.Uncommon, TargetType.None)]
+    [InlineData(typeof(MissedCue), "TheUnderstudy:MissedCue", CardType.Skill, CardRarity.Uncommon, TargetType.None)]
+    [InlineData(typeof(Prompt), "TheUnderstudy:Prompt", CardType.Skill, CardRarity.Uncommon, TargetType.None)]
+    [InlineData(typeof(MagnumOpus), "TheUnderstudy:MagnumOpus", CardType.Skill, CardRarity.Rare, TargetType.None)]
+    [InlineData(typeof(Refrain), "TheUnderstudy:Refrain", CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)]
+    [InlineData(typeof(FullCompany), "TheUnderstudy:FullCompany", CardType.Skill, CardRarity.Rare, TargetType.None)]
+    [InlineData(typeof(StageFright), "TheUnderstudy:StageFright", CardType.Skill, CardRarity.Uncommon, TargetType.None)]
     public void Card_ConstructsWithExpectedShape(
         System.Type cardType, string expectedId, CardType expectedType, CardRarity expectedRarity, TargetType expectedTarget)
     {

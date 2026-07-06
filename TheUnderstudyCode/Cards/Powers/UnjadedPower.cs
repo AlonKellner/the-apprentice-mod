@@ -20,8 +20,8 @@ public class UnjadedPower : UnderstudyPower
     // cards) doesn't expose custom CanonicalVars, only Amount/singleStarIcon/energyPrefix.
     public override List<(string, string)> Localization => new PowerLoc(
         "Unjaded",
-        "Gain {energyPrefix:energyIcons(3)} at the start of your next turn.",
-        "Gain {energyPrefix:energyIcons(3)} at the start of your next turn.");
+        "Gain {energyPrefix:energyIcons(3)} at the start of your next turn. [gold]Invertible[/gold].",
+        "Gain {energyPrefix:energyIcons(3)} at the start of your next turn. [gold]Invertible[/gold].");
 
     // See JadedPower for why this can't use ModifyEnergyGain — the natural per-turn refill
     // bypasses that hook entirely, so the bonus must be applied directly here instead.

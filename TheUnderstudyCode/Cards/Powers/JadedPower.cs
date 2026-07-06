@@ -25,8 +25,8 @@ public class JadedPower : UnderstudyPower
     // needs to be baked into the string via manual repetition.
     public override List<(string, string)> Localization => new PowerLoc(
         "Jaded",
-        "Lose {energyPrefix:energyIcons(1)} at the start of your next turn.",
-        "Lose {energyPrefix:energyIcons(1)} at the start of your next turn.");
+        "Lose {energyPrefix:energyIcons(1)} at the start of your next turn. [gold]Invertible[/gold].",
+        "Lose {energyPrefix:energyIcons(1)} at the start of your next turn. [gold]Invertible[/gold].");
 
     // The natural per-turn energy refill (PlayerCombatState.ResetEnergy/AddMaxEnergyToCurrent,
     // called directly from CombatManager.SetupPlayerTurn) is a raw field mutation that bypasses

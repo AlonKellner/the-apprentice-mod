@@ -22,7 +22,7 @@ public class AllNighter : UnderstudyCard
     protected override void OnUpgrade()
     {
         base.OnUpgrade();
-        DynamicVars["Jaded"].UpgradeValueBy(-1m);
+        DynamicVars.Energy.UpgradeValueBy(1m);
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
