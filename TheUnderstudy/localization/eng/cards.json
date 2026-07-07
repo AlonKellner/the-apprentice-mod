@@ -41,9 +41,8 @@
   "THEUNDERSTUDY-REHEARSE.selectionPrompt": "Choose cards to make [gold]Intense[/gold].",
 
   "THEUNDERSTUDY-CRAM_SESSION.title": "Cram Session",
-  "THEUNDERSTUDY-CRAM_SESSION.description": "Apply [gold]Planned[/gold] to 1 attack or skill in hand.\nApply [gold]Intense[/gold] to {IntenseSelect:diff()} attacks and skills in hand.",
-  "THEUNDERSTUDY-CRAM_SESSION.planSelectionPrompt": "Choose a card to make [gold]Planned[/gold].",
-  "THEUNDERSTUDY-CRAM_SESSION.intenseSelectionPrompt": "Choose cards to make [gold]Intense[/gold].",
+  "THEUNDERSTUDY-CRAM_SESSION.description": "Apply [gold]Planned[/gold] and [gold]Intense[/gold] to {Select:diff()} attack or skill in hand.",
+  "THEUNDERSTUDY-CRAM_SESSION.selectionPrompt": "Choose cards to make [gold]Planned[/gold] and [gold]Intense[/gold].",
 
   "THEUNDERSTUDY-OVEREXERT.title": "Overexert",
   "THEUNDERSTUDY-OVEREXERT.description": "Deal {Damage:diff()} damage.\nGain {Block:diff()} [gold]Block[/gold].\nApply 2 [gold]Limited[/gold] to yourself.",
@@ -144,9 +143,8 @@
   "THEUNDERSTUDY-BIG_BREAK.description": "Gain {IfUpgraded:show:6|4} [gold]Vigor[/gold], X times.",
 
   "THEUNDERSTUDY-TOUCH_UP.title": "Touch Up",
-  "THEUNDERSTUDY-TOUCH_UP.description": "Remove [gold]Unplayable[/gold] from 1 attack or skill in hand.\nApply [gold]Intense[/gold] to {IntenseSelect:diff()} attack or skill in hand.",
-  "THEUNDERSTUDY-TOUCH_UP.freeSelectionPrompt": "Choose a card to remove [gold]Unplayable[/gold] from.",
-  "THEUNDERSTUDY-TOUCH_UP.intenseSelectionPrompt": "Choose cards to make [gold]Intense[/gold].",
+  "THEUNDERSTUDY-TOUCH_UP.description": "Remove [gold]Unplayable[/gold] and apply [gold]Intense[/gold] to {Select:diff()} attack or skill in hand.",
+  "THEUNDERSTUDY-TOUCH_UP.selectionPrompt": "Choose cards to remove [gold]Unplayable[/gold] from and make [gold]Intense[/gold].",
 
   "THEUNDERSTUDY-WIDE_OPEN.title": "Wide Open",
   "THEUNDERSTUDY-WIDE_OPEN.description": "Deal {Damage:diff()} damage to ALL enemies.\nApply 1 [gold]Vulnerable[/gold] to yourself.",

@@ -17,7 +17,7 @@ public class CramSession : UnderstudyCard
 
     public CramSession() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.None)
     {
-        WithVars(new CardsVar("IntenseSelect", 1));
+        WithVars(new CardsVar("Select", 1));
         WithTip(UnderstudyKeywords.Planned);
         WithTip(UnderstudyKeywords.Intense);
     }
@@ -25,38 +25,27 @@ public class CramSession : UnderstudyCard
     protected override void OnUpgrade()
     {
         base.OnUpgrade();
-        DynamicVars["IntenseSelect"].UpgradeValueBy(1m);
+        DynamicVars["Select"].UpgradeValueBy(1m);
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
         var player = cardPlay.Card.Owner;
-
-        var planned = await CardSelectCmd.FromHand(
+        int maxSelect = (int)DynamicVars["Select"].BaseValue;
+        var selected = await CardSelectCmd.FromHand(
             context,
             player,
-            new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-CRAM_SESSION.planSelectionPrompt"), 0, 1),
-            c => c != this && PlannedModifier.CanApplyTo(c),
+            new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-CRAM_SESSION.selectionPrompt"), 0, maxSelect),
+            c => c != this && PlannedModifier.CanApplyTo(c) && IntenseModifier.CanApplyTo(c),
             this);
-        if (planned != null)
-        {
-            var allCards = PlannedModifier.RelevantCards(player).ToList();
-            foreach (var card in planned)
-                PlannedModifier.Apply(card, allCards);
-        }
+        if (selected == null) return;
 
-        int intenseSelect = (int)DynamicVars["IntenseSelect"].BaseValue;
-        var intensified = await CardSelectCmd.FromHand(
-            context,
-            player,
-            new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-CRAM_SESSION.intenseSelectionPrompt"), 0, intenseSelect),
-            c => c != this && IntenseModifier.CanApplyTo(c),
-            this);
-        if (intensified != null)
+        var plannedAllCards = PlannedModifier.RelevantCards(player).ToList();
+        var intenseAllCards = player.Piles.SelectMany(p => p.Cards);
+        foreach (var card in selected)
         {
-            var allCards = player.Piles.SelectMany(p => p.Cards);
-            foreach (var card in intensified)
-                IntenseModifier.Apply(card, CombatState!, allCards);
+            PlannedModifier.Apply(card, plannedAllCards);
+            IntenseModifier.Apply(card, CombatState!, intenseAllCards);
         }
     }
 }

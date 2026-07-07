@@ -6,6 +6,7 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
+using MegaCrit.Sts2.Core.Models;
 using TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
@@ -16,7 +17,7 @@ public class TouchUp : UnderstudyCard
 
     public TouchUp() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.None)
     {
-        WithVars(new CardsVar("IntenseSelect", 1));
+        WithVars(new CardsVar("Select", 1));
         WithTip(CardKeyword.Unplayable);
         WithTip(UnderstudyKeywords.Intense);
     }
@@ -24,38 +25,31 @@ public class TouchUp : UnderstudyCard
     protected override void OnUpgrade()
     {
         base.OnUpgrade();
-        DynamicVars["IntenseSelect"].UpgradeValueBy(1m);
+        DynamicVars["Select"].UpgradeValueBy(1m);
     }
 
+    private static bool CanApplyTo(CardModel c) => UnplayableModifier.CanApplyTo(c) && IntenseModifier.CanApplyTo(c);
+
     protected override bool ShouldGlowGoldInternal =>
-        UnplayableModifier.AnyIn(PileType.Hand.GetPile(Owner).Cards.Where(c => c != this));
+        PileType.Hand.GetPile(Owner).Cards.Where(c => c != this).Any(CanApplyTo);
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
         var player = cardPlay.Card.Owner;
-
-        var freed = await CardSelectCmd.FromHand(
+        int maxSelect = (int)DynamicVars["Select"].BaseValue;
+        var selected = await CardSelectCmd.FromHand(
             context,
             player,
-            new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-TOUCH_UP.freeSelectionPrompt"), 0, 1),
-            c => c != this && UnplayableModifier.CanApplyTo(c),
+            new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-TOUCH_UP.selectionPrompt"), 0, maxSelect),
+            c => c != this && CanApplyTo(c),
             this);
-        if (freed != null)
-            foreach (var card in freed)
-                UnplayableModifier.Remove(card);
+        if (selected == null) return;
 
-        int intenseSelect = (int)DynamicVars["IntenseSelect"].BaseValue;
-        var intensified = await CardSelectCmd.FromHand(
-            context,
-            player,
-            new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-TOUCH_UP.intenseSelectionPrompt"), 0, intenseSelect),
-            c => c != this && IntenseModifier.CanApplyTo(c),
-            this);
-        if (intensified != null)
+        var allCards = player.Piles.SelectMany(p => p.Cards);
+        foreach (var card in selected)
         {
-            var allCards = player.Piles.SelectMany(p => p.Cards);
-            foreach (var card in intensified)
-                IntenseModifier.Apply(card, CombatState!, allCards);
+            UnplayableModifier.Remove(card);
+            IntenseModifier.Apply(card, CombatState!, allCards);
         }
     }
 }
