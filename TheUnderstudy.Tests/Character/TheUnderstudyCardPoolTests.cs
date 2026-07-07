@@ -43,13 +43,14 @@ public class TheUnderstudyCardPoolTests
     public void Pool_HasExactly32UncommonCards() => Assert.Equal(32, CountBCardsByRarity("Uncommon"));
 
     [Fact]
-    public void Pool_HasExactly19RareCards() => Assert.Equal(19, CountBCardsByRarity("Rare"));
+    public void Pool_HasExactly20RareCards() => Assert.Equal(20, CountBCardsByRarity("Rare"));
 
     [Fact]
-    public void UnderstudyCard_NoIsPrePlanned_Overrides()
+    public void UnderstudyCard_IsPrePlannedOverriddenOnlyByPromptAndTableRead()
     {
-        // B cards do not use the pre-planned mechanic (that's for the original Understudy's
-        // Signature/Prelude cards). Verify no B card type overrides IsPrePlanned.
+        // The pre-planned mechanic (starting a combat already Planned, originally from the
+        // Apprentice's Signature/Prelude cards) is deliberately reused by exactly these two B
+        // cards. Verify no other B card type overrides IsPrePlanned.
         var bCardTypes = typeof(UnderstudyCard).Assembly.GetTypes()
             .Where(t => t.IsSubclassOf(typeof(UnderstudyCard)) && !t.IsAbstract)
             .Where(t =>
@@ -58,9 +59,10 @@ public class TheUnderstudyCardPoolTests
                 return method != null && method.DeclaringType == t;
             })
             .Select(t => t.Name)
+            .OrderBy(n => n)
             .ToList();
 
-        Assert.Empty(bCardTypes);
+        Assert.Equal(new[] { "Prompt", "TableRead" }, bCardTypes);
     }
 
     [Fact]
@@ -83,8 +85,28 @@ public class TheUnderstudyCardPoolTests
     [Fact]
     public void UnderstudyStrike_BeforeCombatStart_DoesNotAttachPlannedModifier()
     {
-        // B cards have no IsPrePlanned — BeforeCombatStart on UnderstudyCard does nothing for Planned.
+        // UnderstudyStrike.IsPrePlanned stays false (the default) — BeforeCombatStart's
+        // pre-planned wiring on UnderstudyCard is a no-op for any card that doesn't override it.
         var card = new UnderstudyStrike();
+        card.BeforeCombatStart();
+        Assert.False(card.TryGetModifier<PlannedModifier>(out _));
+    }
+
+    [Fact]
+    public void TableRead_BeforeCombatStart_DoesNotAttachPlannedModifier_WhenBare()
+    {
+        // TableRead.IsPrePlanned is true, but a bare-instantiated card has no Pile (Pile == null,
+        // so IsCombatPile() is false) — the guard in ApplyPrePlannedIfNeeded must no-op safely
+        // rather than crash trying to reach Owner/RelevantCards on a canonical card.
+        var card = new TableRead();
+        card.BeforeCombatStart();
+        Assert.False(card.TryGetModifier<PlannedModifier>(out _));
+    }
+
+    [Fact]
+    public void Prompt_BeforeCombatStart_DoesNotAttachPlannedModifier_WhenBare()
+    {
+        var card = new Prompt();
         card.BeforeCombatStart();
         Assert.False(card.TryGetModifier<PlannedModifier>(out _));
     }

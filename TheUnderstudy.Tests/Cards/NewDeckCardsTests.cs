@@ -24,7 +24,7 @@ public class NewDeckCardsTests
     [InlineData(typeof(AllNighter), "TheUnderstudy:AllNighter", CardType.Skill, CardRarity.Uncommon, TargetType.None)]
     [InlineData(typeof(OpeningNumber), "TheUnderstudy:OpeningNumber", CardType.Skill, CardRarity.Common, TargetType.None)]
     [InlineData(typeof(TakeCenterStage), "TheUnderstudy:TakeCenterStage", CardType.Attack, CardRarity.Uncommon, TargetType.AllEnemies)]
-    [InlineData(typeof(Rewrite), "TheUnderstudy:Rewrite", CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)]
+    [InlineData(typeof(Rewrite), "TheUnderstudy:Rewrite", CardType.Skill, CardRarity.Common, TargetType.None)]
     [InlineData(typeof(TakeTwo), "TheUnderstudy:TakeTwo", CardType.Skill, CardRarity.Uncommon, TargetType.None)]
     [InlineData(typeof(Flourish), "TheUnderstudy:Flourish", CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)]
     [InlineData(typeof(TakeNotes), "TheUnderstudy:TakeNotes", CardType.Power, CardRarity.Uncommon, TargetType.None)]
@@ -72,6 +72,7 @@ public class NewDeckCardsTests
     [InlineData(typeof(PlotTwist), "TheUnderstudy:PlotTwist", CardType.Skill, CardRarity.Common, TargetType.None)]
     [InlineData(typeof(TrueColors), "TheUnderstudy:TrueColors", CardType.Skill, CardRarity.Common, TargetType.None)]
     [InlineData(typeof(Matinee), "TheUnderstudy:Matinee", CardType.Skill, CardRarity.Common, TargetType.None)]
+    [InlineData(typeof(TableRead), "TheUnderstudy:TableRead", CardType.Skill, CardRarity.Rare, TargetType.None)]
     public void Card_ConstructsWithExpectedShape(
         System.Type cardType, string expectedId, CardType expectedType, CardRarity expectedRarity, TargetType expectedTarget)
     {

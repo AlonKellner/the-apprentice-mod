@@ -1,7 +1,11 @@
 using BaseLib.Abstracts;
+using MegaCrit.Sts2.Core.CardSelection;
+using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
+using TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
@@ -13,6 +17,7 @@ public class PlotTwist : UnderstudyCard
     {
         WithVars(new IntVar("Invert", 2));
         WithTip(UnderstudyKeywords.Invert);
+        WithTip(UnderstudyKeywords.Planned);
     }
 
     protected override void OnUpgrade()
@@ -27,5 +32,18 @@ public class PlotTwist : UnderstudyCard
     {
         int invertAmount = (int)DynamicVars["Invert"].BaseValue;
         await EmotionalExpression.InvertEach(context, cardPlay.Card.Owner.Creature, invertAmount);
+
+        var player = cardPlay.Card.Owner;
+        var selected = await CardSelectCmd.FromHand(
+            context,
+            player,
+            new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-PLOT_TWIST.selectionPrompt"), 0, 1),
+            c => c != this && PlannedModifier.CanApplyTo(c),
+            this);
+
+        if (selected == null) return;
+        var allCards = PlannedModifier.RelevantCards(player).ToList();
+        foreach (var card in selected)
+            PlannedModifier.Apply(card, allCards);
     }
 }

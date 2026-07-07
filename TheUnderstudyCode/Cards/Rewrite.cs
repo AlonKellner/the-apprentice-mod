@@ -14,16 +14,16 @@ public class Rewrite : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:Rewrite";
 
-    public Rewrite() : base(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
+    public Rewrite() : base(1, CardType.Skill, CardRarity.Common, TargetType.None)
     {
-        WithDamage(9);
+        WithCards(1);
         WithTip(CardKeyword.Unplayable);
     }
 
     protected override void OnUpgrade()
     {
         base.OnUpgrade();
-        DynamicVars.Damage.UpgradeValueBy(3m);
+        DynamicVars.Cards.UpgradeValueBy(1m);
     }
 
     protected override bool ShouldGlowGoldInternal =>
@@ -31,7 +31,7 @@ public class Rewrite : UnderstudyCard
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
-        await CommonActions.CardAttack(cardPlay.Card, cardPlay).Execute(context);
+        await CommonActions.Draw(this, context);
 
         var player = cardPlay.Card.Owner;
         var selected = await CardSelectCmd.FromHand(

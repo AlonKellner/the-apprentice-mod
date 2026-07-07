@@ -54,11 +54,39 @@ public abstract class UnderstudyCard(
     // Snapshot of DirectModifiers at combat start; null means this card is not Stable.
     private List<CardModifier>? _stableSnapshot;
 
+    // The pre-Planned mechanic (starting a combat already queued) — revived from the original,
+    // now-deleted Apprentice character's ApprenticeCard.IsPrePlanned, scoped to just the handful
+    // of B cards that override this (see ApplyPrePlannedIfNeeded). Manually attaches
+    // PlannedModifier with sentinel slot -1 (always sorts first in PlannedModifier.GetSorted, and
+    // never collides with Apply's own auto-incrementing max+1 numbering) rather than calling
+    // PlannedModifier.Apply, since Apply always assigns a fresh non-negative slot.
+    public virtual bool IsPrePlanned => false;
+
+    private void ApplyPrePlannedIfNeeded()
+    {
+        if (!IsPrePlanned) return;
+        if (Pile?.Type.IsCombatPile() != true) return;
+        if (this.TryGetModifier<PlannedModifier>(out _)) return;
+
+        CardModifier.AddModifier<PlannedModifier>(this);
+        this.TryGetModifier<PlannedModifier>(out var mod);
+        // BaseLib shallow-clones modifier prototypes, so a freshly-attached instance shares its
+        // SequenceIndices/VisualBySeq with every other clone until reinitialized — same reason
+        // PlannedModifier.Apply always calls this for a brand-new attachment.
+        mod!.ReinitCollections();
+        mod.SequenceIndices.Add(-1);
+        if (!this.TryGetModifier<UnplayableModifier>(out _))
+            CardModifier.AddModifier<UnplayableModifier>(this);
+        PlannedModifier.InvokeChanged();
+        PlannedModifier.RefreshVisualIndices(PlannedModifier.RelevantCards(Owner));
+    }
+
     public override Task BeforeCombatStart()
     {
         var t = base.BeforeCombatStart();
         if (Keywords.Contains(UnderstudyKeywords.Stable))
             _stableSnapshot = CardModifier.DirectModifiers(this).ToList();
+        ApplyPrePlannedIfNeeded();
         return t;
     }
 
@@ -83,6 +111,7 @@ public abstract class UnderstudyCard(
     public override Task AfterCardEnteredCombat(CardModel triggeredBy)
     {
         RestoreIfStable();
+        ApplyPrePlannedIfNeeded();
         return Task.CompletedTask;
     }
 

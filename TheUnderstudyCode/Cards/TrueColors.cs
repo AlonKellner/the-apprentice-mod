@@ -2,6 +2,7 @@ using BaseLib.Abstracts;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
+using MegaCrit.Sts2.Core.Models.Powers;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
@@ -13,6 +14,7 @@ public class TrueColors : UnderstudyCard
     {
         WithVars(new IntVar("Invert", 2));
         WithTip(UnderstudyKeywords.Invert);
+        WithTip(typeof(VulnerablePower));
     }
 
     protected override void OnUpgrade()
@@ -25,7 +27,9 @@ public class TrueColors : UnderstudyCard
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
+        var creature = cardPlay.Card.Owner.Creature;
         int invertAmount = (int)DynamicVars["Invert"].BaseValue;
-        await EmotionalExpression.InvertLastModified(context, cardPlay.Card.Owner.Creature, invertAmount);
+        await EmotionalExpression.InvertLastModified(context, creature, invertAmount);
+        await EmotionalExpression.ApplyVulnerableToSelf(context, creature, 1, this);
     }
 }

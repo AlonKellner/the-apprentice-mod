@@ -61,7 +61,7 @@
   "THEUNDERSTUDY-TAKE_CENTER_STAGE.description": "Deal {Damage:diff()} damage to ALL enemies.\nApply 2 [gold]Shaken[/gold] to yourself.",
 
   "THEUNDERSTUDY-REWRITE.title": "Rewrite",
-  "THEUNDERSTUDY-REWRITE.description": "Deal {Damage:diff()} damage.\nRemove [gold]Unplayable[/gold] from 2 attacks and skills in hand.",
+  "THEUNDERSTUDY-REWRITE.description": "Draw {Cards:diff()} cards.\nRemove [gold]Unplayable[/gold] from 2 attacks and skills in hand.",
   "THEUNDERSTUDY-REWRITE.selectionPrompt": "Choose cards to remove [gold]Unplayable[/gold].",
 
   "THEUNDERSTUDY-TAKE_TWO.title": "Take Two",
@@ -188,7 +188,7 @@
   "THEUNDERSTUDY-MISSED_CUE.description": "Remove [gold]Unplayable[/gold] from {Select:diff()} attack or skill in hand.\nApply 1 [gold]Shaken[/gold] to yourself.",
 
   "THEUNDERSTUDY-PROMPT.title": "Prompt",
-  "THEUNDERSTUDY-PROMPT.description": "Draw {Cards:diff()} cards.\nRemove [gold]Unplayable[/gold] from 1 attack or skill in hand.",
+  "THEUNDERSTUDY-PROMPT.description": "This card starts each combat already [gold]Planned[/gold].\nDraw {Cards:diff()} cards.",
 
   "THEUNDERSTUDY-MAGNUM_OPUS.title": "Magnum Opus",
   "THEUNDERSTUDY-MAGNUM_OPUS.description": "Apply [gold]Planned[/gold] to {Select:diff()} attacks or skills in your draw pile.",
@@ -213,11 +213,15 @@
   "THEUNDERSTUDY-STANDING_OVATION.selectionPrompt": "Choose a card to make [gold]Intense[/gold].",
 
   "THEUNDERSTUDY-PLOT_TWIST.title": "Plot Twist",
-  "THEUNDERSTUDY-PLOT_TWIST.description": "[gold]Invert[/gold] {Invert:diff()} of each invertible debuff you have.",
+  "THEUNDERSTUDY-PLOT_TWIST.description": "[gold]Invert[/gold] {Invert:diff()} of each invertible debuff you have.\nApply [gold]Planned[/gold] to 1 attack or skill in your hand.",
+  "THEUNDERSTUDY-PLOT_TWIST.selectionPrompt": "Choose a card to make [gold]Planned[/gold].",
 
   "THEUNDERSTUDY-TRUE_COLORS.title": "True Colors",
-  "THEUNDERSTUDY-TRUE_COLORS.description": "[gold]Invert[/gold] {Invert:diff()} of the last modified invertible debuff.",
+  "THEUNDERSTUDY-TRUE_COLORS.description": "[gold]Invert[/gold] {Invert:diff()} of the last modified invertible debuff.\nApply 1 [gold]Vulnerable[/gold] to yourself.",
 
   "THEUNDERSTUDY-MATINEE.title": "Matinee",
-  "THEUNDERSTUDY-MATINEE.description": "Gain {Block:diff()} [gold]Block[/gold].\nApply 1 [gold]Jaded[/gold] to yourself."
+  "THEUNDERSTUDY-MATINEE.description": "Gain {Block:diff()} [gold]Block[/gold].\nApply 1 [gold]Jaded[/gold] to yourself.",
+
+  "THEUNDERSTUDY-TABLE_READ.title": "Table Read",
+  "THEUNDERSTUDY-TABLE_READ.description": "This card starts each combat already [gold]Planned[/gold].\nGrant 1 [gold]Unweak[/gold], 1 [gold]Unvulnerable[/gold], 1 [gold]Unshaken[/gold], 1 [gold]Unlimited[/gold], and 1 [gold]Unjaded[/gold]."
 }
