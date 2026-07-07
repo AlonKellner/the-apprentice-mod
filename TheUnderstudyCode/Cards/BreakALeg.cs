@@ -8,25 +8,22 @@ using MegaCrit.Sts2.Core.Models.Powers;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
-public class TellItLikeItIs : UnderstudyCard
+public class BreakALeg : UnderstudyCard
 {
-    public const string CardId = "TheUnderstudy:TellItLikeItIs";
+    public const string CardId = "TheUnderstudy:BreakALeg";
 
-    public TellItLikeItIs() : base(2, CardType.Skill, CardRarity.Common, TargetType.AnyEnemy)
+    public BreakALeg() : base(2, CardType.Skill, CardRarity.Uncommon, TargetType.None)
     {
-        WithVars(new EnergyVar(1));
+        WithVars(new EnergyVar(1), new IntVar("Vigor", 3));
         WithTips(_ => new IHoverTip[] { EnergyHoverTip });
-        WithTip(typeof(WeakPower));
-        WithTip(UnderstudyKeywords.Invertible);
+        WithTip(typeof(VigorPower));
     }
 
     protected override void OnUpgrade()
     {
         base.OnUpgrade();
-        DynamicVars.Energy.UpgradeValueBy(1m);
+        DynamicVars["Vigor"].UpgradeValueBy(1m);
     }
-
-    protected override bool ShouldGlowGoldInternal => EmotionalExpression.SumOfInvertibleDebuffs(Owner.Creature) > 0;
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
@@ -34,7 +31,7 @@ public class TellItLikeItIs : UnderstudyCard
         await PlayerCmd.GainEnergy(DynamicVars.Energy.BaseValue, player);
 
         var creature = player.Creature;
-        int amount = EmotionalExpression.SumOfInvertibleDebuffs(creature);
-        await PowerCmd.Apply<WeakPower>(context, cardPlay.Target!, amount, creature, cardPlay.Card, false);
+        int vigor = (int)DynamicVars["Vigor"].BaseValue;
+        await PowerCmd.Apply<VigorPower>(context, creature, vigor, creature, this, false);
     }
 }

@@ -1,10 +1,8 @@
 using BaseLib.Abstracts;
+using BaseLib.Extensions;
 using BaseLib.Utils;
-using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
-using MegaCrit.Sts2.Core.HoverTips;
-using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models.Powers;
 using TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 
@@ -16,35 +14,26 @@ public class DressRehearsal : UnderstudyCard
 
     public DressRehearsal() : base(0, CardType.Skill, CardRarity.Rare, TargetType.None)
     {
-        WithCards(2);
-        WithVars(new EnergyVar(1));
-        WithTips(_ => new IHoverTip[] { EnergyHoverTip });
-        WithKeyword(CardKeyword.Exhaust);
+        WithPower<DressRehearsalPower>(2, 1);
         WithTip(typeof(WeakPower));
         WithTip(typeof(VulnerablePower));
         WithTip(typeof(ShakenPower));
         WithTip(typeof(JadedPower));
         WithTip(typeof(LimitedPower));
-    }
-
-    protected override void OnUpgrade()
-    {
-        base.OnUpgrade();
-        DynamicVars.Cards.UpgradeValueBy(1m);
+        WithTip(UnderstudyKeywords.Invert);
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
-        var player = cardPlay.Card.Owner;
-        var creature = player.Creature;
+        var creature = cardPlay.Card.Owner.Creature;
+        int amount = (int)DynamicVars.Power<DressRehearsalPower>().BaseValue;
 
-        await CommonActions.Draw(this, context);
-        await PlayerCmd.GainEnergy(DynamicVars.Energy.BaseValue, player);
+        await EmotionalExpression.ApplyWeakToSelf(context, creature, amount, this);
+        await EmotionalExpression.ApplyVulnerableToSelf(context, creature, amount, this);
+        await EmotionalExpression.ApplyShakenToSelf(context, creature, amount, this);
+        await EmotionalExpression.ApplyJadedToSelf(context, creature, amount, this);
+        await EmotionalExpression.ApplyLimitedToSelf(context, creature, amount, this);
 
-        await EmotionalExpression.ApplyWeakToSelf(context, creature, 1, this);
-        await EmotionalExpression.ApplyVulnerableToSelf(context, creature, 1, this);
-        await EmotionalExpression.ApplyShakenToSelf(context, creature, 1, this);
-        await EmotionalExpression.ApplyJadedToSelf(context, creature, 1, this);
-        await EmotionalExpression.ApplyLimitedToSelf(context, creature, 1, this);
+        await CommonActions.Apply<DressRehearsalPower>(context, creature, this);
     }
 }

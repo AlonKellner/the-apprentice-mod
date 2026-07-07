@@ -1,17 +1,22 @@
 using System.Linq;
 using BaseLib.Abstracts;
+using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.HoverTips;
+using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
-public class FullCompany : UnderstudyCard
+public class NervousEnergy : UnderstudyCard
 {
-    public const string CardId = "TheUnderstudy:FullCompany";
+    public const string CardId = "TheUnderstudy:NervousEnergy";
 
-    public FullCompany() : base(2, CardType.Skill, CardRarity.Rare, TargetType.None)
+    public NervousEnergy() : base(3, CardType.Skill, CardRarity.Rare, TargetType.None)
     {
+        WithVars(new EnergyVar(1));
+        WithTips(_ => new IHoverTip[] { EnergyHoverTip });
         WithTip(UnderstudyKeywords.Intense);
     }
 
@@ -22,5 +27,7 @@ public class FullCompany : UnderstudyCard
         var allCards = player.Piles.SelectMany(p => p.Cards);
         foreach (var card in hand.Cards.Where(c => c != this && IntenseModifier.CanApplyTo(c)).ToList())
             IntenseModifier.Apply(card, CombatState!, allCards);
+
+        await PlayerCmd.GainEnergy(DynamicVars.Energy.BaseValue, player);
     }
 }

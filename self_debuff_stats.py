@@ -31,6 +31,13 @@ INT_VAR_DECL_RE = re.compile(r'new IntVar\(\s*"(\w+)"\s*,\s*(\d+)\s*\)')
 LOCAL_VAR_FROM_DYNVAR_RE = re.compile(
     r'\bint\s+(\w+)\s*=\s*\(int\)DynamicVars\["(\w+)"\]\.BaseValue'
 )
+# `int amount = (int)DynamicVars.Power<SomePower>().BaseValue;` — the WithPower<T>(base, upgrade)
+# idiom (e.g. DressRehearsal), where one declared amount drives both a card-level effect and its
+# granted Power's Amount. The dynvar key here is the Power's own type name, not a string literal.
+LOCAL_VAR_FROM_POWER_RE = re.compile(
+    r'\bint\s+(\w+)\s*=\s*\(int\)DynamicVars\.Power<(\w+)>\(\)\.BaseValue'
+)
+WITH_POWER_DECL_RE = re.compile(r'WithPower<(\w+)>\(\s*(\d+)\s*(?:,\s*(\d+)\s*)?\)')
 UPGRADE_NAMED_RE = re.compile(r'DynamicVars\["(\w+)"\]\.UpgradeValueBy\(\s*(-?\d+(?:\.\d+)?)m?\s*\)')
 UPGRADE_STD_RE = re.compile(r'DynamicVars\.(Damage|Block|Cards)\.UpgradeValueBy\(\s*(-?\d+(?:\.\d+)?)m?\s*\)')
 
@@ -63,11 +70,26 @@ def resolve_amount(expr: str, text: str) -> tuple[int, str | None]:
         for km, kv in INT_VAR_DECL_RE.findall(text):
             if km == key:
                 return int(kv), key
+
+    # WithPower<T>(base, upgrade) form: `int amount = (int)DynamicVars.Power<DressRehearsalPower>().BaseValue;`
+    m = LOCAL_VAR_FROM_POWER_RE.search(text)
+    if m and m.group(1) == expr:
+        power_type = m.group(2)
+        for pt, base, _upgrade in WITH_POWER_DECL_RE.findall(text):
+            if pt == power_type:
+                return int(base), f"POWER:{power_type}"
+
     raise ValueError(f"Could not resolve debuff amount expression {expr!r}")
 
 
 def upgraded_value(base: int, dynvar_key: str | None, text: str) -> int:
     if dynvar_key is None:
+        return base
+    if dynvar_key.startswith("POWER:"):
+        power_type = dynvar_key[len("POWER:"):]
+        for pt, _base, upgrade in WITH_POWER_DECL_RE.findall(text):
+            if pt == power_type:
+                return base + int(upgrade or 0)
         return base
     m = UPGRADE_NAMED_RE.search(text)
     if m and m.group(1) == dynvar_key:

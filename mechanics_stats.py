@@ -48,7 +48,11 @@ MECHANICS: dict[str, re.Pattern] = {
     "Gain energy":              re.compile(r"PlayerCmd\.GainEnergy\("),
     "Remove Unplayable":        re.compile(r"UnplayableModifier\.Remove\("),
     "Invert debuffs":           re.compile(r"EmotionalExpression\.(?:InvertEach|InvertLastModified|InvertLastModifiedWithBonus)\("),
-    "Apply self debuff":        re.compile(r"EmotionalExpression\.Apply(?:Weak|Vulnerable|Shaken|Limited|Jaded|Frail)ToSelf\("),
+    # Self-debuffs are NOT part of this simple regex-membership dict — see
+    # SELF_DEBUFF_PATTERNS below. Whether a card lands in one of the 5
+    # single-type buckets or the "Apply all self-debuffs" bucket depends on
+    # how MANY distinct types its own source applies, which this dict's
+    # one-regex-per-mechanic model can't express on its own.
     "Apply enemy debuff":       re.compile(r"PowerCmd\.Apply<(?:Weak|Vulnerable|Shaken|Limited|Jaded|Frail)Power>\(\s*context\s*,\s*(?:cardPlay\.Target|enemy)\b"),
     "Apply Planned":            re.compile(r"PlannedModifier\.Apply\("),
     "Apply Intense":            re.compile(r"IntenseModifier\.Apply\("),
@@ -56,6 +60,38 @@ MECHANICS: dict[str, re.Pattern] = {
     "Play all Planned":         re.compile(r"PlannedModifier\.GetSorted\("),
     "Grant Un-X buff":          re.compile(r"PowerCmd\.Apply<Un(?:weak|vulnerable|shaken|jaded|limited|frail)Power>\("),
 }
+
+# Self-debuffs: detect which of the 5 types (Frail omitted — no card self-inflicts
+# it) a card's own source applies, then classify by COUNT, not just presence:
+# exactly one type -> that type's own bucket; two or more (currently only
+# DressRehearsal, which applies all 5) -> the shared "applies multiple at once"
+# bucket instead, kept separate so a kitchen-sink card never gets counted as
+# if it were a dedicated single-debuff card.
+SELF_DEBUFF_TYPES = ["Weak", "Vulnerable", "Shaken", "Limited", "Jaded"]
+SELF_DEBUFF_PATTERNS = {
+    t: re.compile(rf"EmotionalExpression\.Apply{t}ToSelf\(") for t in SELF_DEBUFF_TYPES
+}
+SELF_DEBUFF_ALL_NAME = "Apply all self-debuffs"
+
+# Full ordered list of every mechanic name this report tracks — the simple
+# regex ones from MECHANICS plus the specially-classified self-debuff ones,
+# spliced in where "Apply self debuff" used to sit.
+ALL_MECHANICS: list[str] = [
+    "Deal damage",
+    "Gain block",
+    "Draw cards",
+    "Gain energy",
+    "Remove Unplayable",
+    "Invert debuffs",
+    *[f"Apply self-{t}" for t in SELF_DEBUFF_TYPES],
+    SELF_DEBUFF_ALL_NAME,
+    "Apply enemy debuff",
+    "Apply Planned",
+    "Apply Intense",
+    "Gain Vigor",
+    "Play all Planned",
+    "Grant Un-X buff",
+]
 
 
 def parse_cards() -> list[dict]:
@@ -73,6 +109,12 @@ def parse_cards() -> list[dict]:
         class_name = class_m.group(1) if class_m else name
 
         mechanics = [m for m, pat in MECHANICS.items() if pat.search(text)]
+
+        matched_debuffs = [t for t, pat in SELF_DEBUFF_PATTERNS.items() if pat.search(text)]
+        if len(matched_debuffs) == 1:
+            mechanics.append(f"Apply self-{matched_debuffs[0]}")
+        elif len(matched_debuffs) > 1:
+            mechanics.append(SELF_DEBUFF_ALL_NAME)
 
         cards.append({
             "name": class_name,
@@ -102,11 +144,11 @@ def report(cards: list[dict]) -> str:
     header = f"  {'Mechanic':<20}{'# Cards':>9}"
     lines.append(header)
     lines.append("  " + "-" * (len(header) - 2))
-    for mechanic in MECHANICS:
+    for mechanic in ALL_MECHANICS:
         matching = [c for c in cards if mechanic in c["mechanics"]]
         lines.append(f"  {mechanic:<20}{len(matching):>9}")
 
-    for mechanic in MECHANICS:
+    for mechanic in ALL_MECHANICS:
         matching = [c for c in cards if mechanic in c["mechanics"]]
         lines.append(section(f'MECHANIC: "{mechanic}"  ({len(matching)} cards)'))
         names = ", ".join(sorted(c["name"] for c in matching)) if matching else "—"

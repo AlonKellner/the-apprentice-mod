@@ -1,7 +1,12 @@
+using System.Linq;
 using BaseLib.Abstracts;
 using BaseLib.Utils;
+using MegaCrit.Sts2.Core.CardSelection;
+using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.Localization;
+using TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
@@ -12,7 +17,7 @@ public class Reprise : UnderstudyCard
     public Reprise() : base(2, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
     {
         WithDamage(14);
-        WithTip(UnderstudyKeywords.Invert);
+        WithTip(UnderstudyKeywords.Intense);
     }
 
     protected override void OnUpgrade()
@@ -21,11 +26,21 @@ public class Reprise : UnderstudyCard
         DynamicVars.Damage.UpgradeValueBy(4m);
     }
 
-    protected override bool ShouldGlowGoldInternal => EmotionalExpression.HasAnyInvertibleDebuffPresent(Owner.Creature);
-
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
         await CommonActions.CardAttack(cardPlay.Card, cardPlay).Execute(context);
-        await EmotionalExpression.InvertLastModified(context, cardPlay.Card.Owner.Creature, 3);
+
+        var player = cardPlay.Card.Owner;
+        var selected = await CardSelectCmd.FromHand(
+            context,
+            player,
+            new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-REPRISE.selectionPrompt"), 0, 1),
+            c => c != this && IntenseModifier.CanApplyTo(c),
+            this);
+
+        if (selected == null) return;
+        var allCards = player.Piles.SelectMany(p => p.Cards);
+        foreach (var card in selected)
+            IntenseModifier.Apply(card, CombatState!, allCards);
     }
 }

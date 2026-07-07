@@ -8,10 +8,16 @@ mechanic's SOLO count — cards that trigger that mechanic and no other
 tracked mechanic — so every card that has at least one tracked mechanic
 shows up somewhere in its row/column, not just the ones with crossovers.
 
-Note: two cards (DressRehearsal, NightShift) trigger three tracked mechanics
-at once, so they each contribute to two different off-diagonal cells within
-a single column — a column's (diagonal + off-diagonal) total can therefore
-slightly exceed that mechanic's unique card count from mechanics_stats.py.
+Self-debuffs are split into 5 separate mechanics (one per debuff type —
+Weak/Vulnerable/Shaken/Limited/Jaded; Frail is omitted since no card
+self-inflicts it) rather than one combined "Apply self debuff" bucket, so
+crossovers between individual debuff types are visible too.
+
+Note: any card that triggers 3+ tracked mechanics at once (e.g.
+`DressRehearsal`, which applies all 5 self-debuff types plus Gain energy)
+contributes to multiple off-diagonal cells within a single column — that
+column's (diagonal + off-diagonal) total can therefore exceed the
+mechanic's unique card count from mechanics_stats.py.
 """
 
 from pathlib import Path
@@ -26,7 +32,12 @@ ABBREV = {
     "Gain energy":          "Enrg",
     "Remove Unplayable":    "RmUnp",
     "Invert debuffs":       "Invert",
-    "Apply self debuff":    "SlfDeb",
+    "Apply self-Weak":      "SlfWeak",
+    "Apply self-Vulnerable":"SlfVuln",
+    "Apply self-Shaken":    "SlfShkn",
+    "Apply self-Limited":   "SlfLtd",
+    "Apply self-Jaded":     "SlfJad",
+    "Apply all self-debuffs": "SlfAll",
     "Apply enemy debuff":   "EnmyDeb",
     "Apply Planned":        "AppPl",
     "Apply Intense":        "AppInt",
@@ -37,7 +48,7 @@ ABBREV = {
 
 
 def build_matrix(cards: list[dict]) -> tuple[dict[str, dict[str, list[str]]], dict[str, list[str]]]:
-    mechanics = list(ms.MECHANICS)
+    mechanics = list(ms.ALL_MECHANICS)
     matrix: dict[str, dict[str, list[str]]] = {a: {b: [] for b in mechanics} for a in mechanics}
     solo: dict[str, list[str]] = {m: [] for m in mechanics}
     for c in cards:
@@ -52,7 +63,7 @@ def build_matrix(cards: list[dict]) -> tuple[dict[str, dict[str, list[str]]], di
 
 
 def render(matrix: dict[str, dict[str, list[str]]], solo: dict[str, list[str]]) -> str:
-    mechanics = list(ms.MECHANICS)
+    mechanics = list(ms.ALL_MECHANICS)
     col_labels = [ABBREV[m] for m in mechanics]
     row_label_w = max(len(m) for m in mechanics) + 2
     col_w = max(max(len(c) for c in col_labels), 3) + 2
@@ -76,7 +87,7 @@ def render_percent_by_column(matrix: dict[str, dict[str, list[str]]], solo: dict
     mechanic b's cards are solo (a == b) vs. crossed over with a (a != b).
     A column whose mechanic never appears at all (column sum 0) prints as
     all '-' since there's nothing to take a share of."""
-    mechanics = list(ms.MECHANICS)
+    mechanics = list(ms.ALL_MECHANICS)
     col_labels = [ABBREV[m] for m in mechanics]
     row_label_w = max(len(m) for m in mechanics) + 2
     col_w = max(max(len(c) for c in col_labels), 3) + 2
@@ -115,7 +126,7 @@ def render_over_threshold(
     """List every cell (including diagonal/solo cells) whose column-normalized
     percentage exceeds `threshold`, with the specific cards in that cell.
     A column with total 0 is skipped (nothing to take a share of)."""
-    mechanics = list(ms.MECHANICS)
+    mechanics = list(ms.ALL_MECHANICS)
     col_sums = {
         b: len(solo[b]) + sum(len(matrix[a][b]) for a in mechanics if a != b)
         for b in mechanics
@@ -154,7 +165,7 @@ def render_legend() -> str:
 
 
 def render_nonzero_detail(matrix: dict[str, dict[str, list[str]]]) -> str:
-    mechanics = list(ms.MECHANICS)
+    mechanics = list(ms.ALL_MECHANICS)
     lines = []
     seen = set()
     for a in mechanics:

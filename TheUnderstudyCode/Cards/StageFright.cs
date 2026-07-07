@@ -20,9 +20,8 @@ public class StageFright : UnderstudyCard
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
         var player = cardPlay.Card.Owner;
-        var hand = PileType.Hand.GetPile(player);
-        var allCards = player.Piles.SelectMany(p => p.Cards);
-        foreach (var card in hand.Cards.Where(c => c != this && IntenseModifier.CanApplyTo(c) && c.IsUnplayable()).ToList())
+        var allCards = player.Piles.SelectMany(p => p.Cards).ToList();
+        foreach (var card in allCards.Where(c => c != this && IntenseModifier.CanApplyTo(c) && c.IsUnplayable()).ToList())
             IntenseModifier.Apply(card, CombatState!, allCards);
     }
 }
