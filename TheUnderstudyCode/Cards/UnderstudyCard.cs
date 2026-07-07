@@ -118,6 +118,19 @@ public abstract class UnderstudyCard(
     public override Task AfterCardPlayed(PlayerChoiceContext context, CardPlay cardPlay)
     {
         RestoreIfStable();
+        // Planned and Unplayable are deliberately decoupled: a RemoveUnplayable card can free a
+        // Planned card without un-queuing it, so the player can choose to play it early. But
+        // nothing else would then stop it from being auto-played AGAIN when the queue later
+        // resolves (CurtainCall/etc. re-scan for any card with a live PlannedModifier slot) — so
+        // a genuinely manual play of a still-Planned card must consume one of its own queue slots
+        // here. Gated on !IsAutoPlay: CurtainCall/Encore/Remix/Performance already call
+        // PlannedModifier.RemoveSlot for the exact slot being resolved BEFORE calling
+        // CardCmd.AutoPlay, so by the time their own AfterCardPlayed fires (IsAutoPlay == true),
+        // that slot is already gone and this would have nothing left to consume anyway.
+        if (cardPlay.Card == this && !cardPlay.IsAutoPlay
+            && this.TryGetModifier<PlannedModifier>(out var plannedMod) && plannedMod.SequenceIndices.Count > 0)
+            PlannedModifier.RemoveSlot(this, plannedMod.SequenceIndices.Min(), PlannedModifier.RelevantCards(Owner));
+
         // Safe to mutate DirectModifiers here: AfterCardPlayed fires once BaseLib's per-modifier
         // OnPlay enumeration (BeforeAfterPlayHooks) has finished for this play, unlike a
         // CardModifier's own OnPlay override, which runs inside that enumeration and throws

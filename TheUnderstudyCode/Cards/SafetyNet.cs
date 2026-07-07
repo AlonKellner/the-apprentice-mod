@@ -8,26 +8,24 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
-using TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
-public class MissedCue : UnderstudyCard
+public class SafetyNet : UnderstudyCard
 {
-    public const string CardId = "TheUnderstudy:MissedCue";
+    public const string CardId = "TheUnderstudy:SafetyNet";
 
-    public MissedCue() : base(2, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
+    public SafetyNet() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.None)
     {
-        WithDamage(8);
-        WithVars(new CardsVar("Select", 2));
+        WithBlock(8);
+        WithVars(new CardsVar("Select", 1));
         WithTip(CardKeyword.Unplayable);
-        WithTip(typeof(ShakenPower));
     }
 
     protected override void OnUpgrade()
     {
         base.OnUpgrade();
-        DynamicVars.Damage.UpgradeValueBy(4m);
+        DynamicVars.Block.UpgradeValueBy(3m);
         DynamicVars["Select"].UpgradeValueBy(1m);
     }
 
@@ -36,20 +34,19 @@ public class MissedCue : UnderstudyCard
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
-        await CommonActions.CardAttack(cardPlay.Card, cardPlay).Execute(context);
+        await CommonActions.CardBlock(this, cardPlay);
 
         var player = cardPlay.Card.Owner;
         int maxSelect = (int)DynamicVars["Select"].BaseValue;
-        var freed = await CardSelectCmd.FromHand(
+        var selected = await CardSelectCmd.FromHand(
             context,
             player,
-            new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-MISSED_CUE.selectionPrompt"), 0, maxSelect),
+            new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-SAFETY_NET.selectionPrompt"), 0, maxSelect),
             c => c != this && UnplayableModifier.CanApplyTo(c),
             this);
-        if (freed != null)
-            foreach (var card in freed)
-                UnplayableModifier.Remove(card);
 
-        await EmotionalExpression.ApplyShakenToSelf(context, player.Creature, 1, this);
+        if (selected == null) return;
+        foreach (var card in selected)
+            UnplayableModifier.Remove(card);
     }
 }

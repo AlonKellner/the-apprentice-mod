@@ -1,4 +1,5 @@
 using BaseLib.Abstracts;
+using BaseLib.Utils;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
@@ -12,8 +13,9 @@ public class TellItLikeItIs : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:TellItLikeItIs";
 
-    public TellItLikeItIs() : base(2, CardType.Skill, CardRarity.Common, TargetType.AnyEnemy)
+    public TellItLikeItIs() : base(2, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
     {
+        WithDamage(8);
         WithVars(new EnergyVar(1));
         WithTips(_ => new IHoverTip[] { EnergyHoverTip });
         WithTip(typeof(WeakPower));
@@ -23,6 +25,7 @@ public class TellItLikeItIs : UnderstudyCard
     protected override void OnUpgrade()
     {
         base.OnUpgrade();
+        DynamicVars.Damage.UpgradeValueBy(4m);
         DynamicVars.Energy.UpgradeValueBy(1m);
     }
 
@@ -30,6 +33,8 @@ public class TellItLikeItIs : UnderstudyCard
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
+        await CommonActions.CardAttack(cardPlay.Card, cardPlay).Execute(context);
+
         var player = cardPlay.Card.Owner;
         await PlayerCmd.GainEnergy(DynamicVars.Energy.BaseValue, player);
 

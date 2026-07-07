@@ -11,8 +11,9 @@ public class StageFright : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:StageFright";
 
-    public StageFright() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.None)
+    public StageFright() : base(3, CardType.Skill, CardRarity.Uncommon, TargetType.None)
     {
+        WithCostUpgradeBy(-1);
         WithTip(UnderstudyKeywords.Intense);
         WithTip(CardKeyword.Unplayable);
     }

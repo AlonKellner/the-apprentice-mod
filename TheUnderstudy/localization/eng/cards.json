@@ -27,10 +27,10 @@
   "THEUNDERSTUDY-REPRISE.selectionPrompt": "Choose a card to make [gold]Intense[/gold].",
 
   "THEUNDERSTUDY-TELL_IT_LIKE_IT_IS.title": "Tell It Like It Is",
-  "THEUNDERSTUDY-TELL_IT_LIKE_IT_IS.description": "Gain {Energy:energyIcons()}.\nApply [gold]Weak[/gold] equal to the sum of your [gold]invertible[/gold] debuffs.",
+  "THEUNDERSTUDY-TELL_IT_LIKE_IT_IS.description": "Deal {Damage:diff()} damage.\nGain {Energy:energyIcons()}.\nApply [gold]Weak[/gold] equal to the sum of your [gold]invertible[/gold] debuffs.",
 
   "THEUNDERSTUDY-BARE_IT_ALL.title": "Bare It All",
-  "THEUNDERSTUDY-BARE_IT_ALL.description": "Apply [gold]Vulnerable[/gold] equal to the sum of your [gold]invertible[/gold] debuffs.\nGain {Vigor:diff()} [gold]Vigor[/gold].",
+  "THEUNDERSTUDY-BARE_IT_ALL.description": "Deal {Damage:diff()} damage.\nApply [gold]Vulnerable[/gold] equal to the sum of your [gold]invertible[/gold] debuffs.\nGain {Vigor:diff()} [gold]Vigor[/gold].",
 
   "THEUNDERSTUDY-CUE.title": "Cue",
   "THEUNDERSTUDY-CUE.description": "Draw 1 card.\nApply [gold]Planned[/gold] to {Select:diff()} attack or skill in your hand.",
@@ -46,7 +46,7 @@
   "THEUNDERSTUDY-CRAM_SESSION.intenseSelectionPrompt": "Choose cards to make [gold]Intense[/gold].",
 
   "THEUNDERSTUDY-OVEREXERT.title": "Overexert",
-  "THEUNDERSTUDY-OVEREXERT.description": "Gain {Block:diff()} [gold]Block[/gold].\nApply 2 [gold]Limited[/gold] to yourself.",
+  "THEUNDERSTUDY-OVEREXERT.description": "Deal {Damage:diff()} damage.\nGain {Block:diff()} [gold]Block[/gold].\nApply 2 [gold]Limited[/gold] to yourself.",
 
   "THEUNDERSTUDY-QUICK_NAP.title": "Quick Nap",
   "THEUNDERSTUDY-QUICK_NAP.description": "Deal {Damage:diff()} damage.\nApply 1 [gold]Jaded[/gold] to yourself.",
@@ -93,7 +93,7 @@
   "THEUNDERSTUDY-ENCORE.description": "Play all [gold]Planned[/gold] cards.\nApply [gold]Planned[/gold] to each card played this way.",
 
   "THEUNDERSTUDY-WIND_UP.title": "Wind Up",
-  "THEUNDERSTUDY-WIND_UP.description": "Apply 2 [gold]Weak[/gold] to yourself.\nGain {Vigor:diff()} [gold]Vigor[/gold].",
+  "THEUNDERSTUDY-WIND_UP.description": "Deal {Damage:diff()} damage.\nApply 2 [gold]Weak[/gold] to yourself.\nGain {Vigor:diff()} [gold]Vigor[/gold].",
 
   "THEUNDERSTUDY-DOUBLE_TIME.title": "Double Time",
   "THEUNDERSTUDY-DOUBLE_TIME.description": "All [gold]invertible[/gold] buff and debuff gains are applied {FortissimoPower:diff()} additional {FortissimoPower:plural:time|times}.",
@@ -138,10 +138,10 @@
   "THEUNDERSTUDY-FINAL_BAR.description": "Deal {Damage:diff()} damage for each [gold]Planned[/gold] card you have.\nExhaust all [gold]Planned[/gold] cards.",
 
   "THEUNDERSTUDY-EVERYTHING_IVE_GOT.title": "Everything I've Got",
-  "THEUNDERSTUDY-EVERYTHING_IVE_GOT.description": "[gold]Invert[/gold] {IfUpgraded:show:2|1} of the last modified invertible debuff.\nGain the same inverted buff X more times.",
+  "THEUNDERSTUDY-EVERYTHING_IVE_GOT.description": "Deal {Damage:diff()} damage.\n[gold]Invert[/gold] {IfUpgraded:show:2|1} of the last modified invertible debuff.\nGain the same inverted buff X more times.",
 
   "THEUNDERSTUDY-BIG_BREAK.title": "Big Break",
-  "THEUNDERSTUDY-BIG_BREAK.description": "Gain {IfUpgraded:show:6|4} [gold]Vigor[/gold], X times.",
+  "THEUNDERSTUDY-BIG_BREAK.description": "Deal {Damage:diff()} damage.\nGain {IfUpgraded:show:6|4} [gold]Vigor[/gold], X times.",
 
   "THEUNDERSTUDY-TOUCH_UP.title": "Touch Up",
   "THEUNDERSTUDY-TOUCH_UP.description": "Remove [gold]Unplayable[/gold] from 1 attack or skill in hand.\nApply [gold]Intense[/gold] to {IntenseSelect:diff()} attack or skill in hand.",
@@ -158,7 +158,7 @@
   "THEUNDERSTUDY-STANDING_ROOM.description": "Deal {Damage:diff()} damage to ALL enemies.\nApply [gold]Weak[/gold] equal to the sum of your [gold]invertible[/gold] debuffs to ALL enemies.",
 
   "THEUNDERSTUDY-HOUSE_LIGHTS.title": "House Lights",
-  "THEUNDERSTUDY-HOUSE_LIGHTS.description": "Gain {Block:diff()} [gold]Block[/gold].\nApply [gold]Vulnerable[/gold] equal to the sum of your [gold]invertible[/gold] debuffs to ALL enemies.",
+  "THEUNDERSTUDY-HOUSE_LIGHTS.description": "Deal {Damage:diff()} damage to ALL enemies.\nGain {Block:diff()} [gold]Block[/gold].\nApply [gold]Vulnerable[/gold] equal to the sum of your [gold]invertible[/gold] debuffs to ALL enemies.",
 
   "THEUNDERSTUDY-FULL_VOICE.title": "Full Voice",
   "THEUNDERSTUDY-FULL_VOICE.description": "Whenever a debuff is applied to you, gain {IfUpgraded:show:4|3} [gold]Block[/gold].",
@@ -179,13 +179,13 @@
   "THEUNDERSTUDY-MY_OWN_LESSON.description": "[gold]Invertible[/gold] debuff gains become buffs.\n[gold]Invertible[/gold] buff gains become debuffs.",
 
   "THEUNDERSTUDY-OVERCOMMIT.title": "Overcommit",
-  "THEUNDERSTUDY-OVERCOMMIT.description": "Gain {Block:diff()} [gold]Block[/gold].\nApply 1 [gold]Vulnerable[/gold] to yourself.",
+  "THEUNDERSTUDY-OVERCOMMIT.description": "Deal {Damage:diff()} damage.\nGain {Block:diff()} [gold]Block[/gold].\nApply 1 [gold]Vulnerable[/gold] to yourself.",
 
   "THEUNDERSTUDY-FAST_FORWARD.title": "Fast Forward",
   "THEUNDERSTUDY-FAST_FORWARD.description": "Draw {Cards:diff()} cards.\nApply 2 [gold]Limited[/gold] to yourself.",
 
   "THEUNDERSTUDY-MISSED_CUE.title": "Missed Cue",
-  "THEUNDERSTUDY-MISSED_CUE.description": "Remove [gold]Unplayable[/gold] from {Select:diff()} attack or skill in hand.\nApply 1 [gold]Shaken[/gold] to yourself.",
+  "THEUNDERSTUDY-MISSED_CUE.description": "Deal {Damage:diff()} damage.\nRemove [gold]Unplayable[/gold] from {Select:diff()} attack or skill in hand.\nApply 1 [gold]Shaken[/gold] to yourself.",
 
   "THEUNDERSTUDY-PROMPT.title": "Prompt",
   "THEUNDERSTUDY-PROMPT.description": "This card starts each combat already [gold]Planned[/gold].\nDraw {Cards:diff()} cards.",
@@ -197,10 +197,10 @@
   "THEUNDERSTUDY-REFRAIN.description": "Deal {Damage:diff()} damage.\nApply [gold]Planned[/gold] to this card.",
 
   "THEUNDERSTUDY-NERVOUS_ENERGY.title": "Nervous Energy",
-  "THEUNDERSTUDY-NERVOUS_ENERGY.description": "Apply [gold]Intense[/gold] to all damage-dealing and Block-gaining attacks and skills in hand.\nGain {Energy:energyIcons()}.",
+  "THEUNDERSTUDY-NERVOUS_ENERGY.description": "Deal {Damage:diff()} damage.\nApply [gold]Intense[/gold] to all damage-dealing and Block-gaining attacks and skills in hand.\nGain {Energy:energyIcons()}.",
 
   "THEUNDERSTUDY-STAGE_FRIGHT.title": "Stage Fright",
-  "THEUNDERSTUDY-STAGE_FRIGHT.description": "Apply [gold]Intense[/gold] to all damage-dealing and Block-gaining attacks and skills with [gold]Unplayable[/gold], anywhere in your deck.",
+  "THEUNDERSTUDY-STAGE_FRIGHT.description": "Apply [gold]Intense[/gold] to all damage-dealing and Block-gaining attacks and skills with [gold]Unplayable[/gold].",
 
   "THEUNDERSTUDY-BREAK_A_LEG.title": "Break a Leg",
   "THEUNDERSTUDY-BREAK_A_LEG.description": "Gain {Energy:energyIcons()}.\nGain {Vigor:diff()} [gold]Vigor[/gold].",
@@ -209,7 +209,7 @@
   "THEUNDERSTUDY-BRAVADO.description": "Deal {Damage:diff()} damage.\nGain {Vigor:diff()} [gold]Vigor[/gold].",
 
   "THEUNDERSTUDY-STANDING_OVATION.title": "Standing Ovation",
-  "THEUNDERSTUDY-STANDING_OVATION.description": "Apply [gold]Intense[/gold] to {Select:diff()} card in your hand.\nGain {Vigor:diff()} [gold]Vigor[/gold].",
+  "THEUNDERSTUDY-STANDING_OVATION.description": "Deal {Damage:diff()} damage.\nApply [gold]Intense[/gold] to {Select:diff()} card in your hand.\nGain {Vigor:diff()} [gold]Vigor[/gold].",
   "THEUNDERSTUDY-STANDING_OVATION.selectionPrompt": "Choose a card to make [gold]Intense[/gold].",
 
   "THEUNDERSTUDY-PLOT_TWIST.title": "Plot Twist",
@@ -223,5 +223,9 @@
   "THEUNDERSTUDY-MATINEE.description": "Gain {Block:diff()} [gold]Block[/gold].\nApply 1 [gold]Jaded[/gold] to yourself.",
 
   "THEUNDERSTUDY-TABLE_READ.title": "Table Read",
-  "THEUNDERSTUDY-TABLE_READ.description": "This card starts each combat already [gold]Planned[/gold].\nGrant 1 [gold]Unweak[/gold], 1 [gold]Unvulnerable[/gold], 1 [gold]Unshaken[/gold], 1 [gold]Unlimited[/gold], and 1 [gold]Unjaded[/gold]."
+  "THEUNDERSTUDY-TABLE_READ.description": "This card starts each combat already [gold]Planned[/gold].\nGrant 1 [gold]Unweak[/gold], 1 [gold]Unvulnerable[/gold], 1 [gold]Unshaken[/gold], 1 [gold]Unlimited[/gold], and 1 [gold]Unjaded[/gold].",
+
+  "THEUNDERSTUDY-SAFETY_NET.title": "Safety Net",
+  "THEUNDERSTUDY-SAFETY_NET.description": "Gain {Block:diff()} [gold]Block[/gold].\nRemove [gold]Unplayable[/gold] from {Select:diff()} attack or skill in hand.",
+  "THEUNDERSTUDY-SAFETY_NET.selectionPrompt": "Choose cards to remove [gold]Unplayable[/gold]."
 }

@@ -1,9 +1,8 @@
 # STS2 Card Design: Deep-Dive Analysis
 
-A reference document for The Understudy mod. Covers structural patterns, balance statistics,
-design principles, and best practices derived from decompiling all five STS2 characters.
-Applies to all current and future Understudy mechanics: Planned, Dreams & Ambitions, Unplayable,
-Emotional Expression (debuffs), and future Music combos.
+A character-agnostic reference document for STS2 character mods. Covers structural patterns,
+balance statistics, design principles, and best practices derived from decompiling all five STS2
+characters. Use this when designing or evaluating a card set for any character.
 
 Sources: ilspycmd decompilation of `sts2.dll`, card constructor analysis (435 cards parsed),
 and community analysis from [Cloudfall Studios](https://www.cloudfallstudios.com/blog/2020/11/2/game-design-tips-reverse-engineering-slay-the-spires-decisions),
@@ -138,7 +137,7 @@ Skills are the most varied card type. Their design space spans:
    These have slightly lower block values to compensate.
 3. **Draw/cycle**: Draw N cards. Discard N cards. Draw then discard. Cycle hand.
    Value: Draw 2 for cost 1 is the norm. Draw 3 for cost 1 is good. Draw 3 for cost 0 is Rare.
-4. **Token generation**: Create special cards in hand (Shivs, Stars, Minions, Ambitions).
+4. **Token generation**: Create special cards in hand (Shivs, Stars, Minions).
    This is where character identity lives most strongly.
 5. **Stat manipulation**: Gain Strength/Dexterity/Focus/Stars. Apply debuffs to enemies.
    Usually via a Power, but sometimes directly in a one-shot Skill.
@@ -270,10 +269,8 @@ The most durable design principle in STS2 is the **Setup / Payoff** taxonomy
 
 Every card set should have all three types. A set that is all setup or all payoff will feel bad.
 
-**For The Understudy specifically:**
-- Planned set: Contemplate/Realize (setup the sequence) + Groove/Epiphany (payoff from position).
-- Dreams & Ambitions: Dream/Ambition tokens (setup) + Sublimation/Pastiche (payoff from tokens).
-- Emotional Debuffs: SelfPity/PassionateStrike (setup by gaining debuffs) + Outpouring/Breakdown/Phoenix (payoff from debuff count).
+**When designing a new character's card set**, explicitly identify which of your cards are Setup,
+Payoff, and Double-duty before finalizing the set — a set that's all one type will feel bad.
 
 ---
 
@@ -312,8 +309,9 @@ are created by Skills, consumed or empowered by other Skills, and synergize with
 - Regent: Stars (resource spent for bonuses)
 - Necrobinder: Minions/Souls (summoned entities)
 
-The Understudy's token mechanics: Dreams → Ambitions → Potentials (consumed) and Planned sequence.
-These follow the same paradigm.
+When designing a new character, document its own token mechanic(s) here once finalized, following
+the same paradigm: 1-3 token types created by Skills, consumed or empowered by other Skills, and
+synergizing with Powers.
 
 ---
 
@@ -358,7 +356,7 @@ Before adding any card, verify it satisfies these constraints:
 ### 9.2 Rules for Skills Specifically
 
 Skills are the most diverse type and the primary vehicle for character identity. Subcategories
-that every character includes, and The Understudy should too:
+that every base-game character includes, and any new character should too:
 
 1. **Defense anchor**: 1-cost skill that gives substantial block (~12-16). Every character has 2-3.
 2. **Draw engine**: A way to draw more cards each turn. At least 1 Common, 1-2 Uncommon.
@@ -389,7 +387,7 @@ For any Common card:
 - [ ] No condition required to play (self-explanatory at a glance)
 - [ ] Not a Power
 - [ ] The effect is useful even without any other synergy in your deck
-- [ ] The flavor/name matches the Understudy's emotional/musical identity
+- [ ] The flavor/name matches your character's established identity
 
 ### 9.5 Rare Card Design Checklist
 
@@ -400,52 +398,3 @@ For any Rare card:
 - [ ] If it's a Power: it should anchor an entire deck strategy
 - [ ] The upgrade should feel meaningfully different, not just "+5% effectiveness"
 
----
-
-## 10. The Emotional Debuffs Set — Applying These Principles
-
-The planned Emotional Debuffs set (23 cards: 7 Common / 11 Uncommon / 5 Rare) was designed
-using these principles. Key compliance notes:
-
-**What the set does correctly:**
-- Powers (Introspection, Masochism) are Uncommon/Rare — ✓
-- Block cards (SelfPity, Wallow, Catharsis) give constant amounts — ✓
-- Attack pattern diversity: 0-cost single (Hemorrhage), 1-cost single (PassionateStrike, LashOut,
-  Wounded), 2-cost (GutPunch, CryOut), multi-hit (CryOut ×2, Tantrum ×3), AoE (Outburst),
-  RandomEnemy (Tantrum), scaling (Spite, Resentment, Breakdown) — ✓
-- No self-targeting Attacks — ✓
-- Cost distribution: 0-cost (Hemorrhage, Phoenix), 1-cost (majority), 2-cost (5 cards), 3-cost (0) — ✓
-
-**Design tensions to watch:**
-- Breakdown ("deal 8 damage per unique debuff to a random enemy") is a scaling attack.
-  This is fine at Uncommon/Rare but would be wrong at Common.
-- Spite ("deal 4 damage per total debuff stack") — the "per stack" formula means a lot of damage
-  variance. This works because Attacks CAN scale; only block cannot.
-- Phoenix is 0-cost Skill + Exhaust + conditional AoE. Zero-cost Skills with Exhaust exist in STS2
-  (CalculatedGamble, GrandFinale at Rare). Phoenix is Rare — appropriate.
-- Masochism (Power, Rare): "Whenever you gain a debuff, gain 6 block." This is a per-event Power
-  at Rare, similar to FeelNoPain. The trigger is clear and frequent — this is correct.
-
-**Open design questions resolved by the data:**
-- `DexterityPower` exists: confirmed via Silent's Footwork card hover tips.
-- `WeakPower`, `VulnerablePower`: confirmed via BeamCell/Thunderclap.
-- `FrailPower` name: referenced in Comet (Regent, applies Weak+Vulnerable); Frail likely exists
-  as `ShrinkPower` — verify at implementation time with `ilspycmd`.
-
----
-
-## 11. The Understudy Card Identity
-
-All Understudy cards should feel like they belong to a character who is:
-1. Learning, practicing, and growing (Planned, D&A arc: preparation → realization)
-2. Emotionally intense, self-aware, sometimes self-destructive (debuffs arc: feeling → expression → release)
-3. Musical/artistic (future music arc: rhythm, harmony, resonance)
-
-This identity means:
-- **Names** should reflect internal states, artistic processes, or musical vocabulary
-- **Mechanics** should feel like emotional/creative processes, not combat abstractions
-- **Tradeoffs** are personal — not just "lose HP," but "become Weak" (weaker as a person)
-  or "lose Strength" (emotional drain), with recovery as catharsis
-
-When a new card set doesn't feel thematically connected to this arc, it likely doesn't belong
-in The Understudy's identity — even if mechanically sound.

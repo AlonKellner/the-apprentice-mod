@@ -10,8 +10,9 @@ public class Overcommit : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:Overcommit";
 
-    public Overcommit() : base(2, CardType.Skill, CardRarity.Uncommon, TargetType.None)
+    public Overcommit() : base(2, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
     {
+        WithDamage(8);
         WithBlock(20);
         WithTip(typeof(VulnerablePower));
     }
@@ -19,11 +20,13 @@ public class Overcommit : UnderstudyCard
     protected override void OnUpgrade()
     {
         base.OnUpgrade();
+        DynamicVars.Damage.UpgradeValueBy(4m);
         DynamicVars.Block.UpgradeValueBy(4m);
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
+        await CommonActions.CardAttack(cardPlay.Card, cardPlay).Execute(context);
         await CommonActions.CardBlock(this, cardPlay);
         await EmotionalExpression.ApplyVulnerableToSelf(context, cardPlay.Card.Owner.Creature, 1, this);
     }

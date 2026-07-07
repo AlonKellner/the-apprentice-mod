@@ -11,8 +11,9 @@ public class HouseLights : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:HouseLights";
 
-    public HouseLights() : base(2, CardType.Skill, CardRarity.Uncommon, TargetType.None)
+    public HouseLights() : base(2, CardType.Attack, CardRarity.Uncommon, TargetType.AllEnemies)
     {
+        WithDamage(6);
         WithBlock(10);
         WithTip(typeof(VulnerablePower));
         WithTip(UnderstudyKeywords.Invertible);
@@ -21,6 +22,7 @@ public class HouseLights : UnderstudyCard
     protected override void OnUpgrade()
     {
         base.OnUpgrade();
+        DynamicVars.Damage.UpgradeValueBy(3m);
         DynamicVars.Block.UpgradeValueBy(3m);
     }
 
@@ -28,6 +30,7 @@ public class HouseLights : UnderstudyCard
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
+        await CommonActions.CardAttack(cardPlay.Card, cardPlay).Execute(context);
         await CommonActions.CardBlock(this, cardPlay);
 
         var creature = cardPlay.Card.Owner.Creature;

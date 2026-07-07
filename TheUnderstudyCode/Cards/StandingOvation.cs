@@ -1,5 +1,6 @@
 using System.Linq;
 using BaseLib.Abstracts;
+using BaseLib.Utils;
 using MegaCrit.Sts2.Core.CardSelection;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -15,8 +16,9 @@ public class StandingOvation : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:StandingOvation";
 
-    public StandingOvation() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.None)
+    public StandingOvation() : base(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
     {
+        WithDamage(6);
         WithVars(new CardsVar("Select", 1), new IntVar("Vigor", 3));
         WithTip(UnderstudyKeywords.Intense);
         WithTip(typeof(VigorPower));
@@ -25,12 +27,15 @@ public class StandingOvation : UnderstudyCard
     protected override void OnUpgrade()
     {
         base.OnUpgrade();
+        DynamicVars.Damage.UpgradeValueBy(3m);
         DynamicVars["Select"].UpgradeValueBy(1m);
         DynamicVars["Vigor"].UpgradeValueBy(2m);
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
+        await CommonActions.CardAttack(cardPlay.Card, cardPlay).Execute(context);
+
         var player = cardPlay.Card.Owner;
         int maxSelect = (int)DynamicVars["Select"].BaseValue;
         var selected = await CardSelectCmd.FromHand(

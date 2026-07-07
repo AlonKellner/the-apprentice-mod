@@ -1,4 +1,5 @@
 using BaseLib.Abstracts;
+using BaseLib.Utils;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
@@ -11,8 +12,9 @@ public class WindUp : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:WindUp";
 
-    public WindUp() : base(0, CardType.Skill, CardRarity.Common, TargetType.None)
+    public WindUp() : base(0, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
     {
+        WithDamage(4);
         WithVars(new IntVar("Vigor", 4));
         WithTip(typeof(WeakPower));
         WithTip(typeof(VigorPower));
@@ -21,11 +23,14 @@ public class WindUp : UnderstudyCard
     protected override void OnUpgrade()
     {
         base.OnUpgrade();
+        DynamicVars.Damage.UpgradeValueBy(2m);
         DynamicVars["Vigor"].UpgradeValueBy(2m);
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
+        await CommonActions.CardAttack(cardPlay.Card, cardPlay).Execute(context);
+
         var creature = cardPlay.Card.Owner.Creature;
         await EmotionalExpression.ApplyWeakToSelf(context, creature, 2, this);
         int vigor = (int)DynamicVars["Vigor"].BaseValue;

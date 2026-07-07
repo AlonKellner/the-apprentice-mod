@@ -40,7 +40,7 @@ public class TheUnderstudyCardPoolTests
     public void Pool_HasExactly14CommonCards() => Assert.Equal(14, CountBCardsByRarity("Common"));
 
     [Fact]
-    public void Pool_HasExactly32UncommonCards() => Assert.Equal(32, CountBCardsByRarity("Uncommon"));
+    public void Pool_HasExactly33UncommonCards() => Assert.Equal(33, CountBCardsByRarity("Uncommon"));
 
     [Fact]
     public void Pool_HasExactly20RareCards() => Assert.Equal(20, CountBCardsByRarity("Rare"));
