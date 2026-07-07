@@ -16,9 +16,8 @@ public class MissedCue : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:MissedCue";
 
-    public MissedCue() : base(2, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
+    public MissedCue() : base(2, CardType.Skill, CardRarity.Uncommon, TargetType.None)
     {
-        WithDamage(8);
         WithVars(new CardsVar("Select", 2));
         WithTip(CardKeyword.Unplayable);
         WithTip(typeof(ShakenPower));
@@ -27,7 +26,6 @@ public class MissedCue : UnderstudyCard
     protected override void OnUpgrade()
     {
         base.OnUpgrade();
-        DynamicVars.Damage.UpgradeValueBy(4m);
         DynamicVars["Select"].UpgradeValueBy(1m);
     }
 
@@ -36,8 +34,6 @@ public class MissedCue : UnderstudyCard
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
-        await CommonActions.CardAttack(cardPlay.Card, cardPlay).Execute(context);
-
         var player = cardPlay.Card.Owner;
         int maxSelect = (int)DynamicVars["Select"].BaseValue;
         var freed = await CardSelectCmd.FromHand(

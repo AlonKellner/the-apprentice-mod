@@ -23,6 +23,9 @@ local.props
 # macOS
 .DS_Store
 
+# Python
+__pycache__/
+
 # Android
 /android/
 .godot_publish_lock

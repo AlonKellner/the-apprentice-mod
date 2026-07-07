@@ -14,7 +14,7 @@
   "THEUNDERSTUDY-INTENTION.selectionPrompt": "Choose cards to make [gold]Intense[/gold].",
 
   "THEUNDERSTUDY-FREEZE_UP.title": "Freeze Up",
-  "THEUNDERSTUDY-FREEZE_UP.description": "Gain {Block:diff()} [gold]Block[/gold].\nApply 1 [gold]Weak[/gold] to yourself.",
+  "THEUNDERSTUDY-FREEZE_UP.description": "Deal {Damage:diff()} damage.\nGain {Block:diff()} [gold]Block[/gold].\nApply 1 [gold]Weak[/gold] to yourself.",
 
   "THEUNDERSTUDY-STAGE_WHISPER.title": "Stage Whisper",
   "THEUNDERSTUDY-STAGE_WHISPER.description": "Deal {Damage:diff()} damage.\nApply 2 [gold]Weak[/gold] to yourself.",
@@ -138,10 +138,10 @@
   "THEUNDERSTUDY-FINAL_BAR.description": "Deal {Damage:diff()} damage for each [gold]Planned[/gold] card you have.\nExhaust all [gold]Planned[/gold] cards.",
 
   "THEUNDERSTUDY-EVERYTHING_IVE_GOT.title": "Everything I've Got",
-  "THEUNDERSTUDY-EVERYTHING_IVE_GOT.description": "Deal {Damage:diff()} damage.\n[gold]Invert[/gold] {IfUpgraded:show:2|1} of the last modified invertible debuff.\nGain the same inverted buff X more times.",
+  "THEUNDERSTUDY-EVERYTHING_IVE_GOT.description": "[gold]Invert[/gold] {IfUpgraded:show:2|1} of the last modified invertible debuff.\nGain the same inverted buff X more times.",
 
   "THEUNDERSTUDY-BIG_BREAK.title": "Big Break",
-  "THEUNDERSTUDY-BIG_BREAK.description": "Deal {Damage:diff()} damage.\nGain {IfUpgraded:show:6|4} [gold]Vigor[/gold], X times.",
+  "THEUNDERSTUDY-BIG_BREAK.description": "Gain {IfUpgraded:show:6|4} [gold]Vigor[/gold], X times.",
 
   "THEUNDERSTUDY-TOUCH_UP.title": "Touch Up",
   "THEUNDERSTUDY-TOUCH_UP.description": "Remove [gold]Unplayable[/gold] from 1 attack or skill in hand.\nApply [gold]Intense[/gold] to {IntenseSelect:diff()} attack or skill in hand.",
@@ -185,7 +185,7 @@
   "THEUNDERSTUDY-FAST_FORWARD.description": "Draw {Cards:diff()} cards.\nApply 2 [gold]Limited[/gold] to yourself.",
 
   "THEUNDERSTUDY-MISSED_CUE.title": "Missed Cue",
-  "THEUNDERSTUDY-MISSED_CUE.description": "Deal {Damage:diff()} damage.\nRemove [gold]Unplayable[/gold] from {Select:diff()} attack or skill in hand.\nApply 1 [gold]Shaken[/gold] to yourself.",
+  "THEUNDERSTUDY-MISSED_CUE.description": "Remove [gold]Unplayable[/gold] from {Select:diff()} attack or skill in hand.\nApply 1 [gold]Shaken[/gold] to yourself.",
 
   "THEUNDERSTUDY-PROMPT.title": "Prompt",
   "THEUNDERSTUDY-PROMPT.description": "This card starts each combat already [gold]Planned[/gold].\nDraw {Cards:diff()} cards.",
@@ -220,7 +220,7 @@
   "THEUNDERSTUDY-TRUE_COLORS.description": "[gold]Invert[/gold] {Invert:diff()} of the last modified invertible debuff.\nApply 1 [gold]Vulnerable[/gold] to yourself.",
 
   "THEUNDERSTUDY-MATINEE.title": "Matinee",
-  "THEUNDERSTUDY-MATINEE.description": "Gain {Block:diff()} [gold]Block[/gold].\nApply 1 [gold]Jaded[/gold] to yourself.",
+  "THEUNDERSTUDY-MATINEE.description": "Deal {Damage:diff()} damage.\nGain {Block:diff()} [gold]Block[/gold].\nApply 1 [gold]Jaded[/gold] to yourself.",
 
   "THEUNDERSTUDY-TABLE_READ.title": "Table Read",
   "THEUNDERSTUDY-TABLE_READ.description": "This card starts each combat already [gold]Planned[/gold].\nGrant 1 [gold]Unweak[/gold], 1 [gold]Unvulnerable[/gold], 1 [gold]Unshaken[/gold], 1 [gold]Unlimited[/gold], and 1 [gold]Unjaded[/gold].",

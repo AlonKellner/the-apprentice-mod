@@ -10,7 +10,7 @@ public class StageWhisper : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:StageWhisper";
 
-    public StageWhisper() : base(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
+    public StageWhisper() : base(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
     {
         WithDamage(15);
         WithTip(typeof(WeakPower));

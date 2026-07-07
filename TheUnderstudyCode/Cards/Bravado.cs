@@ -12,7 +12,7 @@ public class Bravado : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:Bravado";
 
-    public Bravado() : base(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
+    public Bravado() : base(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
     {
         WithDamage(7);
         WithVars(new IntVar("Vigor", 3));
