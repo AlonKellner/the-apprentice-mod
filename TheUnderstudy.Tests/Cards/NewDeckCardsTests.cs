@@ -60,7 +60,7 @@ public class NewDeckCardsTests
     [InlineData(typeof(Remix), "TheUnderstudy:Remix", CardType.Skill, CardRarity.Uncommon, TargetType.None)]
     [InlineData(typeof(Overcommit), "TheUnderstudy:Overcommit", CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)]
     [InlineData(typeof(FastForward), "TheUnderstudy:FastForward", CardType.Skill, CardRarity.Uncommon, TargetType.None)]
-    [InlineData(typeof(MissedCue), "TheUnderstudy:MissedCue", CardType.Skill, CardRarity.Uncommon, TargetType.None)]
+    [InlineData(typeof(MissedCue), "TheUnderstudy:MissedCue", CardType.Skill, CardRarity.Rare, TargetType.None)]
     [InlineData(typeof(Prompt), "TheUnderstudy:Prompt", CardType.Skill, CardRarity.Uncommon, TargetType.None)]
     [InlineData(typeof(MagnumOpus), "TheUnderstudy:MagnumOpus", CardType.Skill, CardRarity.Rare, TargetType.None)]
     [InlineData(typeof(Refrain), "TheUnderstudy:Refrain", CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)]
