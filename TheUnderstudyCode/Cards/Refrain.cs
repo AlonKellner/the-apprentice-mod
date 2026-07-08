@@ -26,8 +26,7 @@ public class Refrain : UnderstudyCard
     {
         await CommonActions.CardAttack(cardPlay.Card, cardPlay).Execute(context);
 
-        var player = cardPlay.Card.Owner;
         if (PlannedModifier.CanApplyTo(this))
-            PlannedModifier.Apply(this, PlannedModifier.RelevantCards(player));
+            PlannedModifier.Apply(this, CombatState!);
     }
 }

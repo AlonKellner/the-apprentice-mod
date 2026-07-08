@@ -36,20 +36,40 @@ public class Encore : UnderstudyCard
         var player = cardPlay.Card.Owner;
         var combatState = player.Creature.CombatState!;
 
+        // Locked once recorded here and never re-fetched or re-sorted. See Performance.OnPlay for
+        // the full reasoning: a card in this list can itself be a Planned-queue resolver, which can
+        // resolve some of the OTHER entries still waiting here as a side effect of its own nested
+        // pass — every entry below always gets played regardless, and the per-entry guards just
+        // avoid redoing (not re-playing) work another resolver already did. The re-apply at the end
+        // of this loop hands out a brand-new slot number (via PlannedModifier.Apply's sequencer)
+        // that's guaranteed to sort after everything already in THIS locked list, so it's never a
+        // member of `planned` and can't cause this loop to re-process what it just re-queued.
         var allCardsList = PlannedModifier.RelevantCards(player).ToList();
         var planned = PlannedModifier.GetSorted(allCardsList);
-        int expectedPlays = planned.Count;
-        int actualPlays = 0;
-        Log.Info($"Encore.OnPlay: playing {expectedPlays} Planned slot(s), re-queuing eligible cards afterward");
+        Log.Info($"Encore.OnPlay: playing {planned.Count} Planned slot(s), re-queuing eligible cards afterward");
         var currentTarget = cardPlay.Target;
         foreach (var (card, _, slotSeqIdx) in planned)
         {
-            PlannedModifier.RemoveSlot(card, slotSeqIdx, allCardsList);
+            // Does the card still exist? Real, not hypothetical: base-game Transform cards (e.g.
+            // Begone) swap a card's original CardModel object out for a brand-new one, detaching
+            // the original from every pile.
+            if (card.Pile == null)
+            {
+                Log.Info($"Encore.OnPlay: {card.Id} is no longer in any pile — skipped");
+                continue;
+            }
+
             // RemoveSlot only clears UnplayableModifier once ALL of a card's Planned slots are
             // gone, but a multi-slot card must still be playable on EACH of its own plays in this
             // loop — CardCmd.AutoPlay silently no-ops if the card still carries Unplayable.
             if (card.TryGetModifier<UnplayableModifier>(out var stillUnplayable))
                 CardModifier.DirectModifiers(card).Remove(stillUnplayable);
+
+            // Guarded rather than asserted — a nested resolver played from elsewhere in this same
+            // locked sequence may have already removed this slot as part of its own pass. Either
+            // way, this entry was recorded in the locked sequence, so it always gets played below.
+            if (card.TryGetModifier<PlannedModifier>(out var stillPlanned) && stillPlanned.SequenceIndices.Contains(slotSeqIdx))
+                PlannedModifier.RemoveSlot(card, slotSeqIdx, allCardsList);
 
             // Re-target to a fresh random living enemy if the current one has died partway
             // through the plan, until that one also dies.
@@ -62,12 +82,9 @@ public class Encore : UnderstudyCard
             }
 
             await CardCmd.AutoPlay(context, card, currentTarget, AutoPlayType.None, false, false);
-            actualPlays++;
             if (PlannedModifier.CanApplyTo(card))
-                PlannedModifier.Apply(card, PlannedModifier.RelevantCards(player));
+                PlannedModifier.Apply(card, combatState);
         }
-        Invariants.CheckEqual(expectedPlays, actualPlays, nameof(Encore) + "." + nameof(OnPlay),
-            "Planned cards auto-played");
         PlannedModifier.InvokeChanged();
     }
 }

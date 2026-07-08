@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using BaseLib.Abstracts;
 using BaseLib.Extensions;
+using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Players;
@@ -119,14 +120,26 @@ public class PlannedModifier : CardModifier
         AssignVisualIndices(GetSorted(allCards));
     }
 
+    // Slot numbers are handed out by this pure, engine-independent sequencer (see
+    // PlannedSlotSequencer.cs) rather than by scanning a caller-supplied card snapshot on every
+    // call — a snapshot taken even microseconds before a concurrent/nested Apply call can miss an
+    // already-applied slot, handing out a duplicate number (this replaced exactly that bug: Refrain
+    // and Overexert both ending up on slot 3 in the same combat).
+    private static readonly PlannedSlotSequencer _slots = new();
+
     // Appends a new queue slot to the card. Creates the modifier if the card doesn't have one yet.
-    public static void Apply(CardModel card, IEnumerable<CardModel> allCards)
+    public static void Apply(CardModel card, ICombatState combat)
     {
-        int max = -1;
-        foreach (var c in allCards)
-            if (c.TryGetModifier<PlannedModifier>(out var existing))
-                foreach (var s in existing.SequenceIndices)
-                    if (s > max) max = s;
+        int newSlot = _slots.Next(combat, () =>
+        {
+            int max = -1;
+            foreach (var c in RelevantCards(card.Owner))
+                if (c.TryGetModifier<PlannedModifier>(out var existing))
+                    foreach (var s in existing.SequenceIndices)
+                        if (s > max) max = s;
+            return max + 1;
+        });
+
         if (!card.TryGetModifier<PlannedModifier>(out var mod))
         {
             CardModifier.AddModifier<PlannedModifier>(card);
@@ -138,11 +151,24 @@ public class PlannedModifier : CardModifier
             mod!.ReinitCollections();
             Applied?.Invoke(card);
         }
-        int newSlot = max + 1;
         mod!.SequenceIndices.Add(newSlot);
         Invariants.Check(mod.SequenceIndices.Distinct().Count() == mod.SequenceIndices.Count,
             nameof(PlannedModifier) + "." + nameof(Apply),
-            $"{card.Id} picked up duplicate slot index {newSlot} — SequenceIndices: [{string.Join(",", mod.SequenceIndices)}]");
+            $"{card.Id} picked up duplicate slot index {newSlot} on itself — SequenceIndices: [{string.Join(",", mod.SequenceIndices)}]");
+
+        // Cross-card diagnostic. PlannedSlotSequencer makes a collision impossible under normal
+        // operation, but this is exactly the invariant that silently broke before (Refrain/Overexert
+        // both ending up on slot 3) with nothing logging it at the point of failure — only
+        // reconstructible after the fact from timing. If the sequencer's state ever desyncs from
+        // live card state again (a future caller bypassing Apply, an unanticipated edge case, etc.),
+        // this fires immediately and points at the exact slot and cards involved.
+        int collisions = RelevantCards(card.Owner).Count(c => c != card
+            && c.TryGetModifier<PlannedModifier>(out var other) && other.SequenceIndices.Contains(newSlot));
+        Invariants.Check(collisions == 0,
+            nameof(PlannedModifier) + "." + nameof(Apply),
+            $"slot {newSlot} assigned to {card.Id} is already held by {collisions} other card(s) — " +
+            "monotonic counter desynced from live state");
+
         if (!card.TryGetModifier<UnplayableModifier>(out _))
             CardModifier.AddModifier<UnplayableModifier>(card);
         Log.Info($"PlannedModifier.Apply: {card.Id} took slot {newSlot} ({mod.SequenceIndices.Count} slot(s) total on this card)");

@@ -39,8 +39,7 @@ public class MagnumOpus : UnderstudyCard
             new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-MAGNUM_OPUS.selectionPrompt"), 0, maxSelect),
             c => PlannedModifier.CanApplyTo(c));
 
-        var allCards = PlannedModifier.RelevantCards(player).ToList();
         foreach (var card in selected)
-            PlannedModifier.Apply(card, allCards);
+            PlannedModifier.Apply(card, CombatState!);
     }
 }

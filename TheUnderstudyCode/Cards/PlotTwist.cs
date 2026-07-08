@@ -42,8 +42,7 @@ public class PlotTwist : UnderstudyCard
             this);
 
         if (selected == null) return;
-        var allCards = PlannedModifier.RelevantCards(player).ToList();
         foreach (var card in selected)
-            PlannedModifier.Apply(card, allCards);
+            PlannedModifier.Apply(card, CombatState!);
     }
 }

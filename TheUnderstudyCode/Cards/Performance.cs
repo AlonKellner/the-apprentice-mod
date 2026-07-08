@@ -46,26 +46,48 @@ public class Performance : UnderstudyCard
         var player = cardPlay.Card.Owner;
         var combatState = player.Creature.CombatState!;
 
-        // Step 1: Play all currently-Planned cards in queue order, consuming each slot.
-        // A card with two slots is played twice.
+        // Step 1: Play all currently-Planned cards in queue order, consuming each slot. This list
+        // is locked once recorded here and never re-fetched or re-sorted — a card with two slots
+        // is played twice. If one of these cards is itself a Planned-queue resolver (e.g. Remix),
+        // playing it can resolve some of the OTHER entries still waiting in this same locked list
+        // as a side effect of its own nested pass — that's fine and expected: every entry below
+        // always gets played regardless, and the per-entry guards just avoid redoing (not
+        // re-playing) work another resolver already did.
         var allCardsList = PlannedModifier.RelevantCards(player).ToList();
         var planned = PlannedModifier.GetSorted(allCardsList);
-        int expectedPlays = planned.Count;
-        int actualPlays = 0;
-        Log.Info($"Performance.OnPlay: playing {expectedPlays} Planned slot(s)");
+        Log.Info($"Performance.OnPlay: playing {planned.Count} Planned slot(s)");
         var currentTarget = cardPlay.Target;
         foreach (var (card, _, slotSeqIdx) in planned)
         {
-            PlannedModifier.RemoveSlot(card, slotSeqIdx, allCardsList);
-            // RemoveSlot only clears UnplayableModifier once ALL of a card's Planned slots are
-            // gone (correctly so in general — a card with a remaining slot must still refuse a
-            // manual player click) but a multi-slot card (e.g. Planned #2 and #3) must still be
-            // playable on EACH of its own plays in this loop, not just its last. CardCmd.AutoPlay
-            // silently no-ops (MoveToResultPileWithoutPlaying, no error) if the card still carries
-            // CardKeyword.Unplayable, which is exactly what happened: the first of two plays got
-            // discarded with no effect because the card's OTHER remaining slot kept it Unplayable.
+            // Does the card still exist? The one case a locked-sequence entry is skipped outright.
+            // Real, not hypothetical: base-game Transform cards (e.g. Begone, via CardCmd.Transform)
+            // swap a card's original CardModel object out for a brand-new one, detaching the
+            // original from every pile — if that original card was sitting in the Planned queue,
+            // `card` here is a reference captured when the sequence was recorded above, never
+            // re-validated until now, so it must be checked before acting on it.
+            if (card.Pile == null)
+            {
+                Log.Info($"Performance.OnPlay: {card.Id} is no longer in any pile — skipped");
+                continue;
+            }
+
+            // Is this Unplayable? Remove it if so — guarded, not asserted. RemoveSlot only clears
+            // UnplayableModifier once ALL of a card's Planned slots are gone (correctly so in
+            // general — a card with a remaining slot must still refuse a manual player click) but a
+            // multi-slot card (e.g. Planned #2 and #3) must still be playable on EACH of its own
+            // plays in this loop, not just its last. CardCmd.AutoPlay silently no-ops
+            // (MoveToResultPileWithoutPlaying, no error) if the card still carries
+            // CardKeyword.Unplayable.
             if (card.TryGetModifier<UnplayableModifier>(out var stillUnplayable))
                 CardModifier.DirectModifiers(card).Remove(stillUnplayable);
+
+            // Is the Planned index still on the card? Remove it if so — guarded rather than
+            // asserted, since a nested resolver played from elsewhere in this same locked sequence
+            // (e.g. Remix, itself queued earlier in it) may have already removed it as part of its
+            // own pass. Either way, this entry was recorded in the locked sequence, so it always
+            // gets played below regardless.
+            if (card.TryGetModifier<PlannedModifier>(out var stillPlanned) && stillPlanned.SequenceIndices.Contains(slotSeqIdx))
+                PlannedModifier.RemoveSlot(card, slotSeqIdx, allCardsList);
 
             // If the enemy we were targeting has since died partway through the plan, re-target to
             // a fresh random living enemy for this and all subsequent AnyEnemy cards, until that one
@@ -80,10 +102,7 @@ public class Performance : UnderstudyCard
             }
 
             await CardCmd.AutoPlay(context, card, currentTarget, AutoPlayType.None, false, false);
-            actualPlays++;
         }
-        Invariants.CheckEqual(expectedPlays, actualPlays, nameof(Performance) + "." + nameof(OnPlay),
-            "Planned cards auto-played");
         PlannedModifier.InvokeChanged();
 
         // Step 2: Apply Planned to 0-N cards selected from the discard pile (sets up next turn's queue).
@@ -97,7 +116,7 @@ public class Performance : UnderstudyCard
 
         if (selectedRaw == null) return;
         foreach (var card in selectedRaw)
-            PlannedModifier.Apply(card, PlannedModifier.RelevantCards(player));
+            PlannedModifier.Apply(card, combatState);
 
         if (!player.Creature.Powers.Any(p => p is PlannedCounterPower))
             await PowerCmd.Apply<PlannedCounterPower>(context, player.Creature, 1m, player.Creature, cardPlay.Card, false);

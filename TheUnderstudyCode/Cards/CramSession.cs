@@ -40,11 +40,10 @@ public class CramSession : UnderstudyCard
             this);
         if (selected == null) return;
 
-        var plannedAllCards = PlannedModifier.RelevantCards(player).ToList();
         var intenseAllCards = player.Piles.SelectMany(p => p.Cards);
         foreach (var card in selected)
         {
-            PlannedModifier.Apply(card, plannedAllCards);
+            PlannedModifier.Apply(card, CombatState!);
             IntenseModifier.Apply(card, CombatState!, intenseAllCards);
         }
     }
