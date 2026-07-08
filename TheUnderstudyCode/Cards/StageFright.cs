@@ -18,11 +18,12 @@ public class StageFright : UnderstudyCard
         WithTip(CardKeyword.Unplayable);
     }
 
-    protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
+    protected override Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
         var player = cardPlay.Card.Owner;
         var allCards = player.Piles.SelectMany(p => p.Cards).ToList();
         foreach (var card in allCards.Where(c => c != this && IntenseModifier.CanApplyTo(c) && c.IsUnplayable()).ToList())
             IntenseModifier.Apply(card, CombatState!, allCards);
+        return Task.CompletedTask;
     }
 }
