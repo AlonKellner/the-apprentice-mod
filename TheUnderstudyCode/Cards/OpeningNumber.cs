@@ -14,7 +14,7 @@ public class OpeningNumber : UnderstudyCard
 
     public OpeningNumber() : base(1, CardType.Skill, CardRarity.Common, TargetType.None)
     {
-        WithVars(new EnergyVar(1));
+        WithVars(new EnergyVar(2));
         WithTips(_ => new IHoverTip[] { EnergyHoverTip });
         WithKeyword(CardKeyword.Exhaust, ConstructedCardModel.UpgradeType.Remove);
         WithTip(typeof(ShakenPower));
