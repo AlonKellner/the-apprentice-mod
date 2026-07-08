@@ -133,10 +133,12 @@ public abstract class UnderstudyCard(
     }
 
     // Auto-attach the shared PlannedCounterPower so the queue UI badge is visible whenever
-    // Performance queues cards, and the hidden InvertTrackerPower so Invert can react to
+    // Performance queues cards, the hidden InvertTrackerPower so Invert can react to
     // enemy-inflicted (not just self-applied) invertible debuffs and perform its bidirectional
     // debuff/buff cancellation for all 6 pairs (see InvertTrackerPower for why that logic lives
-    // there rather than on each Un-X power).
+    // there rather than on each Un-X power), and the hidden DebuffClearTrackerPower so Take Notes
+    // (and anything future) can react to any debuff clearing for any reason, not just this deck's
+    // own Invert conversions.
     public override async Task AfterPlayerTurnStartLate(PlayerChoiceContext context, Player player)
     {
         RestoreIfStable();
@@ -145,6 +147,8 @@ public abstract class UnderstudyCard(
             await PowerCmd.Apply<PlannedCounterPower>(context, player.Creature, 1m, player.Creature, null, false);
         if (!player.Creature.Powers.Any(p => p is InvertTrackerPower))
             await PowerCmd.Apply<InvertTrackerPower>(context, player.Creature, 1m, player.Creature, null, false);
+        if (!player.Creature.Powers.Any(p => p is DebuffClearTrackerPower))
+            await PowerCmd.Apply<DebuffClearTrackerPower>(context, player.Creature, 1m, player.Creature, null, false);
     }
 
     // Restore on every card-play and turn boundary so no window exists where a Stable card

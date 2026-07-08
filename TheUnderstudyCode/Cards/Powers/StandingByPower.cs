@@ -13,6 +13,7 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Logging;
 using MegaCrit.Sts2.Core.Models;
+using MegaCrit.Sts2.Core.Rooms;
 using TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
 using TheUnderstudy.TheUnderstudyCode.Extensions;
 
@@ -56,7 +57,13 @@ public class StandingByPower : UnderstudyPower
         return Task.CompletedTask;
     }
 
-    public override Task AfterRemoved(Creature oldOwner)
+    // NOT AfterRemoved: Creature.RemoveAllPowersInternalExcept (the bulk wipe used at combat end)
+    // is explicitly documented to skip the AfterRemoved hook for every power it clears, so it never
+    // fires on a normal combat end. AfterCombatEnd is the hook PlannedCounterPower already
+    // established as the reliable one for this exact cleanup shape. Without this, the static
+    // subscription lingers into every future combat, freeing Unplayable cards even with Standing
+    // By nowhere in play.
+    public override Task AfterCombatEnd(CombatRoom room)
     {
         UnplayableModifier.Applied -= OnUnplayableApplied;
         return Task.CompletedTask;

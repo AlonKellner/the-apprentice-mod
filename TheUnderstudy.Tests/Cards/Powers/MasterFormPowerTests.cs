@@ -14,11 +14,14 @@ public class MasterFormPowerTests
         Assert.Equal(typeof(MasterFormPower), method?.DeclaringType);
     }
 
+    // NOT AfterRemoved: Creature.RemoveAllPowersInternalExcept (the bulk power wipe at combat end)
+    // is documented to skip that hook entirely, so cleanup lives in AfterCombatEnd instead — see
+    // MasterFormPower's own comment on why.
     [Fact]
-    public void MasterFormPower_OverridesAfterRemoved()
+    public void MasterFormPower_OverridesAfterCombatEnd()
     {
         var method = typeof(MasterFormPower).GetMethod(
-            "AfterRemoved", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            "AfterCombatEnd", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
         Assert.Equal(typeof(MasterFormPower), method?.DeclaringType);
     }
 

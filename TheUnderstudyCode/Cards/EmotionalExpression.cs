@@ -106,7 +106,6 @@ public static class EmotionalExpression
             nameof(EmotionalExpression) + "." + nameof(ConvertWeakToUnweak), "Weak after removal");
         await PowerCmd.Apply<UnweakPower>(ctx, creature, removeAmount, creature, null, false);
         RecordModified(creature, InvertibleDebuff.Weak);
-        await RaiseClearedIfZeroed(ctx, creature, curWeak, creature.GetPowerAmount<WeakPower>());
         return removeAmount;
     }
 
@@ -121,7 +120,6 @@ public static class EmotionalExpression
             nameof(EmotionalExpression) + "." + nameof(ConvertVulnerableToUnvulnerable), "Vulnerable after removal");
         await PowerCmd.Apply<UnvulnerablePower>(ctx, creature, removeAmount, creature, null, false);
         RecordModified(creature, InvertibleDebuff.Vulnerable);
-        await RaiseClearedIfZeroed(ctx, creature, curVul, creature.GetPowerAmount<VulnerablePower>());
         return removeAmount;
     }
 
@@ -158,20 +156,6 @@ public static class EmotionalExpression
         }
     }
 
-    // Invoked whenever one of the 5 self-debuffs transitions from present (>0) to fully cleared (0)
-    // as a direct result of one of this class's own Invert calls — e.g. Take Notes' "whenever
-    // a debuff of yours clears, gain Vigor." A Func rather than a true multicast event since it
-    // needs to be awaited with the live PlayerChoiceContext (only one subscriber is expected at a
-    // time in practice). Known limitation, same shape as the "last modified" tracker: only
-    // observes this class's own operations, not natural per-turn decay or anything enemy-inflicted.
-    public static Func<PlayerChoiceContext, Creature, Task>? DebuffCleared;
-
-    private static async Task RaiseClearedIfZeroed(PlayerChoiceContext ctx, Creature creature, int curDebuff, int netDebuff)
-    {
-        if (curDebuff > 0 && netDebuff == 0 && DebuffCleared != null)
-            await DebuffCleared(ctx, creature);
-    }
-
     // Shaken/Unshaken — same shape as Weak/Unweak.
 
     public static async Task ApplyShakenToSelf(PlayerChoiceContext ctx, Creature creature, int stacks, CardModel? card)
@@ -191,7 +175,6 @@ public static class EmotionalExpression
             nameof(EmotionalExpression) + "." + nameof(ConvertShakenToUnshaken), "Shaken after removal");
         await PowerCmd.Apply<UnshakenPower>(ctx, creature, removeAmount, creature, null, false);
         RecordModified(creature, InvertibleDebuff.Shaken);
-        await RaiseClearedIfZeroed(ctx, creature, curShaken, creature.GetPowerAmount<ShakenPower>());
         return removeAmount;
     }
 
@@ -214,7 +197,6 @@ public static class EmotionalExpression
             nameof(EmotionalExpression) + "." + nameof(ConvertLimitedToUnlimited), "Limited after removal");
         await PowerCmd.Apply<UnlimitedPower>(ctx, creature, removeAmount, creature, null, false);
         RecordModified(creature, InvertibleDebuff.Limited);
-        await RaiseClearedIfZeroed(ctx, creature, curLimited, creature.GetPowerAmount<LimitedPower>());
         return removeAmount;
     }
 
@@ -237,7 +219,6 @@ public static class EmotionalExpression
             nameof(EmotionalExpression) + "." + nameof(ConvertJadedToUnjaded), "Jaded after removal");
         await PowerCmd.Apply<UnjadedPower>(ctx, creature, removeAmount, creature, null, false);
         RecordModified(creature, InvertibleDebuff.Jaded);
-        await RaiseClearedIfZeroed(ctx, creature, curJaded, creature.GetPowerAmount<JadedPower>());
         return removeAmount;
     }
 
@@ -262,7 +243,6 @@ public static class EmotionalExpression
             nameof(EmotionalExpression) + "." + nameof(ConvertFrailToUnfrail), "Frail after removal");
         await PowerCmd.Apply<UnfrailPower>(ctx, creature, removeAmount, creature, null, false);
         RecordModified(creature, InvertibleDebuff.Frail);
-        await RaiseClearedIfZeroed(ctx, creature, curFrail, creature.GetPowerAmount<FrailPower>());
         return removeAmount;
     }
 

@@ -4,6 +4,7 @@ using BaseLib.Abstracts;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.Models;
+using MegaCrit.Sts2.Core.Rooms;
 using TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards.Powers;
@@ -24,7 +25,13 @@ public class MasterFormPower : UnderstudyPower
         return Task.CompletedTask;
     }
 
-    public override Task AfterRemoved(Creature oldOwner)
+    // NOT AfterRemoved: Creature.RemoveAllPowersInternalExcept (the bulk wipe used at combat end)
+    // is explicitly documented to skip the AfterRemoved hook for every power it clears, so it never
+    // fires on a normal combat end. AfterCombatEnd is the hook PlannedCounterPower already
+    // established as the reliable one for this exact cleanup shape. Without this, the static
+    // subscription lingers into every future combat, granting Replay even with Master Form nowhere
+    // in play.
+    public override Task AfterCombatEnd(CombatRoom room)
     {
         UnplayableModifier.Applied -= OnUnplayableApplied;
         return Task.CompletedTask;
