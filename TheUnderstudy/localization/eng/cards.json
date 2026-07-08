@@ -33,7 +33,7 @@
   "THEUNDERSTUDY-BARE_IT_ALL.description": "Deal {Damage:diff()} damage.\nApply [gold]Vulnerable[/gold] equal to the sum of your [gold]invertible[/gold] debuffs.\nGain {Vigor:diff()} [gold]Vigor[/gold].",
 
   "THEUNDERSTUDY-CUE.title": "Cue",
-  "THEUNDERSTUDY-CUE.description": "Draw 1 card.\nApply [gold]Planned[/gold] to {Select:diff()} attack or skill in your hand.",
+  "THEUNDERSTUDY-CUE.description": "Draw {Cards:diff()} {Cards:plural:card|cards}.\nApply [gold]Planned[/gold] to {Select:diff()} {Select:plural:attack or skill|attacks and skills} in your hand.",
   "THEUNDERSTUDY-CUE.selectionPrompt": "Choose cards to make [gold]Planned[/gold].",
 
   "THEUNDERSTUDY-REHEARSE.title": "Rehearse",
@@ -41,7 +41,7 @@
   "THEUNDERSTUDY-REHEARSE.selectionPrompt": "Choose cards to make [gold]Intense[/gold].",
 
   "THEUNDERSTUDY-CRAM_SESSION.title": "Cram Session",
-  "THEUNDERSTUDY-CRAM_SESSION.description": "Apply [gold]Planned[/gold] and [gold]Intense[/gold] to {Select:diff()} attack or skill in hand.",
+  "THEUNDERSTUDY-CRAM_SESSION.description": "Apply [gold]Planned[/gold] and [gold]Intense[/gold] to {Select:diff()} {Select:plural:attack or skill|attacks and skills} in hand.",
   "THEUNDERSTUDY-CRAM_SESSION.selectionPrompt": "Choose cards to make [gold]Planned[/gold] and [gold]Intense[/gold].",
 
   "THEUNDERSTUDY-OVEREXERT.title": "Overexert",
@@ -64,7 +64,7 @@
   "THEUNDERSTUDY-REWRITE.selectionPrompt": "Choose cards to remove [gold]Unplayable[/gold].",
 
   "THEUNDERSTUDY-TAKE_TWO.title": "Take Two",
-  "THEUNDERSTUDY-TAKE_TWO.description": "Remove [gold]Unplayable[/gold] from {Select:diff()} attack or skill in hand.",
+  "THEUNDERSTUDY-TAKE_TWO.description": "Remove [gold]Unplayable[/gold] from {Select:diff()} {Select:plural:attack or skill|attacks and skills} in hand.",
   "THEUNDERSTUDY-TAKE_TWO.selectionPrompt": "Choose cards to remove [gold]Unplayable[/gold].",
 
   "THEUNDERSTUDY-FLOURISH.title": "Flourish",
@@ -74,7 +74,7 @@
   "THEUNDERSTUDY-TAKE_NOTES.description": "Whenever a [gold]debuff[/gold] of yours clears, gain {IfUpgraded:show:4|3} [gold]Vigor[/gold].",
 
   "THEUNDERSTUDY-FORESHADOW.title": "Foreshadow",
-  "THEUNDERSTUDY-FORESHADOW.description": "Gain {Block:diff()} [gold]Block[/gold].\nApply [gold]Planned[/gold] to {Select:diff()} attack or skill in your draw pile.",
+  "THEUNDERSTUDY-FORESHADOW.description": "Gain {Block:diff()} [gold]Block[/gold].\nApply [gold]Planned[/gold] to {Select:diff()} {Select:plural:attack or skill|attacks and skills} in your draw pile.",
   "THEUNDERSTUDY-FORESHADOW.selectionPrompt": "Choose cards to make [gold]Planned[/gold].",
 
   "THEUNDERSTUDY-STANDING_BY.title": "Standing By",
@@ -143,7 +143,7 @@
   "THEUNDERSTUDY-BIG_BREAK.description": "Gain {IfUpgraded:show:6|4} [gold]Vigor[/gold], X times.",
 
   "THEUNDERSTUDY-TOUCH_UP.title": "Touch Up",
-  "THEUNDERSTUDY-TOUCH_UP.description": "Remove [gold]Unplayable[/gold] and apply [gold]Intense[/gold] to {Select:diff()} attack or skill in hand.",
+  "THEUNDERSTUDY-TOUCH_UP.description": "Remove [gold]Unplayable[/gold] and apply [gold]Intense[/gold] to {Select:diff()} {Select:plural:attack or skill|attacks and skills} in hand.",
   "THEUNDERSTUDY-TOUCH_UP.selectionPrompt": "Choose cards to remove [gold]Unplayable[/gold] from and make [gold]Intense[/gold].",
 
   "THEUNDERSTUDY-WIDE_OPEN.title": "Wide Open",
@@ -183,7 +183,7 @@
   "THEUNDERSTUDY-FAST_FORWARD.description": "Draw {Cards:diff()} cards.\nApply 2 [gold]Limited[/gold] to yourself.",
 
   "THEUNDERSTUDY-MISSED_CUE.title": "Missed Cue",
-  "THEUNDERSTUDY-MISSED_CUE.description": "Remove [gold]Unplayable[/gold] from {Select:diff()} attack or skill in hand.\nApply 1 [gold]Shaken[/gold] to yourself.",
+  "THEUNDERSTUDY-MISSED_CUE.description": "Remove [gold]Unplayable[/gold] from {Select:diff()} {Select:plural:attack or skill|attacks and skills} in hand.\nApply 1 [gold]Shaken[/gold] to yourself.",
 
   "THEUNDERSTUDY-PROMPT.title": "Prompt",
   "THEUNDERSTUDY-PROMPT.description": "This card starts each combat already [gold]Planned[/gold].\nDraw {Cards:diff()} cards.",
@@ -207,7 +207,7 @@
   "THEUNDERSTUDY-BRAVADO.description": "Deal {Damage:diff()} damage.\nGain {Vigor:diff()} [gold]Vigor[/gold].",
 
   "THEUNDERSTUDY-STANDING_OVATION.title": "Standing Ovation",
-  "THEUNDERSTUDY-STANDING_OVATION.description": "Deal {Damage:diff()} damage.\nApply [gold]Intense[/gold] to {Select:diff()} card in your hand.\nGain {Vigor:diff()} [gold]Vigor[/gold].",
+  "THEUNDERSTUDY-STANDING_OVATION.description": "Deal {Damage:diff()} damage.\nApply [gold]Intense[/gold] to {Select:diff()} {Select:plural:card|cards} in your hand.\nGain {Vigor:diff()} [gold]Vigor[/gold].",
   "THEUNDERSTUDY-STANDING_OVATION.selectionPrompt": "Choose a card to make [gold]Intense[/gold].",
 
   "THEUNDERSTUDY-PLOT_TWIST.title": "Plot Twist",
@@ -224,6 +224,6 @@
   "THEUNDERSTUDY-TABLE_READ.description": "This card starts each combat already [gold]Planned[/gold].\nGrant 1 [gold]Unweak[/gold], 1 [gold]Unvulnerable[/gold], 1 [gold]Unshaken[/gold], 1 [gold]Unlimited[/gold], and 1 [gold]Unjaded[/gold].",
 
   "THEUNDERSTUDY-SAFETY_NET.title": "Safety Net",
-  "THEUNDERSTUDY-SAFETY_NET.description": "Gain {Block:diff()} [gold]Block[/gold].\nRemove [gold]Unplayable[/gold] from {Select:diff()} attack or skill in hand.",
+  "THEUNDERSTUDY-SAFETY_NET.description": "Gain {Block:diff()} [gold]Block[/gold].\nRemove [gold]Unplayable[/gold] from {Select:diff()} {Select:plural:attack or skill|attacks and skills} in hand.",
   "THEUNDERSTUDY-SAFETY_NET.selectionPrompt": "Choose cards to remove [gold]Unplayable[/gold]."
 }

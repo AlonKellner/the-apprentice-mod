@@ -25,6 +25,7 @@ public class Cue : UnderstudyCard
     protected override void OnUpgrade()
     {
         base.OnUpgrade();
+        DynamicVars.Cards.UpgradeValueBy(1m);
         DynamicVars["Select"].UpgradeValueBy(1m);
     }
 
