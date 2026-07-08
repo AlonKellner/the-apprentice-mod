@@ -14,7 +14,7 @@ public class TrueColors : UnderstudyCard
     {
         WithVars(new IntVar("Invert", 2));
         WithTip(UnderstudyKeywords.Invert);
-        WithTip(typeof(VulnerablePower));
+        WithInvertibleTip(typeof(VulnerablePower));
     }
 
     protected override void OnUpgrade()

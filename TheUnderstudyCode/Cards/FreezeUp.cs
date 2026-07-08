@@ -15,7 +15,7 @@ public class FreezeUp : UnderstudyCard
     {
         WithDamage(5);
         WithBlock(8);
-        WithTip(typeof(WeakPower));
+        WithInvertibleTip(typeof(WeakPower));
     }
 
     protected override void OnUpgrade()

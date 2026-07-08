@@ -15,8 +15,8 @@ public class DressRehearsal : UnderstudyCard
     public DressRehearsal() : base(0, CardType.Skill, CardRarity.Rare, TargetType.None)
     {
         WithPower<DressRehearsalPower>(2, 1);
-        WithTip(typeof(WeakPower));
-        WithTip(typeof(VulnerablePower));
+        WithInvertibleTip(typeof(WeakPower));
+        WithInvertibleTip(typeof(VulnerablePower));
         WithTip(typeof(ShakenPower));
         WithTip(typeof(JadedPower));
         WithTip(typeof(LimitedPower));

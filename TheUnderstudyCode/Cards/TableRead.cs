@@ -13,12 +13,12 @@ public class TableRead : UnderstudyCard
     public TableRead() : base(4, CardType.Skill, CardRarity.Rare, TargetType.None)
     {
         WithCostUpgradeBy(-1);
+        WithTip(UnderstudyKeywords.Planned);
         WithTip(typeof(UnweakPower));
         WithTip(typeof(UnvulnerablePower));
         WithTip(typeof(UnshakenPower));
         WithTip(typeof(UnlimitedPower));
         WithTip(typeof(UnjadedPower));
-        WithTip(UnderstudyKeywords.Planned);
     }
 
     public override bool IsPrePlanned => true;

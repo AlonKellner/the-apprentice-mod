@@ -13,7 +13,7 @@ public class WideOpen : UnderstudyCard
     public WideOpen() : base(1, CardType.Attack, CardRarity.Uncommon, TargetType.AllEnemies)
     {
         WithDamage(6);
-        WithTip(typeof(VulnerablePower));
+        WithInvertibleTip(typeof(VulnerablePower));
     }
 
     protected override void OnUpgrade()

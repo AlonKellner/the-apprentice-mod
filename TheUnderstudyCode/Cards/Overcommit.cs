@@ -14,7 +14,7 @@ public class Overcommit : UnderstudyCard
     {
         WithDamage(8);
         WithBlock(14);
-        WithTip(typeof(VulnerablePower));
+        WithInvertibleTip(typeof(VulnerablePower));
     }
 
     protected override void OnUpgrade()

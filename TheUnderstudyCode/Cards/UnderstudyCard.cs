@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using BaseLib.Abstracts;
 using BaseLib.Extensions;
 using BaseLib.Utils;
@@ -51,6 +53,33 @@ public abstract class UnderstudyCard(
         });
     }
 
+    private static readonly PropertyInfo InvertibleTipDescriptionProperty =
+        typeof(HoverTip).GetProperty(nameof(HoverTip.Description))!;
+
+    // Use instead of a plain WithTip(typeof(X)) when referencing one of the 5 invertible base
+    // powers (Weak/Vulnerable/Frail/Strength/Dexterity). WithTip(typeof(X)) resolves through
+    // HoverTipFactory.FromPower<T> -> ModelDb.Power<T>().GetDumbHoverTip(), a fully static/canonical
+    // lookup with no notion of "which card is asking" — InvertibleBasePowerTooltipPatch (a Harmony
+    // patch on the live PowerModel.HoverTips getter, gated on the CURRENT creature carrying
+    // InvertTrackerPower) only covers hovering an actual applied power icon on a creature mid-combat;
+    // it can never reach this path, and couldn't distinguish "an Understudy card is asking" from any
+    // other character's card doing the same even if it could. Baking "Invertible" into the tip here
+    // instead needs no runtime player/creature state at all, so it's correct in hand, reward screens,
+    // deck view, and the Compendium — with or without an active run, not just mid-combat.
+    // HoverTip is a sealed record struct we don't own with a private Description setter, so mutating
+    // the boxed instance via reflection (same technique as InvertibleBasePowerTooltipPatch) is what
+    // lets us append the suffix — never cast the IHoverTip reference to (HoverTip) before the
+    // SetValue call, or it unboxes into a throwaway copy and the mutation is lost.
+    protected void WithInvertibleTip(Type powerType)
+    {
+        WithTips(_ =>
+        {
+            IHoverTip tip = HoverTipFactory.FromPower(ModelDb.DebugPower(powerType));
+            InvertibleTipDescriptionProperty.SetValue(tip, ((HoverTip)tip).Description + " [gold]Invertible[/gold].");
+            return new IHoverTip[] { tip };
+        });
+    }
+
     // Snapshot of DirectModifiers at combat start; null means this card is not Stable.
     private List<CardModifier>? _stableSnapshot;
 
@@ -62,12 +91,24 @@ public abstract class UnderstudyCard(
     // PlannedModifier.Apply, since Apply always assigns a fresh non-negative slot.
     public virtual bool IsPrePlanned => false;
 
+    // True once this card has actually been pre-Planned for the current combat — reset only at
+    // BeforeCombatStart. Guards against ApplyPrePlannedIfNeeded re-firing every time this card
+    // re-enters a combat pile (AfterCardEnteredCombat isn't a one-shot "entered combat" hook — it
+    // fires on every pile transition, including moving to Discard right after a "Play all Planned"
+    // resolver's RemoveSlot call has just emptied the modifier out). Without this, a card starts
+    // each combat Planned exactly once as intended, but the instant it's actually played and its
+    // slot consumed, the very next pile transition would see "no PlannedModifier present" and
+    // silently re-queue it — self-perpetuating, unlike Refrain's genuinely deliberate self-Plan.
+    private bool _prePlannedThisCombat;
+
     private void ApplyPrePlannedIfNeeded()
     {
         if (!IsPrePlanned) return;
+        if (_prePlannedThisCombat) return;
         if (Pile?.Type.IsCombatPile() != true) return;
         if (this.TryGetModifier<PlannedModifier>(out _)) return;
 
+        _prePlannedThisCombat = true;
         CardModifier.AddModifier<PlannedModifier>(this);
         this.TryGetModifier<PlannedModifier>(out var mod);
         // BaseLib shallow-clones modifier prototypes, so a freshly-attached instance shares its
@@ -84,6 +125,7 @@ public abstract class UnderstudyCard(
     public override Task BeforeCombatStart()
     {
         var t = base.BeforeCombatStart();
+        _prePlannedThisCombat = false;
         if (Keywords.Contains(UnderstudyKeywords.Stable))
             _stableSnapshot = CardModifier.DirectModifiers(this).ToList();
         ApplyPrePlannedIfNeeded();
@@ -118,18 +160,13 @@ public abstract class UnderstudyCard(
     public override Task AfterCardPlayed(PlayerChoiceContext context, CardPlay cardPlay)
     {
         RestoreIfStable();
-        // Planned and Unplayable are deliberately decoupled: a RemoveUnplayable card can free a
-        // Planned card without un-queuing it, so the player can choose to play it early. But
-        // nothing else would then stop it from being auto-played AGAIN when the queue later
-        // resolves (CurtainCall/etc. re-scan for any card with a live PlannedModifier slot) — so
-        // a genuinely manual play of a still-Planned card must consume one of its own queue slots
-        // here. Gated on !IsAutoPlay: CurtainCall/Encore/Remix/Performance already call
-        // PlannedModifier.RemoveSlot for the exact slot being resolved BEFORE calling
-        // CardCmd.AutoPlay, so by the time their own AfterCardPlayed fires (IsAutoPlay == true),
-        // that slot is already gone and this would have nothing left to consume anyway.
-        if (cardPlay.Card == this && !cardPlay.IsAutoPlay
-            && this.TryGetModifier<PlannedModifier>(out var plannedMod) && plannedMod.SequenceIndices.Count > 0)
-            PlannedModifier.RemoveSlot(this, plannedMod.SequenceIndices.Min(), PlannedModifier.RelevantCards(Owner));
+
+        // Planned is only ever removed by an explicit "remove Planned" effect or by a "Play all
+        // Planned" resolver (CurtainCall/Encore/Performance/Remix) consuming the exact slot it's
+        // resolving. A card that's simply playable (Unplayable freed some other way, e.g. by
+        // TakeTwo/SafetyNet/MissedCue) just plays normally when clicked manually — its own Planned
+        // slot(s) are untouched and it stays queued to auto-play later too. Intense is the only
+        // keyword that changes a card as a result of being played (below).
 
         // Safe to mutate DirectModifiers here: AfterCardPlayed fires once BaseLib's per-modifier
         // OnPlay enumeration (BeforeAfterPlayHooks) has finished for this play, unlike a

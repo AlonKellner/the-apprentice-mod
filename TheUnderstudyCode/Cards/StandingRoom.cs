@@ -14,7 +14,7 @@ public class StandingRoom : UnderstudyCard
     public StandingRoom() : base(2, CardType.Attack, CardRarity.Uncommon, TargetType.AllEnemies)
     {
         WithDamage(6);
-        WithTip(typeof(WeakPower));
+        WithInvertibleTip(typeof(WeakPower));
         WithTip(UnderstudyKeywords.Invertible);
     }
 

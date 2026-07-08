@@ -15,7 +15,7 @@ public class HouseLights : UnderstudyCard
     {
         WithDamage(6);
         WithBlock(7);
-        WithTip(typeof(VulnerablePower));
+        WithInvertibleTip(typeof(VulnerablePower));
         WithTip(UnderstudyKeywords.Invertible);
     }
 

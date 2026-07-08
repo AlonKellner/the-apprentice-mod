@@ -18,7 +18,7 @@ public class TellItLikeItIs : UnderstudyCard
         WithDamage(8);
         WithVars(new EnergyVar(1));
         WithTips(_ => new IHoverTip[] { EnergyHoverTip });
-        WithTip(typeof(WeakPower));
+        WithInvertibleTip(typeof(WeakPower));
         WithTip(UnderstudyKeywords.Invertible);
     }
 

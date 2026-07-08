@@ -16,7 +16,7 @@ public class BareItAll : UnderstudyCard
     {
         WithDamage(8);
         WithVars(new IntVar("Vigor", 4));
-        WithTip(typeof(VulnerablePower));
+        WithInvertibleTip(typeof(VulnerablePower));
         WithTip(typeof(VigorPower));
         WithTip(UnderstudyKeywords.Invertible);
     }

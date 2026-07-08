@@ -16,7 +16,7 @@ public class WindUp : UnderstudyCard
     {
         WithDamage(4);
         WithVars(new IntVar("Vigor", 4));
-        WithTip(typeof(WeakPower));
+        WithInvertibleTip(typeof(WeakPower));
         WithTip(typeof(VigorPower));
     }
 

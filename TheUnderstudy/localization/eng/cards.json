@@ -183,10 +183,10 @@
   "THEUNDERSTUDY-FAST_FORWARD.description": "Draw {Cards:diff()} cards.\nApply 2 [gold]Limited[/gold] to yourself.",
 
   "THEUNDERSTUDY-MISSED_CUE.title": "Missed Cue",
-  "THEUNDERSTUDY-MISSED_CUE.description": "Remove [gold]Unplayable[/gold] from {Select:diff()} {Select:plural:attack or skill|attacks and skills} in hand.\nApply 1 [gold]Shaken[/gold] to yourself.",
+  "THEUNDERSTUDY-MISSED_CUE.description": "Remove [gold]Unplayable[/gold] from all attacks and skills.\nApply 2 [gold]Shaken[/gold] to yourself.",
 
   "THEUNDERSTUDY-PROMPT.title": "Prompt",
-  "THEUNDERSTUDY-PROMPT.description": "This card starts each combat already [gold]Planned[/gold].\nDraw {Cards:diff()} cards.",
+  "THEUNDERSTUDY-PROMPT.description": "Draw {Cards:diff()} cards.\nStarts each combat [gold]Planned[/gold].",
 
   "THEUNDERSTUDY-MAGNUM_OPUS.title": "Magnum Opus",
   "THEUNDERSTUDY-MAGNUM_OPUS.description": "Apply [gold]Planned[/gold] to {Select:diff()} attacks or skills in your draw pile.",
@@ -221,7 +221,7 @@
   "THEUNDERSTUDY-MATINEE.description": "Deal {Damage:diff()} damage.\nGain {Block:diff()} [gold]Block[/gold].\nApply 1 [gold]Jaded[/gold] to yourself.",
 
   "THEUNDERSTUDY-TABLE_READ.title": "Table Read",
-  "THEUNDERSTUDY-TABLE_READ.description": "This card starts each combat already [gold]Planned[/gold].\nGrant 1 [gold]Unweak[/gold], 1 [gold]Unvulnerable[/gold], 1 [gold]Unshaken[/gold], 1 [gold]Unlimited[/gold], and 1 [gold]Unjaded[/gold].",
+  "THEUNDERSTUDY-TABLE_READ.description": "Gain 1 [gold]Unweak[/gold], 1 [gold]Unvulnerable[/gold], 1 [gold]Unshaken[/gold], 1 [gold]Unlimited[/gold], and 1 [gold]Unjaded[/gold].\nStarts each combat [gold]Planned[/gold].",
 
   "THEUNDERSTUDY-SAFETY_NET.title": "Safety Net",
   "THEUNDERSTUDY-SAFETY_NET.description": "Gain {Block:diff()} [gold]Block[/gold].\nRemove [gold]Unplayable[/gold] from {Select:diff()} {Select:plural:attack or skill|attacks and skills} in hand.",
