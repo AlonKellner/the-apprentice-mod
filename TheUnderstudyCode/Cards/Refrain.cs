@@ -10,16 +10,16 @@ public class Refrain : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:Refrain";
 
-    public Refrain() : base(2, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
+    public Refrain() : base(1, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
     {
-        WithDamage(12);
+        WithDamage(15);
         WithTip(UnderstudyKeywords.Planned);
     }
 
     protected override void OnUpgrade()
     {
         base.OnUpgrade();
-        DynamicVars.Damage.UpgradeValueBy(4m);
+        DynamicVars.Damage.UpgradeValueBy(5m);
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)

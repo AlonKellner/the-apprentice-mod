@@ -15,7 +15,7 @@ public class PlotTwist : UnderstudyCard
 
     public PlotTwist() : base(1, CardType.Skill, CardRarity.Common, TargetType.None)
     {
-        WithVars(new IntVar("Invert", 2));
+        WithVars(new IntVar("Invert", 1));
         WithTip(UnderstudyKeywords.Invert);
         WithTip(UnderstudyKeywords.Planned);
     }
