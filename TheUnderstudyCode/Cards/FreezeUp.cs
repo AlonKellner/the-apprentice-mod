@@ -14,7 +14,7 @@ public class FreezeUp : UnderstudyCard
     public FreezeUp() : base(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
     {
         WithDamage(5);
-        WithBlock(17);
+        WithBlock(8);
         WithTip(typeof(WeakPower));
     }
 
@@ -22,7 +22,7 @@ public class FreezeUp : UnderstudyCard
     {
         base.OnUpgrade();
         DynamicVars.Damage.UpgradeValueBy(2m);
-        DynamicVars.Block.UpgradeValueBy(4m);
+        DynamicVars.Block.UpgradeValueBy(3m);
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)

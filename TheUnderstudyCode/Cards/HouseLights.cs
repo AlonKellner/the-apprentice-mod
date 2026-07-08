@@ -14,7 +14,7 @@ public class HouseLights : UnderstudyCard
     public HouseLights() : base(2, CardType.Attack, CardRarity.Uncommon, TargetType.AllEnemies)
     {
         WithDamage(6);
-        WithBlock(10);
+        WithBlock(7);
         WithTip(typeof(VulnerablePower));
         WithTip(UnderstudyKeywords.Invertible);
     }
@@ -23,7 +23,7 @@ public class HouseLights : UnderstudyCard
     {
         base.OnUpgrade();
         DynamicVars.Damage.UpgradeValueBy(3m);
-        DynamicVars.Block.UpgradeValueBy(3m);
+        DynamicVars.Block.UpgradeValueBy(2m);
     }
 
     protected override bool ShouldGlowGoldInternal => EmotionalExpression.SumOfInvertibleDebuffs(Owner.Creature) > 0;

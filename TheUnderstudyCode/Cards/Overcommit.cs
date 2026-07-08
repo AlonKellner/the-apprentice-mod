@@ -13,7 +13,7 @@ public class Overcommit : UnderstudyCard
     public Overcommit() : base(2, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
     {
         WithDamage(8);
-        WithBlock(20);
+        WithBlock(14);
         WithTip(typeof(VulnerablePower));
     }
 
