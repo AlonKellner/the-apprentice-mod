@@ -252,5 +252,20 @@
   "THEUNDERSTUDY-CUT_THE_TENSION.description": "Double [gold]Intense[/gold] on all cards.",
 
   "THEUNDERSTUDY-SECOND_NATURE.title": "Second Nature",
-  "THEUNDERSTUDY-SECOND_NATURE.description": "Deal {Damage:diff()} damage.\nAt the end of your turn, if this card is [gold]Unplayable[/gold], remove [gold]Unplayable[/gold] and play it."
+  "THEUNDERSTUDY-SECOND_NATURE.description": "Deal {Damage:diff()} damage.\nAt the end of your turn, if this card is [gold]Unplayable[/gold], remove [gold]Unplayable[/gold] and play it.",
+
+  "THEUNDERSTUDY-UNDERSTATEMENT.title": "Understatement",
+  "THEUNDERSTUDY-UNDERSTATEMENT.description": "Gain {Block:diff()} [gold]Block[/gold].\nApply 2 [gold]Weak[/gold] to yourself.",
+
+  "THEUNDERSTUDY-DOWNSTAGE.title": "Downstage",
+  "THEUNDERSTUDY-DOWNSTAGE.description": "Deal {Damage:diff()} damage.\nApply 1 [gold]Vulnerable[/gold] to yourself.",
+
+  "THEUNDERSTUDY-BUTTERFLIES.title": "Butterflies",
+  "THEUNDERSTUDY-BUTTERFLIES.description": "Deal {Damage:diff()} damage.\nGain {Block:diff()} [gold]Block[/gold].\nApply 2 [gold]Shaken[/gold] to yourself.",
+
+  "THEUNDERSTUDY-OFF_SCRIPT.title": "Off Script",
+  "THEUNDERSTUDY-OFF_SCRIPT.description": "Deal {Damage:diff()} damage to a random enemy, 3 times.\nApply 1 [gold]Limited[/gold] to yourself.",
+
+  "THEUNDERSTUDY-RERUN.title": "Rerun",
+  "THEUNDERSTUDY-RERUN.description": "Deal {Damage:diff()} damage twice.\nApply 2 [gold]Jaded[/gold] to yourself."
 }
