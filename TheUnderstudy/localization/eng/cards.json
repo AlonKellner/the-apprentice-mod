@@ -116,7 +116,7 @@
   "THEUNDERSTUDY-OLD_SONG.description": "Gain {Unlimited:diff()} [gold]Unlimited[/gold].",
 
   "THEUNDERSTUDY-DRESS_REHEARSAL.title": "Dress Rehearsal",
-  "THEUNDERSTUDY-DRESS_REHEARSAL.description": "Apply {DressRehearsalPower:diff()} [gold]Weak[/gold], [gold]Vulnerable[/gold], [gold]Shaken[/gold], [gold]Jaded[/gold], and [gold]Limited[/gold] to yourself.\nAt the start of your next turn, [gold]Invert[/gold] {DressRehearsalPower:diff()} of each invertible debuff.",
+  "THEUNDERSTUDY-DRESS_REHEARSAL.description": "Apply {DressRehearsalPower:diff()} [gold]Weak[/gold], [gold]Vulnerable[/gold], [gold]Shaken[/gold], [gold]Jaded[/gold], and [gold]Limited[/gold] to yourself.\nAt the start of next turn, [gold]Invert[/gold] {DressRehearsalPower:diff()} of each invertible debuff.",
 
   "THEUNDERSTUDY-MASTER_FORM.title": "Master Form",
   "THEUNDERSTUDY-MASTER_FORM.description": "When attacks or skills without [gold]Replay[/gold] become [gold]Unplayable[/gold], they gain [gold]Replay[/gold] 1.",
@@ -150,7 +150,7 @@
   "THEUNDERSTUDY-FULL_VOICE.description": "Whenever a debuff is applied to you, gain {IfUpgraded:show:4|3} [gold]Block[/gold].",
 
   "THEUNDERSTUDY-SHOWSTOPPER.title": "Showstopper",
-  "THEUNDERSTUDY-SHOWSTOPPER.description": "Deal {Damage:diff()} damage.\nGain {Energy:energyIcons()}.\nStarts each combat [gold]Intense[/gold].",
+  "THEUNDERSTUDY-SHOWSTOPPER.description": "Deal {Damage:diff()} damage.\nGain {Energy:energyIcons()}.{InCombat:cond:|\n[gold]Intense[/gold] 1.}",
 
   "THEUNDERSTUDY-REMIX.title": "Remix",
   "THEUNDERSTUDY-REMIX.description": "Play all [gold]Planned[/gold] cards in a random order.",
@@ -171,7 +171,7 @@
   "THEUNDERSTUDY-FAST_FORWARD.description": "Draw {Cards:diff()} cards.\nApply 2 [gold]Limited[/gold] to yourself.",
 
   "THEUNDERSTUDY-MISSED_CUE.title": "Missed Cue",
-  "THEUNDERSTUDY-MISSED_CUE.description": "Remove [gold]Unplayable[/gold] from all attacks and skills.\nApply 2 [gold]Shaken[/gold] to yourself.\nStarts each combat [gold]Intense[/gold].",
+  "THEUNDERSTUDY-MISSED_CUE.description": "Remove [gold]Unplayable[/gold] from all attacks and skills.\nApply 2 [gold]Shaken[/gold] to yourself.{InCombat:cond:|\n[gold]Intense[/gold] 1.}",
 
   "THEUNDERSTUDY-PROMPT.title": "Prompt",
   "THEUNDERSTUDY-PROMPT.description": "Draw {Cards:diff()} cards.\nStarts each combat [gold]Planned[/gold].",
@@ -234,13 +234,13 @@
   "THEUNDERSTUDY-FINAL_DRAFT.selectionPrompt": "Choose a card to make [gold]Stable[/gold].",
 
   "THEUNDERSTUDY-CLEAN_SLATE.title": "Clean Slate",
-  "THEUNDERSTUDY-CLEAN_SLATE.description": "Exhaust all [gold]Unplayable[/gold] cards. Deal {Damage:diff()} damage for each exhausted.\nStarts each combat [gold]Intense[/gold].",
+  "THEUNDERSTUDY-CLEAN_SLATE.description": "Exhaust all [gold]Unplayable[/gold] cards. Deal {Damage:diff()} damage for each exhausted.{InCombat:cond:|\n[gold]Intense[/gold] 1.}",
 
   "THEUNDERSTUDY-CUT_THE_TENSION.title": "Cut the Tension",
   "THEUNDERSTUDY-CUT_THE_TENSION.description": "Double [gold]Intense[/gold] on all cards.",
 
   "THEUNDERSTUDY-SECOND_NATURE.title": "Second Nature",
-  "THEUNDERSTUDY-SECOND_NATURE.description": "Deal {Damage:diff()} damage.\nAt the end of your turn, if this card is [gold]Unplayable[/gold], remove [gold]Unplayable[/gold] and play it.",
+  "THEUNDERSTUDY-SECOND_NATURE.description": "Deal {Damage:diff()} damage.\nAt the end of your turn, if this is [gold]Unplayable[/gold], remove [gold]Unplayable[/gold] and play it.",
 
   "THEUNDERSTUDY-UNDERSTATEMENT.title": "Understatement",
   "THEUNDERSTUDY-UNDERSTATEMENT.description": "Gain {Block:diff()} [gold]Block[/gold].\nApply 2 [gold]Weak[/gold] to yourself.",

@@ -19,9 +19,9 @@ public class SecondNature : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:SecondNature";
 
-    public SecondNature() : base(3, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
+    public SecondNature() : base(2, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
     {
-        WithDamage(8);
+        WithDamage(18);
         WithTip(CardKeyword.Unplayable);
     }
 
