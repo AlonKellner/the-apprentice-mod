@@ -1,3 +1,4 @@
+using BaseLib.Abstracts;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using TheUnderstudy.TheUnderstudyCode.Cards;
 using TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
@@ -52,6 +53,16 @@ public class OrderModifierTests
 
     [Fact]
     public void CanApplyTo_StableSkill_ReturnsFalse() => Assert.False(OrderModifier.CanApplyTo(new Intention()));
+
+    [Fact]
+    public void CanApplyTo_RuntimeStableCard_ReturnsFalse()
+    {
+        // A card made Stable at runtime (via StableModifier, not just the printed keyword) must
+        // be just as ineligible as a printed-Stable card like Intention.
+        var card = new UnderstudyStrike();
+        CardModifier.AddModifier(card, new StableModifier());
+        Assert.False(OrderModifier.CanApplyTo(card));
+    }
 
     // ModifyDescriptionPost — prepends (not appends) the Order line as the card's first line.
 

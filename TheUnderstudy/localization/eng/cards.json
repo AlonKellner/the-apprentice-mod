@@ -162,7 +162,7 @@
   "THEUNDERSTUDY-FULL_VOICE.description": "Whenever a debuff is applied to you, gain {IfUpgraded:show:4|3} [gold]Block[/gold].",
 
   "THEUNDERSTUDY-SHOWSTOPPER.title": "Showstopper",
-  "THEUNDERSTUDY-SHOWSTOPPER.description": "Deal {Damage:diff()} damage.\nGain {Energy:energyIcons()}.",
+  "THEUNDERSTUDY-SHOWSTOPPER.description": "Deal {Damage:diff()} damage.\nGain {Energy:energyIcons()}.\nStarts each combat [gold]Intense[/gold].",
 
   "THEUNDERSTUDY-REMIX.title": "Remix",
   "THEUNDERSTUDY-REMIX.description": "Play all [gold]Planned[/gold] cards in a random order.",
@@ -183,7 +183,7 @@
   "THEUNDERSTUDY-FAST_FORWARD.description": "Draw {Cards:diff()} cards.\nApply 2 [gold]Limited[/gold] to yourself.",
 
   "THEUNDERSTUDY-MISSED_CUE.title": "Missed Cue",
-  "THEUNDERSTUDY-MISSED_CUE.description": "Remove [gold]Unplayable[/gold] from all attacks and skills.\nApply 2 [gold]Shaken[/gold] to yourself.",
+  "THEUNDERSTUDY-MISSED_CUE.description": "Remove [gold]Unplayable[/gold] from all attacks and skills.\nApply 2 [gold]Shaken[/gold] to yourself.\nStarts each combat [gold]Intense[/gold].",
 
   "THEUNDERSTUDY-PROMPT.title": "Prompt",
   "THEUNDERSTUDY-PROMPT.description": "Draw {Cards:diff()} cards.\nStarts each combat [gold]Planned[/gold].",
@@ -225,5 +225,32 @@
 
   "THEUNDERSTUDY-SAFETY_NET.title": "Safety Net",
   "THEUNDERSTUDY-SAFETY_NET.description": "Gain {Block:diff()} [gold]Block[/gold].\nRemove [gold]Unplayable[/gold] from {Select:diff()} {Select:plural:attack or skill|attacks and skills} in hand.",
-  "THEUNDERSTUDY-SAFETY_NET.selectionPrompt": "Choose cards to remove [gold]Unplayable[/gold]."
+  "THEUNDERSTUDY-SAFETY_NET.selectionPrompt": "Choose cards to remove [gold]Unplayable[/gold].",
+
+  "THEUNDERSTUDY-CALL_SHEET.title": "Call Sheet",
+  "THEUNDERSTUDY-CALL_SHEET.description": "At the start of your turn, apply [gold]Planned[/gold] to {CallSheetPower:diff()} cards.",
+  "THEUNDERSTUDY-CALL_SHEET.selectionPrompt": "Choose cards to make [gold]Planned[/gold].",
+
+  "THEUNDERSTUDY-WARM_UP.title": "Warm Up",
+  "THEUNDERSTUDY-WARM_UP.description": "At the start of your turn, apply [gold]Intense[/gold] to {WarmUpPower:diff()} cards.",
+  "THEUNDERSTUDY-WARM_UP.selectionPrompt": "Choose cards to make [gold]Intense[/gold].",
+
+  "THEUNDERSTUDY-MUSCLE_MEMORY.title": "Muscle Memory",
+  "THEUNDERSTUDY-MUSCLE_MEMORY.description": "[gold]Intense[/gold] cards will not become [gold]Unplayable[/gold].",
+
+  "THEUNDERSTUDY-IMPROVISE.title": "Improvise",
+  "THEUNDERSTUDY-IMPROVISE.description": "For each [gold]Planned[/gold] card, draw 1 card.\nRemove [gold]Planned[/gold] from all cards.",
+
+  "THEUNDERSTUDY-FINAL_DRAFT.title": "Final Draft",
+  "THEUNDERSTUDY-FINAL_DRAFT.description": "Apply [gold]Stable[/gold] to 1 card in your hand.",
+  "THEUNDERSTUDY-FINAL_DRAFT.selectionPrompt": "Choose a card to make [gold]Stable[/gold].",
+
+  "THEUNDERSTUDY-CLEAN_SLATE.title": "Clean Slate",
+  "THEUNDERSTUDY-CLEAN_SLATE.description": "Exhaust all [gold]Unplayable[/gold] cards. Deal {Damage:diff()} damage for each exhausted.\nStarts each combat [gold]Intense[/gold].",
+
+  "THEUNDERSTUDY-CUT_THE_TENSION.title": "Cut the Tension",
+  "THEUNDERSTUDY-CUT_THE_TENSION.description": "Double [gold]Intense[/gold] on all cards.",
+
+  "THEUNDERSTUDY-SECOND_NATURE.title": "Second Nature",
+  "THEUNDERSTUDY-SECOND_NATURE.description": "Deal {Damage:diff()} damage.\nAt the end of your turn, if this card is [gold]Unplayable[/gold], remove [gold]Unplayable[/gold] and play it."
 }

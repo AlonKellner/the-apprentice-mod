@@ -1,6 +1,8 @@
+using BaseLib.Abstracts;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using TheUnderstudy.TheUnderstudyCode.Cards;
 using TheUnderstudy.TheUnderstudyCode.Cards.Afflictions;
+using TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
 using Xunit;
 
 namespace TheUnderstudy.Tests.Cards.Afflictions;
@@ -29,6 +31,16 @@ public class OrderTests
     [Fact]
     public void CanAfflict_StableSkill_ReturnsFalse() =>
         Assert.False(new Order().CanAfflict(new Intention()));
+
+    [Fact]
+    public void CanAfflict_RuntimeStableCard_ReturnsFalse()
+    {
+        // A card made Stable at runtime (via StableModifier, not just the printed keyword) must
+        // be just as ineligible as a printed-Stable card like Intention.
+        var card = new UnderstudyStrike();
+        CardModifier.AddModifier(card, new StableModifier());
+        Assert.False(new Order().CanAfflict(card));
+    }
 
     [Fact]
     public void CanAfflict_PowerCard_ReturnsFalse() =>

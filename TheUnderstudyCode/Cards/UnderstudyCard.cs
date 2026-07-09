@@ -47,7 +47,7 @@ public abstract class UnderstudyCard(
             {
                 new HoverTip(
                     new LocString("card_keywords", "THEUNDERSTUDY-INTENSE.title"),
-                    $"Increase [gold]Block[/gold] and damage by {s} for each card with [gold]Intense[/gold]."
+                    $"If this deals damage or grants [gold]Block[/gold], increase it by {s} for each card with [gold]Intense[/gold]."
                 )
             };
         });
@@ -122,13 +122,39 @@ public abstract class UnderstudyCard(
         PlannedModifier.RefreshVisualIndices(PlannedModifier.RelevantCards(Owner));
     }
 
+    // The pre-Intense mechanic (starting a combat already carrying Intense 1) — same shape as
+    // IsPrePlanned above, for "big one-off moment" B cards that should already be primed to lock
+    // after their first play rather than needing a card-side grant.
+    public virtual bool IsPreIntense => false;
+
+    // True once this card has actually been pre-Intensified for the current combat — reset only
+    // at BeforeCombatStart, same reasoning as _prePlannedThisCombat (AfterCardEnteredCombat fires
+    // on every pile transition, not just the first).
+    private bool _preIntenseThisCombat;
+
+    private void ApplyPreIntenseIfNeeded()
+    {
+        if (!IsPreIntense || _preIntenseThisCombat) return;
+        if (Pile?.Type.IsCombatPile() != true) return;
+        if (this.TryGetModifier<IntenseModifier>(out _)) return;
+
+        _preIntenseThisCombat = true;
+        IntenseModifier.Apply(this, CombatState!, Owner!.Piles.SelectMany(p => p.Cards));
+    }
+
     public override Task BeforeCombatStart()
     {
         var t = base.BeforeCombatStart();
         _prePlannedThisCombat = false;
-        if (Keywords.Contains(UnderstudyKeywords.Stable))
-            _stableSnapshot = CardModifier.DirectModifiers(this).ToList();
+        _preIntenseThisCombat = false;
+        // Reset (not just lazily set) here: a previous combat's snapshot/StableModifier grant
+        // must not leak into a new one — MaybeSnapshotIfStable only ever sets _stableSnapshot
+        // once it's null, so without this reset a printed-Stable card would only ever get
+        // snapshotted on its very first combat, never refreshed on later ones.
+        _stableSnapshot = null;
+        MaybeSnapshotIfStable();
         ApplyPrePlannedIfNeeded();
+        ApplyPreIntenseIfNeeded();
         return t;
     }
 
@@ -141,6 +167,7 @@ public abstract class UnderstudyCard(
     // own Invert conversions.
     public override async Task AfterPlayerTurnStartLate(PlayerChoiceContext context, Player player)
     {
+        MaybeSnapshotIfStable();
         RestoreIfStable();
         if (player != Owner) return;
         if (!player.Creature.Powers.Any(p => p is PlannedCounterPower))
@@ -156,13 +183,16 @@ public abstract class UnderstudyCard(
     // CanApplyTo guards.
     public override Task AfterCardEnteredCombat(CardModel triggeredBy)
     {
+        MaybeSnapshotIfStable();
         RestoreIfStable();
         ApplyPrePlannedIfNeeded();
+        ApplyPreIntenseIfNeeded();
         return Task.CompletedTask;
     }
 
     public override Task AfterCardPlayed(PlayerChoiceContext context, CardPlay cardPlay)
     {
+        MaybeSnapshotIfStable();
         RestoreIfStable();
 
         // Planned is only ever removed by an explicit "remove Planned" effect or by a "Play all
@@ -177,18 +207,35 @@ public abstract class UnderstudyCard(
         // CardModifier's own OnPlay override, which runs inside that enumeration and throws
         // "Collection was modified" if it tries to add a modifier to the same card.
         // IsFinalIntensePlay gates this to the last CardPlay in a Replay series, so a card with
-        // Replay N only becomes Unplayable after all N+1 plays have resolved.
+        // Replay N only becomes Unplayable after all N+1 plays have resolved. Muscle Memory
+        // suppresses this specifically (not Planned-driven Unplayable in general) — see
+        // MuscleMemoryPower's own doc comment for the other two call sites this mirrors.
         if (cardPlay.Card == this
             && IntenseModifier.IsFinalIntensePlay(cardPlay)
-            && !this.TryGetModifier<UnplayableModifier>(out _))
+            && !this.TryGetModifier<UnplayableModifier>(out _)
+            && !MuscleMemoryPower.IsActive(Owner?.Creature))
             CardModifier.AddModifier<UnplayableModifier>(this);
         return Task.CompletedTask;
     }
 
     public override Task BeforeSideTurnEnd(PlayerChoiceContext context, CombatSide side, IEnumerable<Creature> creatures)
     {
+        MaybeSnapshotIfStable();
         RestoreIfStable();
         return Task.CompletedTask;
+    }
+
+    // Takes the protective snapshot the first time this card is observed to be Stable — whether
+    // printed (BeforeCombatStart already sees it) or granted mid-combat by an effect like Final
+    // Draft (StableModifier), which attaches on a completely different card's OnPlay and so isn't
+    // itself a hook firing on THIS card. Called right before RestoreIfStable() everywhere the
+    // latter already runs, so a runtime-granted Stable starts being protected within one hook
+    // boundary of being granted, without needing a new event subscription (this.IsStable() is a
+    // plain per-instance check, not a static subscription that could leak past combat end).
+    private void MaybeSnapshotIfStable()
+    {
+        if (_stableSnapshot == null && this.IsStable())
+            _stableSnapshot = CardModifier.DirectModifiers(this).ToList();
     }
 
     private void RestoreIfStable()

@@ -98,6 +98,16 @@ public class PlannedModifierTests
     }
 
     [Fact]
+    public void CanApplyTo_RuntimeStableCard_ReturnsFalse()
+    {
+        // A card made Stable at runtime (via StableModifier, not just the printed keyword) must
+        // be just as ineligible as a printed-Stable card like Intention.
+        var card = new UnderstudyStrike();
+        CardModifier.AddModifier(card, new StableModifier());
+        Assert.False(PlannedModifier.CanApplyTo(card));
+    }
+
+    [Fact]
     public void CanApplyTo_AlreadyPlannedAttack_ReturnsTrue()
     {
         var card = new UnderstudyStrike();

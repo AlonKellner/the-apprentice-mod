@@ -5,7 +5,6 @@ using BaseLib.Extensions;
 using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
-using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.ValueProps;
 using TheUnderstudy.TheUnderstudyCode.Cards;
@@ -58,20 +57,13 @@ public class IntenseModifier : CardModifier
         }
     }
 
-    // A card can receive Intense only if it has at least one stat that the Intense bonus
-    // can actually modify via the powered hook — i.e. a DamageVar or BlockVar with
-    // ValueProp.Move (the flag set by WithDamage/WithBlock, which satisfies IsPoweredAttack
-    // and IsPoweredCardOrMonsterMoveBlock). Cards with no Damage/Block var (e.g. Performance,
-    // Intention) or with unpowered props are excluded.
-    public static bool CanApplyTo(CardModel card)
-    {
-        if (card.Keywords.Contains(UnderstudyKeywords.Stable)) return false;
-        bool hasPoweredDamage = card.DynamicVars.TryGetValue("Damage", out var dmgVar)
-            && ((DamageVar)dmgVar).Props.IsPoweredAttack();
-        bool hasPoweredBlock = card.DynamicVars.TryGetValue("Block", out var blkVar)
-            && ((BlockVar)blkVar).Props.IsPoweredCardOrMonsterMoveBlock();
-        return hasPoweredDamage || hasPoweredBlock;
-    }
+    // Any non-Stable Attack/Skill is eligible — matches PlannedModifier/UnplayableModifier's own
+    // eligibility check. A card with no Damage/Block var (e.g. Performance-shaped utility Skills)
+    // still becomes Unplayable when played; it just gets zero numeric bonus from
+    // ModifyDamageAdditive/ModifyBlockAdditive below, since those already no-op via their own
+    // props.IsPoweredAttack()/IsPoweredCardOrMonsterMoveBlock() checks.
+    public static bool CanApplyTo(CardModel card) =>
+        (card.Type == CardType.Attack || card.Type == CardType.Skill) && !card.IsStable();
 
     // Raised the first time a card receives Intense (not on subsequent re-Intensifies of the
     // same card) — Master Form's "whenever you apply... Intense... that doesn't have Replay" trigger.
@@ -106,6 +98,16 @@ public class IntenseModifier : CardModifier
         Invariants.CheckEqual(_intenseCreated, allCards.Count(c => c.TryGetModifier<IntenseModifier>(out _)),
             nameof(IntenseModifier) + "." + nameof(Apply),
             "distinct cards carrying IntenseModifier this combat vs. _intenseCreated");
+    }
+
+    // Doubles an already-Intense card's Stacks in place (Cut the Tension: Intense 1 -> 2, Intense
+    // 3 -> 6). No-op on a card with no IntenseModifier. _intenseCreated is untouched — it counts
+    // distinct cards, not stacks. Stacks keeps its private setter; mutated only through this
+    // class's own static API, matching Apply's existing convention.
+    public static void DoubleStacks(CardModel card)
+    {
+        if (card.TryGetModifier<IntenseModifier>(out var mod))
+            mod!.Stacks *= 2;
     }
 
     // ── Strength/Dexterity-style hook overrides ──────────────────────────────────────────────

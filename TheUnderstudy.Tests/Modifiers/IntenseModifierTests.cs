@@ -57,6 +57,16 @@ public class IntenseModifierTests
     }
 
     [Fact]
+    public void CanApplyTo_EverythingIveGot_ReturnsTrueAfterGeneralization()
+    {
+        // EverythingIveGot is a non-Stable Skill with no Damage/Block DynamicVar. Intense now
+        // applies to any Attack/Skill (matching PlannedModifier/UnplayableModifier's own
+        // eligibility check), not just cards that print damage or block — a pure-utility Skill
+        // still gets the "becomes Unplayable when played" behavior, just no numeric bonus.
+        Assert.True(IntenseModifier.CanApplyTo(new EverythingIveGot()));
+    }
+
+    [Fact]
     public void CanApplyTo_AlreadyIntenseCard_ReturnsTrue()
     {
         // Intense stacks: re-applying to a card that already has Intense adds another stack.
@@ -192,6 +202,36 @@ public class IntenseModifierTests
         var method = typeof(IntenseModifier).GetMethod("ModifyBlockAdditive");
         Assert.NotNull(method);
         Assert.True(method!.DeclaringType == typeof(IntenseModifier));
+    }
+
+    [Fact]
+    public void DoubleStacks_StacksOne_BecomesTwo()
+    {
+        var card = new UnderstudyStrike();
+        var mod = new IntenseModifier();
+        CardModifier.AddModifier(card, mod);
+        typeof(IntenseModifier).GetProperty(nameof(IntenseModifier.Stacks))!.SetValue(mod, 1);
+        IntenseModifier.DoubleStacks(card);
+        Assert.Equal(2, mod.Stacks);
+    }
+
+    [Fact]
+    public void DoubleStacks_StacksThree_BecomesSix()
+    {
+        var card = new UnderstudyStrike();
+        var mod = new IntenseModifier();
+        CardModifier.AddModifier(card, mod);
+        typeof(IntenseModifier).GetProperty(nameof(IntenseModifier.Stacks))!.SetValue(mod, 3);
+        IntenseModifier.DoubleStacks(card);
+        Assert.Equal(6, mod.Stacks);
+    }
+
+    [Fact]
+    public void DoubleStacks_NoIntenseModifier_NoOp()
+    {
+        var card = new UnderstudyStrike();
+        IntenseModifier.DoubleStacks(card); // must not throw
+        Assert.False(card.TryGetModifier<IntenseModifier>(out _));
     }
 
     [Fact]

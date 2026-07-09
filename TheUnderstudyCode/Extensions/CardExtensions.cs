@@ -3,6 +3,7 @@ using System.Linq;
 using BaseLib.Abstracts;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Models;
+using TheUnderstudy.TheUnderstudyCode.Cards;
 
 namespace TheUnderstudy.TheUnderstudyCode.Extensions;
 
@@ -44,4 +45,18 @@ public static class CardExtensions
     // Whether any card in the given set is Unplayable, regardless of type — broader than
     // UnplayableModifier.AnyIn (Attack/Skill only), matching TakeYourBow's damage-counting scope.
     public static bool AnyUnplayable(IEnumerable<CardModel> cards) => cards.Any(c => c.IsUnplayable());
+
+    public static bool IsStable(this CardModel card)
+    {
+        // Native (printed via WithKeyword) + modifier-added Stable keyword. Checked manually
+        // (rather than solely via card.Keywords) because card.Keywords only reflects the printed/
+        // static keyword set — a runtime-granted StableModifier (Cards/Modifiers/StableModifier.cs)
+        // only shows up via TryModifyKeywordsInCombat, same reasoning as IsUnplayable() above.
+        if (card.Keywords.Contains(UnderstudyKeywords.Stable))
+            return true;
+        var kw = new HashSet<CardKeyword>();
+        foreach (var mod in CardModifier.DirectModifiers(card))
+            mod.TryModifyKeywordsInCombat(card, kw);
+        return kw.Contains(UnderstudyKeywords.Stable);
+    }
 }

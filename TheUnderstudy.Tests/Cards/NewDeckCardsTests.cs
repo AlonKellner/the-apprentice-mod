@@ -1,5 +1,8 @@
+using BaseLib.Extensions;
 using MegaCrit.Sts2.Core.Entities.Cards;
+using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using TheUnderstudy.TheUnderstudyCode.Cards;
+using TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
 using Xunit;
 
 namespace TheUnderstudy.Tests.Cards;
@@ -74,6 +77,14 @@ public class NewDeckCardsTests
     [InlineData(typeof(Matinee), "TheUnderstudy:Matinee", CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)]
     [InlineData(typeof(TableRead), "TheUnderstudy:TableRead", CardType.Skill, CardRarity.Rare, TargetType.None)]
     [InlineData(typeof(SafetyNet), "TheUnderstudy:SafetyNet", CardType.Skill, CardRarity.Uncommon, TargetType.None)]
+    [InlineData(typeof(CallSheet), "TheUnderstudy:CallSheet", CardType.Power, CardRarity.Uncommon, TargetType.None)]
+    [InlineData(typeof(WarmUp), "TheUnderstudy:WarmUp", CardType.Power, CardRarity.Uncommon, TargetType.None)]
+    [InlineData(typeof(MuscleMemory), "TheUnderstudy:MuscleMemory", CardType.Power, CardRarity.Rare, TargetType.None)]
+    [InlineData(typeof(Improvise), "TheUnderstudy:Improvise", CardType.Skill, CardRarity.Uncommon, TargetType.None)]
+    [InlineData(typeof(FinalDraft), "TheUnderstudy:FinalDraft", CardType.Skill, CardRarity.Uncommon, TargetType.None)]
+    [InlineData(typeof(CleanSlate), "TheUnderstudy:CleanSlate", CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)]
+    [InlineData(typeof(CutTheTension), "TheUnderstudy:CutTheTension", CardType.Skill, CardRarity.Rare, TargetType.None)]
+    [InlineData(typeof(SecondNature), "TheUnderstudy:SecondNature", CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)]
     public void Card_ConstructsWithExpectedShape(
         System.Type cardType, string expectedId, CardType expectedType, CardRarity expectedRarity, TargetType expectedTarget)
     {
@@ -85,4 +96,45 @@ public class NewDeckCardsTests
         Assert.Equal(expectedRarity, card.Rarity);
         Assert.Equal(expectedTarget, card.TargetType);
     }
+
+    // MissedCue / Showstopper: converted to start-Intense-1 (Part C of the Intense-generalization
+    // plan). MissedCue drops Exhaust in favor of a cost-reduction upgrade; Showstopper's damage is
+    // raised to compensate for losing "always replayable."
+
+    [Fact]
+    public void MissedCue_IsPreIntense() => Assert.True(new MissedCue().IsPreIntense);
+
+    [Fact]
+    public void MissedCue_HasNoExhaustKeyword() =>
+        Assert.False(new MissedCue().Keywords.Contains(CardKeyword.Exhaust));
+
+    [Fact]
+    public void Showstopper_IsPreIntense() => Assert.True(new Showstopper().IsPreIntense);
+
+    [Fact]
+    public void Showstopper_DamageIs34() =>
+        Assert.Equal(34m, new Showstopper().DynamicVars.Damage.BaseValue);
+
+    [Fact]
+    public void FinalDraft_HasExhaustKeyword() =>
+        Assert.True(new FinalDraft().Keywords.Contains(CardKeyword.Exhaust));
+
+    [Fact]
+    public void CleanSlate_IsPreIntense() => Assert.True(new CleanSlate().IsPreIntense);
+
+    [Fact]
+    public void CleanSlate_DamageIs4() =>
+        Assert.Equal(4m, new CleanSlate().DynamicVars.Damage.BaseValue);
+
+    [Fact]
+    public void CutTheTension_HasExhaustKeyword() =>
+        Assert.True(new CutTheTension().Keywords.Contains(CardKeyword.Exhaust));
+
+    [Fact]
+    public void SecondNature_DamageIs8() =>
+        Assert.Equal(8m, new SecondNature().DynamicVars.Damage.BaseValue);
+
+    [Fact]
+    public void SecondNature_HasNoIntenseModifierByDefault() =>
+        Assert.False(new SecondNature().TryGetModifier<IntenseModifier>(out _));
 }

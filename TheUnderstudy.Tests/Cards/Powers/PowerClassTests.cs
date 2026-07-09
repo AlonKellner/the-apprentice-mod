@@ -380,4 +380,45 @@ public class PowerClassTests
         Assert.DoesNotContain(
             typeof(PunishedPower).GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly),
             m => !m.IsSpecialName);
+
+    [Fact]
+    public void CallSheetPower_IsBuff_Counter()
+    {
+        var p = new CallSheetPower();
+        Assert.Equal(PowerType.Buff, p.Type);
+        Assert.Equal(PowerStackType.Counter, p.StackType);
+        Assert.NotEmpty(p.Localization);
+    }
+
+    [Fact]
+    public void CallSheetPower_OverridesAfterPlayerTurnStartLate() =>
+        Assert.NotNull(typeof(CallSheetPower).GetMethod(
+            "AfterPlayerTurnStartLate", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly));
+
+    [Fact]
+    public void WarmUpPower_IsBuff_Counter()
+    {
+        var p = new WarmUpPower();
+        Assert.Equal(PowerType.Buff, p.Type);
+        Assert.Equal(PowerStackType.Counter, p.StackType);
+        Assert.NotEmpty(p.Localization);
+    }
+
+    [Fact]
+    public void WarmUpPower_OverridesAfterPlayerTurnStartLate() =>
+        Assert.NotNull(typeof(WarmUpPower).GetMethod(
+            "AfterPlayerTurnStartLate", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly));
+
+    [Fact]
+    public void MuscleMemoryPower_IsBuff_Single()
+    {
+        var p = new MuscleMemoryPower();
+        Assert.Equal(PowerType.Buff, p.Type);
+        Assert.Equal(PowerStackType.Single, p.StackType);
+        Assert.NotEmpty(p.Localization);
+    }
+
+    [Fact]
+    public void MuscleMemoryPower_IsActive_FalseForNullCreature() =>
+        Assert.False(MuscleMemoryPower.IsActive(null));
 }

@@ -1,5 +1,6 @@
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Models;
+using TheUnderstudy.TheUnderstudyCode.Extensions;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards.Afflictions;
 
@@ -21,5 +22,5 @@ public sealed class Order : AfflictionModel
         cardType == CardType.Attack || cardType == CardType.Skill;
 
     public override bool CanAfflict(CardModel card) =>
-        base.CanAfflict(card) && !card.Keywords.Contains(UnderstudyKeywords.Stable);
+        base.CanAfflict(card) && !card.IsStable();
 }

@@ -1,0 +1,23 @@
+using BaseLib.Abstracts;
+using BaseLib.Utils;
+using MegaCrit.Sts2.Core.Entities.Cards;
+using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using TheUnderstudy.TheUnderstudyCode.Cards.Powers;
+
+namespace TheUnderstudy.TheUnderstudyCode.Cards;
+
+public class WarmUp : UnderstudyCard
+{
+    public const string CardId = "TheUnderstudy:WarmUp";
+
+    public WarmUp() : base(1, CardType.Power, CardRarity.Uncommon, TargetType.None)
+    {
+        WithPower<WarmUpPower>(1, 2);
+        WithTip(UnderstudyKeywords.Intense);
+    }
+
+    protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
+    {
+        await CommonActions.Apply<WarmUpPower>(context, cardPlay.Card.Owner.Creature, this);
+    }
+}

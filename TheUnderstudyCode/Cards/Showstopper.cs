@@ -14,15 +14,21 @@ public class Showstopper : UnderstudyCard
 
     public Showstopper() : base(3, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
     {
-        WithDamage(22);
+        // Starts Intense 1 — converts from "always replayable" to "one big hit, then needs
+        // freeing," so the damage is raised to compensate. The energy refund stays: "the show
+        // must go on" reads fine even on a one-off.
+        WithDamage(34);
         WithVars(new EnergyVar(1));
         WithTips(_ => new IHoverTip[] { EnergyHoverTip });
+        WithTip(UnderstudyKeywords.Intense);
     }
+
+    public override bool IsPreIntense => true;
 
     protected override void OnUpgrade()
     {
         base.OnUpgrade();
-        DynamicVars.Damage.UpgradeValueBy(6m);
+        DynamicVars.Damage.UpgradeValueBy(8m);
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)

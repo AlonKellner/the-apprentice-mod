@@ -31,10 +31,13 @@ public class ShakenPower : UnderstudyPower
         if (side != CombatSide.Player || Owner.Player == null) return;
         var hand = Owner.Player.Piles.FirstOrDefault(p => p.Type == PileType.Hand);
         if (hand == null) return;
+        bool muscleMemoryActive = MuscleMemoryPower.IsActive(Owner);
         foreach (var card in hand.Cards.ToList().Where(c =>
-            (c.Type == CardType.Attack || c.Type == CardType.Skill)
-            && !c.Keywords.Contains(UnderstudyKeywords.Stable)))
+            (c.Type == CardType.Attack || c.Type == CardType.Skill) && !c.IsStable()))
         {
+            // Muscle Memory only protects a card that's ALSO Intense — Shaken still locks any
+            // other eligible Attack/Skill as normal.
+            if (muscleMemoryActive && card.TryGetModifier<IntenseModifier>(out _)) continue;
             if (!card.TryGetModifier<UnplayableModifier>(out _))
                 CardModifier.AddModifier<UnplayableModifier>(card);
         }

@@ -9,6 +9,7 @@ using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Logging;
 using MegaCrit.Sts2.Core.Models;
 using TheUnderstudy.TheUnderstudyCode.Cards;
+using TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 using TheUnderstudy.TheUnderstudyCode.Extensions;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
@@ -59,8 +60,7 @@ public class PlannedModifier : CardModifier
     // Attacks and Skills can be Planned (Powers, Statuses, Curses, and Quests cannot).
     // Stacking is allowed: a card already Planned can be Planned again for a second queue slot.
     public static bool CanApplyTo(CardModel card) =>
-        (card.Type == CardType.Attack || card.Type == CardType.Skill)
-        && !card.Keywords.Contains(UnderstudyKeywords.Stable);
+        (card.Type == CardType.Attack || card.Type == CardType.Skill) && !card.IsStable();
 
     public static bool AnyIn(IEnumerable<CardModel> cards) =>
         cards.Any(c => c.TryGetModifier<PlannedModifier>(out _));
@@ -169,7 +169,11 @@ public class PlannedModifier : CardModifier
             $"slot {newSlot} assigned to {card.Id} is already held by {collisions} other card(s) — " +
             "monotonic counter desynced from live state");
 
-        if (!card.TryGetModifier<UnplayableModifier>(out _))
+        // Muscle Memory only protects a card that's ALSO Intense — Planned cards in general still
+        // become Unplayable as normal.
+        bool immuneViaMuscleMemory = card.TryGetModifier<IntenseModifier>(out _)
+            && MuscleMemoryPower.IsActive(card.Owner?.Creature);
+        if (!immuneViaMuscleMemory && !card.TryGetModifier<UnplayableModifier>(out _))
             CardModifier.AddModifier<UnplayableModifier>(card);
         Log.Info($"PlannedModifier.Apply: {card.Id} took slot {newSlot} ({mod.SequenceIndices.Count} slot(s) total on this card)");
         Changed?.Invoke();

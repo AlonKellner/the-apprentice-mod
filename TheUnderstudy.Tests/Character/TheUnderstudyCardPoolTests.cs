@@ -40,10 +40,10 @@ public class TheUnderstudyCardPoolTests
     public void Pool_HasExactly16CommonCards() => Assert.Equal(16, CountBCardsByRarity("Common"));
 
     [Fact]
-    public void Pool_HasExactly29UncommonCards() => Assert.Equal(29, CountBCardsByRarity("Uncommon"));
+    public void Pool_HasExactly33UncommonCards() => Assert.Equal(33, CountBCardsByRarity("Uncommon"));
 
     [Fact]
-    public void Pool_HasExactly22RareCards() => Assert.Equal(22, CountBCardsByRarity("Rare"));
+    public void Pool_HasExactly26RareCards() => Assert.Equal(26, CountBCardsByRarity("Rare"));
 
     [Fact]
     public void UnderstudyCard_IsPrePlannedOverriddenOnlyByPromptAndTableRead()
@@ -63,6 +63,37 @@ public class TheUnderstudyCardPoolTests
             .ToList();
 
         Assert.Equal(new[] { "Prompt", "TableRead" }, bCardTypes);
+    }
+
+    [Fact]
+    public void UnderstudyCard_IsPreIntenseOverriddenOnlyByExpectedCards()
+    {
+        // The pre-Intense mechanic (starting a combat already carrying Intense 1, mirroring
+        // IsPrePlanned's shape) is deliberately reused by exactly these B cards — "big one-off
+        // moment" cards that read thematically as "one shining chance, then it's spent."
+        var bCardTypes = typeof(UnderstudyCard).Assembly.GetTypes()
+            .Where(t => t.IsSubclassOf(typeof(UnderstudyCard)) && !t.IsAbstract)
+            .Where(t =>
+            {
+                var method = t.GetMethod("get_IsPreIntense");
+                return method != null && method.DeclaringType == t;
+            })
+            .Select(t => t.Name)
+            .OrderBy(n => n)
+            .ToList();
+
+        Assert.Equal(new[] { "CleanSlate", "MissedCue", "Showstopper" }, bCardTypes);
+    }
+
+    [Fact]
+    public void MissedCue_BeforeCombatStart_DoesNotAttachIntenseModifier_WhenBare()
+    {
+        // MissedCue.IsPreIntense is true, but a bare-instantiated card has no Pile (Pile == null,
+        // so IsCombatPile() is false) — the guard in ApplyPreIntenseIfNeeded must no-op safely
+        // rather than crash trying to reach Owner/CombatState on a canonical card.
+        var card = new MissedCue();
+        card.BeforeCombatStart();
+        Assert.False(card.TryGetModifier<IntenseModifier>(out _));
     }
 
     [Fact]

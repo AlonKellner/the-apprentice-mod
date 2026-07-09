@@ -6,6 +6,7 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Logging;
 using MegaCrit.Sts2.Core.Models;
 using TheUnderstudy.TheUnderstudyCode.Cards.Powers;
+using TheUnderstudy.TheUnderstudyCode.Extensions;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
 
@@ -61,8 +62,7 @@ public class OrderModifier : CardModifier
     // Attacks and Skills only, not Stable-tagged (defined fresh here rather than reusing
     // PlannedModifier.CanApplyTo, so each modifier owns its own eligibility rule).
     public static bool CanApplyTo(CardModel card) =>
-        (card.Type == CardType.Attack || card.Type == CardType.Skill)
-        && !card.Keywords.Contains(UnderstudyKeywords.Stable);
+        (card.Type == CardType.Attack || card.Type == CardType.Skill) && !card.IsStable();
 
     // Resolution the instant the order-carrying card is played this turn: "Play this card" is
     // obeyed (Reward); "Don't play this card" is disobeyed (Punish); flavor-only never resolves.
