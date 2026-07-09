@@ -12,16 +12,16 @@ using TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
-public class Intention : UnderstudyCard
+public class Buildup : UnderstudyCard
 {
-    public const string CardId = "TheUnderstudy:Intention";
+    public const string CardId = "TheUnderstudy:Buildup";
 
-    public Intention() : base(0, CardType.Skill, CardRarity.Basic, TargetType.None, false)
+    public Buildup() : base(0, CardType.Skill, CardRarity.Basic, TargetType.None, false)
     {
         WithKeyword(UnderstudyKeywords.Stable, ConstructedCardModel.UpgradeType.None);
         WithKeyword(CardKeyword.Retain, ConstructedCardModel.UpgradeType.None);
         WithVars(new CardsVar("Select", 2));
-        WithTip(UnderstudyKeywords.Intense);
+        WithTip(UnderstudyKeywords.Tense);
     }
 
     protected override void OnUpgrade()
@@ -37,13 +37,13 @@ public class Intention : UnderstudyCard
         var selected = await CardSelectCmd.FromHand(
             context,
             player,
-            new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-INTENTION.selectionPrompt"), 0, maxSelect),
-            c => c != this && IntenseModifier.CanApplyTo(c),
+            new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-BUILDUP.selectionPrompt"), 0, maxSelect),
+            c => c != this && TenseModifier.CanApplyTo(c),
             this);
 
         if (selected == null) return;
         var allCards = player.Piles.SelectMany(p => p.Cards);
         foreach (var card in selected)
-            IntenseModifier.Apply(card, CombatState!, allCards);
+            TenseModifier.Apply(card, CombatState!, allCards);
     }
 }

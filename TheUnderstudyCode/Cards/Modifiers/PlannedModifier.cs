@@ -169,9 +169,9 @@ public class PlannedModifier : CardModifier
             $"slot {newSlot} assigned to {card.Id} is already held by {collisions} other card(s) — " +
             "monotonic counter desynced from live state");
 
-        // Muscle Memory only protects a card that's ALSO Intense — Planned cards in general still
+        // Muscle Memory only protects a card that's ALSO Tense — Planned cards in general still
         // become Unplayable as normal.
-        bool immuneViaMuscleMemory = card.TryGetModifier<IntenseModifier>(out _)
+        bool immuneViaMuscleMemory = card.TryGetModifier<TenseModifier>(out _)
             && MuscleMemoryPower.IsActive(card.Owner?.Creature);
         if (!immuneViaMuscleMemory && !card.TryGetModifier<UnplayableModifier>(out _))
             CardModifier.AddModifier<UnplayableModifier>(card);

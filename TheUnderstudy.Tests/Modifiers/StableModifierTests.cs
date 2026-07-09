@@ -36,8 +36,8 @@ public class StableModifierTests
     [Fact]
     public void CanApplyTo_AlreadyStable_ReturnsFalse()
     {
-        // Intention is printed-Stable via WithKeyword in its constructor.
-        Assert.False(StableModifier.CanApplyTo(new Intention()));
+        // Buildup is printed-Stable via WithKeyword in its constructor.
+        Assert.False(StableModifier.CanApplyTo(new Buildup()));
     }
 
     [Fact]

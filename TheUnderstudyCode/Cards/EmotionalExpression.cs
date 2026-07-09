@@ -267,7 +267,7 @@ public static class EmotionalExpression
 
     // ── Invert dispatcher ────────────────────────────────────────────────────────────────────
     //
-    // "Last modified invertible debuff" tracking, combat-scoped like IntenseModifier's own static
+    // "Last modified invertible debuff" tracking, combat-scoped like TenseModifier's own static
     // counter. `_modificationOrder` holds every category touched this combat, most-recent-first.
     // Updated two ways: (1) every Apply/Convert method above calls RecordModified directly for
     // this deck's own self-application/inversion, and (2) InvertTrackerPower — a hidden Power

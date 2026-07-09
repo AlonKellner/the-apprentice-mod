@@ -19,7 +19,7 @@ public class CramSession : UnderstudyCard
     {
         WithVars(new CardsVar("Select", 1));
         WithTip(UnderstudyKeywords.Planned);
-        WithTip(UnderstudyKeywords.Intense);
+        WithTip(UnderstudyKeywords.Tense);
     }
 
     protected override void OnUpgrade()
@@ -36,15 +36,15 @@ public class CramSession : UnderstudyCard
             context,
             player,
             new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-CRAM_SESSION.selectionPrompt"), 0, maxSelect),
-            c => c != this && PlannedModifier.CanApplyTo(c) && IntenseModifier.CanApplyTo(c),
+            c => c != this && PlannedModifier.CanApplyTo(c) && TenseModifier.CanApplyTo(c),
             this);
         if (selected == null) return;
 
-        var intenseAllCards = player.Piles.SelectMany(p => p.Cards);
+        var tenseAllCards = player.Piles.SelectMany(p => p.Cards);
         foreach (var card in selected)
         {
             PlannedModifier.Apply(card, CombatState!);
-            IntenseModifier.Apply(card, CombatState!, intenseAllCards);
+            TenseModifier.Apply(card, CombatState!, tenseAllCards);
         }
     }
 }

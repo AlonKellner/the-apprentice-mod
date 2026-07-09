@@ -12,14 +12,14 @@ public class CutTheTension : UnderstudyCard
     public CutTheTension() : base(1, CardType.Skill, CardRarity.Rare, TargetType.None)
     {
         WithKeyword(CardKeyword.Exhaust, ConstructedCardModel.UpgradeType.Remove);
-        WithTip(UnderstudyKeywords.Intense);
+        WithTip(UnderstudyKeywords.Tense);
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
         var player = cardPlay.Card.Owner;
         foreach (var card in PlannedModifier.RelevantCards(player))
-            IntenseModifier.DoubleStacks(card);
+            TenseModifier.DoubleStacks(card);
         await Task.CompletedTask;
     }
 }

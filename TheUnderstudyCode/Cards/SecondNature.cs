@@ -12,7 +12,7 @@ using TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
-// Simple, high-cost, plainly repeating hit — not tagged Intense (no stack growth, stays a flat
+// Simple, high-cost, plainly repeating hit — not tagged Tense (no stack growth, stays a flat
 // hit every cycle): it self-manages UnplayableModifier directly, becoming Unplayable after each
 // play and freeing + replaying itself at the end of every turn from then on, for free.
 public class SecondNature : UnderstudyCard

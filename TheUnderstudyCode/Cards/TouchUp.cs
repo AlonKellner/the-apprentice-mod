@@ -19,7 +19,7 @@ public class TouchUp : UnderstudyCard
     {
         WithVars(new CardsVar("Select", 1));
         WithTip(CardKeyword.Unplayable);
-        WithTip(UnderstudyKeywords.Intense);
+        WithTip(UnderstudyKeywords.Tense);
     }
 
     protected override void OnUpgrade()
@@ -28,7 +28,7 @@ public class TouchUp : UnderstudyCard
         DynamicVars["Select"].UpgradeValueBy(1m);
     }
 
-    private static bool CanApplyTo(CardModel c) => UnplayableModifier.CanApplyTo(c) && IntenseModifier.CanApplyTo(c);
+    private static bool CanApplyTo(CardModel c) => UnplayableModifier.CanApplyTo(c) && TenseModifier.CanApplyTo(c);
 
     protected override bool ShouldGlowGoldInternal =>
         PileType.Hand.GetPile(Owner).Cards.Where(c => c != this).Any(CanApplyTo);
@@ -49,7 +49,7 @@ public class TouchUp : UnderstudyCard
         foreach (var card in selected)
         {
             UnplayableModifier.Remove(card);
-            IntenseModifier.Apply(card, CombatState!, allCards);
+            TenseModifier.Apply(card, CombatState!, allCards);
         }
     }
 }

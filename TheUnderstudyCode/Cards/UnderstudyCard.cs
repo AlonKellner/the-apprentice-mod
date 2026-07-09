@@ -33,21 +33,21 @@ public abstract class UnderstudyCard(
     public override string CustomPortraitPath =>
         $"{Id.Entry.RemovePrefix().ToLowerInvariant()}.png".BigCardImagePath();
 
-    // Call in subclass constructors to register the dynamic Intense hover tip. The lambda is
-    // evaluated at hover time with the live card, so it reads the current IntenseModifier.Stacks —
-    // returns nothing when Intense hasn't been applied yet (no tip clutter on fresh cards).
-    protected void WithIntenseTip()
+    // Call in subclass constructors to register the dynamic Tense hover tip. The lambda is
+    // evaluated at hover time with the live card, so it reads the current TenseModifier.Stacks —
+    // returns nothing when Tense hasn't been applied yet (no tip clutter on fresh cards).
+    protected void WithTenseTip()
     {
         WithTips(card =>
         {
-            if (!card.TryGetModifier<IntenseModifier>(out var mod) || mod.Stacks <= 0)
+            if (!card.TryGetModifier<TenseModifier>(out var mod) || mod.Stacks <= 0)
                 return Enumerable.Empty<IHoverTip>();
             int s = mod.Stacks;
             return new IHoverTip[]
             {
                 new HoverTip(
-                    new LocString("card_keywords", "THEUNDERSTUDY-INTENSE.title"),
-                    $"If this deals damage or grants [gold]Block[/gold], increase it by {s} for each card with [gold]Intense[/gold]."
+                    new LocString("card_keywords", "THEUNDERSTUDY-TENSE.title"),
+                    $"If this deals damage or grants [gold]Block[/gold], increase it by {s} for each card with [gold]Tense[/gold]."
                 )
             };
         });
@@ -122,31 +122,31 @@ public abstract class UnderstudyCard(
         PlannedModifier.RefreshVisualIndices(PlannedModifier.RelevantCards(Owner));
     }
 
-    // The pre-Intense mechanic (starting a combat already carrying Intense 1) — same shape as
+    // The pre-Tense mechanic (starting a combat already carrying Tense 1) — same shape as
     // IsPrePlanned above, for "big one-off moment" B cards that should already be primed to lock
     // after their first play rather than needing a card-side grant.
-    public virtual bool IsPreIntense => false;
+    public virtual bool IsPreTense => false;
 
-    // True once this card has actually been pre-Intensified for the current combat — reset only
+    // True once this card has actually been pre-Tensified for the current combat — reset only
     // at BeforeCombatStart, same reasoning as _prePlannedThisCombat (AfterCardEnteredCombat fires
     // on every pile transition, not just the first).
-    private bool _preIntenseThisCombat;
+    private bool _preTenseThisCombat;
 
-    private void ApplyPreIntenseIfNeeded()
+    private void ApplyPreTenseIfNeeded()
     {
-        if (!IsPreIntense || _preIntenseThisCombat) return;
+        if (!IsPreTense || _preTenseThisCombat) return;
         if (Pile?.Type.IsCombatPile() != true) return;
-        if (this.TryGetModifier<IntenseModifier>(out _)) return;
+        if (this.TryGetModifier<TenseModifier>(out _)) return;
 
-        _preIntenseThisCombat = true;
-        IntenseModifier.Apply(this, CombatState!, Owner!.Piles.SelectMany(p => p.Cards));
+        _preTenseThisCombat = true;
+        TenseModifier.Apply(this, CombatState!, Owner!.Piles.SelectMany(p => p.Cards));
     }
 
     public override Task BeforeCombatStart()
     {
         var t = base.BeforeCombatStart();
         _prePlannedThisCombat = false;
-        _preIntenseThisCombat = false;
+        _preTenseThisCombat = false;
         // Reset (not just lazily set) here: a previous combat's snapshot/StableModifier grant
         // must not leak into a new one — MaybeSnapshotIfStable only ever sets _stableSnapshot
         // once it's null, so without this reset a printed-Stable card would only ever get
@@ -154,7 +154,7 @@ public abstract class UnderstudyCard(
         _stableSnapshot = null;
         MaybeSnapshotIfStable();
         ApplyPrePlannedIfNeeded();
-        ApplyPreIntenseIfNeeded();
+        ApplyPreTenseIfNeeded();
         return t;
     }
 
@@ -186,7 +186,7 @@ public abstract class UnderstudyCard(
         MaybeSnapshotIfStable();
         RestoreIfStable();
         ApplyPrePlannedIfNeeded();
-        ApplyPreIntenseIfNeeded();
+        ApplyPreTenseIfNeeded();
         return Task.CompletedTask;
     }
 
@@ -199,19 +199,19 @@ public abstract class UnderstudyCard(
         // Planned" resolver (CurtainCall/Encore/Performance/Remix) consuming the exact slot it's
         // resolving. A card that's simply playable (Unplayable freed some other way, e.g. by
         // TakeTwo/SafetyNet/MissedCue) just plays normally when clicked manually — its own Planned
-        // slot(s) are untouched and it stays queued to auto-play later too. Intense is the only
+        // slot(s) are untouched and it stays queued to auto-play later too. Tense is the only
         // keyword that changes a card as a result of being played (below).
 
         // Safe to mutate DirectModifiers here: AfterCardPlayed fires once BaseLib's per-modifier
         // OnPlay enumeration (BeforeAfterPlayHooks) has finished for this play, unlike a
         // CardModifier's own OnPlay override, which runs inside that enumeration and throws
         // "Collection was modified" if it tries to add a modifier to the same card.
-        // IsFinalIntensePlay gates this to the last CardPlay in a Replay series, so a card with
+        // IsFinalTensePlay gates this to the last CardPlay in a Replay series, so a card with
         // Replay N only becomes Unplayable after all N+1 plays have resolved. Muscle Memory
         // suppresses this specifically (not Planned-driven Unplayable in general) — see
         // MuscleMemoryPower's own doc comment for the other two call sites this mirrors.
         if (cardPlay.Card == this
-            && IntenseModifier.IsFinalIntensePlay(cardPlay)
+            && TenseModifier.IsFinalTensePlay(cardPlay)
             && !this.TryGetModifier<UnplayableModifier>(out _)
             && !MuscleMemoryPower.IsActive(Owner?.Creature))
             CardModifier.AddModifier<UnplayableModifier>(this);

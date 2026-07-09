@@ -55,7 +55,7 @@ MECHANICS: dict[str, re.Pattern] = {
     # one-regex-per-mechanic model can't express on its own.
     "Apply enemy debuff":       re.compile(r"PowerCmd\.Apply<(?:Weak|Vulnerable|Shaken|Limited|Jaded|Frail)Power>\(\s*context\s*,\s*(?:cardPlay\.Target|enemy)\b"),
     "Apply Planned":            re.compile(r"PlannedModifier\.Apply\("),
-    "Apply Intense":            re.compile(r"IntenseModifier\.Apply\("),
+    "Apply Tense":            re.compile(r"TenseModifier\.Apply\("),
     "Gain Vigor":               re.compile(r"PowerCmd\.Apply<VigorPower>\("),
     "Play all Planned":         re.compile(r"PlannedModifier\.GetSorted\("),
     "Grant Un-X buff":          re.compile(r"PowerCmd\.Apply<Un(?:weak|vulnerable|shaken|jaded|limited|frail)Power>\("),
@@ -87,7 +87,7 @@ ALL_MECHANICS: list[str] = [
     SELF_DEBUFF_ALL_NAME,
     "Apply enemy debuff",
     "Apply Planned",
-    "Apply Intense",
+    "Apply Tense",
     "Gain Vigor",
     "Play all Planned",
     "Grant Un-X buff",

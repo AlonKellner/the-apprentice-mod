@@ -13,7 +13,7 @@ public class UnplayableModifier : CardModifier
 {
     public const string ModifierId = "TheUnderstudy:Unplayable";
 
-    // Only Attacks and Skills can ever become Unplayable via Planned/Intense, and "Remove
+    // Only Attacks and Skills can ever become Unplayable via Planned/Tense, and "Remove
     // Unplayable" only ever targets those, so a card is only a valid target once it's actually
     // Unplayable (matches the wording used everywhere: "Remove Unplayable from N attacks and
     // skills"). CardExtensions.IsUnplayable() covers "functionally unplayable" broadly (Smog-style
@@ -27,8 +27,8 @@ public class UnplayableModifier : CardModifier
     // TakeTwo/Rewrite/TouchUp to glow gold only when they'd actually have something to free.
     public static bool AnyIn(IEnumerable<CardModel> cards) => cards.Any(CanApplyTo);
 
-    // Removes the standalone Unplayable flag. Does not touch PlannedModifier/IntenseModifier —
-    // a card can still be Planned/Intense afterward, it just stops being forced Unplayable by
+    // Removes the standalone Unplayable flag. Does not touch PlannedModifier/TenseModifier —
+    // a card can still be Planned/Tense afterward, it just stops being forced Unplayable by
     // this specific modifier (Planned re-adds it the next time Apply is called).
     public static void Remove(CardModel card)
     {

@@ -17,7 +17,7 @@ public class Reprise : UnderstudyCard
     public Reprise() : base(2, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
     {
         WithDamage(14);
-        WithTip(UnderstudyKeywords.Intense);
+        WithTip(UnderstudyKeywords.Tense);
     }
 
     protected override void OnUpgrade()
@@ -35,12 +35,12 @@ public class Reprise : UnderstudyCard
             context,
             player,
             new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-REPRISE.selectionPrompt"), 0, 1),
-            c => c != this && IntenseModifier.CanApplyTo(c),
+            c => c != this && TenseModifier.CanApplyTo(c),
             this);
 
         if (selected == null) return;
         var allCards = player.Piles.SelectMany(p => p.Cards);
         foreach (var card in selected)
-            IntenseModifier.Apply(card, CombatState!, allCards);
+            TenseModifier.Apply(card, CombatState!, allCards);
     }
 }

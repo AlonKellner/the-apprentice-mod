@@ -9,7 +9,7 @@ using Xunit;
 
 namespace TheUnderstudy.Tests.Modifiers;
 
-public class IntenseModifierTests
+public class TenseModifierTests
 {
     private static CardPlay MakePlay(CardModel card, int index, int count) => new()
     {
@@ -25,61 +25,61 @@ public class IntenseModifierTests
     [Fact]
     public void ModifierId_IsExpected()
     {
-        Assert.Equal("TheUnderstudy:Intense", IntenseModifier.ModifierId);
+        Assert.Equal("TheUnderstudy:Tense", TenseModifier.ModifierId);
     }
 
     [Fact]
     public void CanApplyTo_UnderstudyStrike_ReturnsTrue()
     {
         // UnderstudyStrike uses WithDamage → DamageVar with ValueProp.Move (powered).
-        Assert.True(IntenseModifier.CanApplyTo(new UnderstudyStrike()));
+        Assert.True(TenseModifier.CanApplyTo(new UnderstudyStrike()));
     }
 
     [Fact]
     public void CanApplyTo_UnderstudyDefend_ReturnsTrue()
     {
         // UnderstudyDefend uses WithBlock → BlockVar with ValueProp.Move (powered).
-        Assert.True(IntenseModifier.CanApplyTo(new UnderstudyDefend()));
+        Assert.True(TenseModifier.CanApplyTo(new UnderstudyDefend()));
     }
 
     [Fact]
     public void CanApplyTo_Performance_ReturnsFalse()
     {
-        // Performance has no Damage or Block DynamicVar — Intense cannot benefit it.
-        Assert.False(IntenseModifier.CanApplyTo(new Performance()));
+        // Performance has no Damage or Block DynamicVar — Tense cannot benefit it.
+        Assert.False(TenseModifier.CanApplyTo(new Performance()));
     }
 
     [Fact]
-    public void CanApplyTo_Intention_ReturnsFalse()
+    public void CanApplyTo_Buildup_ReturnsFalse()
     {
-        // Intention has no Damage or Block DynamicVar — Intense cannot benefit it.
-        Assert.False(IntenseModifier.CanApplyTo(new Intention()));
+        // Buildup has no Damage or Block DynamicVar — Tense cannot benefit it.
+        Assert.False(TenseModifier.CanApplyTo(new Buildup()));
     }
 
     [Fact]
     public void CanApplyTo_EverythingIveGot_ReturnsTrueAfterGeneralization()
     {
-        // EverythingIveGot is a non-Stable Skill with no Damage/Block DynamicVar. Intense now
+        // EverythingIveGot is a non-Stable Skill with no Damage/Block DynamicVar. Tense now
         // applies to any Attack/Skill (matching PlannedModifier/UnplayableModifier's own
         // eligibility check), not just cards that print damage or block — a pure-utility Skill
         // still gets the "becomes Unplayable when played" behavior, just no numeric bonus.
-        Assert.True(IntenseModifier.CanApplyTo(new EverythingIveGot()));
+        Assert.True(TenseModifier.CanApplyTo(new EverythingIveGot()));
     }
 
     [Fact]
-    public void CanApplyTo_AlreadyIntenseCard_ReturnsTrue()
+    public void CanApplyTo_AlreadyTenseCard_ReturnsTrue()
     {
-        // Intense stacks: re-applying to a card that already has Intense adds another stack.
+        // Tense stacks: re-applying to a card that already has Tense adds another stack.
         var card = new UnderstudyStrike();
-        var mod = new IntenseModifier();
+        var mod = new TenseModifier();
         CardModifier.AddModifier(card, mod);
-        Assert.True(IntenseModifier.CanApplyTo(card));
+        Assert.True(TenseModifier.CanApplyTo(card));
     }
 
     [Fact]
     public void CanApplyTo_IsStaticMethod()
     {
-        var method = typeof(IntenseModifier).GetMethod(
+        var method = typeof(TenseModifier).GetMethod(
             "CanApplyTo", BindingFlags.Public | BindingFlags.Static);
         Assert.NotNull(method);
     }
@@ -87,131 +87,131 @@ public class IntenseModifierTests
     [Fact]
     public void Apply_IsStaticMethod()
     {
-        var method = typeof(IntenseModifier).GetMethod(
+        var method = typeof(TenseModifier).GetMethod(
             "Apply", BindingFlags.Public | BindingFlags.Static);
         Assert.NotNull(method);
     }
 
     [Fact]
-    public void IntenseField_ExistsOnUnderstudyKeywords()
+    public void TenseField_ExistsOnUnderstudyKeywords()
     {
-        var field = typeof(UnderstudyKeywords).GetField("Intense");
+        var field = typeof(UnderstudyKeywords).GetField("Tense");
         Assert.NotNull(field);
     }
 
     [Fact]
     public void Stacks_DefaultsToZero()
     {
-        var mod = new IntenseModifier();
+        var mod = new TenseModifier();
         Assert.Equal(0, mod.Stacks);
     }
 
     [Fact]
-    public void IsFinalIntensePlay_NoIntenseModifier_SinglePlay_ReturnsFalse()
+    public void IsFinalTensePlay_NoTenseModifier_SinglePlay_ReturnsFalse()
     {
         var card = new UnderstudyStrike();
-        Assert.False(IntenseModifier.IsFinalIntensePlay(MakePlay(card, 0, 1)));
+        Assert.False(TenseModifier.IsFinalTensePlay(MakePlay(card, 0, 1)));
     }
 
     [Fact]
-    public void IsFinalIntensePlay_HasIntense_SinglePlay_ReturnsTrue()
+    public void IsFinalTensePlay_HasTense_SinglePlay_ReturnsTrue()
     {
         var card = new UnderstudyDefend();
-        CardModifier.AddModifier(card, new IntenseModifier());
-        Assert.True(IntenseModifier.IsFinalIntensePlay(MakePlay(card, 0, 1)));
+        CardModifier.AddModifier(card, new TenseModifier());
+        Assert.True(TenseModifier.IsFinalTensePlay(MakePlay(card, 0, 1)));
     }
 
     [Fact]
-    public void IsFinalIntensePlay_HasIntense_Replay1_FirstPlay_ReturnsFalse()
+    public void IsFinalTensePlay_HasTense_Replay1_FirstPlay_ReturnsFalse()
     {
         var card = new UnderstudyDefend();
-        CardModifier.AddModifier(card, new IntenseModifier());
+        CardModifier.AddModifier(card, new TenseModifier());
         // Replay 1 -> PlayCount = 2; first play is PlayIndex 0.
-        Assert.False(IntenseModifier.IsFinalIntensePlay(MakePlay(card, 0, 2)));
+        Assert.False(TenseModifier.IsFinalTensePlay(MakePlay(card, 0, 2)));
     }
 
     [Fact]
-    public void IsFinalIntensePlay_HasIntense_Replay1_SecondPlay_ReturnsTrue()
+    public void IsFinalTensePlay_HasTense_Replay1_SecondPlay_ReturnsTrue()
     {
         var card = new UnderstudyDefend();
-        CardModifier.AddModifier(card, new IntenseModifier());
-        Assert.True(IntenseModifier.IsFinalIntensePlay(MakePlay(card, 1, 2)));
+        CardModifier.AddModifier(card, new TenseModifier());
+        Assert.True(TenseModifier.IsFinalTensePlay(MakePlay(card, 1, 2)));
     }
 
     [Fact]
-    public void IsFinalIntensePlay_HasIntense_Replay2_MiddlePlay_ReturnsFalse()
+    public void IsFinalTensePlay_HasTense_Replay2_MiddlePlay_ReturnsFalse()
     {
         var card = new UnderstudyDefend();
-        CardModifier.AddModifier(card, new IntenseModifier());
+        CardModifier.AddModifier(card, new TenseModifier());
         // Replay 2 -> PlayCount = 3; middle play is PlayIndex 1.
-        Assert.False(IntenseModifier.IsFinalIntensePlay(MakePlay(card, 1, 3)));
+        Assert.False(TenseModifier.IsFinalTensePlay(MakePlay(card, 1, 3)));
     }
 
     [Fact]
-    public void IsFinalIntensePlay_HasIntense_Replay2_FinalPlay_ReturnsTrue()
+    public void IsFinalTensePlay_HasTense_Replay2_FinalPlay_ReturnsTrue()
     {
         var card = new UnderstudyDefend();
-        CardModifier.AddModifier(card, new IntenseModifier());
-        Assert.True(IntenseModifier.IsFinalIntensePlay(MakePlay(card, 2, 3)));
+        CardModifier.AddModifier(card, new TenseModifier());
+        Assert.True(TenseModifier.IsFinalTensePlay(MakePlay(card, 2, 3)));
     }
 
     [Fact]
-    public void IsFinalIntensePlay_GrantedAfterOwnCheckThisSamePlay_ReturnsFalse()
+    public void IsFinalTensePlay_GrantedAfterOwnCheckThisSamePlay_ReturnsFalse()
     {
-        // Da Capo's case: Intense was granted after this exact play's own attack, so it
+        // Da Capo's case: Tense was granted after this exact play's own attack, so it
         // shouldn't lock the card up for THIS play.
         var card = new UnderstudyStrike();
-        var mod = new IntenseModifier();
+        var mod = new TenseModifier();
         CardModifier.AddModifier(card, mod);
         var play = MakePlay(card, 0, 1);
-        typeof(IntenseModifier)
+        typeof(TenseModifier)
             .GetField("_grantedAfterOwnCheckDuringPlay", BindingFlags.NonPublic | BindingFlags.Instance)!
             .SetValue(mod, play);
-        Assert.False(IntenseModifier.IsFinalIntensePlay(play));
+        Assert.False(TenseModifier.IsFinalTensePlay(play));
     }
 
     [Fact]
-    public void IsFinalIntensePlay_GrantedAfterOwnCheckOnAnEarlierPlay_ReturnsTrue()
+    public void IsFinalTensePlay_GrantedAfterOwnCheckOnAnEarlierPlay_ReturnsTrue()
     {
-        // The next time the card is played, Intense was already active before this new play's
+        // The next time the card is played, Tense was already active before this new play's
         // own check ran, so the normal locking rule applies again.
         var card = new UnderstudyStrike();
-        var mod = new IntenseModifier();
+        var mod = new TenseModifier();
         CardModifier.AddModifier(card, mod);
         var firstPlay = MakePlay(card, 0, 1);
-        typeof(IntenseModifier)
+        typeof(TenseModifier)
             .GetField("_grantedAfterOwnCheckDuringPlay", BindingFlags.NonPublic | BindingFlags.Instance)!
             .SetValue(mod, firstPlay);
         var secondPlay = MakePlay(card, 0, 1);
-        Assert.True(IntenseModifier.IsFinalIntensePlay(secondPlay));
+        Assert.True(TenseModifier.IsFinalTensePlay(secondPlay));
     }
 
     [Fact]
     public void ModifyDamageAdditive_IsVirtualMethod()
     {
-        // IntenseModifier provides the Strength-style damage bonus hook.
-        var method = typeof(IntenseModifier).GetMethod("ModifyDamageAdditive");
+        // TenseModifier provides the Strength-style damage bonus hook.
+        var method = typeof(TenseModifier).GetMethod("ModifyDamageAdditive");
         Assert.NotNull(method);
-        Assert.True(method!.DeclaringType == typeof(IntenseModifier));
+        Assert.True(method!.DeclaringType == typeof(TenseModifier));
     }
 
     [Fact]
     public void ModifyBlockAdditive_IsVirtualMethod()
     {
-        // IntenseModifier provides the Dexterity-style block bonus hook.
-        var method = typeof(IntenseModifier).GetMethod("ModifyBlockAdditive");
+        // TenseModifier provides the Dexterity-style block bonus hook.
+        var method = typeof(TenseModifier).GetMethod("ModifyBlockAdditive");
         Assert.NotNull(method);
-        Assert.True(method!.DeclaringType == typeof(IntenseModifier));
+        Assert.True(method!.DeclaringType == typeof(TenseModifier));
     }
 
     [Fact]
     public void DoubleStacks_StacksOne_BecomesTwo()
     {
         var card = new UnderstudyStrike();
-        var mod = new IntenseModifier();
+        var mod = new TenseModifier();
         CardModifier.AddModifier(card, mod);
-        typeof(IntenseModifier).GetProperty(nameof(IntenseModifier.Stacks))!.SetValue(mod, 1);
-        IntenseModifier.DoubleStacks(card);
+        typeof(TenseModifier).GetProperty(nameof(TenseModifier.Stacks))!.SetValue(mod, 1);
+        TenseModifier.DoubleStacks(card);
         Assert.Equal(2, mod.Stacks);
     }
 
@@ -219,36 +219,36 @@ public class IntenseModifierTests
     public void DoubleStacks_StacksThree_BecomesSix()
     {
         var card = new UnderstudyStrike();
-        var mod = new IntenseModifier();
+        var mod = new TenseModifier();
         CardModifier.AddModifier(card, mod);
-        typeof(IntenseModifier).GetProperty(nameof(IntenseModifier.Stacks))!.SetValue(mod, 3);
-        IntenseModifier.DoubleStacks(card);
+        typeof(TenseModifier).GetProperty(nameof(TenseModifier.Stacks))!.SetValue(mod, 3);
+        TenseModifier.DoubleStacks(card);
         Assert.Equal(6, mod.Stacks);
     }
 
     [Fact]
-    public void DoubleStacks_NoIntenseModifier_NoOp()
+    public void DoubleStacks_NoTenseModifier_NoOp()
     {
         var card = new UnderstudyStrike();
-        IntenseModifier.DoubleStacks(card); // must not throw
-        Assert.False(card.TryGetModifier<IntenseModifier>(out _));
+        TenseModifier.DoubleStacks(card); // must not throw
+        Assert.False(card.TryGetModifier<TenseModifier>(out _));
     }
 
     [Fact]
     public void ModifyDescription_ShowsStackCount_BeforeDescription()
     {
-        var mod = new IntenseModifier();
-        typeof(IntenseModifier).GetProperty(nameof(IntenseModifier.Stacks))!.SetValue(mod, 2);
+        var mod = new TenseModifier();
+        typeof(TenseModifier).GetProperty(nameof(TenseModifier.Stacks))!.SetValue(mod, 2);
         string description = "Deal 6 damage.";
         mod.ModifyDescription(null, ref description);
-        Assert.StartsWith("[gold]Intense 2[/gold].", description);
+        Assert.StartsWith("[gold]Tense 2[/gold].", description);
         Assert.Contains("Deal 6 damage.", description);
     }
 
     [Fact]
     public void ModifyDescription_NoStacks_DoesNotModify()
     {
-        var mod = new IntenseModifier();
+        var mod = new TenseModifier();
         string description = "Deal 6 damage.";
         mod.ModifyDescription(null, ref description);
         Assert.Equal("Deal 6 damage.", description);

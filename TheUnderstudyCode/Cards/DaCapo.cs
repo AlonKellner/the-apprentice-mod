@@ -17,7 +17,7 @@ public class DaCapo : UnderstudyCard
     {
         WithDamage(3);
         WithVars(new RepeatVar(3));
-        WithTip(UnderstudyKeywords.Intense);
+        WithTip(UnderstudyKeywords.Tense);
     }
 
     protected override void OnUpgrade()
@@ -30,14 +30,14 @@ public class DaCapo : UnderstudyCard
     {
         int hitCount = (int)DynamicVars["Repeat"].BaseValue;
         Invariants.Check(hitCount > 0, nameof(DaCapo) + "." + nameof(OnPlay),
-            $"Repeat resolved to {hitCount} hits — must be positive before attacking and applying Intense");
+            $"Repeat resolved to {hitCount} hits — must be positive before attacking and applying Tense");
         await CommonActions.CardAttack(cardPlay.Card, cardPlay, hitCount).Execute(context);
 
         var player = cardPlay.Card.Owner;
         var allCards = player.Piles.SelectMany(p => p.Cards);
         // Granted after the attack above, so this play's damage didn't benefit from it — pass
         // cardPlay so a first-ever application doesn't lock this card up for THIS play (see
-        // IntenseModifier.Apply's grantedAfterOwnCheck doc).
-        IntenseModifier.Apply(this, CombatState!, allCards, cardPlay);
+        // TenseModifier.Apply's grantedAfterOwnCheck doc).
+        TenseModifier.Apply(this, CombatState!, allCards, cardPlay);
     }
 }

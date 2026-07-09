@@ -19,7 +19,7 @@ public class NervousEnergy : UnderstudyCard
         WithDamage(10);
         WithVars(new EnergyVar(1));
         WithTips(_ => new IHoverTip[] { EnergyHoverTip });
-        WithTip(UnderstudyKeywords.Intense);
+        WithTip(UnderstudyKeywords.Tense);
     }
 
     protected override void OnUpgrade()
@@ -36,8 +36,8 @@ public class NervousEnergy : UnderstudyCard
         var player = cardPlay.Card.Owner;
         var hand = PileType.Hand.GetPile(player);
         var allCards = player.Piles.SelectMany(p => p.Cards);
-        foreach (var card in hand.Cards.Where(c => c != this && IntenseModifier.CanApplyTo(c)).ToList())
-            IntenseModifier.Apply(card, CombatState!, allCards);
+        foreach (var card in hand.Cards.Where(c => c != this && TenseModifier.CanApplyTo(c)).ToList())
+            TenseModifier.Apply(card, CombatState!, allCards);
 
         await PlayerCmd.GainEnergy(DynamicVars.Energy.BaseValue, player);
     }

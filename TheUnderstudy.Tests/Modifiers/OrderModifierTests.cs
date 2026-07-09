@@ -40,7 +40,7 @@ public class OrderModifierTests
         Assert.Equal(OrderModifier.Resolution.None, OrderModifier.OnTurnEndIfUnresolved(OrderModifier.Kind.FlavorOnly));
 
     // CanApplyTo — Attack/Skill only, not Stable-tagged. Uses real existing cards, matching the
-    // established idiom in PlannedModifierTests.cs/IntenseModifierTests.cs.
+    // established idiom in PlannedModifierTests.cs/TenseModifierTests.cs.
 
     [Fact]
     public void CanApplyTo_UnderstudyStrike_ReturnsTrue() => Assert.True(OrderModifier.CanApplyTo(new UnderstudyStrike()));
@@ -52,13 +52,13 @@ public class OrderModifierTests
     public void CanApplyTo_PowerCard_ReturnsFalse() => Assert.False(OrderModifier.CanApplyTo(new TheFirstLesson()));
 
     [Fact]
-    public void CanApplyTo_StableSkill_ReturnsFalse() => Assert.False(OrderModifier.CanApplyTo(new Intention()));
+    public void CanApplyTo_StableSkill_ReturnsFalse() => Assert.False(OrderModifier.CanApplyTo(new Buildup()));
 
     [Fact]
     public void CanApplyTo_RuntimeStableCard_ReturnsFalse()
     {
         // A card made Stable at runtime (via StableModifier, not just the printed keyword) must
-        // be just as ineligible as a printed-Stable card like Intention.
+        // be just as ineligible as a printed-Stable card like Buildup.
         var card = new UnderstudyStrike();
         CardModifier.AddModifier(card, new StableModifier());
         Assert.False(OrderModifier.CanApplyTo(card));

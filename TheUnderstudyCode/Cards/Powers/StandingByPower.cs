@@ -86,8 +86,8 @@ public class StandingByPower : UnderstudyPower
     // Must run in the *Late* pass, not the main AfterCardPlayed pass: CombatState.IterateHookListeners
     // enumerates each creature's Powers before its cards (see CombatState's hook-listener builder),
     // so this Power's own AfterCardPlayed would fire BEFORE the just-played card's own AfterCardPlayed
-    // override — the one that attaches UnplayableModifier when a card's own final Intense play just
-    // completed (UnderstudyCard.AfterCardPlayed's IsFinalIntensePlay check). That self-triggered
+    // override — the one that attaches UnplayableModifier when a card's own final Tense play just
+    // completed (UnderstudyCard.AfterCardPlayed's IsFinalTensePlay check). That self-triggered
     // OnUnplayableApplied call would arrive one play too late for a same-pass drain, so the card
     // that JUST became Unplayable by playing itself would only free a hand card on the NEXT play,
     // not this one. AfterCardPlayedLate runs in a second, separate pass after every listener's

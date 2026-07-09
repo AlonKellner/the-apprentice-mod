@@ -35,9 +35,9 @@ public class ShakenPower : UnderstudyPower
         foreach (var card in hand.Cards.ToList().Where(c =>
             (c.Type == CardType.Attack || c.Type == CardType.Skill) && !c.IsStable()))
         {
-            // Muscle Memory only protects a card that's ALSO Intense — Shaken still locks any
+            // Muscle Memory only protects a card that's ALSO Tense — Shaken still locks any
             // other eligible Attack/Skill as normal.
-            if (muscleMemoryActive && card.TryGetModifier<IntenseModifier>(out _)) continue;
+            if (muscleMemoryActive && card.TryGetModifier<TenseModifier>(out _)) continue;
             if (!card.TryGetModifier<UnplayableModifier>(out _))
                 CardModifier.AddModifier<UnplayableModifier>(card);
         }

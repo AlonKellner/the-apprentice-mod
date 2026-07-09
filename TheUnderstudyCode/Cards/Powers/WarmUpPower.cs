@@ -19,8 +19,8 @@ public class WarmUpPower : UnderstudyPower
 
     public override List<(string, string)> Localization => new PowerLoc(
         "Warm Up",
-        "At the start of your turn, apply [gold]Intense[/gold] to this many cards.",
-        "At the start of your turn, apply [gold]Intense[/gold] to [blue]{Amount}[/blue] {Amount:plural:card|cards}.");
+        "At the start of your turn, apply [gold]Tense[/gold] to this many cards.",
+        "At the start of your turn, apply [gold]Tense[/gold] to [blue]{Amount}[/blue] {Amount:plural:card|cards}.");
 
     public override async Task AfterPlayerTurnStartLate(PlayerChoiceContext context, Player player)
     {
@@ -30,11 +30,11 @@ public class WarmUpPower : UnderstudyPower
             context,
             player,
             new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-WARM_UP.selectionPrompt"), 0, maxSelect),
-            IntenseModifier.CanApplyTo,
+            TenseModifier.CanApplyTo,
             this);
         if (selected == null) return;
         var allCards = player.Piles.SelectMany(p => p.Cards);
         foreach (var card in selected)
-            IntenseModifier.Apply(card, Owner.CombatState!, allCards);
+            TenseModifier.Apply(card, Owner.CombatState!, allCards);
     }
 }

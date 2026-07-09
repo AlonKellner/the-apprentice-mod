@@ -9,7 +9,7 @@ namespace TheUnderstudy.Tests.Character;
 
 // General guardrail: every core mechanic must remain represented at the rarities where it belongs.
 // This is the executable statement of the deck's rarity intent:
-//   * Common must give an on-ramp to all three core builds (Invert/Planned/Intense), preview all
+//   * Common must give an on-ramp to all three core builds (Invert/Planned/Tense), preview all
 //     five debuffs + remove-Unplayable + Vigor, and cover the four core game mechanics
 //     (damage/block/draw/energy).
 //   * Uncommon and Rare must each still represent all three builds and all five debuffs, so no
@@ -36,7 +36,7 @@ public class CardRarityMechanicCoverageTests
             typeof(Arrangement), typeof(FinalBar), typeof(StageManager),
             typeof(CleanSlate), typeof(Encore), typeof(MagnumOpus), typeof(Refrain), typeof(TableRead),
         },
-        ["Intense"] = new[]
+        ["Tense"] = new[]
         {
             typeof(CramSession), typeof(TouchUp), typeof(Reprise),
             typeof(Rehearse), typeof(StandingOvation), typeof(StageFright), typeof(WarmUp),
@@ -108,7 +108,7 @@ public class CardRarityMechanicCoverageTests
     // Common must cover the full preview set: 3 builds + 5 debuffs + remove-Unplayable + Vigor + 4 game mechanics.
     [InlineData("Common", "Invert")]
     [InlineData("Common", "Planned")]
-    [InlineData("Common", "Intense")]
+    [InlineData("Common", "Tense")]
     [InlineData("Common", "Weak")]
     [InlineData("Common", "Vulnerable")]
     [InlineData("Common", "Shaken")]
@@ -123,7 +123,7 @@ public class CardRarityMechanicCoverageTests
     // Uncommon must still represent all three builds + all five debuffs.
     [InlineData("Uncommon", "Invert")]
     [InlineData("Uncommon", "Planned")]
-    [InlineData("Uncommon", "Intense")]
+    [InlineData("Uncommon", "Tense")]
     [InlineData("Uncommon", "Weak")]
     [InlineData("Uncommon", "Vulnerable")]
     [InlineData("Uncommon", "Shaken")]
@@ -132,7 +132,7 @@ public class CardRarityMechanicCoverageTests
     // Rare must still represent all three builds + all five debuffs.
     [InlineData("Rare", "Invert")]
     [InlineData("Rare", "Planned")]
-    [InlineData("Rare", "Intense")]
+    [InlineData("Rare", "Tense")]
     [InlineData("Rare", "Weak")]
     [InlineData("Rare", "Vulnerable")]
     [InlineData("Rare", "Shaken")]

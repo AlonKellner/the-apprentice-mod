@@ -26,11 +26,11 @@ public class MasterFormPowerTests
     }
 
     [Fact]
-    public void Localization_MentionsUnplayable_NotPlannedOrIntense()
+    public void Localization_MentionsUnplayable_NotPlannedOrTense()
     {
         var p = new MasterFormPower();
         Assert.Contains(p.Localization, entry => entry.Item2.Contains("[gold]Unplayable[/gold]"));
         Assert.DoesNotContain(p.Localization, entry => entry.Item2.Contains("Planned"));
-        Assert.DoesNotContain(p.Localization, entry => entry.Item2.Contains("Intense"));
+        Assert.DoesNotContain(p.Localization, entry => entry.Item2.Contains("Tense"));
     }
 }

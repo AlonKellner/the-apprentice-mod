@@ -20,7 +20,7 @@ public class StandingOvation : UnderstudyCard
     {
         WithDamage(6);
         WithVars(new CardsVar("Select", 1), new IntVar("Vigor", 3));
-        WithTip(UnderstudyKeywords.Intense);
+        WithTip(UnderstudyKeywords.Tense);
         WithTip(typeof(VigorPower));
     }
 
@@ -42,14 +42,14 @@ public class StandingOvation : UnderstudyCard
             context,
             player,
             new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-STANDING_OVATION.selectionPrompt"), 0, maxSelect),
-            c => c != this && IntenseModifier.CanApplyTo(c),
+            c => c != this && TenseModifier.CanApplyTo(c),
             this);
 
         if (selected != null)
         {
             var allCards = player.Piles.SelectMany(p => p.Cards);
             foreach (var card in selected)
-                IntenseModifier.Apply(card, CombatState!, allCards);
+                TenseModifier.Apply(card, CombatState!, allCards);
         }
 
         var creature = player.Creature;

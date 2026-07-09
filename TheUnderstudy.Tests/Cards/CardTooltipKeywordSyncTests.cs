@@ -25,7 +25,7 @@ public class CardTooltipKeywordSyncTests
         ["Jaded"] = "typeof(JadedPower)",
         ["Vigor"] = "typeof(VigorPower)",
         ["Planned"] = "UnderstudyKeywords.Planned)",
-        ["Intense"] = "UnderstudyKeywords.Intense)",
+        ["Tense"] = "UnderstudyKeywords.Tense)",
         ["Invert"] = "UnderstudyKeywords.Invert)",
         ["Invertible"] = "UnderstudyKeywords.Invertible)",
         ["Unplayable"] = "CardKeyword.Unplayable)",

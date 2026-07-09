@@ -14,18 +14,18 @@ public class MissedCue : UnderstudyCard
 
     public MissedCue() : base(2, CardType.Skill, CardRarity.Rare, TargetType.None)
     {
-        // Starts Intense 1 instead of Exhaust — "reset button" reads just as well as a one-off
+        // Starts Tense 1 instead of Exhaust — "reset button" reads just as well as a one-off
         // that locks (and can be freed again, unlike Exhaust) as one that vanishes outright.
         // Upgrade is now a cost reduction (was previously "remove Exhaust", which no longer
         // applies) — the "always costs 2 Shaken" self-cost stays fixed, matching TableRead/Encore/
         // HeldNote's own Rare-Skill cost-reduction convention.
         WithCostUpgradeBy(-1);
-        WithTip(UnderstudyKeywords.Intense);
+        WithTip(UnderstudyKeywords.Tense);
         WithTip(CardKeyword.Unplayable);
         WithTip(typeof(ShakenPower));
     }
 
-    public override bool IsPreIntense => true;
+    public override bool IsPreTense => true;
 
     protected override bool ShouldGlowGoldInternal =>
         UnplayableModifier.AnyIn(Owner.Piles.SelectMany(p => p.Cards).Where(c => c != this));

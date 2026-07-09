@@ -100,19 +100,19 @@ public class NewDeckCardsTests
         Assert.Equal(expectedTarget, card.TargetType);
     }
 
-    // MissedCue / Showstopper: converted to start-Intense-1 (Part C of the Intense-generalization
+    // MissedCue / Showstopper: converted to start-Tense-1 (Part C of the Tense-generalization
     // plan). MissedCue drops Exhaust in favor of a cost-reduction upgrade; Showstopper's damage is
     // raised to compensate for losing "always replayable."
 
     [Fact]
-    public void MissedCue_IsPreIntense() => Assert.True(new MissedCue().IsPreIntense);
+    public void MissedCue_IsPreTense() => Assert.True(new MissedCue().IsPreTense);
 
     [Fact]
     public void MissedCue_HasNoExhaustKeyword() =>
         Assert.False(new MissedCue().Keywords.Contains(CardKeyword.Exhaust));
 
     [Fact]
-    public void Showstopper_IsPreIntense() => Assert.True(new Showstopper().IsPreIntense);
+    public void Showstopper_IsPreTense() => Assert.True(new Showstopper().IsPreTense);
 
     [Fact]
     public void Showstopper_DamageIs34() =>
@@ -123,7 +123,7 @@ public class NewDeckCardsTests
         Assert.True(new FinalDraft().Keywords.Contains(CardKeyword.Exhaust));
 
     [Fact]
-    public void CleanSlate_IsPreIntense() => Assert.True(new CleanSlate().IsPreIntense);
+    public void CleanSlate_IsPreTense() => Assert.True(new CleanSlate().IsPreTense);
 
     [Fact]
     public void CleanSlate_DamageIs4() =>
@@ -138,6 +138,6 @@ public class NewDeckCardsTests
         Assert.Equal(18m, new SecondNature().DynamicVars.Damage.BaseValue);
 
     [Fact]
-    public void SecondNature_HasNoIntenseModifierByDefault() =>
-        Assert.False(new SecondNature().TryGetModifier<IntenseModifier>(out _));
+    public void SecondNature_HasNoTenseModifierByDefault() =>
+        Assert.False(new SecondNature().TryGetModifier<TenseModifier>(out _));
 }

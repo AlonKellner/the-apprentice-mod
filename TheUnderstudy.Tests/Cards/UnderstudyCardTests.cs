@@ -11,7 +11,7 @@ namespace TheUnderstudy.Tests.Cards;
 // Covers only the guard branches of UnderstudyCard.AfterCardPlayed that never reach
 // CardModifier.AddModifier<UnplayableModifier>(this) — that generic call requires ModelDb,
 // which isn't available in this bare test harness (see AssemblyInfo.cs). The "should attach"
-// branch is exercised via IntenseModifier.IsFinalIntensePlay in IntenseModifierTests.cs, and
+// branch is exercised via TenseModifier.IsFinalTensePlay in TenseModifierTests.cs, and
 // verified end-to-end in-game.
 public class UnderstudyCardTests
 {
@@ -27,7 +27,7 @@ public class UnderstudyCardTests
     };
 
     [Fact]
-    public void AfterCardPlayed_NoIntenseModifier_DoesNotThrow_NoUnplayableAdded()
+    public void AfterCardPlayed_NoTenseModifier_DoesNotThrow_NoUnplayableAdded()
     {
         var card = new UnderstudyStrike();
         card.AfterCardPlayed(null!, MakePlay(card, 0, 1));
@@ -35,10 +35,10 @@ public class UnderstudyCardTests
     }
 
     [Fact]
-    public void AfterCardPlayed_IntenseNotFinalPlay_DoesNotAddUnplayable()
+    public void AfterCardPlayed_TenseNotFinalPlay_DoesNotAddUnplayable()
     {
         var card = new UnderstudyStrike();
-        CardModifier.AddModifier(card, new IntenseModifier());
+        CardModifier.AddModifier(card, new TenseModifier());
         // Replay 1, first of two plays.
         card.AfterCardPlayed(null!, MakePlay(card, 0, 2));
         Assert.False(card.TryGetModifier<UnplayableModifier>(out _));
@@ -48,7 +48,7 @@ public class UnderstudyCardTests
     public void AfterCardPlayed_AlreadyUnplayable_DoesNotReAddOrThrow()
     {
         var card = new UnderstudyStrike();
-        CardModifier.AddModifier(card, new IntenseModifier());
+        CardModifier.AddModifier(card, new TenseModifier());
         CardModifier.AddModifier(card, new UnplayableModifier());
         card.AfterCardPlayed(null!, MakePlay(card, 0, 1));
         Assert.Single(CardModifier.DirectModifiers(card), m => m is UnplayableModifier);
@@ -59,7 +59,7 @@ public class UnderstudyCardTests
     {
         var card = new UnderstudyStrike();
         var otherCard = new UnderstudyDefend();
-        CardModifier.AddModifier(card, new IntenseModifier());
+        CardModifier.AddModifier(card, new TenseModifier());
         card.AfterCardPlayed(null!, MakePlay(otherCard, 0, 1));
         Assert.False(card.TryGetModifier<UnplayableModifier>(out _));
     }

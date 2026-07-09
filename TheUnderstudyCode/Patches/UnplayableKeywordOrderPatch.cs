@@ -7,10 +7,10 @@ namespace TheUnderstudy.TheUnderstudyCode.Patches;
 // Reorders beforeDescription so Unplayable appears at the START of the before-badge
 // block. CardModel's renderer Inserts each matched keyword at index 0 in array order,
 // so the LAST array entry ends up FIRST/frontmost. BaseLib's AutoKeywordText postfix
-// appends custom AutoKeywordPosition.Before keywords (Intense, Stable) after the base
+// appends custom AutoKeywordPosition.Before keywords (Tense, Stable) after the base
 // array's Unplayable entry, pushing Unplayable out of last place. Our postfix runs
 // after BaseLib's and moves Unplayable back to the end, regardless of whether it was
-// added by IntenseModifier or PlannedModifier.
+// added by TenseModifier or PlannedModifier.
 [HarmonyPatch(typeof(CardKeywordOrder), MethodType.StaticConstructor)]
 public static class UnplayableKeywordOrderPatch
 {

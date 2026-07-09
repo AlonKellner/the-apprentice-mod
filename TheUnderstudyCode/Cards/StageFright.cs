@@ -14,7 +14,7 @@ public class StageFright : UnderstudyCard
     public StageFright() : base(3, CardType.Skill, CardRarity.Uncommon, TargetType.None)
     {
         WithCostUpgradeBy(-1);
-        WithTip(UnderstudyKeywords.Intense);
+        WithTip(UnderstudyKeywords.Tense);
         WithTip(CardKeyword.Unplayable);
     }
 
@@ -22,8 +22,8 @@ public class StageFright : UnderstudyCard
     {
         var player = cardPlay.Card.Owner;
         var allCards = player.Piles.SelectMany(p => p.Cards).ToList();
-        foreach (var card in allCards.Where(c => c != this && IntenseModifier.CanApplyTo(c) && c.IsUnplayable()).ToList())
-            IntenseModifier.Apply(card, CombatState!, allCards);
+        foreach (var card in allCards.Where(c => c != this && TenseModifier.CanApplyTo(c) && c.IsUnplayable()).ToList())
+            TenseModifier.Apply(card, CombatState!, allCards);
         return Task.CompletedTask;
     }
 }

@@ -33,7 +33,7 @@ public class TakeYourBow : UnderstudyCard
         var handCards = PileType.Hand.GetPile(player).Cards.Where(c => c != this).ToList();
 
         // Damage counts every Unplayable card in hand, regardless of type — but only attacks and
-        // skills actually have their Unplayable removed (Planned/Intense/Free's usual scope).
+        // skills actually have their Unplayable removed (Planned/Tense/Free's usual scope).
         int unplayableCount = handCards.Count(c => c.IsUnplayable());
         var toFree = handCards.Where(UnplayableModifier.CanApplyTo).ToList();
         Invariants.Check(toFree.Count <= unplayableCount, nameof(TakeYourBow) + "." + nameof(OnPlay),

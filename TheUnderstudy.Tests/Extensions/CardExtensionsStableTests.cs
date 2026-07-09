@@ -28,7 +28,7 @@ public class CardExtensionsStableTests
     [Fact]
     public void IsStable_PrintedStableCard_ReturnsTrue()
     {
-        // Intention is Stable via WithKeyword in its constructor (the static/printed path).
-        Assert.True(((CardModel)new Intention()).IsStable());
+        // Buildup is Stable via WithKeyword in its constructor (the static/printed path).
+        Assert.True(((CardModel)new Buildup()).IsStable());
     }
 }

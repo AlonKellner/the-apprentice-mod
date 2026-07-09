@@ -13,7 +13,7 @@ public class UnderstudyStrike : UnderstudyCard
     {
         WithDamage(6);
         WithTags(CardTag.Strike);
-        WithIntenseTip();
+        WithTenseTip();
     }
 
     protected override void OnUpgrade() => DynamicVars.Damage.UpgradeValueBy(3m);
