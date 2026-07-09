@@ -258,7 +258,7 @@
   "THEUNDERSTUDY-RERUN.description": "Deal {Damage:diff()} damage twice.\nApply 2 [gold]Jaded[/gold] to yourself.",
 
   "THEUNDERSTUDY-PULLED_PUNCH.title": "Pulled Punch",
-  "THEUNDERSTUDY-PULLED_PUNCH.description": "Whenever an [gold]invertible[/gold] debuff is applied to you, reduce its value by {IfUpgraded:show:2|1} immediately after it lands.",
+  "THEUNDERSTUDY-PULLED_PUNCH.description": "[gold]Invertible[/gold] debuffs applied to you are reduced by {IfUpgraded:show:2|1}.",
 
   "THEUNDERSTUDY-ONE_TAKE.title": "One Take",
   "THEUNDERSTUDY-ONE_TAKE.description": "Decrease all card costs by 1. Apply [gold]Unplayable[/gold] to every played card.",

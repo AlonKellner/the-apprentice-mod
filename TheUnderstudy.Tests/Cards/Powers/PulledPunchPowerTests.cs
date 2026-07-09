@@ -1,4 +1,3 @@
-using MegaCrit.Sts2.Core.Entities.Powers;
 using TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 using Xunit;
 
@@ -6,39 +5,31 @@ namespace TheUnderstudy.Tests.Cards.Powers;
 
 public class PulledPunchPowerTests
 {
-    [Fact]
-    public void ComputeDebuffPairSteps_FreshThreeWeak_ReducesByOne() =>
-        Assert.Equal(1, PulledPunchPower.ComputeDebuffPairSteps(PowerType.Debuff, 3m, 3, 1));
+    // ── Normal debuff powers (positive gain, reduce toward 0) ────────────────────────────────────
 
     [Fact]
-    public void ComputeDebuffPairSteps_FreshOneLimited_UpgradedReduceByTwo_CapsAtOne() =>
-        Assert.Equal(1, PulledPunchPower.ComputeDebuffPairSteps(PowerType.Debuff, 1m, 1, 2));
+    public void Dampen_FreshThreeWeak_ReducedByOne() =>
+        Assert.Equal(2m, PulledPunchPower.Dampen(3m, isSignFlip: false, reduceBy: 1));
 
     [Fact]
-    public void ComputeDebuffPairSteps_DecayTickDecrement_DoesNotReact() =>
-        Assert.Equal(0, PulledPunchPower.ComputeDebuffPairSteps(PowerType.Debuff, -1m, 2, 1));
+    public void Dampen_OneLimited_UpgradedReduceByTwo_ClampsAtZero() =>
+        Assert.Equal(0m, PulledPunchPower.Dampen(1m, isSignFlip: false, reduceBy: 2));
 
     [Fact]
-    public void ComputeDebuffPairSteps_ZeroAmount_DoesNotReact() =>
-        Assert.Equal(0, PulledPunchPower.ComputeDebuffPairSteps(PowerType.Debuff, 0m, 2, 1));
+    public void Dampen_OneWeak_ReduceByOne_LandsExactlyZero() =>
+        Assert.Equal(0m, PulledPunchPower.Dampen(1m, isSignFlip: false, reduceBy: 1));
+
+    // ── Sign-flip powers (Strength/Dexterity debuff is a negative amount, reduce toward 0) ───────
 
     [Fact]
-    public void ComputeDebuffPairSteps_BuffTypedSide_DoesNotReact() =>
-        Assert.Equal(0, PulledPunchPower.ComputeDebuffPairSteps(PowerType.Buff, 3m, 3, 1));
+    public void Dampen_NegativeTwoDexterity_ReducedByOne() =>
+        Assert.Equal(-1m, PulledPunchPower.Dampen(-2m, isSignFlip: true, reduceBy: 1));
 
     [Fact]
-    public void ComputeSignFlipSteps_NegativeTwoDexterity_ReducesByOne() =>
-        Assert.Equal(1, PulledPunchPower.ComputeSignFlipSteps(-2m, -2, 1));
+    public void Dampen_NegativeOne_UpgradedReduceByTwo_ClampsAtZero_DoesNotFlipPositive() =>
+        Assert.Equal(0m, PulledPunchPower.Dampen(-1m, isSignFlip: true, reduceBy: 2));
 
     [Fact]
-    public void ComputeSignFlipSteps_OvershootCapped_DoesNotFlipToPositive() =>
-        Assert.Equal(1, PulledPunchPower.ComputeSignFlipSteps(-3m, -1, 2));
-
-    [Fact]
-    public void ComputeSignFlipSteps_PositiveGain_DoesNotReact() =>
-        Assert.Equal(0, PulledPunchPower.ComputeSignFlipSteps(2m, 5, 1));
-
-    [Fact]
-    public void ComputeSignFlipSteps_DebuffHitDidNotCrossZero_DoesNotReact() =>
-        Assert.Equal(0, PulledPunchPower.ComputeSignFlipSteps(-2m, 3, 1));
+    public void Dampen_NegativeTwo_ReduceByTwo_LandsExactlyZero() =>
+        Assert.Equal(0m, PulledPunchPower.Dampen(-2m, isSignFlip: true, reduceBy: 2));
 }

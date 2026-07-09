@@ -1,15 +1,15 @@
+using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using BaseLib.Abstracts;
-using MegaCrit.Sts2.Core.Commands;
-using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Powers;
-using MegaCrit.Sts2.Core.GameActions.Multiplayer;
-using MegaCrit.Sts2.Core.Models;
-using MegaCrit.Sts2.Core.Models.Powers;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 
+// A plain counter power: its only job is to record "reduce incoming invertible debuffs by Amount".
+// The actual reduction is applied by InvertTrackerPower, which already owns the single
+// TryModifyPowerAmountReceived interception for every invertible pair — folding the dampening in
+// there (gated on Owner.GetPowerAmount<PulledPunchPower>()) keeps one deterministic interceptor
+// rather than racing a second one (see MyOwnLessonPower for why a separate interceptor is avoided).
 public class PulledPunchPower : UnderstudyPower
 {
     public override PowerType Type => PowerType.Buff;
@@ -17,34 +17,15 @@ public class PulledPunchPower : UnderstudyPower
 
     public override List<(string, string)> Localization => new PowerLoc(
         "Pulled Punch",
-        "Whenever an [gold]invertible[/gold] debuff is applied to you, reduce its value by 1 immediately after it lands.",
-        "Whenever an [gold]invertible[/gold] debuff is applied to you, reduce its value by {Amount} immediately after it lands.");
+        "[gold]Invertible[/gold] debuffs applied to you are reduced by 1.",
+        "[gold]Invertible[/gold] debuffs applied to you are reduced by {Amount}.");
 
-    public static int ComputeDebuffPairSteps(PowerType type, decimal landedAmount, int currentAmount, int reduceBy) =>
-        type != PowerType.Debuff || landedAmount <= 0m ? 0 : Math.Min(reduceBy, currentAmount);
-
-    public static int ComputeSignFlipSteps(decimal landedAmount, int currentAmount, int reduceBy) =>
-        landedAmount >= 0m || currentAmount >= 0 ? 0 : Math.Min(reduceBy, -currentAmount);
-
-    public override async Task AfterPowerAmountChanged(
-        PlayerChoiceContext choiceContext, PowerModel power, decimal amount, Creature? applier, CardModel? cardSource)
-    {
-        if (power.Owner != Owner || !DoubleTimePower.IsInvertiblePower(power)) return;
-
-        bool isSignFlip = power is StrengthPower or DexterityPower;
-        int steps = isSignFlip
-            ? ComputeSignFlipSteps(amount, power.Amount, Amount)
-            : ComputeDebuffPairSteps(power.Type, amount, power.Amount, Amount);
-
-        // A correction that lands a debuff-pair power exactly at 0 causes the outer, original
-        // PowerCmd.ModifyAmount call (the one for the landing application itself) to also see
-        // Amount <= 0 and call Remove a second time once this hook returns. Harmless: none of the
-        // 8 invertible power types override AfterRemoved, so the duplicate removal is a no-op.
-        if (isSignFlip)
-            for (int i = 0; i < steps && power.Owner != null; i++)
-                await PowerCmd.ModifyAmount(choiceContext, power, 1m, applier, cardSource);
-        else
-            for (int i = 0; i < steps && power.Owner != null; i++)
-                await PowerCmd.Decrement(power);
-    }
+    // Pure reduction of a single invertible-debuff application toward zero, by reduceBy, clamped so
+    // it never overshoots past 0 into the opposite sign. Two shapes:
+    //  - normal debuff powers (Weak/Vulnerable/Shaken/Limited/Jaded/Frail) gain a POSITIVE amount,
+    //    so reduce means subtract toward 0;
+    //  - sign-flip powers (Strength/Dexterity) express a debuff as a NEGATIVE amount to the same
+    //    power, so reduce means add toward 0.
+    public static decimal Dampen(decimal amount, bool isSignFlip, int reduceBy) =>
+        isSignFlip ? Math.Min(0m, amount + reduceBy) : Math.Max(0m, amount - reduceBy);
 }

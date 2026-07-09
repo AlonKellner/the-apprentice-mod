@@ -439,9 +439,12 @@ public class PowerClassTests
         Assert.All(descriptions, d => Assert.Contains("invertible", d, StringComparison.OrdinalIgnoreCase));
     }
 
+    // Pulled Punch is a plain marker/counter power: the actual debuff reduction is folded into
+    // InvertTrackerPower's single interception (gated on this power's presence), and the pure
+    // reduction math is covered by PulledPunchPowerTests.Dampen_*.
     [Fact]
-    public void PulledPunchPower_OverridesAfterPowerAmountChanged() =>
-        Assert.NotNull(typeof(PulledPunchPower).GetMethod(
+    public void PulledPunchPower_IsPlainMarker_NoOwnAmountHook() =>
+        Assert.Null(typeof(PulledPunchPower).GetMethod(
             "AfterPowerAmountChanged", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly));
 
     [Fact]

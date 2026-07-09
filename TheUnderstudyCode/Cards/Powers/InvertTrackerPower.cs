@@ -12,7 +12,7 @@ using TheUnderstudy.TheUnderstudyCode.Extensions;
 namespace TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 
 // Silently auto-attached to the player at combat start (see UnderstudyCard.AfterPlayerTurnStartLate,
-// mirroring PlannedCounterPower's own auto-attach). Two jobs, both relying on being an
+// mirroring PlannedCounterPower's own auto-attach). Three jobs, all relying on being an
 // always-attached, always-hidden observer of every power change on the player:
 //
 // (1) Feeds EmotionalExpression's "last modified invertible debuff" tracker via the global
@@ -30,6 +30,12 @@ namespace TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 //     state, it can intercept a gain to a pair that doesn't exist yet just fine — so the Un-X (and
 //     X) powers go back to being ordinary powers: created on demand, visible immediately, removed
 //     when they decay to nothing, exactly like Strength/Dexterity.
+//
+// (3) Pulled Punch dampening: while the player holds PulledPunchPower, every incoming invertible
+//     debuff is softened toward 0 by that power's Amount, inside the same single interception used
+//     for (2). Kept here — rather than as a separate TryModifyPowerAmountReceived listener on
+//     PulledPunchPower — so there is only ever one interceptor for the event and no order-race
+//     against the cancellation (the exact hazard MyOwnLessonPower documents avoiding).
 public class InvertTrackerPower : UnderstudyPower
 {
     public override PowerType Type => PowerType.Buff;
@@ -99,6 +105,12 @@ public class InvertTrackerPower : UnderstudyPower
             nameof(InvertTrackerPower) + "." + nameof(TryModifyPowerAmountReceived),
             "a previous interception is still pending when a new one is starting — re-entrancy assumption violated");
 
+        // Pulled Punch (job 3): while Owner holds PulledPunchPower, every incoming invertible debuff
+        // is softened toward 0 by that power's Amount. Done here rather than as its own
+        // TryModifyPowerAmountReceived listener so there is exactly one interceptor for the event and
+        // no order-race with the cancellation below (see MyOwnLessonPower for that reasoning).
+        int pulledPunch = Owner.GetPowerAmount<PulledPunchPower>();
+
         // Strength/Dexterity sign-flip swap must run before the amount > 0 gate below: a "debuff"
         // gain here is a *negative* amount to this same power, not a positive gain to a separate
         // power, so it would otherwise never reach the reversed-mode logic at all.
@@ -107,6 +119,14 @@ public class InvertTrackerPower : UnderstudyPower
         {
             _pendingSignFlipSwap = (canonicalPower is StrengthPower, (int)amount);
             modifiedAmount = 0m;
+            return true;
+        }
+
+        // Pulled Punch for the sign-flip powers: a Strength/Dexterity debuff is a negative amount to
+        // the same power, so it also lives below the amount > 0 gate — soften it here.
+        if (pulledPunch > 0 && amount < 0m && canonicalPower is StrengthPower or DexterityPower)
+        {
+            modifiedAmount = PulledPunchPower.Dampen(amount, isSignFlip: true, pulledPunch);
             return true;
         }
 
@@ -122,6 +142,13 @@ public class InvertTrackerPower : UnderstudyPower
                 return true;
             }
         }
+
+        // Pulled Punch softens the incoming debuff-side gain toward 0 *before* it cancels against
+        // any opposing buff stock below, so a hit Pulled Punch fully absorbs doesn't also waste your
+        // Un-X buffs. Only the debuff side is reduced — the Un-X buff powers are beneficial gains.
+        decimal originalAmount = amount;
+        if (pulledPunch > 0 && IsInvertibleDebuffSide(canonicalPower))
+            amount = PulledPunchPower.Dampen(amount, isSignFlip: false, pulledPunch);
 
         (int reduced, int consumed) result;
         switch (canonicalPower)
@@ -178,10 +205,18 @@ public class InvertTrackerPower : UnderstudyPower
                 return false;
         }
 
-        if (result.consumed <= 0) return false;
+        if (result.consumed <= 0)
+        {
+            // No opposing stock to cancel against, but Pulled Punch may still have softened the hit.
+            if (amount != originalAmount) { modifiedAmount = amount; return true; }
+            return false;
+        }
         modifiedAmount = result.reduced;
         return true;
     }
+
+    private static bool IsInvertibleDebuffSide(PowerModel power) =>
+        power is WeakPower or VulnerablePower or ShakenPower or LimitedPower or JadedPower or FrailPower;
 
     public override async Task AfterModifyingPowerAmountReceived(PowerModel power)
     {
