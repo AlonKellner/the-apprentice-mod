@@ -13,7 +13,7 @@ public class TakeNotes : UnderstudyCard
 
     public TakeNotes() : base(1, CardType.Power, CardRarity.Uncommon, TargetType.None)
     {
-        WithPower<TakeNotesPower>(3, 1);
+        WithPowerNoTip<TakeNotesPower>(3, 1);
         WithTip(typeof(VigorPower));
     }
 

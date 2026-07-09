@@ -12,7 +12,7 @@ public class AdLib : UnderstudyCard
 
     public AdLib() : base(1, CardType.Power, CardRarity.Uncommon, TargetType.None)
     {
-        WithPower<AdLibPower>(1, 1);
+        WithPowerNoTip<AdLibPower>(1, 1);
         WithTip(UnderstudyKeywords.Invertible);
     }
 

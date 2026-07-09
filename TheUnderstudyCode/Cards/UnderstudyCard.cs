@@ -13,7 +13,9 @@ using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization;
+using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
+using MegaCrit.Sts2.Core.Models.Powers;
 using TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
 using TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 using TheUnderstudy.TheUnderstudyCode.Character;
@@ -79,6 +81,14 @@ public abstract class UnderstudyCard(
             return new IHoverTip[] { tip };
         });
     }
+
+    // Same as BaseLib's WithPower<T>, but WITHOUT the auto-added power-description hover tip. Used by
+    // Power cards whose own card text already states the effect in plain mechanical language, so the
+    // power's tooltip would only duplicate the card description. The PowerVar<T> itself is still added
+    // (it's what CommonActions.Apply<T> reads for the amount) — only the redundant tip is dropped.
+    // Lesson cards that use flavour text keep the real WithPower<T> so their tooltip explains it.
+    protected void WithPowerNoTip<T>(int baseVal, int upgrade = 0) where T : PowerModel =>
+        WithVar(new PowerVar<T>(baseVal).WithUpgrade<PowerVar<T>>(upgrade));
 
     // Snapshot of DirectModifiers at combat start; null means this card is not Stable.
     private List<CardModifier>? _stableSnapshot;

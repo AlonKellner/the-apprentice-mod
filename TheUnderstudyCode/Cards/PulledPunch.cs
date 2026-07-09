@@ -12,7 +12,7 @@ public class PulledPunch : UnderstudyCard
 
     public PulledPunch() : base(1, CardType.Power, CardRarity.Uncommon, TargetType.None)
     {
-        WithPower<PulledPunchPower>(1, 1);
+        WithPowerNoTip<PulledPunchPower>(1, 1);
         WithTip(UnderstudyKeywords.Invertible);
     }
 

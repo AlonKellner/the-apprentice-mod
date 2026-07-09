@@ -13,7 +13,7 @@ public class OneTake : UnderstudyCard
     public OneTake() : base(2, CardType.Power, CardRarity.Rare, TargetType.None)
     {
         WithCostUpgradeBy(-1);
-        WithPower<OneTakePower>(1);
+        WithPowerNoTip<OneTakePower>(1);
         WithTip(CardKeyword.Unplayable);
     }
 

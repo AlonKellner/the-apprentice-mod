@@ -14,7 +14,7 @@ public class Crescendo : UnderstudyCard
     public Crescendo() : base(2, CardType.Power, CardRarity.Rare, TargetType.None)
     {
         WithCostUpgradeBy(-1);
-        WithPower<CrescendoPower>(1);
+        WithPowerNoTip<CrescendoPower>(1);
         WithTip(typeof(VigorPower));
     }
 

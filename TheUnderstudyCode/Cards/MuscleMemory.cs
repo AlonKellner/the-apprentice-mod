@@ -13,7 +13,7 @@ public class MuscleMemory : UnderstudyCard
     public MuscleMemory() : base(2, CardType.Power, CardRarity.Rare, TargetType.None)
     {
         WithCostUpgradeBy(-1);
-        WithPower<MuscleMemoryPower>(1, 1);
+        WithPowerNoTip<MuscleMemoryPower>(1, 1);
         WithTip(UnderstudyKeywords.Tense);
         WithTip(CardKeyword.Unplayable);
     }

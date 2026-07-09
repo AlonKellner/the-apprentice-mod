@@ -13,7 +13,7 @@ public class MyOwnLesson : UnderstudyCard
     public MyOwnLesson() : base(0, CardType.Power, CardRarity.Rare, TargetType.None)
     {
         WithKeyword(CardKeyword.Retain, ConstructedCardModel.UpgradeType.Add);
-        WithPower<MyOwnLessonPower>(1);
+        WithPowerNoTip<MyOwnLessonPower>(1);
         WithTip(UnderstudyKeywords.Invertible);
     }
 

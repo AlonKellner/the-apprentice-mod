@@ -12,7 +12,7 @@ public class CallSheet : UnderstudyCard
 
     public CallSheet() : base(1, CardType.Power, CardRarity.Uncommon, TargetType.None)
     {
-        WithPower<CallSheetPower>(1, 2);
+        WithPowerNoTip<CallSheetPower>(1, 2);
         WithTip(UnderstudyKeywords.Planned);
     }
 

@@ -13,7 +13,7 @@ public class HeldNote : UnderstudyCard
     public HeldNote() : base(2, CardType.Power, CardRarity.Rare, TargetType.None)
     {
         WithCostUpgradeBy(-1);
-        WithPower<HeldNotePower>(1, 1);
+        WithPowerNoTip<HeldNotePower>(1, 1);
         WithTip(UnderstudyKeywords.Invertible);
     }
 

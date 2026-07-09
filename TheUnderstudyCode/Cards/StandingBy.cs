@@ -13,7 +13,7 @@ public class StandingBy : UnderstudyCard
 
     public StandingBy() : base(1, CardType.Power, CardRarity.Uncommon, TargetType.None)
     {
-        WithPower<StandingByPower>(1, 1);
+        WithPowerNoTip<StandingByPower>(1, 1);
         WithTip(CardKeyword.Unplayable);
     }
 

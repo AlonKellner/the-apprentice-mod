@@ -13,7 +13,7 @@ public class StageManager : UnderstudyCard
     public StageManager() : base(2, CardType.Power, CardRarity.Rare, TargetType.None)
     {
         WithCostUpgradeBy(-1);
-        WithPower<StageManagerPower>(1, 1);
+        WithPowerNoTip<StageManagerPower>(1, 1);
         WithTip(UnderstudyKeywords.Planned);
     }
 

@@ -12,7 +12,7 @@ public class WarmUp : UnderstudyCard
 
     public WarmUp() : base(1, CardType.Power, CardRarity.Uncommon, TargetType.None)
     {
-        WithPower<WarmUpPower>(1, 2);
+        WithPowerNoTip<WarmUpPower>(1, 2);
         WithTip(UnderstudyKeywords.Tense);
     }
 

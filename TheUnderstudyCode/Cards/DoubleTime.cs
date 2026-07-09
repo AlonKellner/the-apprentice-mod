@@ -12,7 +12,7 @@ public class DoubleTime : UnderstudyCard
 
     public DoubleTime() : base(1, CardType.Power, CardRarity.Rare, TargetType.None)
     {
-        WithPower<DoubleTimePower>(1, 1);
+        WithPowerNoTip<DoubleTimePower>(1, 1);
         WithTip(UnderstudyKeywords.Invertible);
     }
 
