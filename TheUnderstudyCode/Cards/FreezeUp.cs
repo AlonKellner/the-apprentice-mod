@@ -4,6 +4,7 @@ using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models.Powers;
+using TheUnderstudy.TheUnderstudyCode.Cards.DynamicVars;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
@@ -16,6 +17,7 @@ public class FreezeUp : UnderstudyCard
         WithDamage(5);
         WithBlock(8);
         WithInvertibleTip(typeof(WeakPower));
+        WithVar(new SelfDebuffVar("Weak", 1));
     }
 
     protected override void OnUpgrade()
@@ -29,6 +31,6 @@ public class FreezeUp : UnderstudyCard
     {
         await CommonActions.CardAttack(cardPlay.Card, cardPlay).Execute(context);
         await CommonActions.CardBlock(this, cardPlay);
-        await EmotionalExpression.ApplyWeakToSelf(context, cardPlay.Card.Owner.Creature, 1, this);
+        await EmotionalExpression.ApplyWeakToSelf(context, cardPlay.Card.Owner.Creature, (int)DynamicVars["Weak"].BaseValue, this);
     }
 }

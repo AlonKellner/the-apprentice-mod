@@ -4,6 +4,7 @@ using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using TheUnderstudy.TheUnderstudyCode.Cards.Powers;
+using TheUnderstudy.TheUnderstudyCode.Cards.DynamicVars;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
@@ -16,6 +17,7 @@ public class Matinee : UnderstudyCard
         WithDamage(5);
         WithBlock(8);
         WithTip(typeof(JadedPower));
+        WithVar(new SelfDebuffVar("Jaded", 1));
     }
 
     protected override void OnUpgrade()
@@ -29,6 +31,6 @@ public class Matinee : UnderstudyCard
     {
         await CommonActions.CardAttack(cardPlay.Card, cardPlay).Execute(context);
         await CommonActions.CardBlock(this, cardPlay);
-        await EmotionalExpression.ApplyJadedToSelf(context, cardPlay.Card.Owner.Creature, 1, this);
+        await EmotionalExpression.ApplyJadedToSelf(context, cardPlay.Card.Owner.Creature, (int)DynamicVars["Jaded"].BaseValue, this);
     }
 }

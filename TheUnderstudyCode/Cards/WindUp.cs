@@ -5,6 +5,7 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models.Powers;
+using TheUnderstudy.TheUnderstudyCode.Cards.DynamicVars;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
@@ -17,6 +18,7 @@ public class WindUp : UnderstudyCard
         WithDamage(4);
         WithVars(new IntVar("Vigor", 4));
         WithInvertibleTip(typeof(WeakPower));
+        WithVar(new SelfDebuffVar("Weak", 2));
         WithTip(typeof(VigorPower));
     }
 
@@ -32,7 +34,7 @@ public class WindUp : UnderstudyCard
         await CommonActions.CardAttack(cardPlay.Card, cardPlay).Execute(context);
 
         var creature = cardPlay.Card.Owner.Creature;
-        await EmotionalExpression.ApplyWeakToSelf(context, creature, 2, this);
+        await EmotionalExpression.ApplyWeakToSelf(context, creature, (int)DynamicVars["Weak"].BaseValue, this);
         int vigor = (int)DynamicVars["Vigor"].BaseValue;
         await PowerCmd.Apply<VigorPower>(context, creature, vigor, creature, this, false);
     }

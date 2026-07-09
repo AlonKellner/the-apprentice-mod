@@ -5,6 +5,7 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using TheUnderstudy.TheUnderstudyCode.Cards.Powers;
+using TheUnderstudy.TheUnderstudyCode.Cards.DynamicVars;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
@@ -14,7 +15,7 @@ public class AllNighter : UnderstudyCard
 
     public AllNighter() : base(0, CardType.Skill, CardRarity.Uncommon, TargetType.None)
     {
-        WithVars(new IntVar("Jaded", 2), new EnergyVar(1));
+        WithVars(new SelfDebuffVar("Jaded", 2), new EnergyVar(1));
         WithTips(_ => new IHoverTip[] { EnergyHoverTip });
         WithTip(typeof(JadedPower));
     }

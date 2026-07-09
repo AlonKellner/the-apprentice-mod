@@ -3,6 +3,7 @@ using BaseLib.Utils;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using TheUnderstudy.TheUnderstudyCode.Cards.Powers;
+using TheUnderstudy.TheUnderstudyCode.Cards.DynamicVars;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
@@ -15,6 +16,7 @@ public class Butterflies : UnderstudyCard
         WithDamage(5);
         WithBlock(8);
         WithTip(typeof(ShakenPower));
+        WithVar(new SelfDebuffVar("Shaken", 2));
     }
 
     protected override void OnUpgrade()
@@ -28,6 +30,6 @@ public class Butterflies : UnderstudyCard
     {
         await CommonActions.CardAttack(cardPlay.Card, cardPlay).Execute(context);
         await CommonActions.CardBlock(this, cardPlay);
-        await EmotionalExpression.ApplyShakenToSelf(context, cardPlay.Card.Owner.Creature, 2, this);
+        await EmotionalExpression.ApplyShakenToSelf(context, cardPlay.Card.Owner.Creature, (int)DynamicVars["Shaken"].BaseValue, this);
     }
 }

@@ -3,6 +3,7 @@ using BaseLib.Utils;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models.Powers;
+using TheUnderstudy.TheUnderstudyCode.Cards.DynamicVars;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
@@ -15,6 +16,7 @@ public class Overcommit : UnderstudyCard
         WithDamage(8);
         WithBlock(14);
         WithInvertibleTip(typeof(VulnerablePower));
+        WithVar(new SelfDebuffVar("Vulnerable", 1));
     }
 
     protected override void OnUpgrade()
@@ -28,6 +30,6 @@ public class Overcommit : UnderstudyCard
     {
         await CommonActions.CardAttack(cardPlay.Card, cardPlay).Execute(context);
         await CommonActions.CardBlock(this, cardPlay);
-        await EmotionalExpression.ApplyVulnerableToSelf(context, cardPlay.Card.Owner.Creature, 1, this);
+        await EmotionalExpression.ApplyVulnerableToSelf(context, cardPlay.Card.Owner.Creature, (int)DynamicVars["Vulnerable"].BaseValue, this);
     }
 }

@@ -5,6 +5,7 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
 using TheUnderstudy.TheUnderstudyCode.Cards.Powers;
+using TheUnderstudy.TheUnderstudyCode.Cards.DynamicVars;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
@@ -23,6 +24,7 @@ public class MissedCue : UnderstudyCard
         WithTip(UnderstudyKeywords.Tense);
         WithTip(CardKeyword.Unplayable);
         WithTip(typeof(ShakenPower));
+        WithVar(new SelfDebuffVar("Shaken", 2));
     }
 
     public override bool IsPreTense => true;
@@ -36,6 +38,6 @@ public class MissedCue : UnderstudyCard
         foreach (var card in player.Piles.SelectMany(p => p.Cards).Where(c => c != this && UnplayableModifier.CanApplyTo(c)).ToList())
             UnplayableModifier.Remove(card);
 
-        await EmotionalExpression.ApplyShakenToSelf(context, player.Creature, 2, this);
+        await EmotionalExpression.ApplyShakenToSelf(context, player.Creature, (int)DynamicVars["Shaken"].BaseValue, this);
     }
 }

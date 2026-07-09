@@ -3,6 +3,7 @@ using BaseLib.Utils;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models.Powers;
+using TheUnderstudy.TheUnderstudyCode.Cards.DynamicVars;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
@@ -14,6 +15,7 @@ public class WideOpen : UnderstudyCard
     {
         WithDamage(6);
         WithInvertibleTip(typeof(VulnerablePower));
+        WithVar(new SelfDebuffVar("Vulnerable", 1));
     }
 
     protected override void OnUpgrade()
@@ -25,6 +27,6 @@ public class WideOpen : UnderstudyCard
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
         await CommonActions.CardAttack(cardPlay.Card, cardPlay).Execute(context);
-        await EmotionalExpression.ApplyVulnerableToSelf(context, cardPlay.Card.Owner.Creature, 1, this);
+        await EmotionalExpression.ApplyVulnerableToSelf(context, cardPlay.Card.Owner.Creature, (int)DynamicVars["Vulnerable"].BaseValue, this);
     }
 }
