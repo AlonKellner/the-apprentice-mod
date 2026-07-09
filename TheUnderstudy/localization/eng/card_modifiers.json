@@ -2,7 +2,7 @@
   "TheUnderstudy:Planned.name": "Planned",
   "TheUnderstudy:Planned.description": "When a card becomes [gold]Planned[/gold], it also becomes [gold]Unplayable[/gold]. Some cards can play all [gold]Planned[/gold] cards in the order they were planned.",
   "TheUnderstudy:Intense.name": "Intense",
-  "TheUnderstudy:Intense.description": "Becomes [gold]Unplayable[/gold] when played. Increase [gold]Block[/gold] and damage by 1 for each card with [gold]Intense[/gold] this combat.",
+  "TheUnderstudy:Intense.description": "Becomes [gold]Unplayable[/gold] when played. Increases damage or [gold]Block[/gold] by 1 for each card with [gold]Intense[/gold].",
   "TheUnderstudy:Unplayable.name": "Unplayable",
   "TheUnderstudy:Unplayable.description": "Cannot be played."
 }

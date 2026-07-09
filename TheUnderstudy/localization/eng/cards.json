@@ -150,7 +150,7 @@
   "THEUNDERSTUDY-FULL_VOICE.description": "Whenever a debuff is applied to you, gain {IfUpgraded:show:4|3} [gold]Block[/gold].",
 
   "THEUNDERSTUDY-SHOWSTOPPER.title": "Showstopper",
-  "THEUNDERSTUDY-SHOWSTOPPER.description": "Deal {Damage:diff()} damage.\nGain {Energy:energyIcons()}.{InCombat:cond:|\n[gold]Intense[/gold] 1.}",
+  "THEUNDERSTUDY-SHOWSTOPPER.description": "{InCombat:cond:|[gold]Intense[/gold] 1.\n}Deal {Damage:diff()} damage.\nGain {Energy:energyIcons()}.",
 
   "THEUNDERSTUDY-REMIX.title": "Remix",
   "THEUNDERSTUDY-REMIX.description": "Play all [gold]Planned[/gold] cards in a random order.",
@@ -171,7 +171,7 @@
   "THEUNDERSTUDY-FAST_FORWARD.description": "Draw {Cards:diff()} cards.\nApply 2 [gold]Limited[/gold] to yourself.",
 
   "THEUNDERSTUDY-MISSED_CUE.title": "Missed Cue",
-  "THEUNDERSTUDY-MISSED_CUE.description": "Remove [gold]Unplayable[/gold] from all attacks and skills.\nApply 2 [gold]Shaken[/gold] to yourself.{InCombat:cond:|\n[gold]Intense[/gold] 1.}",
+  "THEUNDERSTUDY-MISSED_CUE.description": "{InCombat:cond:|[gold]Intense[/gold] 1.\n}Remove [gold]Unplayable[/gold] from all attacks and skills.\nApply 2 [gold]Shaken[/gold] to yourself.",
 
   "THEUNDERSTUDY-PROMPT.title": "Prompt",
   "THEUNDERSTUDY-PROMPT.description": "Draw {Cards:diff()} cards.\nStarts each combat [gold]Planned[/gold].",
@@ -183,10 +183,10 @@
   "THEUNDERSTUDY-REFRAIN.description": "Deal {Damage:diff()} damage.\nApply [gold]Planned[/gold] to this card.",
 
   "THEUNDERSTUDY-NERVOUS_ENERGY.title": "Nervous Energy",
-  "THEUNDERSTUDY-NERVOUS_ENERGY.description": "Deal {Damage:diff()} damage.\nApply [gold]Intense[/gold] to all damage-dealing and Block-gaining attacks and skills in hand.\nGain {Energy:energyIcons()}.",
+  "THEUNDERSTUDY-NERVOUS_ENERGY.description": "Deal {Damage:diff()} damage.\nGain {Energy:energyIcons()}.\nApply [gold]Intense[/gold] to all attacks and skills in hand.",
 
   "THEUNDERSTUDY-STAGE_FRIGHT.title": "Stage Fright",
-  "THEUNDERSTUDY-STAGE_FRIGHT.description": "Apply [gold]Intense[/gold] to all damage-dealing and Block-gaining attacks and skills with [gold]Unplayable[/gold].",
+  "THEUNDERSTUDY-STAGE_FRIGHT.description": "Apply [gold]Intense[/gold] to all attacks and skills with [gold]Unplayable[/gold].",
 
   "THEUNDERSTUDY-BREAK_A_LEG.title": "Break a Leg",
   "THEUNDERSTUDY-BREAK_A_LEG.description": "Gain {Energy:energyIcons()}.\nGain {Vigor:diff()} [gold]Vigor[/gold].",
@@ -234,7 +234,7 @@
   "THEUNDERSTUDY-FINAL_DRAFT.selectionPrompt": "Choose a card to make [gold]Stable[/gold].",
 
   "THEUNDERSTUDY-CLEAN_SLATE.title": "Clean Slate",
-  "THEUNDERSTUDY-CLEAN_SLATE.description": "Exhaust all [gold]Unplayable[/gold] cards. Deal {Damage:diff()} damage for each exhausted.{InCombat:cond:|\n[gold]Intense[/gold] 1.}",
+  "THEUNDERSTUDY-CLEAN_SLATE.description": "{InCombat:cond:|[gold]Intense[/gold] 1.\n}Exhaust all [gold]Unplayable[/gold] cards. Deal {Damage:diff()} damage for each exhausted.",
 
   "THEUNDERSTUDY-CUT_THE_TENSION.title": "Cut the Tension",
   "THEUNDERSTUDY-CUT_THE_TENSION.description": "Double [gold]Intense[/gold] on all cards.",
