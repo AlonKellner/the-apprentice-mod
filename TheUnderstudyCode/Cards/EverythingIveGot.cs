@@ -12,7 +12,7 @@ public class EverythingIveGot : UnderstudyCard
 
     protected override bool HasEnergyCostX => true;
 
-    public EverythingIveGot() : base(0, CardType.Skill, CardRarity.Uncommon, TargetType.None)
+    public EverythingIveGot() : base(0, CardType.Skill, CardRarity.Rare, TargetType.None)
     {
         WithTip(UnderstudyKeywords.Invert);
     }

@@ -12,7 +12,7 @@ public class WindUp : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:WindUp";
 
-    public WindUp() : base(0, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
+    public WindUp() : base(0, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
     {
         WithDamage(4);
         WithVars(new IntVar("Vigor", 4));

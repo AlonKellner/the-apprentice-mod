@@ -11,7 +11,7 @@ public class PopSong : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:PopSong";
 
-    public PopSong() : base(3, CardType.Skill, CardRarity.Rare, TargetType.None)
+    public PopSong() : base(3, CardType.Skill, CardRarity.Uncommon, TargetType.None)
     {
         WithVars(new IntVar("Unjaded", 2));
         WithTip(typeof(UnjadedPower));

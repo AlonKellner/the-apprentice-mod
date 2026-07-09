@@ -14,7 +14,7 @@ public class Reprise : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:Reprise";
 
-    public Reprise() : base(2, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
+    public Reprise() : base(2, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
     {
         WithDamage(14);
         WithTip(UnderstudyKeywords.Intense);

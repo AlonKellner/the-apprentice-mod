@@ -11,7 +11,7 @@ public class OldSong : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:OldSong";
 
-    public OldSong() : base(3, CardType.Skill, CardRarity.Rare, TargetType.None)
+    public OldSong() : base(3, CardType.Skill, CardRarity.Uncommon, TargetType.None)
     {
         WithVars(new IntVar("Unlimited", 2));
         WithTip(typeof(UnlimitedPower));

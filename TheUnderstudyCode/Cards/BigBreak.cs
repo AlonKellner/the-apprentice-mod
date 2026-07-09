@@ -13,7 +13,7 @@ public class BigBreak : UnderstudyCard
 
     protected override bool HasEnergyCostX => true;
 
-    public BigBreak() : base(0, CardType.Skill, CardRarity.Uncommon, TargetType.None)
+    public BigBreak() : base(0, CardType.Skill, CardRarity.Rare, TargetType.None)
     {
         WithTip(typeof(VigorPower));
     }

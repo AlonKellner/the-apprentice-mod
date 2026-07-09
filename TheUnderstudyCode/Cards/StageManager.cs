@@ -10,7 +10,7 @@ public class StageManager : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:StageManager";
 
-    public StageManager() : base(2, CardType.Power, CardRarity.Uncommon, TargetType.None)
+    public StageManager() : base(2, CardType.Power, CardRarity.Rare, TargetType.None)
     {
         WithCostUpgradeBy(-1);
         WithPower<StageManagerPower>(1, 1);

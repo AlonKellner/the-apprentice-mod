@@ -10,7 +10,7 @@ public class OffScript : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:OffScript";
 
-    public OffScript() : base(1, CardType.Attack, CardRarity.Common, TargetType.RandomEnemy)
+    public OffScript() : base(1, CardType.Attack, CardRarity.Uncommon, TargetType.RandomEnemy)
     {
         WithDamage(4);
         WithTip(typeof(LimitedPower));

@@ -11,7 +11,7 @@ public class FolkSong : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:FolkSong";
 
-    public FolkSong() : base(3, CardType.Skill, CardRarity.Rare, TargetType.None)
+    public FolkSong() : base(3, CardType.Skill, CardRarity.Uncommon, TargetType.None)
     {
         WithVars(new IntVar("Unweak", 2));
         WithTip(typeof(UnweakPower));

@@ -11,7 +11,7 @@ public class Crescendo : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:Crescendo";
 
-    public Crescendo() : base(2, CardType.Power, CardRarity.Uncommon, TargetType.None)
+    public Crescendo() : base(2, CardType.Power, CardRarity.Rare, TargetType.None)
     {
         WithCostUpgradeBy(-1);
         WithPower<CrescendoPower>(1);

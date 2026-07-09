@@ -15,7 +15,7 @@ public class CramSession : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:CramSession";
 
-    public CramSession() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.None)
+    public CramSession() : base(1, CardType.Skill, CardRarity.Common, TargetType.None)
     {
         WithVars(new CardsVar("Select", 1));
         WithTip(UnderstudyKeywords.Planned);

@@ -11,7 +11,7 @@ public class Ensemble : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:Ensemble";
 
-    public Ensemble() : base(1, CardType.Attack, CardRarity.Common, TargetType.AllEnemies)
+    public Ensemble() : base(1, CardType.Attack, CardRarity.Uncommon, TargetType.AllEnemies)
     {
         WithDamage(4);
         WithInvertibleTip(typeof(VulnerablePower));

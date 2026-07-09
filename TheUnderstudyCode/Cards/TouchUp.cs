@@ -15,7 +15,7 @@ public class TouchUp : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:TouchUp";
 
-    public TouchUp() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.None)
+    public TouchUp() : base(1, CardType.Skill, CardRarity.Common, TargetType.None)
     {
         WithVars(new CardsVar("Select", 1));
         WithTip(CardKeyword.Unplayable);

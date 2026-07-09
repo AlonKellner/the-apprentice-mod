@@ -11,7 +11,7 @@ public class SadSong : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:SadSong";
 
-    public SadSong() : base(3, CardType.Skill, CardRarity.Rare, TargetType.None)
+    public SadSong() : base(3, CardType.Skill, CardRarity.Uncommon, TargetType.None)
     {
         WithVars(new IntVar("Unshaken", 2));
         WithTip(typeof(UnshakenPower));
