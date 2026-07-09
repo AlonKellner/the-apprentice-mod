@@ -35,6 +35,10 @@ public class Performance : UnderstudyCard
             ? (PlannedModifier.QueueNeedsEnemyTarget(PlannedModifier.RelevantCards(Owner)) ? TargetType.AnyEnemy : TargetType.None)
             : base.TargetType;
 
+    // Glow gold while there are Planned cards to resolve — same cue as the other Planned resolvers
+    // (CurtainCall/Encore/FinalBar), signalling that playing this now will play the queue.
+    protected override bool ShouldGlowGoldInternal => PlannedModifier.AnyIn(PlannedModifier.RelevantCards(Owner));
+
     protected override void OnUpgrade()
     {
         base.OnUpgrade();
