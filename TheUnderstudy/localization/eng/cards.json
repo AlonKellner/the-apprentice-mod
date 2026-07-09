@@ -26,12 +26,6 @@
   "THEUNDERSTUDY-REPRISE.description": "Deal {Damage:diff()} damage.\nApply [gold]Intense[/gold] to 1 attack or skill in hand.",
   "THEUNDERSTUDY-REPRISE.selectionPrompt": "Choose a card to make [gold]Intense[/gold].",
 
-  "THEUNDERSTUDY-TELL_IT_LIKE_IT_IS.title": "Tell It Like It Is",
-  "THEUNDERSTUDY-TELL_IT_LIKE_IT_IS.description": "Deal {Damage:diff()} damage.\nGain {Energy:energyIcons()}.\nApply [gold]Weak[/gold] equal to the sum of your [gold]invertible[/gold] debuffs.",
-
-  "THEUNDERSTUDY-BARE_IT_ALL.title": "Bare It All",
-  "THEUNDERSTUDY-BARE_IT_ALL.description": "Deal {Damage:diff()} damage.\nApply [gold]Vulnerable[/gold] equal to the sum of your [gold]invertible[/gold] debuffs.\nGain {Vigor:diff()} [gold]Vigor[/gold].",
-
   "THEUNDERSTUDY-CUE.title": "Cue",
   "THEUNDERSTUDY-CUE.description": "Draw {Cards:diff()} {Cards:plural:card|cards}.\nApply [gold]Planned[/gold] to {Select:diff()} {Select:plural:attack or skill|attacks and skills} in your hand.",
   "THEUNDERSTUDY-CUE.selectionPrompt": "Choose cards to make [gold]Planned[/gold].",
@@ -95,7 +89,7 @@
   "THEUNDERSTUDY-WIND_UP.description": "Deal {Damage:diff()} damage.\nApply 2 [gold]Weak[/gold] to yourself.\nGain {Vigor:diff()} [gold]Vigor[/gold].",
 
   "THEUNDERSTUDY-DOUBLE_TIME.title": "Double Time",
-  "THEUNDERSTUDY-DOUBLE_TIME.description": "All [gold]invertible[/gold] buff and debuff gains are applied {FortissimoPower:diff()} additional {FortissimoPower:plural:time|times}.",
+  "THEUNDERSTUDY-DOUBLE_TIME.description": "All [gold]invertible[/gold] buff and debuff gains are applied {DoubleTimePower:diff()} additional {DoubleTimePower:plural:time|times}.",
 
   "THEUNDERSTUDY-TAKE_YOUR_BOW.title": "Take Your Bow",
   "THEUNDERSTUDY-TAKE_YOUR_BOW.description": "Deal {Damage:diff()} damage to a random enemy for each [gold]Unplayable[/gold] in hand.\nRemove [gold]Unplayable[/gold] from all attacks and skills in hand.",
@@ -151,12 +145,6 @@
 
   "THEUNDERSTUDY-THE_FIRST_LESSON.title": "The First Lesson",
   "THEUNDERSTUDY-THE_FIRST_LESSON.description": "You cannot become [gold]Weak[/gold] or [gold]Vulnerable[/gold].",
-
-  "THEUNDERSTUDY-STANDING_ROOM.title": "Standing Room",
-  "THEUNDERSTUDY-STANDING_ROOM.description": "Deal {Damage:diff()} damage to ALL enemies.\nApply [gold]Weak[/gold] equal to the sum of your [gold]invertible[/gold] debuffs to ALL enemies.",
-
-  "THEUNDERSTUDY-HOUSE_LIGHTS.title": "House Lights",
-  "THEUNDERSTUDY-HOUSE_LIGHTS.description": "Deal {Damage:diff()} damage to ALL enemies.\nGain {Block:diff()} [gold]Block[/gold].\nApply [gold]Vulnerable[/gold] equal to the sum of your [gold]invertible[/gold] debuffs to ALL enemies.",
 
   "THEUNDERSTUDY-FULL_VOICE.title": "Full Voice",
   "THEUNDERSTUDY-FULL_VOICE.description": "Whenever a debuff is applied to you, gain {IfUpgraded:show:4|3} [gold]Block[/gold].",
@@ -267,5 +255,23 @@
   "THEUNDERSTUDY-OFF_SCRIPT.description": "Deal {Damage:diff()} damage to a random enemy, 3 times.\nApply 1 [gold]Limited[/gold] to yourself.",
 
   "THEUNDERSTUDY-RERUN.title": "Rerun",
-  "THEUNDERSTUDY-RERUN.description": "Deal {Damage:diff()} damage twice.\nApply 2 [gold]Jaded[/gold] to yourself."
+  "THEUNDERSTUDY-RERUN.description": "Deal {Damage:diff()} damage twice.\nApply 2 [gold]Jaded[/gold] to yourself.",
+
+  "THEUNDERSTUDY-PULLED_PUNCH.title": "Pulled Punch",
+  "THEUNDERSTUDY-PULLED_PUNCH.description": "Whenever an [gold]invertible[/gold] debuff is applied to you, reduce its value by {IfUpgraded:show:2|1} immediately after it lands.",
+
+  "THEUNDERSTUDY-ONE_TAKE.title": "One Take",
+  "THEUNDERSTUDY-ONE_TAKE.description": "Decrease all card costs by 1. Apply [gold]Unplayable[/gold] to every played card.",
+
+  "THEUNDERSTUDY-ENSEMBLE.title": "Ensemble",
+  "THEUNDERSTUDY-ENSEMBLE.description": "Deal {Damage:diff()} damage to ALL enemies.\nApply 2 [gold]Vulnerable[/gold] and 2 [gold]Weak[/gold] to yourself and ALL enemies.",
+
+  "THEUNDERSTUDY-AD_LIB.title": "Ad Lib",
+  "THEUNDERSTUDY-AD_LIB.description": "At the start of your turn, Invert {IfUpgraded:show:2|1} random [gold]invertible[/gold] debuff you currently have.",
+
+  "THEUNDERSTUDY-CRESCENDO.title": "Crescendo",
+  "THEUNDERSTUDY-CRESCENDO.description": "Double all gained [gold]Vigor[/gold].",
+
+  "THEUNDERSTUDY-STAGE_MANAGER.title": "Stage Manager",
+  "THEUNDERSTUDY-STAGE_MANAGER.description": "When you end your turn without playing any card, play all [gold]Planned[/gold] cards."
 }

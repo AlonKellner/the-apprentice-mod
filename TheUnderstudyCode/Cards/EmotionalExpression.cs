@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Commands;
@@ -93,7 +94,7 @@ public static class EmotionalExpression
     // Convert up to max WeakPower to UnweakPower. The raw removeAmount (not a pre-reduced value)
     // is what's granted to Unweak — InvertTrackerPower's interception (canonicalPower is
     // UnweakPower) reduces that raw amount by whatever Weak remains after the removal above, live,
-    // at the moment this call (and each Fortissimo repeat of it) actually lands. This is what makes
+    // at the moment this call (and each Double Time repeat of it) actually lands. This is what makes
     // the amount of cancellation depend on how much debuff is left over after a capped Invert,
     // instead of a single precomputed net.
     public static async Task<int> ConvertWeakToUnweak(PlayerChoiceContext ctx, Creature creature, int max = int.MaxValue)
@@ -246,27 +247,9 @@ public static class EmotionalExpression
         return removeAmount;
     }
 
-    // Sum of the 5 self-debuff flavors currently on a creature — the scaling metric used by
-    // "Project"-style cards (Apply [Debuff] equal to the sum of your invertible debuffs).
-    // Deliberately only the 5 flavors the Understudy's own cards generate (Weak, Vulnerable,
-    // Shaken, Limited, Jaded) — Frail/Strength/Dexterity are Invert-recognized but never part of
-    // this sum, matching how the mechanic has been scoped throughout design.
-    public static int SumOfInvertibleDebuffs(Creature creature)
-    {
-        int sum = creature.GetPowerAmount<WeakPower>()
-            + creature.GetPowerAmount<VulnerablePower>()
-            + creature.GetPowerAmount<ShakenPower>()
-            + creature.GetPowerAmount<LimitedPower>()
-            + creature.GetPowerAmount<JadedPower>();
-        Invariants.Check(sum >= 0, nameof(EmotionalExpression) + "." + nameof(SumOfInvertibleDebuffs),
-            $"sum of invertible debuffs is negative ({sum}) — a source power must have gone negative");
-        return sum;
-    }
-
     // Whether Invert would have anything at all to act on right now — all 8 invertible pairs
     // (the 5 self-debuffs plus Frail/Strength/Dexterity, matching PickDebuffToInvert's/IsPresent's
-    // scope below, which is broader than SumOfInvertibleDebuffs' 5-flavor sum). Used by relevance
-    // highlighting on Coda/Reprise/SteadyNow/TakeABreath/EverythingIveGot.
+    // scope below). Used by relevance highlighting on Coda/Reprise/SteadyNow/TakeABreath/EverythingIveGot.
     public static bool HasAnyInvertibleDebuffPresent(
         int weak, int vulnerable, int shaken, int limited, int jaded, int frail, int strength, int dexterity) =>
         weak > 0 || vulnerable > 0 || shaken > 0 || limited > 0 || jaded > 0 || frail > 0
@@ -321,6 +304,12 @@ public static class EmotionalExpression
         _ => false
     };
 
+    // All invertible debuffs currently present on a creature, in fixed enum order — the candidate
+    // list for Ad Lib's "invert 1 random invertible debuff you currently have" (as opposed to
+    // PickDebuffToInvert's "last modified" selection below).
+    internal static List<InvertibleDebuff> GetPresentInvertibleDebuffs(Creature creature) =>
+        Enum.GetValues<InvertibleDebuff>().Where(d => IsPresent(creature, d)).ToList();
+
     // Picks which invertible debuff Invert should act on: the most recently modified one that's
     // still actually present (walking back through modification history, since the very latest
     // entry may have already been fully cleared by something else), or — if nothing tracked is
@@ -352,7 +341,7 @@ public static class EmotionalExpression
     // buff, at the same amount just converted, `repeats` additional times as separate applications
     // — Everything I've Got's "gain the same inverted buff X more times." Separate applications
     // (rather than one lump sum) so once-per-application triggers (e.g. Full Voice) see `repeats`
-    // distinct events, matching the Fortissimo repeat idiom.
+    // distinct events, matching the Double Time repeat idiom.
     public static async Task InvertLastModifiedWithBonus(PlayerChoiceContext ctx, Creature creature, int invertMax, int repeats)
     {
         var debuff = PickDebuffToInvert(creature);
@@ -439,7 +428,7 @@ public static class EmotionalExpression
             await InvertDebuff(ctx, creature, debuff, maxEach);
     }
 
-    private static async Task<int> InvertDebuff(PlayerChoiceContext ctx, Creature creature, InvertibleDebuff debuff, int max) => debuff switch
+    internal static async Task<int> InvertDebuff(PlayerChoiceContext ctx, Creature creature, InvertibleDebuff debuff, int max) => debuff switch
     {
         InvertibleDebuff.Weak => await ConvertWeakToUnweak(ctx, creature, max),
         InvertibleDebuff.Vulnerable => await ConvertVulnerableToUnvulnerable(ctx, creature, max),

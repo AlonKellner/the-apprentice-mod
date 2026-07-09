@@ -6,18 +6,18 @@ using TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
-public class DoubleTime : UnderstudyCard
+public class AdLib : UnderstudyCard
 {
-    public const string CardId = "TheUnderstudy:DoubleTime";
+    public const string CardId = "TheUnderstudy:AdLib";
 
-    public DoubleTime() : base(1, CardType.Power, CardRarity.Rare, TargetType.None)
+    public AdLib() : base(1, CardType.Power, CardRarity.Uncommon, TargetType.None)
     {
-        WithPower<DoubleTimePower>(1, 1);
+        WithPower<AdLibPower>(1, 1);
         WithTip(UnderstudyKeywords.Invertible);
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
-        await CommonActions.Apply<DoubleTimePower>(context, cardPlay.Card.Owner.Creature, this);
+        await CommonActions.Apply<AdLibPower>(context, cardPlay.Card.Owner.Creature, this);
     }
 }

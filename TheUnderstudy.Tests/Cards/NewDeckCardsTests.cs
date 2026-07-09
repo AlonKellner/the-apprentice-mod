@@ -17,8 +17,6 @@ public class NewDeckCardsTests
     [InlineData(typeof(StageWhisper), "TheUnderstudy:StageWhisper", CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)]
     [InlineData(typeof(TakeABreath), "TheUnderstudy:TakeABreath", CardType.Skill, CardRarity.Common, TargetType.None)]
     [InlineData(typeof(Reprise), "TheUnderstudy:Reprise", CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)]
-    [InlineData(typeof(TellItLikeItIs), "TheUnderstudy:TellItLikeItIs", CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)]
-    [InlineData(typeof(BareItAll), "TheUnderstudy:BareItAll", CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)]
     [InlineData(typeof(Cue), "TheUnderstudy:Cue", CardType.Skill, CardRarity.Common, TargetType.None)]
     [InlineData(typeof(Rehearse), "TheUnderstudy:Rehearse", CardType.Skill, CardRarity.Uncommon, TargetType.None)]
     [InlineData(typeof(CramSession), "TheUnderstudy:CramSession", CardType.Skill, CardRarity.Uncommon, TargetType.None)]
@@ -56,8 +54,6 @@ public class NewDeckCardsTests
     [InlineData(typeof(TouchUp), "TheUnderstudy:TouchUp", CardType.Skill, CardRarity.Uncommon, TargetType.None)]
     [InlineData(typeof(WideOpen), "TheUnderstudy:WideOpen", CardType.Attack, CardRarity.Uncommon, TargetType.AllEnemies)]
     [InlineData(typeof(TheFirstLesson), "TheUnderstudy:TheFirstLesson", CardType.Power, CardRarity.Rare, TargetType.None)]
-    [InlineData(typeof(StandingRoom), "TheUnderstudy:StandingRoom", CardType.Attack, CardRarity.Uncommon, TargetType.AllEnemies)]
-    [InlineData(typeof(HouseLights), "TheUnderstudy:HouseLights", CardType.Attack, CardRarity.Uncommon, TargetType.AllEnemies)]
     [InlineData(typeof(FullVoice), "TheUnderstudy:FullVoice", CardType.Power, CardRarity.Uncommon, TargetType.None)]
     [InlineData(typeof(Showstopper), "TheUnderstudy:Showstopper", CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)]
     [InlineData(typeof(Remix), "TheUnderstudy:Remix", CardType.Skill, CardRarity.Uncommon, TargetType.None)]
@@ -85,6 +81,12 @@ public class NewDeckCardsTests
     [InlineData(typeof(CleanSlate), "TheUnderstudy:CleanSlate", CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)]
     [InlineData(typeof(CutTheTension), "TheUnderstudy:CutTheTension", CardType.Skill, CardRarity.Rare, TargetType.None)]
     [InlineData(typeof(SecondNature), "TheUnderstudy:SecondNature", CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)]
+    [InlineData(typeof(PulledPunch), "TheUnderstudy:PulledPunch", CardType.Power, CardRarity.Uncommon, TargetType.None)]
+    [InlineData(typeof(OneTake), "TheUnderstudy:OneTake", CardType.Power, CardRarity.Uncommon, TargetType.None)]
+    [InlineData(typeof(Ensemble), "TheUnderstudy:Ensemble", CardType.Attack, CardRarity.Common, TargetType.AllEnemies)]
+    [InlineData(typeof(AdLib), "TheUnderstudy:AdLib", CardType.Power, CardRarity.Uncommon, TargetType.None)]
+    [InlineData(typeof(Crescendo), "TheUnderstudy:Crescendo", CardType.Power, CardRarity.Uncommon, TargetType.None)]
+    [InlineData(typeof(StageManager), "TheUnderstudy:StageManager", CardType.Power, CardRarity.Uncommon, TargetType.None)]
     public void Card_ConstructsWithExpectedShape(
         System.Type cardType, string expectedId, CardType expectedType, CardRarity expectedRarity, TargetType expectedTarget)
     {

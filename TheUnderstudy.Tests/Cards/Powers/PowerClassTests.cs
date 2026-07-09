@@ -152,9 +152,9 @@ public class PowerClassTests
     }
 
     [Fact]
-    public void FortissimoPower_IsBuff_Counter()
+    public void DoubleTimePower_IsBuff_Counter()
     {
-        var p = new FortissimoPower();
+        var p = new DoubleTimePower();
         Assert.Equal(PowerType.Buff, p.Type);
         Assert.Equal(PowerStackType.Counter, p.StackType);
     }
@@ -249,16 +249,16 @@ public class PowerClassTests
     }
 
     [Fact]
-    public void FortissimoPower_HasRawAmountCapture()
+    public void DoubleTimePower_HasRawAmountCapture()
     {
-        Assert.NotNull(typeof(FortissimoPower).GetMethod(
+        Assert.NotNull(typeof(DoubleTimePower).GetMethod(
             "BeforePowerAmountChanged", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly));
     }
 
     [Fact]
-    public void FortissimoPower_IsInvertiblePower_IncludesFrailAndUnfrail()
+    public void DoubleTimePower_IsInvertiblePower_IncludesFrailAndUnfrail()
     {
-        var method = typeof(FortissimoPower).GetMethod(
+        var method = typeof(DoubleTimePower).GetMethod(
             "IsInvertiblePower", BindingFlags.NonPublic | BindingFlags.Static);
         Assert.NotNull(method);
         Assert.Equal(true, method!.Invoke(null, new object[] { new FrailPower() }));
@@ -284,7 +284,7 @@ public class PowerClassTests
         Assert.NotEmpty(new UnjadedPower().Localization);
         Assert.NotEmpty(new TakeNotesPower().Localization);
         Assert.NotEmpty(new StandingByPower().Localization);
-        Assert.NotEmpty(new FortissimoPower().Localization);
+        Assert.NotEmpty(new DoubleTimePower().Localization);
         Assert.NotEmpty(new MasterFormPower().Localization);
         Assert.NotEmpty(new HeldNotePower().Localization);
         Assert.NotEmpty(new TheFirstLessonPower().Localization);
@@ -421,4 +421,129 @@ public class PowerClassTests
     [Fact]
     public void MuscleMemoryPower_IsActive_FalseForNullCreature() =>
         Assert.False(MuscleMemoryPower.IsActive(null));
+
+    [Fact]
+    public void PulledPunchPower_IsBuff_Counter()
+    {
+        var p = new PulledPunchPower();
+        Assert.Equal(PowerType.Buff, p.Type);
+        Assert.Equal(PowerStackType.Counter, p.StackType);
+    }
+
+    [Fact]
+    public void PulledPunchPower_Localization_MentionsInvertible()
+    {
+        var descriptions = new PulledPunchPower().Localization
+            .Where(e => e.Item1 == "description" || e.Item1 == "smartDescription")
+            .Select(e => e.Item2);
+        Assert.All(descriptions, d => Assert.Contains("invertible", d, StringComparison.OrdinalIgnoreCase));
+    }
+
+    [Fact]
+    public void PulledPunchPower_OverridesAfterPowerAmountChanged() =>
+        Assert.NotNull(typeof(PulledPunchPower).GetMethod(
+            "AfterPowerAmountChanged", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly));
+
+    [Fact]
+    public void OneTakePower_IsBuff_Counter()
+    {
+        var p = new OneTakePower();
+        Assert.Equal(PowerType.Buff, p.Type);
+        Assert.Equal(PowerStackType.Counter, p.StackType);
+    }
+
+    [Fact]
+    public void OneTakePower_Localization_MentionsUnplayable()
+    {
+        var descriptions = new OneTakePower().Localization
+            .Where(e => e.Item1 == "description" || e.Item1 == "smartDescription")
+            .Select(e => e.Item2);
+        Assert.All(descriptions, d => Assert.Contains("Unplayable", d));
+    }
+
+    [Fact]
+    public void OneTakePower_OverridesTryModifyEnergyCostInCombat() =>
+        Assert.NotNull(typeof(OneTakePower).GetMethod(
+            "TryModifyEnergyCostInCombat", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly));
+
+    [Fact]
+    public void OneTakePower_OverridesAfterCardPlayed() =>
+        Assert.NotNull(typeof(OneTakePower).GetMethod(
+            "AfterCardPlayed", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly));
+
+    [Fact]
+    public void AdLibPower_IsBuff_Counter()
+    {
+        var p = new AdLibPower();
+        Assert.Equal(PowerType.Buff, p.Type);
+        Assert.Equal(PowerStackType.Counter, p.StackType);
+    }
+
+    [Fact]
+    public void AdLibPower_Localization_MentionsInvertible()
+    {
+        var descriptions = new AdLibPower().Localization
+            .Where(e => e.Item1 == "description" || e.Item1 == "smartDescription")
+            .Select(e => e.Item2);
+        Assert.All(descriptions, d => Assert.Contains("invertible", d, StringComparison.OrdinalIgnoreCase));
+    }
+
+    [Fact]
+    public void AdLibPower_OverridesAfterPlayerTurnStartLate() =>
+        Assert.NotNull(typeof(AdLibPower).GetMethod(
+            "AfterPlayerTurnStartLate", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly));
+
+    [Fact]
+    public void CrescendoPower_IsBuff_Counter()
+    {
+        var p = new CrescendoPower();
+        Assert.Equal(PowerType.Buff, p.Type);
+        Assert.Equal(PowerStackType.Counter, p.StackType);
+    }
+
+    [Fact]
+    public void CrescendoPower_Localization_MentionsVigor()
+    {
+        var descriptions = new CrescendoPower().Localization
+            .Where(e => e.Item1 == "description" || e.Item1 == "smartDescription")
+            .Select(e => e.Item2);
+        Assert.All(descriptions, d => Assert.Contains("Vigor", d));
+    }
+
+    [Fact]
+    public void CrescendoPower_OverridesModifyPowerAmountGivenMultiplicative() =>
+        Assert.NotNull(typeof(CrescendoPower).GetMethod(
+            "ModifyPowerAmountGivenMultiplicative", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly));
+
+    [Fact]
+    public void StageManagerPower_IsBuff_Single()
+    {
+        var p = new StageManagerPower();
+        Assert.Equal(PowerType.Buff, p.Type);
+        Assert.Equal(PowerStackType.Single, p.StackType);
+    }
+
+    [Fact]
+    public void StageManagerPower_Localization_MentionsPlanned()
+    {
+        var descriptions = new StageManagerPower().Localization
+            .Where(e => e.Item1 == "description" || e.Item1 == "smartDescription")
+            .Select(e => e.Item2);
+        Assert.All(descriptions, d => Assert.Contains("Planned", d));
+    }
+
+    [Fact]
+    public void StageManagerPower_OverridesAfterCardPlayed() =>
+        Assert.NotNull(typeof(StageManagerPower).GetMethod(
+            "AfterCardPlayed", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly));
+
+    [Fact]
+    public void StageManagerPower_OverridesAfterPlayerTurnStartLate() =>
+        Assert.NotNull(typeof(StageManagerPower).GetMethod(
+            "AfterPlayerTurnStartLate", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly));
+
+    [Fact]
+    public void StageManagerPower_OverridesAfterSideTurnEnd() =>
+        Assert.NotNull(typeof(StageManagerPower).GetMethod(
+            "AfterSideTurnEnd", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly));
 }

@@ -11,7 +11,7 @@ using TheUnderstudy.TheUnderstudyCode.Extensions;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 
-public class FortissimoPower : UnderstudyPower
+public class DoubleTimePower : UnderstudyPower
 {
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Counter;
@@ -25,7 +25,7 @@ public class FortissimoPower : UnderstudyPower
         "All [gold]invertible[/gold] buff and debuff gains are applied an additional time.",
         "All [gold]invertible[/gold] buff and debuff gains are applied [blue]{Amount}[/blue] additional {Amount:plural:time|times}.");
 
-    private static bool IsInvertiblePower(PowerModel power) =>
+    internal static bool IsInvertiblePower(PowerModel power) =>
         power is WeakPower or UnweakPower
             or VulnerablePower or UnvulnerablePower
             or ShakenPower or UnshakenPower
@@ -56,7 +56,7 @@ public class FortissimoPower : UnderstudyPower
     {
         if (!_isRepeating && applier == Owner && amount > 0m && IsInvertiblePower(power))
         {
-            Invariants.Check(_capturedRawAmount == null, nameof(FortissimoPower) + "." + nameof(BeforePowerAmountChanged),
+            Invariants.Check(_capturedRawAmount == null, nameof(DoubleTimePower) + "." + nameof(BeforePowerAmountChanged),
                 $"a previous capture ({_capturedRawAmount}) was never consumed before a new invertible gain started — nested/overlapping capture");
             _capturedRawAmount = amount;
         }
@@ -67,14 +67,14 @@ public class FortissimoPower : UnderstudyPower
     // Accelerant uses (it makes Poison's damage trigger fire additional times; it does not scale
     // Poison's damage per trigger). This matters here because other reactive effects (e.g. Full
     // Voice's "whenever a debuff is applied to you") need to see N separate applications, not one
-    // application of a bigger number: apply 1 Weak with Fortissimo (Amount 1) active should apply
+    // application of a bigger number: apply 1 Weak with Double Time (Amount 1) active should apply
     // 1 Weak twice, not 2 Weak once.
     public override async Task AfterPowerAmountChanged(
         PlayerChoiceContext choiceContext, PowerModel power, decimal amount, Creature? applier, CardModel? cardSource)
     {
         if (_isRepeating || applier != Owner || amount <= 0m || !IsInvertiblePower(power)) return;
 
-        Invariants.Check(_capturedRawAmount != null, nameof(FortissimoPower) + "." + nameof(AfterPowerAmountChanged),
+        Invariants.Check(_capturedRawAmount != null, nameof(DoubleTimePower) + "." + nameof(AfterPowerAmountChanged),
             "fired for an invertible gain with no raw amount captured by BeforePowerAmountChanged — hook " +
             "ordering assumption broke; falling back to the post-interception amount, which may under-count repeats.");
         decimal rawAmount = _capturedRawAmount ?? amount;
