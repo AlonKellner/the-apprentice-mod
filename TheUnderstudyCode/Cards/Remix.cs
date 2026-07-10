@@ -22,6 +22,10 @@ public class Remix : UnderstudyCard
         WithTip(UnderstudyKeywords.Planned);
     }
 
+    // Glow gold while there are Planned cards to resolve — same cue as the other Planned resolvers
+    // (Performance/CurtainCall/Encore/FinalBar), signalling that playing this now will play the queue.
+    protected override bool ShouldGlowGoldInternal => PlannedModifier.AnyIn(PlannedModifier.RelevantCards(Owner));
+
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
         var player = cardPlay.Card.Owner;
