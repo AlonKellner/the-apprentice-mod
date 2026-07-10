@@ -1,27 +1,34 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using Godot;
+using MegaCrit.Sts2.addons.mega_text;
 using MegaCrit.Sts2.Core.Nodes.Cards;
 
 namespace TheUnderstudy.TheUnderstudyCode.Patches;
 
-// Draws a small numbered badge ("1", "2", "3" ...) on selected cards during a Planned selection so the
+// Draws a small numbered badge ("#1", "#2", ...) on selected cards during a Planned selection so the
 // player can see the order they picked. Driven by the two selection patches, which call Render() with
-// the currently-selected NCards in click order on every change and ClearAll() when the screen closes.
+// (card, number) pairs on every change and ClearAll() when the screen closes. The `number` is the real
+// visual Planned index the card will end up with (existing plan slots + selection position), computed
+// by the patches — not just the 1..N position within this one selection.
 //
 // Attach mechanism mirrors OrderOverlayPatch: a Control added into NCard.OverlayContainer, sized/placed
 // off the sibling "Frame" node (OverlayContainer and its ancestors report Size=(0,0); every visible
-// card element is instead centered on CardContainer's origin via Position = Frame.Position). Everything
-// here is built in code (StyleBoxFlat + Label) — no textures/scenes, so no PCK load-order risk and no
-// GPU shader pipeline to warm up.
+// card element is instead centered on CardContainer's origin via Position = Frame.Position). The number
+// is a plain Label whose font we set to the card's description font (fetched from the theme) and whose
+// color we set gold — a code-created MegaRichTextLabel can't be used here: its _Ready() throws unless a
+// theme font override was baked in by a scene (a Godot-engine-bug workaround). The chip background is a
+// code-built StyleBoxFlat — no textures/scenes, so no PCK load-order risk.
 public static class SelectionIndexBadge
 {
     private const float BadgeSize = 54f;
     private const float Inset = 10f;
+    private const int FontSize = 30;
     private static readonly Vector2 FallbackCardSize = new(300, 422);
 
     // Gold to match Planned's [gold] description text; dark translucent fill for contrast.
-    private static readonly Color GoldBorder = new(1f, 0.784f, 0f);
+    private static readonly Color Gold = new(1f, 0.784f, 0f);
     private static readonly Color DarkFill = new(0.07f, 0.07f, 0.10f, 0.92f);
 
     // Per-card attached badge (ConditionalWeakTable so a freed NCard doesn't leak). Tracked is the
@@ -29,24 +36,23 @@ public static class SelectionIndexBadge
     private static readonly ConditionalWeakTable<NCard, Control> Badges = new();
     private static readonly List<NCard> Tracked = new();
 
-    // Renders badges numbered 1..N over `orderedCards` (in order) and removes badges from any card no
-    // longer present. Safe to call every time the selection changes.
-    public static void Render(IReadOnlyList<NCard> orderedCards)
+    // Renders a "#number" badge over each (card, number) pair and removes badges from any card no longer
+    // present. Safe to call every time the selection changes.
+    public static void Render(IReadOnlyList<(NCard card, int number)> items)
     {
         for (int i = Tracked.Count - 1; i >= 0; i--)
         {
-            if (!orderedCards.Contains(Tracked[i]))
+            if (!items.Any(it => it.card == Tracked[i]))
             {
                 RemoveFrom(Tracked[i]);
                 Tracked.RemoveAt(i);
             }
         }
 
-        for (int i = 0; i < orderedCards.Count; i++)
+        foreach (var (card, number) in items)
         {
-            var card = orderedCards[i];
             if (card == null) continue;
-            SetNumber(GetOrCreate(card), i + 1);
+            SetNumber(GetOrCreate(card), number);
             if (!Tracked.Contains(card)) Tracked.Add(card);
         }
     }
@@ -87,7 +93,7 @@ public static class SelectionIndexBadge
         var style = new StyleBoxFlat
         {
             BgColor = DarkFill,
-            BorderColor = GoldBorder,
+            BorderColor = Gold,
             BorderWidthTop = 3,
             BorderWidthBottom = 3,
             BorderWidthLeft = 3,
@@ -115,10 +121,13 @@ public static class SelectionIndexBadge
             HorizontalAlignment = HorizontalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Center,
         };
-        label.AddThemeColorOverride("font_color", new Color(1, 1, 1));
+        // Match the card description typeface by pulling the RichTextLabel normal font from the theme.
+        var descFont = card.GetThemeFont(ThemeConstants.RichTextLabel.NormalFont, "RichTextLabel");
+        if (descFont != null) label.AddThemeFontOverride("font", descFont);
+        label.AddThemeColorOverride("font_color", Gold);
         label.AddThemeColorOverride("font_outline_color", new Color(0, 0, 0));
         label.AddThemeConstantOverride("outline_size", 6);
-        label.AddThemeFontSizeOverride("font_size", 32);
+        label.AddThemeFontSizeOverride("font_size", FontSize);
         panel.AddChild(label);
 
         card.OverlayContainer.AddChild(panel);
@@ -129,6 +138,6 @@ public static class SelectionIndexBadge
     private static void SetNumber(Control badge, int number)
     {
         if (badge.GetNodeOrNull<Label>("Number") is { } label)
-            label.Text = number.ToString();
+            label.Text = $"#{number}";
     }
 }

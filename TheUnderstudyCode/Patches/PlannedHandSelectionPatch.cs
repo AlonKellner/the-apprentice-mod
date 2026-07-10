@@ -1,8 +1,10 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using HarmonyLib;
 using MegaCrit.Sts2.Core.Nodes.Cards;
 using MegaCrit.Sts2.Core.Nodes.Combat;
+using TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
 
 namespace TheUnderstudy.TheUnderstudyCode.Patches;
 
@@ -63,6 +65,14 @@ public static class PlannedHandSelectionPatch
             .Where(n => n != null)
             .Cast<NCard>()
             .ToList();
-        SelectionIndexBadge.Render(nodes);
+        // Offset by the plan slots already on the board so the badge shows the real Planned #N.
+        int firstNumber = nodes.Count == 0
+            ? 1
+            : PlannedModifier.TotalSlotCount(PlannedModifier.RelevantCards(nodes[0].Model?.Owner)) + 1;
+
+        var items = new List<(NCard card, int number)>();
+        for (int i = 0; i < nodes.Count; i++)
+            items.Add((nodes[i], firstNumber + i));
+        SelectionIndexBadge.Render(items);
     }
 }

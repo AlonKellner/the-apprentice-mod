@@ -178,6 +178,7 @@
 
   "THEUNDERSTUDY-MAGNUM_OPUS.title": "Magnum Opus",
   "THEUNDERSTUDY-MAGNUM_OPUS.description": "Apply [gold]Planned[/gold] to {Select:diff()} attacks or skills in your draw pile.",
+  "THEUNDERSTUDY-MAGNUM_OPUS.selectionPrompt": "Choose cards to make [gold]Planned[/gold].",
 
   "THEUNDERSTUDY-REFRAIN.title": "Refrain",
   "THEUNDERSTUDY-REFRAIN.description": "Deal {Damage:diff()} damage.\nApply [gold]Planned[/gold] to this card.",

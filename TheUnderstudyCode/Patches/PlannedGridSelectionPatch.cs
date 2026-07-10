@@ -5,6 +5,7 @@ using HarmonyLib;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Nodes.Cards;
 using MegaCrit.Sts2.Core.Nodes.Screens.CardSelection;
+using TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
 
 namespace TheUnderstudy.TheUnderstudyCode.Patches;
 
@@ -91,11 +92,16 @@ public static class PlannedGridSelectionPatch
     private static void RenderBadges(NCombatPileCardSelectScreen screen, List<CardModel> order)
     {
         var grid = GridRef(screen);
-        var nodes = order
-            .Select(c => grid.GetCardNode(c))
-            .Where(n => n != null)
-            .Cast<NCard>()
-            .ToList();
-        SelectionIndexBadge.Render(nodes);
+        // Offset by the plan slots already on the board so the badge shows the real Planned #N the card
+        // will display, not just its 1..N position within this selection.
+        int firstNumber = order.Count == 0
+            ? 1
+            : PlannedModifier.TotalSlotCount(PlannedModifier.RelevantCards(order[0].Owner)) + 1;
+
+        var items = new List<(NCard card, int number)>();
+        for (int i = 0; i < order.Count; i++)
+            if (grid.GetCardNode(order[i]) is { } node)
+                items.Add((node, firstNumber + i));
+        SelectionIndexBadge.Render(items);
     }
 }
