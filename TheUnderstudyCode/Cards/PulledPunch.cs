@@ -10,9 +10,10 @@ public class PulledPunch : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:PulledPunch";
 
-    public PulledPunch() : base(1, CardType.Power, CardRarity.Uncommon, TargetType.None)
+    public PulledPunch() : base(2, CardType.Power, CardRarity.Uncommon, TargetType.None)
     {
-        WithPowerNoTip<PulledPunchPower>(1, 1);
+        WithPowerNoTip<PulledPunchPower>(1);
+        WithCostUpgradeBy(-1);
         WithTip(UnderstudyKeywords.Invertible);
     }
 
