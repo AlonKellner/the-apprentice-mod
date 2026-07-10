@@ -353,4 +353,45 @@ public class PlannedModifierTests
         var strike = new UnderstudyStrike();
         Assert.False(PlannedModifier.QueueNeedsEnemyTarget(new[] { strike }));
     }
+
+    // Regression for the StackOverflow crash: a Planned-queue resolver (CurtainCall/Encore, both
+    // non-Stable) can itself be Planned, and its TargetType queries the very queue it sits in. Without
+    // a re-entrancy guard, QueueNeedsEnemyTarget reads that card's TargetType, which calls back into
+    // QueueNeedsEnemyTarget over the same queue — infinite recursion, fatal StackOverflow. This double
+    // reproduces that self-referential TargetType (a bare CurtainCall can't, since Owner-backed
+    // RelevantCards needs a live combat).
+#pragma warning disable STS001 // test-only card double, no shipped localization
+    private sealed class RecursiveResolverCard : UnderstudyCard
+    {
+        public RecursiveResolverCard() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.AnyEnemy) { }
+
+        public override TargetType TargetType =>
+            PlannedModifier.QueueNeedsEnemyTarget(new CardModel[] { this }) ? TargetType.AnyEnemy : TargetType.None;
+    }
+#pragma warning restore STS001
+
+    private static T Planned<T>(T card) where T : CardModel
+    {
+        var mod = new PlannedModifier();
+        mod.SequenceIndices.Add(0);
+        CardModifier.DirectModifiers(card).Add(mod);
+        return card;
+    }
+
+    [Fact]
+    public void QueueNeedsEnemyTarget_PlannedResolverInQueue_DoesNotRecurse()
+    {
+        // Would StackOverflow (crashing the process) without the re-entrancy guard.
+        var resolver = Planned(new RecursiveResolverCard());
+        Assert.False(PlannedModifier.QueueNeedsEnemyTarget(new CardModel[] { resolver }));
+    }
+
+    [Fact]
+    public void QueueNeedsEnemyTarget_PlannedResolverPlusPlannedStrike_ReturnsTrue()
+    {
+        // The resolver contributes nothing, but the real AnyEnemy leaf card still requires a target.
+        var resolver = Planned(new RecursiveResolverCard());
+        var strike = Planned(new UnderstudyStrike());
+        Assert.True(PlannedModifier.QueueNeedsEnemyTarget(new CardModel[] { resolver, strike }));
+    }
 }

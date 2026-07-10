@@ -75,11 +75,30 @@ public class PlannedModifier : CardModifier
     public static int TotalSlotCount(IEnumerable<CardModel> cards) =>
         cards.Sum(c => c.TryGetModifier<PlannedModifier>(out var mod) ? mod.SequenceIndices.Count : 0);
 
+    // Re-entrancy guard. CurtainCall/Performance/Encore override TargetType to call this method, and
+    // CurtainCall/Encore are not Stable, so either can itself sit in the Planned queue. Evaluating
+    // such a card's TargetType while it (or another resolver) is in `cards` would read its TargetType
+    // here, which calls back into this method over the same queue — infinite recursion, a fatal
+    // StackOverflow. A resolver's own reticle need is fully derived from the OTHER (leaf) cards in the
+    // same flat queue, so a re-entrant query contributes nothing and safely returns false.
+    [ThreadStatic] private static bool _evaluatingQueueTarget;
+
     // Whether the queue contains a card that needs the player to pick a single enemy — used by
     // CurtainCall/Performance/Encore to skip the targeting prompt when nothing queued needs it
     // (empty plan, or only AoE/self/no-target cards, e.g. two Defends).
-    public static bool QueueNeedsEnemyTarget(IEnumerable<CardModel> cards) =>
-        cards.Any(c => c.TryGetModifier<PlannedModifier>(out _) && c.TargetType == TargetType.AnyEnemy);
+    public static bool QueueNeedsEnemyTarget(IEnumerable<CardModel> cards)
+    {
+        if (_evaluatingQueueTarget) return false;
+        _evaluatingQueueTarget = true;
+        try
+        {
+            return cards.Any(c => c.TryGetModifier<PlannedModifier>(out _) && c.TargetType == TargetType.AnyEnemy);
+        }
+        finally
+        {
+            _evaluatingQueueTarget = false;
+        }
+    }
 
     // Returns one entry per queue slot. A card with two slots appears twice.
     // Sorted by slotSeqIdx ascending, then by deck position as a tiebreaker.
