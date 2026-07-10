@@ -134,8 +134,8 @@ public class NewDeckCardsTests
         Assert.True(new CutTheTension().Keywords.Contains(CardKeyword.Exhaust));
 
     [Fact]
-    public void SecondNature_DamageIs18() =>
-        Assert.Equal(18m, new SecondNature().DynamicVars.Damage.BaseValue);
+    public void SecondNature_DamageIs24() =>
+        Assert.Equal(24m, new SecondNature().DynamicVars.Damage.BaseValue);
 
     [Fact]
     public void SecondNature_HasNoTenseModifierByDefault() =>

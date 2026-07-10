@@ -12,23 +12,26 @@ using TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
-// Simple, high-cost, plainly repeating hit — not tagged Tense (no stack growth, stays a flat
-// hit every cycle): it self-manages UnplayableModifier directly, becoming Unplayable after each
-// play and freeing + replaying itself at the end of every turn from then on, for free.
+// Simple, high-cost hit — not tagged Tense (no stack growth, stays a flat hit). It self-manages
+// UnplayableModifier: OnPlay makes it Unplayable, and whenever it's Unplayable (from its own play,
+// Planned, Tense, or anything else) it frees + replays itself ONCE at the end of the turn, then
+// leaves itself free (a normal playable card). So each thing that makes it Unplayable grants exactly
+// one free end-of-turn replay — it does NOT loop forever. Any Planned/other modifier is left intact;
+// only its own Unplayable flag is cleared.
 public class SecondNature : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:SecondNature";
 
-    public SecondNature() : base(2, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
+    public SecondNature() : base(3, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
     {
-        WithDamage(18);
+        WithDamage(24);
         WithTip(CardKeyword.Unplayable);
     }
 
     protected override void OnUpgrade()
     {
         base.OnUpgrade();
-        DynamicVars.Damage.UpgradeValueBy(4m);
+        DynamicVars.Damage.UpgradeValueBy(6m);
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
@@ -49,6 +52,10 @@ public class SecondNature : UnderstudyCard
             // Target null: CardCmd.AutoPlay rolls a fresh random living enemy for an AnyEnemy
             // card whenever its target argument is null (relied on by Remix.cs/Encore.cs).
             await CardCmd.AutoPlay(context, this, null, AutoPlayType.None, false, false);
+            // OnPlay re-added Unplayable during that play — strip it again so this card ends the turn
+            // free (a normal playable card), rather than looping every turn. Only clears our own flag;
+            // any Planned slot is untouched, so a Planned Second Nature stays Planned but playable.
+            UnplayableModifier.Remove(this);
         }
     }
 }
