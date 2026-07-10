@@ -12,6 +12,7 @@ using MegaCrit.Sts2.Core.Logging;
 using TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
 using TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 using TheUnderstudy.TheUnderstudyCode.Extensions;
+using TheUnderstudy.TheUnderstudyCode.Patches;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
@@ -111,6 +112,7 @@ public class Performance : UnderstudyCard
 
         // Step 2: Apply Planned to 0-N cards selected from the discard pile (sets up next turn's queue).
         var maxSelect = IsUpgraded ? 3 : 2;
+        PlannedSelectionState.Arm();
         var selectedRaw = await CardSelectCmd.FromCombatPile(
             context,
             PileType.Discard.GetPile(player),
@@ -119,7 +121,7 @@ public class Performance : UnderstudyCard
             c => c != this && PlannedModifier.CanApplyTo(c));
 
         if (selectedRaw == null) return;
-        foreach (var card in selectedRaw)
+        foreach (var card in PlannedSelectionState.OrderFor(selectedRaw))
             PlannedModifier.Apply(card, combatState);
 
         if (!player.Creature.Powers.Any(p => p is PlannedCounterPower))

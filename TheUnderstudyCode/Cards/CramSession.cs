@@ -8,6 +8,7 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
+using TheUnderstudy.TheUnderstudyCode.Patches;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
@@ -32,6 +33,7 @@ public class CramSession : UnderstudyCard
     {
         var player = cardPlay.Card.Owner;
         int maxSelect = (int)DynamicVars["Select"].BaseValue;
+        PlannedSelectionState.Arm();
         var selected = await CardSelectCmd.FromHand(
             context,
             player,
@@ -41,7 +43,7 @@ public class CramSession : UnderstudyCard
         if (selected == null) return;
 
         var tenseAllCards = player.Piles.SelectMany(p => p.Cards);
-        foreach (var card in selected)
+        foreach (var card in PlannedSelectionState.OrderFor(selected))
         {
             PlannedModifier.Apply(card, CombatState!);
             TenseModifier.Apply(card, CombatState!, tenseAllCards);

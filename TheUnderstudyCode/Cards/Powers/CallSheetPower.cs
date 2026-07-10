@@ -8,6 +8,7 @@ using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization;
 using TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
+using TheUnderstudy.TheUnderstudyCode.Patches;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 
@@ -25,6 +26,7 @@ public class CallSheetPower : UnderstudyPower
     {
         if (player != Owner.Player) return;
         int maxSelect = (int)Amount;
+        PlannedSelectionState.Arm();
         var selected = await CardSelectCmd.FromHand(
             context,
             player,
@@ -32,7 +34,7 @@ public class CallSheetPower : UnderstudyPower
             PlannedModifier.CanApplyTo,
             this);
         if (selected == null) return;
-        foreach (var card in selected)
+        foreach (var card in PlannedSelectionState.OrderFor(selected))
             PlannedModifier.Apply(card, Owner.CombatState!);
     }
 }

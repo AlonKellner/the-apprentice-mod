@@ -8,6 +8,7 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
+using TheUnderstudy.TheUnderstudyCode.Patches;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
@@ -35,6 +36,7 @@ public class Foreshadow : UnderstudyCard
         var player = cardPlay.Card.Owner;
         int maxSelect = (int)DynamicVars["Select"].BaseValue;
         var pile = PileType.Draw.GetPile(player);
+        PlannedSelectionState.Arm();
         var selected = await CardSelectCmd.FromCombatPile(
             context,
             pile,
@@ -42,7 +44,7 @@ public class Foreshadow : UnderstudyCard
             new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-FORESHADOW.selectionPrompt"), 0, maxSelect),
             c => PlannedModifier.CanApplyTo(c));
 
-        foreach (var card in selected)
+        foreach (var card in PlannedSelectionState.OrderFor(selected))
             PlannedModifier.Apply(card, CombatState!);
     }
 }

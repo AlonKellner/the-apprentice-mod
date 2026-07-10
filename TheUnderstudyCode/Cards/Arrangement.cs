@@ -7,6 +7,7 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization;
 using TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
+using TheUnderstudy.TheUnderstudyCode.Patches;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
@@ -31,6 +32,7 @@ public class Arrangement : UnderstudyCard
         await CommonActions.CardAttack(cardPlay.Card, cardPlay).Execute(context);
 
         var player = cardPlay.Card.Owner;
+        PlannedSelectionState.Arm();
         var selected = await CardSelectCmd.FromHand(
             context,
             player,
@@ -39,7 +41,7 @@ public class Arrangement : UnderstudyCard
             this);
 
         if (selected == null) return;
-        foreach (var card in selected)
+        foreach (var card in PlannedSelectionState.OrderFor(selected))
             PlannedModifier.Apply(card, CombatState!);
     }
 }

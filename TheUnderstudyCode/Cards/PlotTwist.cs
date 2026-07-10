@@ -6,6 +6,7 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
+using TheUnderstudy.TheUnderstudyCode.Patches;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
@@ -34,6 +35,7 @@ public class PlotTwist : UnderstudyCard
         await EmotionalExpression.InvertEach(context, cardPlay.Card.Owner.Creature, invertAmount);
 
         var player = cardPlay.Card.Owner;
+        PlannedSelectionState.Arm();
         var selected = await CardSelectCmd.FromHand(
             context,
             player,
@@ -42,7 +44,7 @@ public class PlotTwist : UnderstudyCard
             this);
 
         if (selected == null) return;
-        foreach (var card in selected)
+        foreach (var card in PlannedSelectionState.OrderFor(selected))
             PlannedModifier.Apply(card, CombatState!);
     }
 }
