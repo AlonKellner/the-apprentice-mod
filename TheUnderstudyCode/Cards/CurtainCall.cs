@@ -16,7 +16,7 @@ public class CurtainCall : UnderstudyCard
 
     public CurtainCall() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.AnyEnemy)
     {
-        WithCostUpgradeBy(-1);
+        WithKeyword(CardKeyword.Retain, ConstructedCardModel.UpgradeType.Add);
         WithTip(UnderstudyKeywords.Planned);
     }
 
