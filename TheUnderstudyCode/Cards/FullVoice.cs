@@ -12,7 +12,7 @@ public class FullVoice : UnderstudyCard
 
     public FullVoice() : base(1, CardType.Power, CardRarity.Uncommon, TargetType.None)
     {
-        WithPowerNoTip<FullVoicePower>(3, 1);
+        WithPowerNoTip<FullVoicePower>(5, 2);
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
