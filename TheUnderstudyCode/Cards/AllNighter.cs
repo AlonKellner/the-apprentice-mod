@@ -15,7 +15,7 @@ public class AllNighter : UnderstudyCard
 
     public AllNighter() : base(0, CardType.Skill, CardRarity.Uncommon, TargetType.None)
     {
-        WithVars(new SelfDebuffVar("Jaded", 2), new EnergyVar(1));
+        WithVars(new SelfDebuffVar("Jaded", 2), new EnergyVar(2));
         WithTips(_ => new IHoverTip[] { EnergyHoverTip });
         WithTip(typeof(JadedPower));
     }

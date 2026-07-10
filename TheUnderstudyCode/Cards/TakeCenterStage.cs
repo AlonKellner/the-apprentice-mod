@@ -13,7 +13,7 @@ public class TakeCenterStage : UnderstudyCard
 
     public TakeCenterStage() : base(1, CardType.Attack, CardRarity.Uncommon, TargetType.AllEnemies)
     {
-        WithDamage(8);
+        WithDamage(10);
         WithTip(typeof(ShakenPower));
         WithVar(new SelfDebuffVar("Shaken", 2));
     }

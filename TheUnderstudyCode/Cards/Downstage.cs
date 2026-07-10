@@ -13,7 +13,7 @@ public class Downstage : UnderstudyCard
 
     public Downstage() : base(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
     {
-        WithDamage(14);
+        WithDamage(15);
         WithInvertibleTip(typeof(VulnerablePower));
         WithVar(new SelfDebuffVar("Vulnerable", 1));
     }

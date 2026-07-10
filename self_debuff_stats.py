@@ -27,7 +27,11 @@ CONSTRUCTOR_RE = re.compile(
 SELF_APPLY_RE = re.compile(
     r"EmotionalExpression\.Apply(" + "|".join(DEBUFFS) + r")ToSelf\(\s*context\s*,\s*[^,]+,\s*([^,]+),"
 )
-INT_VAR_DECL_RE = re.compile(r'new IntVar\(\s*"(\w+)"\s*,\s*(\d+)\s*\)')
+# Matches a debuff/amount var declaration, whether a plain IntVar or the display-only SelfDebuffVar
+# (self-debuff stack counts are declared as SelfDebuffVar("<Type>", N)).
+INT_VAR_DECL_RE = re.compile(r'new (?:IntVar|SelfDebuffVar)\(\s*"(\w+)"\s*,\s*(\d+)\s*\)')
+# Matches an inline read of a card var: `(int)DynamicVars["Shaken"].BaseValue` passed straight to Apply.
+DIRECT_DYNVAR_RE = re.compile(r'DynamicVars\[\s*"(\w+)"\s*\]\.BaseValue')
 LOCAL_VAR_FROM_DYNVAR_RE = re.compile(
     r'\bint\s+(\w+)\s*=\s*\(int\)DynamicVars\["(\w+)"\]\.BaseValue'
 )
@@ -78,6 +82,15 @@ def resolve_amount(expr: str, text: str) -> tuple[int, str | None]:
         for pt, base, _upgrade in WITH_POWER_DECL_RE.findall(text):
             if pt == power_type:
                 return int(base), f"POWER:{power_type}"
+
+    # Inline form: `ApplyShakenToSelf(..., (int)DynamicVars["Shaken"].BaseValue, this)` — read the key
+    # straight from the expression and look up its SelfDebuffVar/IntVar declaration.
+    m = DIRECT_DYNVAR_RE.search(expr)
+    if m:
+        key = m.group(1)
+        for km, kv in INT_VAR_DECL_RE.findall(text):
+            if km == key:
+                return int(kv), key
 
     raise ValueError(f"Could not resolve debuff amount expression {expr!r}")
 

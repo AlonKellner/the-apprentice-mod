@@ -14,7 +14,7 @@ public class Matinee : UnderstudyCard
 
     public Matinee() : base(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
     {
-        WithDamage(5);
+        WithDamage(7);
         WithBlock(8);
         WithTip(typeof(JadedPower));
         WithVar(new SelfDebuffVar("Jaded", 1));

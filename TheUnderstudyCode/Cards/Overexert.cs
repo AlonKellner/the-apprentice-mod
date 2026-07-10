@@ -13,7 +13,7 @@ public class Overexert : UnderstudyCard
 
     public Overexert() : base(2, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
     {
-        WithDamage(8);
+        WithDamage(10);
         WithBlock(14);
         WithTip(typeof(LimitedPower));
         WithVar(new SelfDebuffVar("Limited", 2));

@@ -13,8 +13,8 @@ public class Butterflies : UnderstudyCard
 
     public Butterflies() : base(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
     {
-        WithDamage(5);
-        WithBlock(8);
+        WithDamage(7);
+        WithBlock(12);
         WithTip(typeof(ShakenPower));
         WithVar(new SelfDebuffVar("Shaken", 2));
     }

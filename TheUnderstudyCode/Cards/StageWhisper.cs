@@ -13,7 +13,7 @@ public class StageWhisper : UnderstudyCard
 
     public StageWhisper() : base(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
     {
-        WithDamage(15);
+        WithDamage(18);
         WithInvertibleTip(typeof(WeakPower));
         WithVar(new SelfDebuffVar("Weak", 2));
     }
