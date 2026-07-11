@@ -201,6 +201,13 @@ public class PlannedModifier : CardModifier
     // Removes a specific queue slot. If the slot list empties, removes the modifier entirely.
     public static void RemoveSlot(CardModel card, int slotSeqIdx, IEnumerable<CardModel> allCards)
     {
+        // Stable = frozen: never strip (or in-place mutate) a Stable card's Planned. This is a
+        // correctness requirement, not just intent — RemoveSlot empties mod.SequenceIndices in place
+        // before detaching the modifier, and the Stable snapshot restores state by that same instance,
+        // so mutating it here would leave a restored-but-empty phantom Planned (silently lost). A Stable
+        // Planned card is still auto-played by the queue resolvers (they strip Unplayable separately); it
+        // just keeps its slot and re-queues. See StableEnforcer / UnderstudyCard Stable handling.
+        if (card.IsStable()) return;
         if (card.TryGetModifier<PlannedModifier>(out var mod))
         {
             bool removed = mod.SequenceIndices.Remove(slotSeqIdx);
@@ -225,6 +232,9 @@ public class PlannedModifier : CardModifier
     // Removes the entire modifier (all queue slots). Used by Improvise, TabulaRasa, etc.
     public static void Remove(CardModel card, IEnumerable<CardModel> allCards)
     {
+        // Stable cards cannot be modified — a "remove all Planned" effect must not strip a Stable
+        // card's Planned either. See RemoveSlot.
+        if (card.IsStable()) return;
         if (card.TryGetModifier<PlannedModifier>(out var mod))
         {
             CardModifier.DirectModifiers(card).Remove(mod);

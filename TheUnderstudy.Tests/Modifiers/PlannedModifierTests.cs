@@ -6,6 +6,7 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Models;
 using TheUnderstudy.TheUnderstudyCode.Cards;
 using TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
+using TheUnderstudy.TheUnderstudyCode.Extensions;
 using Xunit;
 
 namespace TheUnderstudy.Tests.Modifiers;
@@ -269,6 +270,40 @@ public class PlannedModifierTests
         PlannedModifier.RemoveSlot(card, 0, Enumerable.Empty<CardModel>());
 
         Assert.False(card.TryGetModifier<PlannedModifier>(out _));
+    }
+
+    // Stable = frozen: a queue resolver (Performance/CurtainCall/...) calling RemoveSlot on a Stable
+    // card must NOT strip its Planned — the card is still auto-played, but keeps its slot and re-queues.
+    // (Regression for: Planned + Stable on Showstopper lost Planned after Performance.)
+    [Fact]
+    public void RemoveSlot_StableCard_KeepsSlotAndModifier()
+    {
+        var card = new UnderstudyStrike();
+        var mod = new PlannedModifier();
+        mod.SequenceIndices.Add(0);
+        CardModifier.DirectModifiers(card).Add(mod);
+        CardModifier.AddModifier(card, new StableModifier());
+        Assert.True(card.IsStable());
+
+        PlannedModifier.RemoveSlot(card, 0, Enumerable.Empty<CardModel>());
+
+        Assert.True(card.TryGetModifier<PlannedModifier>(out var remaining));
+        Assert.Equal(new[] { 0 }, remaining!.SequenceIndices);
+    }
+
+    // "Remove all Planned" effects (Improvise, TabulaRasa) must also refuse to touch a Stable card.
+    [Fact]
+    public void Remove_StableCard_KeepsPlanned()
+    {
+        var card = new UnderstudyStrike();
+        var mod = new PlannedModifier();
+        mod.SequenceIndices.Add(0);
+        CardModifier.DirectModifiers(card).Add(mod);
+        CardModifier.AddModifier(card, new StableModifier());
+
+        PlannedModifier.Remove(card, Enumerable.Empty<CardModel>());
+
+        Assert.True(card.TryGetModifier<PlannedModifier>(out _));
     }
 
     [Fact]

@@ -16,6 +16,7 @@ using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Powers;
+using MegaCrit.Sts2.Core.Rooms;
 using TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
 using TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 using TheUnderstudy.TheUnderstudyCode.Character;
@@ -90,8 +91,14 @@ public abstract class UnderstudyCard(
     protected void WithPowerNoTip<T>(int baseVal, int upgrade = 0) where T : PowerModel =>
         WithVar(new PowerVar<T>(baseVal).WithUpgrade<PowerVar<T>>(upgrade));
 
-    // Snapshot of DirectModifiers at combat start; null means this card is not Stable.
-    private List<CardModifier>? _stableSnapshot;
+    // The frozen configuration captured the first time this card is observed Stable; null means it is
+    // not (yet) Stable. Deep (modifier state + local keywords) via StableEnforcer, so restore undoes
+    // in-place mutation (e.g. an emptied Planned slot list), not just add/remove.
+    private StableState? _stableSnapshot;
+
+    // Whether we've subscribed to this card's own KeywordsChanged event (for immediate reversion of
+    // base-game keyword edits like Ethereal). Cleared per combat.
+    private bool _stableKeywordWatch;
 
     // The pre-Planned mechanic (starting a combat already queued) — revived from the original,
     // now-deleted Apprentice character's ApprenticeCard.IsPrePlanned, scoped to just the handful
@@ -162,7 +169,7 @@ public abstract class UnderstudyCard(
         // once it's null, so without this reset a printed-Stable card would only ever get
         // snapshotted on its very first combat, never refreshed on later ones.
         _stableSnapshot = null;
-        MaybeSnapshotIfStable();
+        EnforceStableNow();
         ApplyPrePlannedIfNeeded();
         ApplyPreTenseIfNeeded();
         return t;
@@ -177,8 +184,7 @@ public abstract class UnderstudyCard(
     // own Invert conversions.
     public override async Task AfterPlayerTurnStartLate(PlayerChoiceContext context, Player player)
     {
-        MaybeSnapshotIfStable();
-        RestoreIfStable();
+        EnforceStableNow();
         if (player != Owner) return;
         if (!player.Creature.Powers.Any(p => p is PlannedCounterPower))
             await PowerCmd.Apply<PlannedCounterPower>(context, player.Creature, 1m, player.Creature, null, false);
@@ -193,8 +199,7 @@ public abstract class UnderstudyCard(
     // CanApplyTo guards.
     public override Task AfterCardEnteredCombat(CardModel triggeredBy)
     {
-        MaybeSnapshotIfStable();
-        RestoreIfStable();
+        EnforceStableNow();
         ApplyPrePlannedIfNeeded();
         ApplyPreTenseIfNeeded();
         return Task.CompletedTask;
@@ -202,8 +207,7 @@ public abstract class UnderstudyCard(
 
     public override Task AfterCardPlayed(PlayerChoiceContext context, CardPlay cardPlay)
     {
-        MaybeSnapshotIfStable();
-        RestoreIfStable();
+        EnforceStableNow();
 
         // Planned is only ever removed by an explicit "remove Planned" effect or by a "Play all
         // Planned" resolver (CurtainCall/Encore/Performance/Remix) consuming the exact slot it's
@@ -230,31 +234,79 @@ public abstract class UnderstudyCard(
 
     public override Task BeforeSideTurnEnd(PlayerChoiceContext context, CombatSide side, IEnumerable<Creature> creatures)
     {
-        MaybeSnapshotIfStable();
-        RestoreIfStable();
+        EnforceStableNow();
         return Task.CompletedTask;
     }
 
-    // Takes the protective snapshot the first time this card is observed to be Stable — whether
-    // printed (BeforeCombatStart already sees it) or granted mid-combat by an effect like Final
-    // Draft (StableModifier), which attaches on a completely different card's OnPlay and so isn't
-    // itself a hook firing on THIS card. Called right before RestoreIfStable() everywhere the
-    // latter already runs, so a runtime-granted Stable starts being protected within one hook
-    // boundary of being granted, without needing a new event subscription (this.IsStable() is a
-    // plain per-instance check, not a static subscription that could leak past combat end).
-    private void MaybeSnapshotIfStable()
+    // The single Stable-enforcement entry point, called at every significant combat event (combat
+    // start, card entered/played, both sides' turn start, side turn end) plus — for immediate reaction
+    // to modifications from any source — this card's own KeywordsChanged event and the ApplyInternal
+    // Harmony patch (StableEnforcementPatch). The first time the card is observed Stable it takes the
+    // deep snapshot (whether printed, or granted mid-combat by e.g. Final Draft on another card's OnPlay)
+    // and starts watching keyword edits; every call then reconciles the live card back to that frozen
+    // config via StableEnforcer.Restore. Deep restore undoes in-place mutation (e.g. an emptied Planned
+    // slot list), so a Stable Planned card keeps its Planned through a queue resolution.
+    private void EnforceStableNow()
     {
-        if (_stableSnapshot == null && this.IsStable())
-            _stableSnapshot = CardModifier.DirectModifiers(this).ToList();
+        if (_stableSnapshot == null)
+        {
+            if (!this.IsStable()) return;
+            _stableSnapshot = StableEnforcer.Capture(this);
+            if (!_stableKeywordWatch)
+            {
+                KeywordsChanged += OnStableKeywordsChanged;
+                _stableKeywordWatch = true;
+            }
+        }
+        if (StableEnforcer.Restore(this, _stableSnapshot))
+            RefreshStablePlannedVisuals();
     }
 
-    private void RestoreIfStable()
+    // Fires the instant this card's local keywords are edited (e.g. base-game Ethereal from Hex/Music
+    // Box) — revert immediately. Guarded against re-entry from Restore's own AddKeyword/RemoveKeyword.
+    private void OnStableKeywordsChanged()
     {
-        if (_stableSnapshot == null) return;
-        var mods = CardModifier.DirectModifiers(this);
-        var toRemove = mods.Where(m => !_stableSnapshot.Contains(m)).ToList();
-        foreach (var m in toRemove) mods.Remove(m);
-        var toRestore = _stableSnapshot.Where(m => !mods.Contains(m)).ToList();
-        foreach (var m in toRestore) mods.Add(m);
+        if (_stableSnapshot == null || StableEnforcer.Enforcing) return;
+        if (StableEnforcer.Restore(this, _stableSnapshot))
+            RefreshStablePlannedVisuals();
+    }
+
+    // Called by StableEnforcementPatch the instant any BaseLib modifier is added to this card. Strip-only
+    // (removes the addition if its type isn't part of the frozen config) — deliberately never re-adds,
+    // so it can't re-lock an Unplayable that a Planned-queue resolver just stripped to auto-play a Stable
+    // card mid-play. Full reconciliation (resets/re-adds) still happens at the next EnforceStableNow hook.
+    internal void RejectForeignModifierIfStable(CardModifier justAdded)
+    {
+        if (_stableSnapshot == null || StableEnforcer.Enforcing) return;
+        if (_stableSnapshot.Modifiers.Any(m => m.type == justAdded.GetType())) return;
+        CardModifier.DirectModifiers(this).Remove(justAdded);
+    }
+
+    // Planned slot state may have just been restored; re-sync the global visual index badges. Reads
+    // Owner (throws on a canonical card), so guard on IsMutable.
+    private void RefreshStablePlannedVisuals()
+    {
+        if (IsMutable && this.TryGetModifier<PlannedModifier>(out _))
+            PlannedModifier.RefreshVisualIndices(PlannedModifier.RelevantCards(Owner));
+    }
+
+    // Turn start for BOTH sides — the enforcement point covering "after enemy actions". (Overridden only
+    // by Powers elsewhere, never by a card subclass, so adding it here is safe.)
+    public override Task AfterSideTurnStart(CombatSide side, IReadOnlyList<Creature> participants, ICombatState combatState)
+    {
+        EnforceStableNow();
+        return Task.CompletedTask;
+    }
+
+    // Stop watching keyword changes and drop the snapshot so nothing leaks into the next combat.
+    public override Task AfterCombatEnd(CombatRoom room)
+    {
+        if (_stableKeywordWatch)
+        {
+            KeywordsChanged -= OnStableKeywordsChanged;
+            _stableKeywordWatch = false;
+        }
+        _stableSnapshot = null;
+        return Task.CompletedTask;
     }
 }
