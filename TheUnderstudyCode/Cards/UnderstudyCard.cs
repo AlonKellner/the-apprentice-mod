@@ -278,7 +278,9 @@ public abstract class UnderstudyCard(
     internal void RejectForeignModifierIfStable(CardModifier justAdded)
     {
         if (_stableSnapshot == null || StableEnforcer.Enforcing) return;
-        if (_stableSnapshot.Modifiers.Any(m => m.type == justAdded.GetType())) return;
+        // Allow a type the frozen config already contains (e.g. re-adding an Unplayable a resolver
+        // stripped); only strip a genuinely foreign type.
+        if (_stableSnapshot.Modifiers.Any(m => m.modifier.GetType() == justAdded.GetType())) return;
         CardModifier.DirectModifiers(this).Remove(justAdded);
     }
 

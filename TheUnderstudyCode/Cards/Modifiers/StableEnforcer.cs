@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using BaseLib.Abstracts;
@@ -7,16 +6,20 @@ using MegaCrit.Sts2.Core.Models;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
 
-// The frozen configuration of a Stable card: each BaseLib modifier captured with its internal state
-// (keyed by runtime Type — ModelId is unset on bare/reconstructed instances), plus the card's local
-// keywords (Ethereal/Retain/etc. added via CardModel.AddKeyword).
+// The frozen configuration of a Stable card: each BaseLib modifier captured as its own INSTANCE plus a
+// snapshot of its internal state, and the card's local keywords (Ethereal/Retain/etc.).
+//
+// We keep the modifier instance itself — not a Type or a rebuilt copy — because a modifier is a ModelDb
+// model: `new`-ing one (Activator or constructor) in a live combat throws DuplicateModelException. The
+// original instance is a valid mutable clone, so restore re-attaches that same object and only resets its
+// state via LoadSaveData, never constructing anything.
 public sealed class StableState
 {
-    public IReadOnlyList<(Type type, int amount, CardModifier.ModifierSave save)> Modifiers { get; }
+    public IReadOnlyList<(CardModifier modifier, CardModifier.ModifierSave save)> Modifiers { get; }
     public IReadOnlySet<CardKeyword> LocalKeywords { get; }
 
     public StableState(
-        IReadOnlyList<(Type type, int amount, CardModifier.ModifierSave save)> modifiers,
+        IReadOnlyList<(CardModifier modifier, CardModifier.ModifierSave save)> modifiers,
         IReadOnlySet<CardKeyword> localKeywords)
     {
         Modifiers = modifiers;
@@ -25,21 +28,20 @@ public sealed class StableState
 }
 
 // Engine-independent core of the Stable "freeze": snapshot a card's modifiers + local keywords, then
-// reconcile the live card back to that snapshot — undoing in-place mutation (e.g. an emptied Planned
-// slot list), foreign modifier additions, and foreign keyword add/removes from ANY source. Kept free of
-// ModelDb / CombatState / Godot / Log so it runs against bare-constructed cards in unit tests; the live
-// hook wiring and RefreshVisualIndices (which need a live combat / card Owner) stay in UnderstudyCard.
+// reconcile the live card back to that snapshot — undoing in-place mutation (e.g. an emptied Planned slot
+// list), foreign modifier additions, and foreign keyword add/removes from ANY source. Kept free of
+// ModelDb construction / CombatState / Godot / Log so it runs against bare-constructed cards in unit
+// tests; the live hook wiring and RefreshVisualIndices (which need a live combat / card Owner) stay in
+// UnderstudyCard.
 public static class StableEnforcer
 {
-    // Set while Restore is applying its own re-adds, so the ApplyInternal Harmony patch (which fires on
-    // each re-add) doesn't recursively re-enter enforcement.
+    // Set while Restore is applying, so the ApplyInternal Harmony patch (which fires on each keyword-driven
+    // event) doesn't recursively re-enter enforcement.
     [ThreadStatic] public static bool Enforcing;
 
     public static StableState Capture(CardModel card)
     {
-        var mods = CardModifier.DirectModifiers(card)
-            .Select(m => (m.GetType(), m.Amount, SaveOf(m)))
-            .ToList();
+        var mods = CardModifier.DirectModifiers(card).Select(m => (m, SaveOf(m))).ToList();
         var keywords = new HashSet<CardKeyword>(card.GetKeywordsWithSources(KeywordSources.Local));
         return new StableState(mods, keywords);
     }
@@ -55,36 +57,23 @@ public static class StableEnforcer
         try
         {
             var live = CardModifier.DirectModifiers(card);
-            var snapTypes = snap.Modifiers.Select(x => x.type).ToHashSet();
+            var frozen = new HashSet<CardModifier>(snap.Modifiers.Select(x => x.modifier));
 
-            // 1. Strip foreign modifiers — a type not present in the frozen snapshot.
-            foreach (var m in live.Where(m => !snapTypes.Contains(m.GetType())).ToList())
+            // 1. Strip foreign modifiers — an instance not part of the frozen config.
+            foreach (var m in live.Where(m => !frozen.Contains(m)).ToList())
                 live.Remove(m);
 
-            // 2. Reset present modifiers in place (fixes in-place mutation like an emptied Planned slot
-            //    list) / rebuild any that were fully detached, restoring internal state either way.
-            foreach (var (type, _, save) in snap.Modifiers)
+            // 2. Re-attach any detached frozen instance (the SAME object — no construction), and reset
+            //    every frozen instance's internal state (fixes in-place mutation like an emptied Planned
+            //    slot list).
+            foreach (var (modifier, save) in snap.Modifiers)
             {
-                // Note: we don't reassign CardModifier.Amount — its setter AssertMutable-throws on a
-                // canonical instance, and none of this mod's modifiers carry state in Amount (Planned →
-                // slots, Tense → Stacks, etc., all round-tripped through Store/LoadSaveData). The saved
-                // Amount is kept in the snapshot for completeness / future Amount-based modifiers.
-                var existing = live.FirstOrDefault(m => m.GetType() == type);
-                if (existing != null)
-                {
-                    existing.LoadSaveData(save);
-                }
-                else
-                {
-                    var rebuilt = (CardModifier)Activator.CreateInstance(type)!;
-                    rebuilt.LoadSaveData(save);
-                    CardModifier.AddModifier(card, rebuilt);
-                }
+                if (!live.Contains(modifier))
+                    live.Add(modifier);
+                modifier.LoadSaveData(save);
             }
 
-            // 3. Reconcile local keywords. AddKeyword/RemoveKeyword assert the card is mutable (only
-            //    true in a live combat), so the diff is a pure, testable step and only the application
-            //    touches the live card.
+            // 3. Reconcile local keywords (application needs a live mutable card; the decision is pure).
             var localNow = new HashSet<CardKeyword>(card.GetKeywordsWithSources(KeywordSources.Local));
             var (toAdd, toRemove) = KeywordDiff(snap.LocalKeywords, localNow);
             foreach (var kw in toAdd) card.AddKeyword(kw);
@@ -111,25 +100,27 @@ public static class StableEnforcer
 
     private static bool Matches(CardModel card, StableState snap)
     {
-        var current = Capture(card);
-        if (current.Modifiers.Count != snap.Modifiers.Count) return false;
+        var live = CardModifier.DirectModifiers(card);
+        if (live.Count != snap.Modifiers.Count) return false;
 
-        var bySnapType = snap.Modifiers.ToDictionary(x => x.type, x => (x.amount, x.save));
-        foreach (var (type, amount, save) in current.Modifiers)
+        var frozen = snap.Modifiers.ToDictionary(x => x.modifier, x => x.save);
+        foreach (var m in live)
         {
-            if (!bySnapType.TryGetValue(type, out var s)) return false;
-            if (s.amount != amount || !SavesEqual(s.save, save)) return false;
+            // Same set of instances (reference identity) …
+            if (!frozen.TryGetValue(m, out var save)) return false;
+            // … and no in-place state drift on any of them.
+            if (!SavesEqual(SaveOf(m), save)) return false;
         }
 
-        return current.LocalKeywords.Count == snap.LocalKeywords.Count
-            && current.LocalKeywords.All(snap.LocalKeywords.Contains);
+        var localNow = card.GetKeywordsWithSources(KeywordSources.Local);
+        return localNow.Count == snap.LocalKeywords.Count && localNow.All(snap.LocalKeywords.Contains);
     }
 
     private static CardModifier.ModifierSave SaveOf(CardModifier m)
     {
         // Build the save manually rather than via ModifierSave.FromModifier: FromModifier reads
-        // modifier.Id, which is unset on the bare instances used in tests. We key by runtime Type, so Id
-        // is irrelevant here anyway.
+        // modifier.Id, which is unset on the bare instances used in tests. Reconciliation keys by instance
+        // identity, so Id is irrelevant here anyway.
         var save = new CardModifier.ModifierSave { Amount = m.Amount };
         m.StoreSaveData(save);
         return save;

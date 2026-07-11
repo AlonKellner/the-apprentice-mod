@@ -40,7 +40,7 @@ public class StableEnforcerTests
     }
 
     [Fact]
-    public void Restore_AfterModifierDetached_ReattachesWithSlots()
+    public void Restore_AfterModifierDetached_ReattachesSameInstanceWithSlots()
     {
         var card = new UnderstudyStrike();
         var mod = PlannedWith(card, 2);
@@ -50,6 +50,9 @@ public class StableEnforcerTests
 
         Assert.True(StableEnforcer.Restore(card, snap));
         Assert.True(card.TryGetModifier<PlannedModifier>(out var m));
+        // Must re-add the SAME instance, never construct a new one: `new`-ing a model in a live combat
+        // throws DuplicateModelException (ModelDb is initialized). This assertion encodes that constraint.
+        Assert.Same(mod, m);
         Assert.Equal(new[] { 2 }, m!.SequenceIndices);
     }
 
