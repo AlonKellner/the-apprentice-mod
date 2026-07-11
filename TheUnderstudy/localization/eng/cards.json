@@ -150,7 +150,7 @@
   "THEUNDERSTUDY-FULL_VOICE.description": "Whenever a debuff is applied to you, gain {FullVoicePower:diff()} [gold]Block[/gold].",
 
   "THEUNDERSTUDY-SHOWSTOPPER.title": "Showstopper",
-  "THEUNDERSTUDY-SHOWSTOPPER.description": "{InCombat:cond:|[gold]Tense[/gold] 1.\n}Deal {Damage:diff()} damage.\nGain {Energy:energyIcons()}.",
+  "THEUNDERSTUDY-SHOWSTOPPER.description": "{InCombat:cond:|[gold]Tense[/gold] 1.\n}Deal {Damage:diff()} damage.",
 
   "THEUNDERSTUDY-REMIX.title": "Remix",
   "THEUNDERSTUDY-REMIX.description": "Play all [gold]Planned[/gold] cards in a random order, at most once per turn.",
