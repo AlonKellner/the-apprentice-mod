@@ -10,7 +10,7 @@ using TheUnderstudy.TheUnderstudyCode.Extensions;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
-public class Encore : UnderstudyCard
+public class Encore : PlayAllPlannedCard
 {
     public const string CardId = "TheUnderstudy:Encore";
 
@@ -29,10 +29,10 @@ public class Encore : UnderstudyCard
             ? (PlannedModifier.QueueNeedsEnemyTarget(PlannedModifier.RelevantCards(Owner)) ? TargetType.AnyEnemy : TargetType.None)
             : base.TargetType;
 
-    protected override bool ShouldGlowGoldInternal => PlannedModifier.AnyIn(PlannedModifier.RelevantCards(Owner));
-
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
+        if (!BeginPlayAllThisTurn()) return;
+
         var player = cardPlay.Card.Owner;
         var combatState = player.Creature.CombatState!;
 

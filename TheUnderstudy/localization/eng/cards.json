@@ -83,7 +83,7 @@
   "THEUNDERSTUDY-DA_CAPO.description": "Deal {Damage:diff()} damage {Repeat:diff()} times.\nApply [gold]Tense[/gold] to this card.",
 
   "THEUNDERSTUDY-ENCORE.title": "Encore",
-  "THEUNDERSTUDY-ENCORE.description": "Play all [gold]Planned[/gold] cards.\nApply [gold]Planned[/gold] to each card played this way.",
+  "THEUNDERSTUDY-ENCORE.description": "Play all [gold]Planned[/gold] cards, at most once per turn.\nApply [gold]Planned[/gold] to each card played this way.",
 
   "THEUNDERSTUDY-WIND_UP.title": "Wind Up",
   "THEUNDERSTUDY-WIND_UP.description": "Deal {Damage:diff()} damage.\nApply {Weak:inverseDiff()} [gold]Weak[/gold] to yourself.\nGain {Vigor:diff()} [gold]Vigor[/gold].",
@@ -125,7 +125,7 @@
   "THEUNDERSTUDY-HELD_NOTE.description": "[gold]Invertible[/gold] debuffs and buffs no longer decrease by 1 each turn.",
 
   "THEUNDERSTUDY-CURTAIN_CALL.title": "Curtain Call",
-  "THEUNDERSTUDY-CURTAIN_CALL.description": "Play all [gold]Planned[/gold] cards.",
+  "THEUNDERSTUDY-CURTAIN_CALL.description": "Play all [gold]Planned[/gold] cards, at most once per turn.",
 
   "THEUNDERSTUDY-FINAL_BAR.title": "Final Bar",
   "THEUNDERSTUDY-FINAL_BAR.description": "Deal {Damage:diff()} damage for each [gold]Planned[/gold] card you have.\nExhaust all [gold]Planned[/gold] cards.",
@@ -153,7 +153,7 @@
   "THEUNDERSTUDY-SHOWSTOPPER.description": "{InCombat:cond:|[gold]Tense[/gold] 1.\n}Deal {Damage:diff()} damage.\nGain {Energy:energyIcons()}.",
 
   "THEUNDERSTUDY-REMIX.title": "Remix",
-  "THEUNDERSTUDY-REMIX.description": "Play all [gold]Planned[/gold] cards in a random order.",
+  "THEUNDERSTUDY-REMIX.description": "Play all [gold]Planned[/gold] cards in a random order, at most once per turn.",
 
   "THEUNDERSTUDY-THE_SECOND_LESSON.title": "The Second Lesson",
   "THEUNDERSTUDY-THE_SECOND_LESSON.description": "Obey my [red][sine]Orders[/sine][/red], and be [gold]Rewarded[/gold].\nOtherwise, you'll be [gold]Punished[/gold].",

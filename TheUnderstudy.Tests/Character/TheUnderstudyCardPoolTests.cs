@@ -146,8 +146,10 @@ public class TheUnderstudyCardPoolTests
     {
         var root = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", ".."));
         var cardsDir = Path.Combine(root, "TheUnderstudyCode", "Cards");
-        var skip = new HashSet<string> { "UnderstudyCard" };
-        var bCardPattern = new System.Text.RegularExpressions.Regex(@":\s*UnderstudyCard\b");
+        var skip = new HashSet<string> { "UnderstudyCard", "PlayAllPlannedCard" };
+        // Match the abstract resolver base too — Curtain Call/Encore/Remix inherit UnderstudyCard through
+        // PlayAllPlannedCard, so their source declares ": PlayAllPlannedCard".
+        var bCardPattern = new System.Text.RegularExpressions.Regex(@":\s*(?:UnderstudyCard|PlayAllPlannedCard)\b");
         var rarityPattern = new System.Text.RegularExpressions.Regex(
             @":\s*base\(\s*\d+\s*,\s*CardType\.\w+\s*,\s*CardRarity\." + rarity + @"\b");
         return Directory.GetFiles(cardsDir, "*.cs", SearchOption.AllDirectories)

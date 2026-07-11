@@ -93,8 +93,9 @@ public class CardTooltipKeywordSyncTests
     public static IEnumerable<object[]> AllCardFiles()
     {
         var cardsDir = Path.Combine(RepoRoot, "TheUnderstudyCode", "Cards");
-        var skip = new HashSet<string> { "UnderstudyCard" };
-        var bCardPattern = new Regex(@":\s*UnderstudyCard\b");
+        var skip = new HashSet<string> { "UnderstudyCard", "PlayAllPlannedCard" };
+        // Also recognize the abstract resolver base (Curtain Call/Encore/Remix declare ": PlayAllPlannedCard").
+        var bCardPattern = new Regex(@":\s*(?:UnderstudyCard|PlayAllPlannedCard)\b");
         foreach (var file in Directory.GetFiles(cardsDir, "*.cs", SearchOption.AllDirectories))
         {
             var name = Path.GetFileNameWithoutExtension(file);

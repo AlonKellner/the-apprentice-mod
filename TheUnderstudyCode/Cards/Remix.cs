@@ -10,7 +10,7 @@ using TheUnderstudy.TheUnderstudyCode.Extensions;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
-public class Remix : UnderstudyCard
+public class Remix : PlayAllPlannedCard
 {
     public const string CardId = "TheUnderstudy:Remix";
 
@@ -22,12 +22,10 @@ public class Remix : UnderstudyCard
         WithTip(UnderstudyKeywords.Planned);
     }
 
-    // Glow gold while there are Planned cards to resolve — same cue as the other Planned resolvers
-    // (Performance/CurtainCall/Encore/FinalBar), signalling that playing this now will play the queue.
-    protected override bool ShouldGlowGoldInternal => PlannedModifier.AnyIn(PlannedModifier.RelevantCards(Owner));
-
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
+        if (!BeginPlayAllThisTurn()) return;
+
         var player = cardPlay.Card.Owner;
 
         // Locked once recorded and shuffled here — never re-fetched or re-sorted afterward. See
