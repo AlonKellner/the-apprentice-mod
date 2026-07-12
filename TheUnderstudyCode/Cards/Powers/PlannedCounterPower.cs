@@ -20,11 +20,16 @@ public class PlannedCounterPower : UnderstudyPower
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Counter;
 
-    protected override IEnumerable<DynamicVar> CanonicalVars =>
-        new[] { new StringVar("CardList") };
+    private const string EmptyHeader = "You have no [gold]Planned[/gold] cards";
+    private const string NonEmptyHeader = "Your [gold]Planned[/gold] cards:";
 
-    private static readonly string BaseDescription =
-        "Your [gold]Planned[/gold] cards across all piles:{CardList}";
+    protected override IEnumerable<DynamicVar> CanonicalVars =>
+        // Header default = the empty-state text, so the canonical (0-card) description reads
+        // correctly on its own; it flips to NonEmptyHeader in UpdateDisplayIfChanged once cards
+        // are Planned.
+        new[] { new StringVar("Header", EmptyHeader), new StringVar("CardList") };
+
+    private static readonly string BaseDescription = "{Header}{CardList}";
 
     public override List<(string, string)> Localization => new PowerLoc(
         "Planned",
@@ -37,7 +42,9 @@ public class PlannedCounterPower : UnderstudyPower
 
     protected override bool IsVisibleInternal => true;
 
-    private string _lastPlanList = "";
+    // null (not "") so the first UpdateDisplayIfChanged always runs and explicitly sets both vars,
+    // rather than relying on the mutable clone having carried the canonical Header default.
+    private string? _lastPlanList = null;
 
     public static string BuildPlanList(IEnumerable<string> titles)
     {
@@ -66,6 +73,7 @@ public class PlannedCounterPower : UnderstudyPower
         var current = BuildPlanList(sorted.Select(x => x.card.Title)); // one entry per slot; multi-slot cards appear N times
         if (current == _lastPlanList) return;
         _lastPlanList = current;
+        ((StringVar)DynamicVars["Header"]).StringValue = current.Length == 0 ? EmptyHeader : NonEmptyHeader;
         ((StringVar)DynamicVars["CardList"]).StringValue = current;
         InvokeDisplayAmountChanged();
     }
