@@ -228,7 +228,7 @@
   "THEUNDERSTUDY-MUSCLE_MEMORY.description": "[gold]Tense[/gold] cards will not become [gold]Unplayable[/gold].",
 
   "THEUNDERSTUDY-IMPROVISE.title": "Improvise",
-  "THEUNDERSTUDY-IMPROVISE.description": "For each [gold]Planned[/gold] card, draw 1 card.\nRemove [gold]Planned[/gold] from all cards.",
+  "THEUNDERSTUDY-IMPROVISE.description": "For each [gold]Planned[/gold] card, draw 1 card.\n{IfUpgraded:show:Remove [gold]Unplayable[/gold] from all [gold]Planned[/gold] cards.|Remove [gold]Planned[/gold] from all cards.}",
 
   "THEUNDERSTUDY-FINAL_DRAFT.title": "Final Draft",
   "THEUNDERSTUDY-FINAL_DRAFT.description": "Apply [gold]Stable[/gold] to 1 card in your hand.",
