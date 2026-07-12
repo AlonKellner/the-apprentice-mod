@@ -23,6 +23,6 @@ public class EverythingIveGot : UnderstudyCard
     {
         int x = ResolveEnergyXValue();
         int invertAmount = IsUpgraded ? 2 : 1;
-        await EmotionalExpression.InvertLastModifiedWithBonus(context, cardPlay.Card.Owner.Creature, invertAmount, x);
+        await EmotionalExpression.InvertEachWithBonus(context, cardPlay.Card.Owner.Creature, invertAmount, x);
     }
 }

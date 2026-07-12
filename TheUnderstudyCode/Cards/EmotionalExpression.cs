@@ -337,23 +337,8 @@ public static class EmotionalExpression
         await InvertDebuff(ctx, creature, debuff.Value, max);
     }
 
-    // Invert the last modified invertible debuff (as InvertLastModified), then re-gain that same
-    // buff, at the same amount just converted, `repeats` additional times as separate applications
-    // — Everything I've Got's "gain the same inverted buff X more times." Separate applications
-    // (rather than one lump sum) so once-per-application triggers (e.g. Full Voice) see `repeats`
-    // distinct events, matching the Double Time repeat idiom.
-    public static async Task InvertLastModifiedWithBonus(PlayerChoiceContext ctx, Creature creature, int invertMax, int repeats)
-    {
-        var debuff = PickDebuffToInvert(creature);
-        if (debuff == null) return;
-        int converted = await InvertDebuff(ctx, creature, debuff.Value, invertMax);
-        if (converted <= 0) return;
-        for (int i = 0; i < repeats; i++)
-            await ApplyBuffSide(ctx, creature, debuff.Value, converted);
-    }
-
     // Apply `stacks` of the buff side of one of the 8 invertible pairs (the 6 real Un-X powers, or a
-    // positive Strength/Dexterity gain). Used by InvertLastModifiedWithBonus above, and reused by
+    // positive Strength/Dexterity gain). Used by InvertEachWithBonus below, and reused by
     // My Own Lesson's InvertTrackerPower swap and Second Lesson's Rewarded resolution.
     public static async Task ApplyBuffSide(PlayerChoiceContext ctx, Creature creature, InvertibleDebuff debuff, int stacks)
     {
@@ -426,6 +411,22 @@ public static class EmotionalExpression
     {
         foreach (InvertibleDebuff debuff in Enum.GetValues<InvertibleDebuff>())
             await InvertDebuff(ctx, creature, debuff, maxEach);
+    }
+
+    // Like InvertEach, but for each debuff actually inverted, also re-gain that same buff — at the
+    // amount just converted for that debuff — `repeats` additional times as separate applications.
+    // Everything I've Got's "invert each invertible debuff, then gain each inverted buff X more
+    // times." Separate applications (rather than one lump sum) so once-per-application triggers like
+    // Full Voice see `repeats` distinct events per pair, matching the Double Time repeat idiom.
+    public static async Task InvertEachWithBonus(PlayerChoiceContext ctx, Creature creature, int invertMax, int repeats)
+    {
+        foreach (InvertibleDebuff debuff in Enum.GetValues<InvertibleDebuff>())
+        {
+            int converted = await InvertDebuff(ctx, creature, debuff, invertMax);
+            if (converted <= 0) continue;
+            for (int i = 0; i < repeats; i++)
+                await ApplyBuffSide(ctx, creature, debuff, converted);
+        }
     }
 
     internal static async Task<int> InvertDebuff(PlayerChoiceContext ctx, Creature creature, InvertibleDebuff debuff, int max) => debuff switch
