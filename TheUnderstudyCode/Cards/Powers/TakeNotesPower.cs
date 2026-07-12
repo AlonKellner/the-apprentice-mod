@@ -24,7 +24,7 @@ public class TakeNotesPower : UnderstudyPower
 
     public override Task AfterApplied(Creature? creature, CardModel? cardSource)
     {
-        DebuffClearTrackerPower.DebuffCleared += OnDebuffCleared;
+        DebuffClearNotifier.DebuffCleared += OnDebuffCleared;
         return Task.CompletedTask;
     }
 
@@ -37,7 +37,7 @@ public class TakeNotesPower : UnderstudyPower
     // any debuff clearing even with Take Notes nowhere in play.
     public override Task AfterCombatEnd(CombatRoom room)
     {
-        DebuffClearTrackerPower.DebuffCleared -= OnDebuffCleared;
+        DebuffClearNotifier.DebuffCleared -= OnDebuffCleared;
         return Task.CompletedTask;
     }
 
