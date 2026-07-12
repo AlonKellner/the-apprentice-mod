@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using BaseLib.Abstracts;
 using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
@@ -22,7 +23,7 @@ public class UnvulnerablePower : UnderstudyPower
         "Unvulnerable creatures take [blue]25%[/blue] less damage from Attacks. Cancels out with Vulnerable. [gold]Invertible[/gold].",
         "Unvulnerable creatures take [blue]25%[/blue] less damage from Attacks. Cancels out with Vulnerable. [gold]Invertible[/gold].");
 
-    public override decimal ModifyDamageMultiplicative(Creature? target, decimal amount, ValueProp props, Creature? dealer, CardModel? cardSource)
+    public override decimal ModifyDamageMultiplicative(Creature? target, decimal amount, ValueProp props, Creature? dealer, CardModel? cardSource, CardPlay? cardPlay)
     {
         if (target != Owner) return 1m;
         if (!props.IsPoweredAttack()) return 1m;

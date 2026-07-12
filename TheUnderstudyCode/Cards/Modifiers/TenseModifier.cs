@@ -110,30 +110,31 @@ public class TenseModifier : CardModifier
             mod!.Stacks *= 2;
     }
 
-    // ── Strength/Dexterity-style hook overrides ──────────────────────────────────────────────
-    // These are called by Hook.ModifyDamage / Hook.ModifyBlock at card preview and play time,
-    // causing the card to display and deal/grant the bonus automatically, with green/red coloring
-    // when the final value differs from the base value (same as how Strength renders on cards).
+    // ── Strength/Dexterity-style bonus, delivered via BaseLib's card-modifier contract ─────────
+    // These are the ModifyBase* hooks BaseLib invokes directly on the calculated card's own
+    // modifiers (cardSource.GetModifiers()): the damage side via BaseLib's ModifyBaseDamagePatches
+    // Harmony patch on Hook.ModifyDamage, the block side via our own ModifyBaseBlockPatch (BaseLib
+    // ships no block equivalent — see that class). We deliberately do NOT override the game's 5/6-arg
+    // AbstractModel.ModifyDamageAdditive / ModifyBlockAdditive: those only reach a card modifier
+    // through the game's hook-listener enumeration, whose signature and (for damage) run-state
+    // routing drift between game versions — a Slay the Spire 2 update that added a CardPlay? param
+    // to ModifyDamageAdditive silently unbound that override and killed Tense's damage bonus for
+    // players on the newer build while Block (whose signature was unchanged) kept working. The
+    // ModifyBase* signatures are BaseLib-owned and stable across those game changes.
+    //
+    // BaseLib calls these only on THIS card's own modifiers, so no cardSource/Owner check is needed.
+    // originalDamage/originalBlock are unused — Tense is a flat additive, like Strength/Dexterity.
+    // The powered-attack gate lives here (props is available); the powered-block gate lives in
+    // ModifyBaseBlockPatch, because BaseLib's ModifyBaseBlockAdditive virtual carries no props.
 
-    public override decimal ModifyDamageAdditive(
-        Creature? target, decimal amount, ValueProp props, Creature? dealer, CardModel? cardSource)
+    public override decimal ModifyBaseDamageAdditive(decimal originalDamage, ValueProp props)
     {
-        if (cardSource != Owner) return 0m;
         if (!props.IsPoweredAttack()) return 0m;
-        Invariants.Check(ReferenceEquals(_lastCombat, cardSource?.CombatState),
-            nameof(TenseModifier) + "." + nameof(ModifyDamageAdditive),
-            "_tenseCreated may be stale — this ran before any TenseModifier.Apply call this combat");
         return Stacks * _tenseCreated;
     }
 
-    public override decimal ModifyBlockAdditive(
-        Creature target, decimal block, ValueProp props, CardModel? cardSource, CardPlay? cardPlay)
+    public override decimal ModifyBaseBlockAdditive(decimal originalBlock)
     {
-        if (cardSource != Owner) return 0m;
-        if (!props.IsPoweredCardOrMonsterMoveBlock()) return 0m;
-        Invariants.Check(ReferenceEquals(_lastCombat, cardSource?.CombatState),
-            nameof(TenseModifier) + "." + nameof(ModifyBlockAdditive),
-            "_tenseCreated may be stale — this ran before any TenseModifier.Apply call this combat");
         return Stacks * _tenseCreated;
     }
 

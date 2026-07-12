@@ -3,6 +3,7 @@ using BaseLib.Abstracts;
 using BaseLib.Extensions;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Models;
+using MegaCrit.Sts2.Core.ValueProps;
 using TheUnderstudy.TheUnderstudyCode.Cards;
 using TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
 using Xunit;
@@ -186,22 +187,63 @@ public class TenseModifierTests
         Assert.True(TenseModifier.IsFinalTensePlay(secondPlay));
     }
 
+    // ── Damage/block delivery via BaseLib's card-modifier ModifyBase* contract ───────────────
+    // Tense must deliver its bonus through CardModifier.ModifyBaseDamageAdditive /
+    // ModifyBaseBlockAdditive (invoked directly on cardSource.GetModifiers() by a Harmony patch),
+    // NOT the game's 5-arg AbstractModel.ModifyDamageAdditive/ModifyBlockAdditive hooks — those only
+    // reach card modifiers through the version-fragile run-state hook-listener chain, which is why
+    // damage silently stopped applying on some players' installs while block kept working.
+
+    private static void SetStacks(TenseModifier mod, int stacks) =>
+        typeof(TenseModifier).GetProperty(nameof(TenseModifier.Stacks))!.SetValue(mod, stacks);
+
+    private static void SetTenseCreated(int count) =>
+        typeof(TenseModifier).GetField("_tenseCreated", BindingFlags.NonPublic | BindingFlags.Static)!
+            .SetValue(null, count);
+
     [Fact]
-    public void ModifyDamageAdditive_IsVirtualMethod()
+    public void ModifyBaseDamageAdditive_IsOverride()
     {
-        // TenseModifier provides the Strength-style damage bonus hook.
-        var method = typeof(TenseModifier).GetMethod("ModifyDamageAdditive");
+        var method = typeof(TenseModifier).GetMethod(nameof(TenseModifier.ModifyBaseDamageAdditive));
         Assert.NotNull(method);
         Assert.True(method!.DeclaringType == typeof(TenseModifier));
     }
 
     [Fact]
-    public void ModifyBlockAdditive_IsVirtualMethod()
+    public void ModifyBaseBlockAdditive_IsOverride()
     {
-        // TenseModifier provides the Dexterity-style block bonus hook.
-        var method = typeof(TenseModifier).GetMethod("ModifyBlockAdditive");
+        var method = typeof(TenseModifier).GetMethod(nameof(TenseModifier.ModifyBaseBlockAdditive));
         Assert.NotNull(method);
         Assert.True(method!.DeclaringType == typeof(TenseModifier));
+    }
+
+    [Fact]
+    public void ModifyBaseDamageAdditive_PoweredAttack_ReturnsStacksScaledBonus()
+    {
+        var mod = new TenseModifier();
+        SetStacks(mod, 2);
+        SetTenseCreated(3); // bonus = Stacks * _tenseCreated = 6
+        // ValueProp.Move (no Unpowered) is a powered attack.
+        Assert.Equal(6m, mod.ModifyBaseDamageAdditive(10m, ValueProp.Move));
+    }
+
+    [Fact]
+    public void ModifyBaseDamageAdditive_UnpoweredProps_ReturnsZero()
+    {
+        var mod = new TenseModifier();
+        SetStacks(mod, 2);
+        SetTenseCreated(3);
+        // Move but Unpowered (e.g. relic/power/potion damage) gets no Tense bonus.
+        Assert.Equal(0m, mod.ModifyBaseDamageAdditive(10m, ValueProp.Move | ValueProp.Unpowered));
+    }
+
+    [Fact]
+    public void ModifyBaseBlockAdditive_ReturnsStacksScaledBonus()
+    {
+        var mod = new TenseModifier();
+        SetStacks(mod, 2);
+        SetTenseCreated(3); // bonus = 6
+        Assert.Equal(6m, mod.ModifyBaseBlockAdditive(5m));
     }
 
     [Fact]
