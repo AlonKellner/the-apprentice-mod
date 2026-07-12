@@ -1,0 +1,9 @@
+# Per-upload build outputs (regenerated from the game mods/ folder before each upload)
+TheUnderstudyWIP/content/TheUnderstudy.pck
+TheUnderstudyWIP/content/TheUnderstudy.dll
+TheUnderstudyWIP/content/TheUnderstudy.json
+
+# Uploader logs
+mod-uploader.log
+
+# Keep tracked: workshop.json, image.png, and mod_id.txt (needed to update the same item)

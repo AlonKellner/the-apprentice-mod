@@ -1,0 +1,9 @@
+{
+  "title": "The Understudy WIP",
+  "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
+  "visibility": "unlisted",
+  "changeNote": "Use skill placeholder art as the thumbnail.",
+  "tags": [],
+  "dependencies": [3737335127],
+  "contentDescriptors": []
+}

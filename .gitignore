@@ -6,6 +6,9 @@ bin/
 obj/
 publish/
 
+# Steam Workshop uploader binary (re-download from the release; see workshop/README.md)
+tools/mod-uploader/
+
 # Packages
 packages/
 Properties/
