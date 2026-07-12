@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://61di1kwmmys5"
-path="res://.godot/imported/character_icon_the_understudy.png-3f22315fec3d3a6a7a4b38a50e5c487c.ctex"
+uid="uid://p6hom74sotwf"
+path="res://.godot/imported/shaken_power.png-70587439344f92c802f53164d592706e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://TheUnderstudy/images/charui/character_icon_the_understudy.png"
-dest_files=["res://.godot/imported/character_icon_the_understudy.png-3f22315fec3d3a6a7a4b38a50e5c487c.ctex"]
+source_file="res://TheUnderstudy/images/powers/shaken_power.png"
+dest_files=["res://.godot/imported/shaken_power.png-70587439344f92c802f53164d592706e.ctex"]
 
 [params]
 

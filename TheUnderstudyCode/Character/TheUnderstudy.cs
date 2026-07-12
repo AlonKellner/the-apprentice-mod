@@ -56,8 +56,14 @@ public class TheUnderstudy : PlaceholderCharacterModel
         }
     }
 
+    // Bespoke face art: the in-game top-panel corner portrait (CustomIconTexturePath -> IconTexture)
+    // and the character-select face (locked + unlocked) all use Understudy_Face.png. CustomIcon above
+    // wraps CustomIconTexturePath, so it picks this up too. The character-select background is a small
+    // scene wrapping the Attack card placeholder art as a full-rect TextureRect — CharacterSelectBg is
+    // instantiated as a Control, so it must be a scene, not a plain texture. The map marker is left as
+    // the inherited Ironclad default until dedicated art is made.
     public override string CustomIconTexturePath => "character_icon_the_understudy.png".CharacterUiPath();
     public override string CustomCharacterSelectIconPath => "char_select_the_understudy.png".CharacterUiPath();
     public override string CustomCharacterSelectLockedIconPath => "char_select_the_understudy_locked.png".CharacterUiPath();
-    public override string CustomMapMarkerPath => "map_marker_the_understudy.png".CharacterUiPath();
+    public override string CustomCharacterSelectBg => "char_select_bg_the_understudy.tscn".SceneResPath();
 }

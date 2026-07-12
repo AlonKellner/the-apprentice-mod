@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://61di1kwmmys5"
-path="res://.godot/imported/character_icon_the_understudy.png-3f22315fec3d3a6a7a4b38a50e5c487c.ctex"
+uid="uid://cyngkdgk17cf4"
+path="res://.godot/imported/limited_power.png-167ddc5ba8f372925c584894a12b60bd.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://TheUnderstudy/images/charui/character_icon_the_understudy.png"
-dest_files=["res://.godot/imported/character_icon_the_understudy.png-3f22315fec3d3a6a7a4b38a50e5c487c.ctex"]
+source_file="res://TheUnderstudy/images/powers/limited_power.png"
+dest_files=["res://.godot/imported/limited_power.png-167ddc5ba8f372925c584894a12b60bd.ctex"]
 
 [params]
 

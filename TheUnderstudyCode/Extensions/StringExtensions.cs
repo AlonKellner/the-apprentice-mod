@@ -9,40 +9,36 @@ public static class StringExtensions
         return Path.Join(MainFile.ResPath, "images", path);
     }
 
-    public static string CardImagePath(this string path)
+    // The base game's own default for a power icon that has no art yet — a red "NOPE" glyph
+    // (res://images/powers/missing_power.png). Used instead of a bundled white placeholder so
+    // art-less powers visibly fall back to the game's default rather than an invisible blank.
+    private const string MissingPowerIcon = "res://images/powers/missing_power.png";
+
+    // Returns null when no mod-specific portrait exists for this card, so callers fall through to
+    // the base game's default (blank) portrait rather than a bundled white placeholder. Once
+    // per-card-type placeholder art is added, this can fall back to a type-based image instead.
+    public static string? CardImagePath(this string path)
     {
         path = Path.Join(MainFile.ResPath, "images", "card_portraits", path);
-        if (ResourceLoader.Exists(path)) return path;
-
-        MainFile.Logger.Info("Could not find card image path: " + path);
-        return Path.Join(MainFile.ResPath, "images", "card_portraits", "card.png");
+        return ResourceLoader.Exists(path) ? path : null;
     }
 
-    public static string BigCardImagePath(this string path)
+    public static string? BigCardImagePath(this string path)
     {
         path = Path.Join(MainFile.ResPath, "images", "card_portraits", "big", path);
-        if (ResourceLoader.Exists(path)) return path;
-
-        MainFile.Logger.Info("Could not find big card image path: " + path);
-        return Path.Join(MainFile.ResPath, "images", "card_portraits", "big", "card.png");
+        return ResourceLoader.Exists(path) ? path : null;
     }
 
     public static string PowerImagePath(this string path)
     {
         path = Path.Join(MainFile.ResPath, "images", "powers", path);
-        if (ResourceLoader.Exists(path)) return path;
-
-        MainFile.Logger.Info("Could not find power image path: " + path);
-        return Path.Join(MainFile.ResPath, "images", "powers", "power.png");
+        return ResourceLoader.Exists(path) ? path : MissingPowerIcon;
     }
 
     public static string BigPowerImagePath(this string path)
     {
         path = Path.Join(MainFile.ResPath, "images", "powers", "big", path);
-        if (ResourceLoader.Exists(path)) return path;
-
-        MainFile.Logger.Info("Could not find big power image path: " + path);
-        return Path.Join(MainFile.ResPath, "images", "powers", "big", "power.png");
+        return ResourceLoader.Exists(path) ? path : MissingPowerIcon;
     }
 
     public static string RelicImagePath(this string path)
@@ -66,5 +62,10 @@ public static class StringExtensions
     public static string CharacterUiPath(this string path)
     {
         return Path.Join(MainFile.ResPath, "images", "charui", path);
+    }
+
+    public static string SceneResPath(this string path)
+    {
+        return Path.Join(MainFile.ResPath, "scenes", path);
     }
 }

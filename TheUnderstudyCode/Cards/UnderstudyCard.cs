@@ -30,11 +30,28 @@ public abstract class UnderstudyCard(
     bool showInCardLibrary = true)
     : ConstructedCardModel(cost, type, rarity, target, showInCardLibrary)
 {
-    public override string PortraitPath =>
-        $"{Id.Entry.RemovePrefix().ToLowerInvariant()}.png".CardImagePath();
+    // Portrait resolution order: (1) bespoke per-card art if it exists, else (2) a single shared
+    // per-card-type placeholder — card_portraits/placeholders/{attack,skill,power}.png — so every
+    // card of a type draws from ONE editable image (edit it + republish to update them all at once),
+    // else (3) the base game's blank missing-portrait default. Bespoke per-card art, once added,
+    // always wins over the type placeholder.
+    private string TypePlaceholderName => Type switch
+    {
+        CardType.Attack => "attack",
+        CardType.Power => "power",
+        _ => "skill",
+    };
 
-    public override string CustomPortraitPath =>
-        $"{Id.Entry.RemovePrefix().ToLowerInvariant()}.png".BigCardImagePath();
+    private string? TypePlaceholderPortrait =>
+        $"placeholders/{TypePlaceholderName}.png".CardImagePath();
+
+    public override string PortraitPath =>
+        $"{Id.Entry.RemovePrefix().ToLowerInvariant()}.png".CardImagePath()
+            ?? TypePlaceholderPortrait ?? MissingPortraitPath;
+
+    public override string? CustomPortraitPath =>
+        $"{Id.Entry.RemovePrefix().ToLowerInvariant()}.png".BigCardImagePath()
+            ?? TypePlaceholderPortrait;
 
     // Call in subclass constructors to register the dynamic Tense hover tip. The lambda is
     // evaluated at hover time with the live card, so it reads the current TenseModifier.Stacks —
