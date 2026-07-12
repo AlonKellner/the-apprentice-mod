@@ -6,4 +6,7 @@ TheUnderstudyWIP/content/TheUnderstudy.json
 # Uploader logs
 mod-uploader.log
 
+# Godot re-imports the thumbnail because workshop/ sits inside the project tree; artifact only
+TheUnderstudyWIP/image.png.import
+
 # Keep tracked: workshop.json, image.png, and mod_id.txt (needed to update the same item)
