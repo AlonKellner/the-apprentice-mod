@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "Planned counter now reads \"You have no Planned cards\" when empty and \"Your Planned cards:\" otherwise.",
+  "changeNote": "Fix Tense not increasing damage (and Un-Weak/Un-Vulnerable doing nothing) after the latest Slay the Spire 2 update changed the damage-hook signature; Block was unaffected.",
   "tags": [],
   "dependencies": [3737335127],
   "contentDescriptors": []
