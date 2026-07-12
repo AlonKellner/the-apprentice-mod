@@ -217,11 +217,11 @@
   "THEUNDERSTUDY-SAFETY_NET.selectionPrompt": "Choose cards to remove [gold]Unplayable[/gold].",
 
   "THEUNDERSTUDY-CALL_SHEET.title": "Call Sheet",
-  "THEUNDERSTUDY-CALL_SHEET.description": "At the start of your turn, apply [gold]Planned[/gold] to {CallSheetPower:diff()} cards.",
+  "THEUNDERSTUDY-CALL_SHEET.description": "At the start of your turn, apply [gold]Planned[/gold] to a card.",
   "THEUNDERSTUDY-CALL_SHEET.selectionPrompt": "Choose cards to make [gold]Planned[/gold].",
 
   "THEUNDERSTUDY-WARM_UP.title": "Warm Up",
-  "THEUNDERSTUDY-WARM_UP.description": "At the start of your turn, apply [gold]Tense[/gold] to {WarmUpPower:diff()} cards.",
+  "THEUNDERSTUDY-WARM_UP.description": "At the start of your turn, apply [gold]Tense[/gold] to a card.",
   "THEUNDERSTUDY-WARM_UP.selectionPrompt": "Choose cards to make [gold]Tense[/gold].",
 
   "THEUNDERSTUDY-MUSCLE_MEMORY.title": "Muscle Memory",

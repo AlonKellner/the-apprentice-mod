@@ -12,8 +12,9 @@ public class WarmUp : UnderstudyCard
 
     public WarmUp() : base(1, CardType.Power, CardRarity.Uncommon, TargetType.None)
     {
-        WithPowerNoTip<WarmUpPower>(1, 2);
+        WithPowerNoTip<WarmUpPower>(1);
         WithTip(UnderstudyKeywords.Tense);
+        WithKeyword(CardKeyword.Innate, ConstructedCardModel.UpgradeType.Add);
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)

@@ -66,4 +66,14 @@ public class TheUnderstudy : PlaceholderCharacterModel
     public override string CustomCharacterSelectIconPath => "char_select_the_understudy.png".CharacterUiPath();
     public override string CustomCharacterSelectLockedIconPath => "char_select_the_understudy_locked.png".CharacterUiPath();
     public override string CustomCharacterSelectBg => "char_select_bg_the_understudy.tscn".SceneResPath();
+
+    // Combat energy counter: the Understudy's golden energy orb (big_energy) is the base orb layer,
+    // the other four layers stay transparent, with warm-gold burst particles and a dark-amber number
+    // outline. BaseLib assembles the animated NEnergyCounter from these five layers (layers 2-3 spin,
+    // so the orb lives on the static layer 1) and wraps creation in a try/catch that falls back to the
+    // inherited Ironclad orb if anything fails — so this can't break the combat energy display.
+    public override CustomEnergyCounter? CustomEnergyCounter => new(
+        static layer => (layer == 1 ? "big_energy.png" : "energy_counter_blank.png").CharacterUiPath(),
+        outlineColor: new Color("3a2800"),
+        burstColor: new Color("f0c040"));
 }
