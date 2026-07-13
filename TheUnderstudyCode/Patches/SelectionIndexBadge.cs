@@ -16,12 +16,16 @@ namespace TheUnderstudy.TheUnderstudyCode.Patches;
 // Attach mechanism mirrors OrderOverlayPatch: a Control added into NCard.OverlayContainer, sized/placed
 // off the sibling "Frame" node (OverlayContainer and its ancestors report Size=(0,0); every visible
 // card element is instead centered on CardContainer's origin via Position = Frame.Position). The number
-// is a plain Label whose font we set to the card's description font (fetched from the theme) and whose
+// is a plain Label whose font we set to the base game's Kreon display face (card name/number type) and whose
 // color we set gold — a code-created MegaRichTextLabel can't be used here: its _Ready() throws unless a
 // theme font override was baked in by a scene (a Godot-engine-bug workaround). The chip background is a
 // code-built StyleBoxFlat — no textures/scenes, so no PCK load-order risk.
 public static class SelectionIndexBadge
 {
+    // Base-game Kreon Bold — the display typeface used for card names and cost/number text, so the
+    // index badge matches the game's UI numbers rather than the serif card-body font.
+    private const string KreonBoldPath = "res://fonts/kreon_bold.ttf";
+
     private const float BadgeSize = 54f;
     private const float Inset = 10f;
     private const int FontSize = 30;
@@ -121,9 +125,14 @@ public static class SelectionIndexBadge
             HorizontalAlignment = HorizontalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Center,
         };
-        // Match the card description typeface by pulling the RichTextLabel normal font from the theme.
-        var descFont = card.GetThemeFont(ThemeConstants.RichTextLabel.NormalFont, "RichTextLabel");
-        if (descFont != null) label.AddThemeFontOverride("font", descFont);
+        // Use Kreon — the base game's display typeface for card names and numbers — so the "#N"
+        // index reads as a game UI number, not card body text. (The card description font pulled from
+        // the theme is a serif body face, which is what previously made this look wrong.) Fall back to
+        // that description font if the base-game Kreon resource can't be loaded for any reason.
+        Font? numberFont = ResourceLoader.Exists(KreonBoldPath)
+            ? GD.Load<Font>(KreonBoldPath)
+            : card.GetThemeFont(ThemeConstants.RichTextLabel.NormalFont, "RichTextLabel");
+        if (numberFont != null) label.AddThemeFontOverride("font", numberFont);
         label.AddThemeColorOverride("font_color", Gold);
         label.AddThemeColorOverride("font_outline_color", new Color(0, 0, 0));
         label.AddThemeConstantOverride("outline_size", 6);
