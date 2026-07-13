@@ -22,6 +22,7 @@ public class StandingByPower : StandingByPowerBase
         for (int i = 0; i < count && pool.Count > 0; i++)
         {
             var pick = player.RunState.Rng.CombatCardSelection.NextItem(pool);
+            if (pick == null) break;
             picked.Add(pick);
             pool.Remove(pick);
         }

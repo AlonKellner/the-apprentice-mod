@@ -52,8 +52,13 @@ public abstract class StandingByPowerBase : UnderstudyPower
     // on stale queued state in the new attempt (same fix as SecondLessonPower.ResetTracking).
     public void ResetTracking() => _pending.Clear();
 
+    // AfterApplied fires on EVERY application — including each stack onto this same reused instance
+    // (PowerCmd reuses a same-type instance for stacking, see ResetTracking). Subscribe idempotently
+    // (unsubscribe first) so a stacked power queues each Unplayable event exactly once; otherwise the
+    // handler would be attached once per stack and free Amount-times too many cards per trigger.
     public override Task AfterApplied(Creature? creature, CardModel? cardSource)
     {
+        UnplayableModifier.Applied -= OnUnplayableApplied;
         UnplayableModifier.Applied += OnUnplayableApplied;
         return Task.CompletedTask;
     }
@@ -96,20 +101,17 @@ public abstract class StandingByPowerBase : UnderstudyPower
         var triggers = _pending.ToList();
         _pending.Clear();
 
-        Invariants.Check(triggers.Distinct().Count() == triggers.Count,
-            nameof(StandingByPowerBase) + "." + nameof(AfterCardPlayedLate),
-            "the pending trigger queue has duplicate cards — OnUnplayableApplied fired twice for the same card");
-
         var player = Owner.Player;
         int restBefore = CountUnplayableOutsideHand(player);
         int perTrigger = (int)Amount;
 
+        // Note: a triggering card need NOT still be Unplayable here. The drain is deferred to the
+        // Late pass, and between the trigger firing and now the card may have been freed (by this
+        // power, by Rewrite/Take Two/Touch Up, or during a Performance auto-play chain) — the
+        // "whenever a card becomes Unplayable" reaction still stands. We only ever free OTHER cards
+        // in hand, guarded by the outside-hand invariant below.
         foreach (var triggeringCard in triggers)
         {
-            Invariants.Check(triggeringCard.TryGetModifier<UnplayableModifier>(out _),
-                nameof(StandingByPowerBase) + "." + nameof(AfterCardPlayedLate),
-                $"{triggeringCard.Id} queued this trigger by becoming Unplayable, but no longer carries UnplayableModifier by drain time");
-
             var candidates = PileType.Hand.GetPile(player).Cards
                 .Where(c => c != triggeringCard && UnplayableModifier.CanApplyTo(c))
                 .ToList();
