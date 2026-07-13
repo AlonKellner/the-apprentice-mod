@@ -61,45 +61,11 @@
     </ItemGroup>
   </Target>
 
-  <!-- Copy compiled mod files to StS2 mods folder after build.
-       Skipped when inside MegaDot's recursive dotnet publish (env var set by GodotPublish's Exec)
-       so MegaDot's x86_64-targeted DLL doesn't overwrite the AnyCPU one we already copied. -->
-  <Target Name="CopyToModsFolderOnBuild" AfterTargets="Build"
-          Condition="'$([System.Environment]::GetEnvironmentVariable(&quot;STS2_INSIDE_GODOT_PUBLISH&quot;))' != '1'">
-    <Copy
-      SourceFiles="$(OutputPath)$(AssemblyName).dll"
-      DestinationFolder="$(ModsPath)"
-      SkipUnchangedFiles="true"
-      Condition="Exists('$(ModsPath)')" />
-    <Copy
-      SourceFiles="$(OutputPath)$(AssemblyName).pdb"
-      DestinationFolder="$(ModsPath)"
-      SkipUnchangedFiles="true"
-      Condition="Exists('$(ModsPath)') AND Exists('$(OutputPath)$(AssemblyName).pdb')" />
-    <Copy
-      SourceFiles="$(MSBuildProjectDirectory)/$(AssemblyName).json"
-      DestinationFolder="$(ModsPath)"
-      SkipUnchangedFiles="true"
-      Condition="Exists('$(ModsPath)')" />
-  </Target>
-
-  <!-- Copy .pck to mods folder for quick code-only builds (reuses PCK from last publish) -->
-  <Target Name="CopyQuickPck" AfterTargets="Build"
-          Condition="'$([System.Environment]::GetEnvironmentVariable(&quot;STS2_INSIDE_GODOT_PUBLISH&quot;))' != '1'">
-    <Copy
-      SourceFiles="$(MSBuildProjectDirectory)/publish/$(AssemblyName).pck"
-      DestinationFolder="$(ModsPath)"
-      SkipUnchangedFiles="true"
-      Condition="Exists('$(ModsPath)') AND Exists('$(MSBuildProjectDirectory)/publish/$(AssemblyName).pck')" />
-  </Target>
-
-  <!-- Copy freshly exported .pck to mods folder after a full publish (runs after GodotPublish) -->
-  <Target Name="CopyFreshPck" AfterTargets="GodotPublish">
-    <Copy
-      SourceFiles="$(MSBuildProjectDirectory)/publish/$(AssemblyName).pck"
-      DestinationFolder="$(ModsPath)"
-      Condition="Exists('$(ModsPath)') AND Exists('$(MSBuildProjectDirectory)/publish/$(AssemblyName).pck')" />
-  </Target>
+  <!-- NOTE: this project deliberately no longer deploys build output into the local StS2 mods/
+       folder — the mod is distributed via the Steam Workshop only. `build` produces the DLL in
+       $(OutputPath) and a full `publish` exports the .pck to publish/ (see GodotPublish below); the
+       Workshop upload stages content/ from those build outputs, not from a local mods install. The
+       former CopyToModsFolderOnBuild / CopyQuickPck / CopyFreshPck targets were removed for this. -->
 
   <!-- Export Godot .pck for publishing.
        STS2_INSIDE_GODOT_PUBLISH=1 is passed to MegaDot's Exec so that its recursive dotnet publish
