@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using BaseLib.Abstracts;
-using MegaCrit.Sts2.Core.Entities.Players;
+using MegaCrit.Sts2.Core.Combat;
+using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 
@@ -14,17 +15,17 @@ public class AdLibPower : UnderstudyPower
 
     public override List<(string, string)> Localization => new PowerLoc(
         "Ad Lib",
-        "At the start of your turn, Invert 1 random [gold]invertible[/gold] debuff you currently have.",
-        "At the start of your turn, Invert {Amount} random [gold]invertible[/gold] debuff you currently have.");
+        "At the end of your turn, Invert 1 random [gold]invertible[/gold] debuff you currently have.",
+        "At the end of your turn, Invert {Amount} random [gold]invertible[/gold] debuff you currently have.");
 
-    public override async Task AfterPlayerTurnStartLate(PlayerChoiceContext context, Player player)
+    public override async Task BeforeSideTurnEnd(PlayerChoiceContext context, CombatSide side, IEnumerable<Creature> creatures)
     {
-        if (player != Owner.Player) return;
+        if (side != CombatSide.Player || Owner.Player == null) return;
 
         var present = EmotionalExpression.GetPresentInvertibleDebuffs(Owner);
         if (present.Count == 0) return;
 
-        var chosen = player.RunState.Rng.CombatCardSelection.NextItem(present);
+        var chosen = Owner.Player.RunState.Rng.CombatCardSelection.NextItem(present);
         await EmotionalExpression.InvertDebuff(context, Owner, chosen, Amount);
     }
 }

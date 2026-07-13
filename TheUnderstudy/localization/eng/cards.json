@@ -268,7 +268,7 @@
   "THEUNDERSTUDY-ENSEMBLE.description": "Deal {Damage:diff()} damage to ALL enemies.\nApply 2 [gold]Vulnerable[/gold] and 2 [gold]Weak[/gold] to yourself and ALL enemies.",
 
   "THEUNDERSTUDY-AD_LIB.title": "Ad Lib",
-  "THEUNDERSTUDY-AD_LIB.description": "At the start of your turn, Invert {IfUpgraded:show:2|1} random [gold]invertible[/gold] debuff you currently have.",
+  "THEUNDERSTUDY-AD_LIB.description": "At the end of your turn, Invert {IfUpgraded:show:2|1} random [gold]invertible[/gold] debuff you currently have.",
 
   "THEUNDERSTUDY-CRESCENDO.title": "Crescendo",
   "THEUNDERSTUDY-CRESCENDO.description": "Double all gained [gold]Vigor[/gold].",

@@ -13,17 +13,29 @@ public class StandingBy : UnderstudyCard
 
     public StandingBy() : base(1, CardType.Power, CardRarity.Uncommon, TargetType.None)
     {
-        WithPowerNoTip<StandingByPower>(1, 1);
         WithTip(CardKeyword.Unplayable);
     }
 
+    // Base applies the random StandingByPower; upgraded applies the choice StandingByChoicePower.
+    // They're distinct power types, so playing one of each leaves two independent Counter badges,
+    // and replaying either stacks only its own kind. Amount 1 per play (explicit-amount Apply
+    // overload) — each stack frees one card per trigger; the power reads its own Amount.
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
         var creature = cardPlay.Card.Owner.Creature;
-        var power = await CommonActions.Apply<StandingByPower>(context, creature, this);
-        Invariants.Check(power != null, nameof(StandingBy) + "." + nameof(OnPlay),
-            "StandingByPower must exist immediately after Apply — an upgraded copy's ChoiceMode would be silently dropped");
-        power?.ResetTracking();
-        if (cardPlay.Card.IsUpgraded && power != null) power.ChoiceMode = true;
+        if (cardPlay.Card.IsUpgraded)
+        {
+            var power = await CommonActions.Apply<StandingByChoicePower>(context, creature, this, 1);
+            Invariants.Check(power != null, nameof(StandingBy) + "." + nameof(OnPlay),
+                "StandingByChoicePower must exist immediately after Apply");
+            power?.ResetTracking();
+        }
+        else
+        {
+            var power = await CommonActions.Apply<StandingByPower>(context, creature, this, 1);
+            Invariants.Check(power != null, nameof(StandingBy) + "." + nameof(OnPlay),
+                "StandingByPower must exist immediately after Apply");
+            power?.ResetTracking();
+        }
     }
 }

@@ -136,19 +136,49 @@ public class PowerClassTests
         var p = new StandingByPower();
         Assert.Equal(PowerType.Buff, p.Type);
         Assert.Equal(PowerStackType.Counter, p.StackType);
-        Assert.False(p.ChoiceMode);
     }
 
     [Fact]
-    public void StandingByPower_Localization_ReflectsLiveChoiceMode()
+    public void StandingByChoicePower_IsBuff_Counter()
+    {
+        var p = new StandingByChoicePower();
+        Assert.Equal(PowerType.Buff, p.Type);
+        Assert.Equal(PowerStackType.Counter, p.StackType);
+    }
+
+    // Random (base) and choice (upgraded) are two independent powers that both present as the same
+    // "Standing By" badge — same name and (via the shared base's override) same icon — differing
+    // only in tooltip: "random attack or skill" vs "attack or skill of your choice".
+    [Fact]
+    public void StandingByPower_Localization_IsRandom()
     {
         var p = new StandingByPower();
+        Assert.Equal("Standing By", p.Localization[0].Item2);
         Assert.Contains("random", p.Localization[1].Item2);
         Assert.Contains("random", p.Localization[2].Item2);
+    }
 
-        p.ChoiceMode = true;
+    [Fact]
+    public void StandingByChoicePower_Localization_IsChoice()
+    {
+        var p = new StandingByChoicePower();
+        Assert.Equal("Standing By", p.Localization[0].Item2);
         Assert.Contains("of your choice", p.Localization[1].Item2);
         Assert.Contains("of your choice", p.Localization[2].Item2);
+    }
+
+    [Fact]
+    public void StandingByPowers_ShareBaseAndIcon()
+    {
+        // Both derive from the shared base...
+        Assert.IsAssignableFrom<StandingByPowerBase>(new StandingByPower());
+        Assert.IsAssignableFrom<StandingByPowerBase>(new StandingByChoicePower());
+        // ...and neither re-declares the icon path, so the base's single override drives both
+        // (guarantees an identical badge icon without invoking Godot's ResourceLoader here).
+        var randomIcon = typeof(StandingByPower).GetProperty("CustomPackedIconPath")!.DeclaringType;
+        var choiceIcon = typeof(StandingByChoicePower).GetProperty("CustomPackedIconPath")!.DeclaringType;
+        Assert.Equal(typeof(StandingByPowerBase), randomIcon);
+        Assert.Equal(typeof(StandingByPowerBase), choiceIcon);
     }
 
     [Fact]
@@ -492,9 +522,9 @@ public class PowerClassTests
     }
 
     [Fact]
-    public void AdLibPower_OverridesAfterPlayerTurnStartLate() =>
+    public void AdLibPower_OverridesBeforeSideTurnEnd() =>
         Assert.NotNull(typeof(AdLibPower).GetMethod(
-            "AfterPlayerTurnStartLate", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly));
+            "BeforeSideTurnEnd", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly));
 
     [Fact]
     public void CrescendoPower_IsBuff_Counter()
