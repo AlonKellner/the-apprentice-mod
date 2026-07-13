@@ -5,6 +5,7 @@ using BaseLib.Abstracts;
 using BaseLib.Extensions;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Models;
+using TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 using TheUnderstudy.TheUnderstudyCode.Extensions;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
@@ -42,7 +43,24 @@ public class UnplayableModifier : CardModifier
 
     public override void OnInitialApplication()
     {
-        if (Owner != null) Applied?.Invoke(Owner);
+        var card = Owner;
+        if (card == null) return;
+
+        // Muscle Memory: a Tense card can never become Unplayable while its owner has the power.
+        // This is enforced here — the single point every UnplayableModifier attach funnels through
+        // (BaseLib AddModifier -> ApplyInternal -> OnInitialApplication) — so EVERY source is covered
+        // uniformly (Tense's own play-lock, Planned, Shaken, One Take, and anything added later),
+        // instead of each call site having to remember to check. We strip the just-attached flag and
+        // return BEFORE raising Applied, so Standing By / Master Form never react to a lock that never
+        // actually took hold. Owner throws on canonical cards, so only read it when mutable.
+        var creature = card.IsMutable ? card.Owner?.Creature : null;
+        if (card.TryGetModifier<TenseModifier>(out _) && MuscleMemoryPower.IsActive(creature))
+        {
+            CardModifier.DirectModifiers(card).Remove(this);
+            return;
+        }
+
+        Applied?.Invoke(card);
     }
 
     public override bool TryModifyKeywordsInCombat(CardModel card, ISet<CardKeyword> keywords)

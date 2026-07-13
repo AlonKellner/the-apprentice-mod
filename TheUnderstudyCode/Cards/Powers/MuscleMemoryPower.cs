@@ -5,10 +5,9 @@ using MegaCrit.Sts2.Core.Entities.Powers;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 
-// Pure presence flag, same shape as HeldNotePower.IsActive — checked by the three call sites that
-// add UnplayableModifier as a result of a card carrying TenseModifier (UnderstudyCard.AfterCardPlayed,
-// PlannedModifier.Apply, ShakenPower.BeforeSideTurnEnd), so a Tense card can be played, Planned,
-// or Shaken without locking up while this Power is active.
+// "Tense cards will not become Unplayable." Immunity is NOT enforced here per call site — it's
+// enforced centrally in UnplayableModifier.OnInitialApplication (the one point every Unplayable
+// attach funnels through), which checks IsActive below. This Power only supplies that presence flag.
 public class MuscleMemoryPower : UnderstudyPower
 {
     public override PowerType Type => PowerType.Buff;

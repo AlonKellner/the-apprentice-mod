@@ -1,4 +1,5 @@
 using BaseLib.Abstracts;
+using BaseLib.Extensions;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Models;
 using TheUnderstudy.TheUnderstudyCode.Cards;
@@ -42,5 +43,36 @@ public class UnplayableModifierTests
     public void AnyIn_OneUnplayableCard_ReturnsTrue()
     {
         Assert.True(UnplayableModifier.AnyIn(new CardModel[] { new PlayableSkill(), new UnplayableSkill() }));
+    }
+
+    // The Muscle Memory immunity guard in OnInitialApplication must only block when the card is Tense
+    // AND its owner has Muscle Memory. With no owner/creature (bare card), IsActive(null) is false, so
+    // the modifier must attach normally and raise Applied — i.e. the guard never over-blocks. The
+    // positive immune path needs a live creature carrying Muscle Memory and is verified in-game.
+    private static bool AttachUnplayableAndDidItFireApplied(CardModel card)
+    {
+        bool fired = false;
+        void Handler(CardModel c) { if (c == card) fired = true; }
+        UnplayableModifier.Applied += Handler;
+        try { CardModifier.AddModifier(card, new UnplayableModifier()); }
+        finally { UnplayableModifier.Applied -= Handler; }
+        return fired;
+    }
+
+    [Fact]
+    public void OnInitialApplication_NonTenseCard_Attaches_AndFiresApplied()
+    {
+        var card = new PlayableSkill();
+        Assert.True(AttachUnplayableAndDidItFireApplied(card));
+        Assert.True(card.TryGetModifier<UnplayableModifier>(out _));
+    }
+
+    [Fact]
+    public void OnInitialApplication_TenseCard_NoMuscleMemoryCreature_StillAttaches_AndFiresApplied()
+    {
+        var card = new PlayableSkill();
+        CardModifier.AddModifier(card, new TenseModifier()); // Tense, but bare card has no creature/power
+        Assert.True(AttachUnplayableAndDidItFireApplied(card));
+        Assert.True(card.TryGetModifier<UnplayableModifier>(out _));
     }
 }

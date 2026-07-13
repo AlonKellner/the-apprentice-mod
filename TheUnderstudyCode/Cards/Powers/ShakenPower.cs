@@ -31,13 +31,12 @@ public class ShakenPower : UnderstudyPower
         if (side != CombatSide.Player || Owner.Player == null) return;
         var hand = Owner.Player.Piles.FirstOrDefault(p => p.Type == PileType.Hand);
         if (hand == null) return;
-        bool muscleMemoryActive = MuscleMemoryPower.IsActive(Owner);
         foreach (var card in hand.Cards.ToList().Where(c =>
             (c.Type == CardType.Attack || c.Type == CardType.Skill) && !c.IsStable()))
         {
-            // Muscle Memory only protects a card that's ALSO Tense — Shaken still locks any
-            // other eligible Attack/Skill as normal.
-            if (muscleMemoryActive && card.TryGetModifier<TenseModifier>(out _)) continue;
+            // Muscle Memory immunity (Tense cards) is enforced centrally in
+            // UnplayableModifier.OnInitialApplication — the attach below simply doesn't stick for a
+            // Tense card under Muscle Memory. Shaken still locks any other eligible Attack/Skill.
             if (!card.TryGetModifier<UnplayableModifier>(out _))
                 CardModifier.AddModifier<UnplayableModifier>(card);
         }

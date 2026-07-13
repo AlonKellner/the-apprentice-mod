@@ -188,11 +188,10 @@ public class PlannedModifier : CardModifier
             $"slot {newSlot} assigned to {card.Id} is already held by {collisions} other card(s) — " +
             "monotonic counter desynced from live state");
 
-        // Muscle Memory only protects a card that's ALSO Tense — Planned cards in general still
-        // become Unplayable as normal.
-        bool immuneViaMuscleMemory = card.TryGetModifier<TenseModifier>(out _)
-            && MuscleMemoryPower.IsActive(card.Owner?.Creature);
-        if (!immuneViaMuscleMemory && !card.TryGetModifier<UnplayableModifier>(out _))
+        // Muscle Memory immunity (Tense cards) is enforced centrally in
+        // UnplayableModifier.OnInitialApplication — a Planned Tense card under Muscle Memory simply
+        // won't retain the Unplayable flag we attach here. Non-Tense Planned cards lock as normal.
+        if (!card.TryGetModifier<UnplayableModifier>(out _))
             CardModifier.AddModifier<UnplayableModifier>(card);
         Log.Info($"PlannedModifier.Apply: {card.Id} took slot {newSlot} ({mod.SequenceIndices.Count} slot(s) total on this card)");
         Changed?.Invoke();

@@ -235,13 +235,12 @@ public abstract class UnderstudyCard(
         // CardModifier's own OnPlay override, which runs inside that enumeration and throws
         // "Collection was modified" if it tries to add a modifier to the same card.
         // IsFinalTensePlay gates this to the last CardPlay in a Replay series, so a card with
-        // Replay N only becomes Unplayable after all N+1 plays have resolved. Muscle Memory
-        // suppresses this specifically (not Planned-driven Unplayable in general) — see
-        // MuscleMemoryPower's own doc comment for the other two call sites this mirrors.
+        // Replay N only becomes Unplayable after all N+1 plays have resolved. Muscle Memory immunity
+        // is NOT checked here — it's enforced centrally in UnplayableModifier.OnInitialApplication,
+        // which drops this attach for a Tense card whose owner has the power.
         if (cardPlay.Card == this
             && TenseModifier.IsFinalTensePlay(cardPlay)
-            && !this.TryGetModifier<UnplayableModifier>(out _)
-            && !MuscleMemoryPower.IsActive(Owner?.Creature))
+            && !this.TryGetModifier<UnplayableModifier>(out _))
             CardModifier.AddModifier<UnplayableModifier>(this);
         return Task.CompletedTask;
     }
