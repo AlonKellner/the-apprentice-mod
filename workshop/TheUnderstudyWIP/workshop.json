@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "Standing By now stacks properly: base (random) and upgrade (choice) are independent stacks, and each stack frees one more Unplayable card per trigger. Ad Lib now triggers at the end of your turn instead of the start.",
+  "changeNote": "Fix a Standing By error (spurious invariant log) during heavy Unplayable churn, and fix stacked Standing By freeing too many cards per trigger.",
   "tags": [],
   "dependencies": [3737335127],
   "contentDescriptors": []
