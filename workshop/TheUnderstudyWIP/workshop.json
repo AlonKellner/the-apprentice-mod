@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "Fix a Standing By error (spurious invariant log) during heavy Unplayable churn, and fix stacked Standing By freeing too many cards per trigger.",
+  "changeNote": "Muscle Memory now keeps Tense cards playable against every Unplayable source, including One Take. Planned-selection index badges use the correct (Kreon) font.",
   "tags": [],
   "dependencies": [3737335127],
   "contentDescriptors": []
