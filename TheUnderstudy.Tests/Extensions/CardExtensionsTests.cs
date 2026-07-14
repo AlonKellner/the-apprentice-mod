@@ -79,7 +79,7 @@ public class CardExtensionsTests
             UnplayableReason.EnergyCostTooHigh | UnplayableReason.BlockedByHook));
 
     // AnyUnplayable — broader than UnplayableModifier.AnyIn (any card type, matching
-    // TakeYourBow's existing damage-counting scope).
+    // LoosenUp's existing damage-counting scope).
 
     [Fact]
     public void AnyUnplayable_EmptyInput_ReturnsFalse() =>

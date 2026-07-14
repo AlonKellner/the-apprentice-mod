@@ -125,7 +125,7 @@ public class PowerClassTests
     [Fact]
     public void TakeNotesPower_IsBuff_Counter()
     {
-        var p = new TakeNotesPower();
+        var p = new CryingOutLoudPower();
         Assert.Equal(PowerType.Buff, p.Type);
         Assert.Equal(PowerStackType.Counter, p.StackType);
     }
@@ -133,7 +133,7 @@ public class PowerClassTests
     [Fact]
     public void StandingByPower_IsBuff_Counter()
     {
-        var p = new StandingByPower();
+        var p = new BalancedPower();
         Assert.Equal(PowerType.Buff, p.Type);
         Assert.Equal(PowerStackType.Counter, p.StackType);
     }
@@ -141,19 +141,19 @@ public class PowerClassTests
     [Fact]
     public void StandingByChoicePower_IsBuff_Counter()
     {
-        var p = new StandingByChoicePower();
+        var p = new BalancedChoicePower();
         Assert.Equal(PowerType.Buff, p.Type);
         Assert.Equal(PowerStackType.Counter, p.StackType);
     }
 
     // Random (base) and choice (upgraded) are two independent powers that both present as the same
-    // "Standing By" badge — same name and (via the shared base's override) same icon — differing
+    // "Balanced" badge — same name and (via the shared base's override) same icon — differing
     // only in tooltip: "random attack or skill" vs "attack or skill of your choice".
     [Fact]
     public void StandingByPower_Localization_IsRandom()
     {
-        var p = new StandingByPower();
-        Assert.Equal("Standing By", p.Localization[0].Item2);
+        var p = new BalancedPower();
+        Assert.Equal("Balanced", p.Localization[0].Item2);
         Assert.Contains("random", p.Localization[1].Item2);
         Assert.Contains("random", p.Localization[2].Item2);
     }
@@ -161,8 +161,8 @@ public class PowerClassTests
     [Fact]
     public void StandingByChoicePower_Localization_IsChoice()
     {
-        var p = new StandingByChoicePower();
-        Assert.Equal("Standing By", p.Localization[0].Item2);
+        var p = new BalancedChoicePower();
+        Assert.Equal("Balanced", p.Localization[0].Item2);
         Assert.Contains("of your choice", p.Localization[1].Item2);
         Assert.Contains("of your choice", p.Localization[2].Item2);
     }
@@ -171,14 +171,14 @@ public class PowerClassTests
     public void StandingByPowers_ShareBaseAndIcon()
     {
         // Both derive from the shared base...
-        Assert.IsAssignableFrom<StandingByPowerBase>(new StandingByPower());
-        Assert.IsAssignableFrom<StandingByPowerBase>(new StandingByChoicePower());
+        Assert.IsAssignableFrom<BalancedPowerBase>(new BalancedPower());
+        Assert.IsAssignableFrom<BalancedPowerBase>(new BalancedChoicePower());
         // ...and neither re-declares the icon path, so the base's single override drives both
         // (guarantees an identical badge icon without invoking Godot's ResourceLoader here).
-        var randomIcon = typeof(StandingByPower).GetProperty("CustomPackedIconPath")!.DeclaringType;
-        var choiceIcon = typeof(StandingByChoicePower).GetProperty("CustomPackedIconPath")!.DeclaringType;
-        Assert.Equal(typeof(StandingByPowerBase), randomIcon);
-        Assert.Equal(typeof(StandingByPowerBase), choiceIcon);
+        var randomIcon = typeof(BalancedPower).GetProperty("CustomPackedIconPath")!.DeclaringType;
+        var choiceIcon = typeof(BalancedChoicePower).GetProperty("CustomPackedIconPath")!.DeclaringType;
+        Assert.Equal(typeof(BalancedPowerBase), randomIcon);
+        Assert.Equal(typeof(BalancedPowerBase), choiceIcon);
     }
 
     [Fact]
@@ -222,7 +222,7 @@ public class PowerClassTests
     [Fact]
     public void FullVoicePower_IsBuff_Counter()
     {
-        var p = new FullVoicePower();
+        var p = new AnotherBrickPower();
         Assert.Equal(PowerType.Buff, p.Type);
         Assert.Equal(PowerStackType.Counter, p.StackType);
     }
@@ -312,13 +312,13 @@ public class PowerClassTests
     {
         Assert.NotEmpty(new JadedPower().Localization);
         Assert.NotEmpty(new UnjadedPower().Localization);
-        Assert.NotEmpty(new TakeNotesPower().Localization);
-        Assert.NotEmpty(new StandingByPower().Localization);
+        Assert.NotEmpty(new CryingOutLoudPower().Localization);
+        Assert.NotEmpty(new BalancedPower().Localization);
         Assert.NotEmpty(new DoubleTimePower().Localization);
         Assert.NotEmpty(new MasterFormPower().Localization);
         Assert.NotEmpty(new HeldNotePower().Localization);
         Assert.NotEmpty(new TheFirstLessonPower().Localization);
-        Assert.NotEmpty(new FullVoicePower().Localization);
+        Assert.NotEmpty(new AnotherBrickPower().Localization);
         Assert.NotEmpty(new UnfrailPower().Localization);
         Assert.NotEmpty(new InvertTrackerPower().Localization);
     }
@@ -414,7 +414,7 @@ public class PowerClassTests
     [Fact]
     public void CallSheetPower_IsBuff_Counter()
     {
-        var p = new CallSheetPower();
+        var p = new MusePower();
         Assert.Equal(PowerType.Buff, p.Type);
         Assert.Equal(PowerStackType.Counter, p.StackType);
         Assert.NotEmpty(p.Localization);
@@ -422,13 +422,13 @@ public class PowerClassTests
 
     [Fact]
     public void CallSheetPower_OverridesAfterPlayerTurnStartLate() =>
-        Assert.NotNull(typeof(CallSheetPower).GetMethod(
+        Assert.NotNull(typeof(MusePower).GetMethod(
             "AfterPlayerTurnStartLate", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly));
 
     [Fact]
     public void WarmUpPower_IsBuff_Counter()
     {
-        var p = new WarmUpPower();
+        var p = new SchedulePower();
         Assert.Equal(PowerType.Buff, p.Type);
         Assert.Equal(PowerStackType.Counter, p.StackType);
         Assert.NotEmpty(p.Localization);
@@ -436,7 +436,7 @@ public class PowerClassTests
 
     [Fact]
     public void WarmUpPower_OverridesAfterPlayerTurnStartLate() =>
-        Assert.NotNull(typeof(WarmUpPower).GetMethod(
+        Assert.NotNull(typeof(SchedulePower).GetMethod(
             "AfterPlayerTurnStartLate", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly));
 
     [Fact]
@@ -455,7 +455,7 @@ public class PowerClassTests
     [Fact]
     public void PulledPunchPower_IsBuff_Counter()
     {
-        var p = new PulledPunchPower();
+        var p = new ApathyPower();
         Assert.Equal(PowerType.Buff, p.Type);
         Assert.Equal(PowerStackType.Counter, p.StackType);
     }
@@ -463,7 +463,7 @@ public class PowerClassTests
     [Fact]
     public void PulledPunchPower_Localization_MentionsInvertible()
     {
-        var descriptions = new PulledPunchPower().Localization
+        var descriptions = new ApathyPower().Localization
             .Where(e => e.Item1 == "description" || e.Item1 == "smartDescription")
             .Select(e => e.Item2);
         Assert.All(descriptions, d => Assert.Contains("invertible", d, StringComparison.OrdinalIgnoreCase));
@@ -474,7 +474,7 @@ public class PowerClassTests
     // reduction math is covered by PulledPunchPowerTests.Dampen_*.
     [Fact]
     public void PulledPunchPower_IsPlainMarker_NoOwnAmountHook() =>
-        Assert.Null(typeof(PulledPunchPower).GetMethod(
+        Assert.Null(typeof(ApathyPower).GetMethod(
             "AfterPowerAmountChanged", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly));
 
     [Fact]
@@ -507,7 +507,7 @@ public class PowerClassTests
     [Fact]
     public void AdLibPower_IsBuff_Counter()
     {
-        var p = new AdLibPower();
+        var p = new BrightSidePower();
         Assert.Equal(PowerType.Buff, p.Type);
         Assert.Equal(PowerStackType.Counter, p.StackType);
     }
@@ -515,7 +515,7 @@ public class PowerClassTests
     [Fact]
     public void AdLibPower_Localization_MentionsInvertible()
     {
-        var descriptions = new AdLibPower().Localization
+        var descriptions = new BrightSidePower().Localization
             .Where(e => e.Item1 == "description" || e.Item1 == "smartDescription")
             .Select(e => e.Item2);
         Assert.All(descriptions, d => Assert.Contains("invertible", d, StringComparison.OrdinalIgnoreCase));
@@ -523,7 +523,7 @@ public class PowerClassTests
 
     [Fact]
     public void AdLibPower_OverridesBeforeSideTurnEnd() =>
-        Assert.NotNull(typeof(AdLibPower).GetMethod(
+        Assert.NotNull(typeof(BrightSidePower).GetMethod(
             "BeforeSideTurnEnd", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly));
 
     [Fact]
@@ -551,7 +551,7 @@ public class PowerClassTests
     [Fact]
     public void StageManagerPower_IsBuff_Single()
     {
-        var p = new StageManagerPower();
+        var p = new VenuePower();
         Assert.Equal(PowerType.Buff, p.Type);
         Assert.Equal(PowerStackType.Single, p.StackType);
     }
@@ -559,7 +559,7 @@ public class PowerClassTests
     [Fact]
     public void StageManagerPower_Localization_MentionsPlanned()
     {
-        var descriptions = new StageManagerPower().Localization
+        var descriptions = new VenuePower().Localization
             .Where(e => e.Item1 == "description" || e.Item1 == "smartDescription")
             .Select(e => e.Item2);
         Assert.All(descriptions, d => Assert.Contains("Planned", d));
@@ -567,16 +567,16 @@ public class PowerClassTests
 
     [Fact]
     public void StageManagerPower_OverridesAfterCardPlayed() =>
-        Assert.NotNull(typeof(StageManagerPower).GetMethod(
+        Assert.NotNull(typeof(VenuePower).GetMethod(
             "AfterCardPlayed", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly));
 
     [Fact]
     public void StageManagerPower_OverridesAfterPlayerTurnStartLate() =>
-        Assert.NotNull(typeof(StageManagerPower).GetMethod(
+        Assert.NotNull(typeof(VenuePower).GetMethod(
             "AfterPlayerTurnStartLate", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly));
 
     [Fact]
     public void StageManagerPower_OverridesAfterSideTurnEnd() =>
-        Assert.NotNull(typeof(StageManagerPower).GetMethod(
+        Assert.NotNull(typeof(VenuePower).GetMethod(
             "AfterSideTurnEnd", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly));
 }

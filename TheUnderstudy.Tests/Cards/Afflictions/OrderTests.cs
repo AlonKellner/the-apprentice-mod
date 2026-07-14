@@ -30,13 +30,13 @@ public class OrderTests
 
     [Fact]
     public void CanAfflict_StableSkill_ReturnsFalse() =>
-        Assert.False(new Order().CanAfflict(new Buildup()));
+        Assert.False(new Order().CanAfflict(new WarmUp()));
 
     [Fact]
     public void CanAfflict_RuntimeStableCard_ReturnsFalse()
     {
         // A card made Stable at runtime (via StableModifier, not just the printed keyword) must
-        // be just as ineligible as a printed-Stable card like Buildup.
+        // be just as ineligible as a printed-Stable card like WarmUp.
         var card = new UnderstudyStrike();
         CardModifier.AddModifier(card, new StableModifier());
         Assert.False(new Order().CanAfflict(card));

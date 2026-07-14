@@ -13,7 +13,7 @@ namespace TheUnderstudy.TheUnderstudyCode.Patches;
 // CardModifier.ModifyBaseBlockAdditive exists as a virtual yet nothing ever invokes it. This mirrors
 // the damage patch on Hook.ModifyBlock so a card modifier can modify its card's Block through the same
 // version-stable ModifyBase* contract instead of the game's 6-arg AbstractModel.ModifyBlockAdditive
-// hook (whose signature drifts between game versions). Tense is the only modifier that uses it today.
+// hook (whose signature drifts between game versions). Tuned is the only modifier that uses it today.
 //
 // The powered-block gate lives here rather than in ModifyBaseBlockAdditive because BaseLib's
 // ModifyBaseBlockAdditive(decimal) virtual carries no ValueProp (unlike ModifyBaseDamageAdditive).

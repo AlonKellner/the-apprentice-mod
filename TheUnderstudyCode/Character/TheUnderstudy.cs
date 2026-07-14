@@ -9,7 +9,7 @@ using MegaCrit.Sts2.Core.Models.Relics;
 using TheUnderstudy.TheUnderstudyCode.Cards;
 using TheUnderstudy.TheUnderstudyCode.Extensions;
 using TheUnderstudy.TheUnderstudyCode.Relics;
-using PerformanceCard = TheUnderstudy.TheUnderstudyCode.Cards.Performance;
+using PerformanceCard = TheUnderstudy.TheUnderstudyCode.Cards.Workshop;
 
 namespace TheUnderstudy.TheUnderstudyCode.Character;
 
@@ -34,7 +34,7 @@ public class TheUnderstudy : PlaceholderCharacterModel
         ModelDb.Card<UnderstudyDefend>(),
         ModelDb.Card<UnderstudyDefend>(),
         ModelDb.Card<PerformanceCard>(),
-        ModelDb.Card<Buildup>(),
+        ModelDb.Card<WarmUp>(),
     ];
 
     public override IReadOnlyList<RelicModel> StartingRelics =>

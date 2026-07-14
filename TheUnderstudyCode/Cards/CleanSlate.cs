@@ -18,10 +18,10 @@ public class CleanSlate : UnderstudyCard
     {
         WithDamage(4);
         WithTip(CardKeyword.Unplayable);
-        WithTip(UnderstudyKeywords.Tense);
+        WithTip(UnderstudyKeywords.Tuned);
     }
 
-    public override bool IsPreTense => true;
+    public override bool IsPreTuned => true;
 
     protected override void OnUpgrade()
     {

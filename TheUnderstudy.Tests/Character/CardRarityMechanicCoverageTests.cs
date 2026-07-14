@@ -9,7 +9,7 @@ namespace TheUnderstudy.Tests.Character;
 
 // General guardrail: every core mechanic must remain represented at the rarities where it belongs.
 // This is the executable statement of the deck's rarity intent:
-//   * Common must give an on-ramp to all three core builds (Invert/Planned/Tense), preview all
+//   * Common must give an on-ramp to all three core builds (Invert/Planned/Tuned), preview all
 //     five debuffs + remove-Unplayable + Vigor, and cover the four core game mechanics
 //     (damage/block/draw/energy).
 //   * Uncommon and Rare must each still represent all three builds and all five debuffs, so no
@@ -25,79 +25,79 @@ public class CardRarityMechanicCoverageTests
     {
         ["Invert"] = new[]
         {
-            typeof(PlotTwist), typeof(SteadyNow), typeof(TakeABreath), typeof(TrueColors),
-            typeof(AdLib), typeof(PulledPunch), typeof(Coda), typeof(DoubleTime),
-            typeof(HeldNote), typeof(MyOwnLesson), typeof(EverythingIveGot),
+            typeof(Subversion), typeof(HaveFun), typeof(MoveOn), typeof(Joke),
+            typeof(BrightSide), typeof(Apathy), typeof(StrikeAPose), typeof(DoubleTime),
+            typeof(HeldNote), typeof(MyOwnLesson), typeof(OwnIt),
         },
         ["Planned"] = new[]
         {
-            typeof(Cue), typeof(Foreshadow), typeof(PlotTwist), typeof(CramSession),
-            typeof(CallSheet), typeof(CurtainCall), typeof(Prompt), typeof(Remix),
-            typeof(Arrangement), typeof(FinalBar), typeof(StageManager),
-            typeof(CleanSlate), typeof(Encore), typeof(MagnumOpus), typeof(Refrain), typeof(TableRead),
+            typeof(Development), typeof(Preview), typeof(Subversion), typeof(Innovation),
+            typeof(Muse), typeof(Showtime), typeof(Signature), typeof(Medley),
+            typeof(Arrangement), typeof(SellOut), typeof(Venue),
+            typeof(CleanSlate), typeof(DaCapo), typeof(MagnumOpus), typeof(Motif), typeof(Playlist),
         },
-        ["Tense"] = new[]
+        ["Tuned"] = new[]
         {
-            typeof(CramSession), typeof(TouchUp), typeof(Reprise),
-            typeof(Rehearse), typeof(StandingOvation), typeof(StageFright), typeof(WarmUp),
-            typeof(CleanSlate), typeof(CutTheTension), typeof(DaCapo), typeof(MissedCue),
-            typeof(MuscleMemory), typeof(NervousEnergy), typeof(Showstopper),
+            typeof(Innovation), typeof(TuningRitual), typeof(PracticeStrike),
+            typeof(Rehearse), typeof(Signature), typeof(Memorize), typeof(Schedule),
+            typeof(CleanSlate), typeof(Experience), typeof(OneUp), typeof(StartOver),
+            typeof(MuscleMemory), typeof(AllHands), typeof(Showstopper), typeof(AutoTune),
         },
         ["Weak"] = new[]
         {
-            typeof(FreezeUp), typeof(StageWhisper), typeof(Understatement),
-            typeof(Ensemble), typeof(DressRehearsal), typeof(FolkSong), typeof(TheFirstLesson),
+            typeof(FreezeUp), typeof(DesperateStrike), typeof(WritersBlock),
+            typeof(Pathos), typeof(CenterStage), typeof(FolkSong), typeof(TheFirstLesson),
         },
         ["Vulnerable"] = new[]
         {
-            typeof(Downstage), typeof(TrueColors), typeof(Overcommit), typeof(WideOpen),
-            typeof(Ensemble), typeof(DressRehearsal), typeof(LoveSong), typeof(TheFirstLesson),
+            typeof(BreakALeg), typeof(Joke), typeof(HeartAche), typeof(TheWall),
+            typeof(Pathos), typeof(CenterStage), typeof(LoveSong), typeof(TheFirstLesson),
         },
         ["Shaken"] = new[]
         {
-            typeof(Butterflies), typeof(OpeningNumber), typeof(TakeCenterStage),
-            typeof(DressRehearsal), typeof(MissedCue), typeof(SadSong),
+            typeof(TheShakes), typeof(MissedCue), typeof(StageFright),
+            typeof(CenterStage), typeof(StartOver), typeof(SadSong),
         },
         ["Jaded"] = new[]
         {
-            typeof(Matinee), typeof(QuickNap), typeof(AllNighter), typeof(Rerun),
-            typeof(DressRehearsal), typeof(PopSong),
+            typeof(RunningOnFumes), typeof(AllNighter), typeof(MustGoOn), typeof(Procrastinate),
+            typeof(CenterStage), typeof(PopSong),
         },
         ["Limited"] = new[]
         {
-            typeof(Flourish), typeof(OffScript), typeof(FastForward), typeof(Overexert),
-            typeof(DressRehearsal), typeof(OldSong), typeof(TableRead),
+            typeof(BuyTime), typeof(CribNotes), typeof(DrawingBlanks), typeof(Blackout),
+            typeof(CenterStage), typeof(OldSong), typeof(Playlist),
         },
         ["remove-Unplayable"] = new[]
         {
-            typeof(Rewrite), typeof(TouchUp), typeof(TakeTwo), typeof(SafetyNet),
-            typeof(Improvise), typeof(TakeYourBow), typeof(StandingBy),
-            typeof(CleanSlate), typeof(MissedCue), typeof(SecondNature),
+            typeof(Breather), typeof(BuyTime), typeof(TakeTwo), typeof(Confidence),
+            typeof(Improvise), typeof(LoosenUp), typeof(Balanced),
+            typeof(CleanSlate), typeof(StartOver), typeof(SecondNature),
         },
         ["Vigor"] = new[]
         {
-            typeof(Bravado), typeof(WindUp), typeof(BigBreak), typeof(BreakALeg),
-            typeof(Crescendo), typeof(StandingOvation), typeof(TakeNotes),
+            typeof(Crash), typeof(WindUp), typeof(SonicBoom), typeof(Forte),
+            typeof(Crescendo), typeof(CryingOutLoud),
         },
         ["damage"] = new[]
         {
-            typeof(Bravado), typeof(StageWhisper), typeof(QuickNap), typeof(Reprise),
-            typeof(Downstage), typeof(Flourish),
+            typeof(Crash), typeof(DesperateStrike), typeof(AllNighter), typeof(PracticeStrike),
+            typeof(BreakALeg), typeof(BuyTime),
         },
         ["block"] = new[]
         {
-            typeof(Understatement), typeof(FreezeUp), typeof(Foreshadow), typeof(SteadyNow),
-            typeof(Matinee), typeof(Butterflies),
+            typeof(WritersBlock), typeof(FreezeUp), typeof(Preview), typeof(HaveFun),
+            typeof(RunningOnFumes), typeof(TheShakes),
         },
         ["draw"] = new[]
         {
-            typeof(Cue), typeof(Rewrite), typeof(TakeABreath), typeof(FastForward),
-            typeof(Rehearse), typeof(Prompt),
+            typeof(Development), typeof(Breather), typeof(MoveOn), typeof(DrawingBlanks),
+            typeof(Rehearse), typeof(AllNighter),
         },
         ["energy"] = new[]
         {
-            typeof(OpeningNumber), typeof(AllNighter), typeof(BreakALeg),
-            typeof(NervousEnergy), typeof(Showstopper),
+            typeof(MissedCue), typeof(MustGoOn), typeof(Forte),
+            typeof(Showstopper),
         },
     };
 
@@ -108,7 +108,7 @@ public class CardRarityMechanicCoverageTests
     // Common must cover the full preview set: 3 builds + 5 debuffs + remove-Unplayable + Vigor + 4 game mechanics.
     [InlineData("Common", "Invert")]
     [InlineData("Common", "Planned")]
-    [InlineData("Common", "Tense")]
+    [InlineData("Common", "Tuned")]
     [InlineData("Common", "Weak")]
     [InlineData("Common", "Vulnerable")]
     [InlineData("Common", "Shaken")]
@@ -123,7 +123,7 @@ public class CardRarityMechanicCoverageTests
     // Uncommon must still represent all three builds + all five debuffs.
     [InlineData("Uncommon", "Invert")]
     [InlineData("Uncommon", "Planned")]
-    [InlineData("Uncommon", "Tense")]
+    [InlineData("Uncommon", "Tuned")]
     [InlineData("Uncommon", "Weak")]
     [InlineData("Uncommon", "Vulnerable")]
     [InlineData("Uncommon", "Shaken")]
@@ -132,7 +132,7 @@ public class CardRarityMechanicCoverageTests
     // Rare must still represent all three builds + all five debuffs.
     [InlineData("Rare", "Invert")]
     [InlineData("Rare", "Planned")]
-    [InlineData("Rare", "Tense")]
+    [InlineData("Rare", "Tuned")]
     [InlineData("Rare", "Weak")]
     [InlineData("Rare", "Vulnerable")]
     [InlineData("Rare", "Shaken")]

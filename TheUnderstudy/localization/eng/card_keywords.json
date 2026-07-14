@@ -1,8 +1,8 @@
 {
   "THEUNDERSTUDY-PLANNED.title": "Planned",
   "THEUNDERSTUDY-PLANNED.description": "When a card becomes [gold]Planned[/gold], it also becomes [gold]Unplayable[/gold]. Some cards can play all [gold]Planned[/gold] cards in the order they were planned.",
-  "THEUNDERSTUDY-TENSE.title": "Tense",
-  "THEUNDERSTUDY-TENSE.description": "Becomes [gold]Unplayable[/gold] when played. Increases damage or [gold]Block[/gold] by 1 for each card with [gold]Tense[/gold].",
+  "THEUNDERSTUDY-TUNED.title": "Tuned",
+  "THEUNDERSTUDY-TUNED.description": "Becomes [gold]Unplayable[/gold] when played. Increases damage or [gold]Block[/gold] by 1 for each card with [gold]Tuned[/gold].",
   "THEUNDERSTUDY-STABLE.title": "Stable",
   "THEUNDERSTUDY-STABLE.description": "May not be modified during combat.",
   "THEUNDERSTUDY-INVERT.title": "Invert",

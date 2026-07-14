@@ -59,43 +59,46 @@ them — choosing a split that gives each card in a group a distinct statline.
 `Δ = P·(stacks−1) + sev(debuff)`. Anchors (marked *) keep their pre-existing values and set each group's
 `Base`.
 
+(Card names below are the current music/creative-theme names; the mechanic and values are unchanged
+from the original theatrical-theme cards unless noted.)
+
 ### Attack + Block, 1-cost Common — Base 16 vp
 | Card | debuff · stacks | Δ | vp | Damage / Block |
 |---|:---:|:---:|:---:|:---:|
 | Freeze Up * | Weak · 1 | −1 | 15 | 5 / 8 |
-| Matinee | Jaded · 1 | +1 | 17 | 7 / 8 |
-| Butterflies | Shaken · 2 | +6 | 22 | 7 / 12 |
+| Running on Fumes | Jaded · 1 | +1 | 17 | 7 / 8 |
+| The Shakes | Shaken · 2 | +6 | 22 | 7 / 12 |
 
 ### Attack + Block, 2-cost Uncommon — Base 23.5 vp
 | Card | debuff · stacks | Δ | vp | Damage / Block |
 |---|:---:|:---:|:---:|:---:|
-| Overcommit * | Vulnerable · 1 | +2 | 25.5 | 8 / 14 |
-| Overexert | Limited · 2 | +4 | 27.5 | 10 / 14 |
+| Heart Ache * | Vulnerable · 1 | +2 | 25.5 | 8 / 14 |
+| Blackout | Limited · 2 | +4 | 27.5 | 10 / 14 |
 
-Overexert's 2 mild-Limited stacks only edge out Overcommit's 1 harsh-Vulnerable stack (the smallest
+Blackout's 2 mild-Limited stacks only edge out Heart Ache's 1 harsh-Vulnerable stack (the smallest
 2-vs-1 gap, +2 vp) — the severity offset partly cancels the stack premium, exactly as intended.
 
 ### Single-hit Attack, 1-cost — Base 13 vp
 | Card | debuff · stacks | Δ | vp | Damage |
 |---|:---:|:---:|:---:|:---:|
-| Quick Nap * | Jaded · 1 | +1 | 14 | 14 |
-| Downstage | Vulnerable · 1 | +2 | 15 | 15 |
-| Stage Whisper | Weak · 2 | +5 | 18 | 18 |
+| Break a Leg * | Vulnerable · 1 | +2 | 15 | 15 |
+| Desperate Strike | Weak · 2 | +5 | 18 | 18 |
 
 ### AoE Attack, 1-cost Uncommon — Base 4 vp
 | Card | debuff · stacks | Δ | vp | AoE Damage |
 |---|:---:|:---:|:---:|:---:|
-| Wide Open * | Vulnerable · 1 | +2 | 6 | 6 |
-| Take Center Stage | Shaken · 2 | +6 | 10 | 10 |
+| Stage Fright * | Shaken · 2 | +6 | 10 | 10 |
 
 ### Energy
-Opening Number (Shaken · 1) gains 2 at 1 cost with Exhaust → net +1 energy. All-Nighter (Jaded · 2) gains
-2 at 0 cost → net +2, clearing Opening Number by its 2-stack + worse-debuff margin.
+Missed Cue (Shaken · 1) is now a 1-cost Attack that deals 6 and gains 2 → net +1 energy plus the strike.
+Must Go On (Jaded · 2) gains 2 at 0 cost → net +2, clearing Missed Cue by its 2-stack + worse-debuff margin.
 
 ## Not priced by a group (same-mechanic singletons)
 
 These have no same-mechanic peer, so there is no duplication constraint; they keep their current values,
-and the schema is the reference if a peer is ever added: Understatement (block-only), Fast Forward (draw),
-Wind Up (attack + Vigor), True Colors (Invert), Off Script (random multi-hit), Missed Cue and Dress
-Rehearsal (Rare build-arounds), Ensemble (also debuffs enemies). Flourish (6×2, Limited · 1) and Rerun
-(8×2, Jaded · 2) already sit on the schema across their rarity/stack difference.
+and the schema is the reference if a peer is ever added: Writer's Block and The Wall (block-only —
+The Wall trades a lower block for a harsher Vulnerable · 1), Drawing Blanks (draw), Wind Up (attack +
+Vigor), Joke (attack + Invert + self-Vulnerable), All-Nighter (attack + draw + self-Jaded), Buy Time
+(attack + remove-Unplayable + self-Limited), Crib Notes (attack + self-Tuned + self-Limited),
+Procrastinate (attack + self-Planned + self-Jaded), Center Stage (Rare build-around), Pathos (also
+debuffs enemies).

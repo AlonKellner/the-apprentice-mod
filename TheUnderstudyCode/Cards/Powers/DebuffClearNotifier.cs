@@ -23,7 +23,7 @@ namespace TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 public static class DebuffClearNotifier
 {
     // A Func rather than a true multicast event: it must be awaited, and only one subscriber
-    // (Take Notes) is expected at a time in practice. Set/cleared by TakeNotesPower on apply /
+    // (Take Notes) is expected at a time in practice. Set/cleared by CryingOutLoudPower on apply /
     // combat end, so this is null — and NotifyDebuffRemoved a no-op — whenever Take Notes is absent.
     public static Func<PlayerChoiceContext, Creature, PowerModel, Task>? DebuffCleared;
 

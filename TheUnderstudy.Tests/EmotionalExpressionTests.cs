@@ -90,8 +90,8 @@ public class EmotionalExpressionTests
         Assert.Equal((0, 0), EmotionalExpression.ComputeSignFlip(0, 5));
 
     // HasAnyInvertibleDebuffPresent — pure core behind the "is there anything for Invert to act
-    // on right now" check, used by relevance-highlighting on Coda/Reprise/SteadyNow/TakeABreath/
-    // EverythingIveGot. Covers all 8 invertible pairs (the 5 self-debuffs Understudy's own cards
+    // on right now" check, used by relevance-highlighting on StrikeAPose/PracticeStrike/HaveFun/MoveOn/
+    // OwnIt. Covers all 8 invertible pairs (the 5 self-debuffs Understudy's own cards
     // generate, plus Frail/Strength/Dexterity which Invert must still recognize).
 
     [Fact]

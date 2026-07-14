@@ -102,7 +102,7 @@ public class PlannedModifierTests
     public void CanApplyTo_RuntimeStableCard_ReturnsFalse()
     {
         // A card made Stable at runtime (via StableModifier, not just the printed keyword) must
-        // be just as ineligible as a printed-Stable card like Buildup.
+        // be just as ineligible as a printed-Stable card like WarmUp.
         var card = new UnderstudyStrike();
         CardModifier.AddModifier(card, new StableModifier());
         Assert.False(PlannedModifier.CanApplyTo(card));
@@ -272,9 +272,9 @@ public class PlannedModifierTests
         Assert.False(card.TryGetModifier<PlannedModifier>(out _));
     }
 
-    // Stable = frozen: a queue resolver (Performance/CurtainCall/...) calling RemoveSlot on a Stable
+    // Stable = frozen: a queue resolver (Workshop/Showtime/...) calling RemoveSlot on a Stable
     // card must NOT strip its Planned — the card is still auto-played, but keeps its slot and re-queues.
-    // (Regression for: Planned + Stable on Showstopper lost Planned after Performance.)
+    // (Regression for: Planned + Stable on Showstopper lost Planned after Workshop.)
     [Fact]
     public void RemoveSlot_StableCard_KeepsSlotAndModifier()
     {
@@ -334,7 +334,7 @@ public class PlannedModifierTests
     }
 
     // QueueNeedsEnemyTarget — whether the Planned queue contains a card that needs the player to
-    // pick a single enemy, used by CurtainCall/Performance/Encore to skip the targeting prompt
+    // pick a single enemy, used by Showtime/Workshop/DaCapo to skip the targeting prompt
     // when nothing queued needs it (empty plan, or only AoE/self/no-target cards).
 
     [Fact]
@@ -389,11 +389,11 @@ public class PlannedModifierTests
         Assert.False(PlannedModifier.QueueNeedsEnemyTarget(new[] { strike }));
     }
 
-    // Regression for the StackOverflow crash: a Planned-queue resolver (CurtainCall/Encore, both
+    // Regression for the StackOverflow crash: a Planned-queue resolver (Showtime/DaCapo, both
     // non-Stable) can itself be Planned, and its TargetType queries the very queue it sits in. Without
     // a re-entrancy guard, QueueNeedsEnemyTarget reads that card's TargetType, which calls back into
     // QueueNeedsEnemyTarget over the same queue — infinite recursion, fatal StackOverflow. This double
-    // reproduces that self-referential TargetType (a bare CurtainCall can't, since Owner-backed
+    // reproduces that self-referential TargetType (a bare Showtime can't, since Owner-backed
     // RelevantCards needs a live combat).
 #pragma warning disable STS001 // test-only card double, no shipped localization
     private sealed class RecursiveResolverCard : UnderstudyCard

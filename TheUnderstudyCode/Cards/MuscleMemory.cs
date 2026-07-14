@@ -14,7 +14,7 @@ public class MuscleMemory : UnderstudyCard
     {
         WithCostUpgradeBy(-1);
         WithPowerNoTip<MuscleMemoryPower>(1, 1);
-        WithTip(UnderstudyKeywords.Tense);
+        WithTip(UnderstudyKeywords.Tuned);
         WithTip(CardKeyword.Unplayable);
     }
 

@@ -14,7 +14,7 @@ MECHANIC_KEYWORDS = {
     "Planned":                   ["Planned"],
     "Unplayable":                ["Unplayable"],
     "Dreams / Ambitions / Potentials": ["Dream", "Ambition", "Potential"],
-    "Tension":                   ["Tension"],
+    "Tuned":                   ["TunedModifier"],
     "Weak / Vulnerable (self-debuffs)": [
         "[gold]Weak[/gold]", "[gold]Vulnerable[/gold]", "Unweak", "Unvulnerable",
     ],

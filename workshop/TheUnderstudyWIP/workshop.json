@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "Muscle Memory now keeps Tense cards playable against every Unplayable source, including One Take. Planned-selection index badges use the correct (Kreon) font.",
+  "changeNote": "v1.9.0 - Major overhaul. The deck is re-themed around music and creative work, and the 'Tense' keyword is now 'Tuned'. New: Auto Tune (power), Tuning Ritual, Signature, The Wall, and Fate Knocking. Reworked Missed Cue, Joke, All-Nighter, Buy Time, Crib Notes, Procrastinate, All Hands and others; removed four cards. Dozens of cards renamed. Requires BaseLib.",
   "tags": [],
   "dependencies": [3737335127],
   "contentDescriptors": []

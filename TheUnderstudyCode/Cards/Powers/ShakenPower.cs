@@ -34,9 +34,9 @@ public class ShakenPower : UnderstudyPower
         foreach (var card in hand.Cards.ToList().Where(c =>
             (c.Type == CardType.Attack || c.Type == CardType.Skill) && !c.IsStable()))
         {
-            // Muscle Memory immunity (Tense cards) is enforced centrally in
+            // Muscle Memory immunity (Tuned cards) is enforced centrally in
             // UnplayableModifier.OnInitialApplication — the attach below simply doesn't stick for a
-            // Tense card under Muscle Memory. Shaken still locks any other eligible Attack/Skill.
+            // Tuned card under Muscle Memory. Shaken still locks any other eligible Attack/Skill.
             if (!card.TryGetModifier<UnplayableModifier>(out _))
                 CardModifier.AddModifier<UnplayableModifier>(card);
         }

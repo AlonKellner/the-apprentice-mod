@@ -19,7 +19,7 @@ public class Rehearse : UnderstudyCard
     {
         WithCards(2);
         WithVars(new CardsVar("Select", 2));
-        WithTip(UnderstudyKeywords.Tense);
+        WithTip(UnderstudyKeywords.Tuned);
     }
 
     protected override void OnUpgrade()
@@ -39,12 +39,12 @@ public class Rehearse : UnderstudyCard
             context,
             player,
             new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-REHEARSE.selectionPrompt"), 0, maxSelect),
-            c => c != this && TenseModifier.CanApplyTo(c),
+            c => c != this && TunedModifier.CanApplyTo(c),
             this);
 
         if (selected == null) return;
         var allCards = player.Piles.SelectMany(p => p.Cards);
         foreach (var card in selected)
-            TenseModifier.Apply(card, CombatState!, allCards);
+            TunedModifier.Apply(card, CombatState!, allCards);
     }
 }

@@ -63,10 +63,10 @@ public class StableEnforcerTests
         PlannedWith(card, 0);
         var snap = StableEnforcer.Capture(card);
 
-        CardModifier.DirectModifiers(card).Add(new TenseModifier());
+        CardModifier.DirectModifiers(card).Add(new TunedModifier());
 
         Assert.True(StableEnforcer.Restore(card, snap));
-        Assert.False(card.TryGetModifier<TenseModifier>(out _));
+        Assert.False(card.TryGetModifier<TunedModifier>(out _));
         Assert.True(card.TryGetModifier<PlannedModifier>(out _));
     }
 

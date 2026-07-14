@@ -75,8 +75,8 @@ public class PlannedModifier : CardModifier
     public static int TotalSlotCount(IEnumerable<CardModel> cards) =>
         cards.Sum(c => c.TryGetModifier<PlannedModifier>(out var mod) ? mod.SequenceIndices.Count : 0);
 
-    // Re-entrancy guard. CurtainCall/Performance/Encore override TargetType to call this method, and
-    // CurtainCall/Encore are not Stable, so either can itself sit in the Planned queue. Evaluating
+    // Re-entrancy guard. Showtime/Workshop/DaCapo override TargetType to call this method, and
+    // Showtime/DaCapo are not Stable, so either can itself sit in the Planned queue. Evaluating
     // such a card's TargetType while it (or another resolver) is in `cards` would read its TargetType
     // here, which calls back into this method over the same queue — infinite recursion, a fatal
     // StackOverflow. A resolver's own reticle need is fully derived from the OTHER (leaf) cards in the
@@ -84,7 +84,7 @@ public class PlannedModifier : CardModifier
     [ThreadStatic] private static bool _evaluatingQueueTarget;
 
     // Whether the queue contains a card that needs the player to pick a single enemy — used by
-    // CurtainCall/Performance/Encore to skip the targeting prompt when nothing queued needs it
+    // Showtime/Workshop/DaCapo to skip the targeting prompt when nothing queued needs it
     // (empty plan, or only AoE/self/no-target cards, e.g. two Defends).
     public static bool QueueNeedsEnemyTarget(IEnumerable<CardModel> cards)
     {
@@ -142,8 +142,8 @@ public class PlannedModifier : CardModifier
     // Slot numbers are handed out by this pure, engine-independent sequencer (see
     // PlannedSlotSequencer.cs) rather than by scanning a caller-supplied card snapshot on every
     // call — a snapshot taken even microseconds before a concurrent/nested Apply call can miss an
-    // already-applied slot, handing out a duplicate number (this replaced exactly that bug: Refrain
-    // and Overexert both ending up on slot 3 in the same combat).
+    // already-applied slot, handing out a duplicate number (this replaced exactly that bug: Motif
+    // and Blackout both ending up on slot 3 in the same combat).
     private static readonly PlannedSlotSequencer _slots = new();
 
     // Appends a new queue slot to the card. Creates the modifier if the card doesn't have one yet.
@@ -176,7 +176,7 @@ public class PlannedModifier : CardModifier
             $"{card.Id} picked up duplicate slot index {newSlot} on itself — SequenceIndices: [{string.Join(",", mod.SequenceIndices)}]");
 
         // Cross-card diagnostic. PlannedSlotSequencer makes a collision impossible under normal
-        // operation, but this is exactly the invariant that silently broke before (Refrain/Overexert
+        // operation, but this is exactly the invariant that silently broke before (Motif/Blackout
         // both ending up on slot 3) with nothing logging it at the point of failure — only
         // reconstructible after the fact from timing. If the sequencer's state ever desyncs from
         // live card state again (a future caller bypassing Apply, an unanticipated edge case, etc.),
@@ -188,9 +188,9 @@ public class PlannedModifier : CardModifier
             $"slot {newSlot} assigned to {card.Id} is already held by {collisions} other card(s) — " +
             "monotonic counter desynced from live state");
 
-        // Muscle Memory immunity (Tense cards) is enforced centrally in
-        // UnplayableModifier.OnInitialApplication — a Planned Tense card under Muscle Memory simply
-        // won't retain the Unplayable flag we attach here. Non-Tense Planned cards lock as normal.
+        // Muscle Memory immunity (Tuned cards) is enforced centrally in
+        // UnplayableModifier.OnInitialApplication — a Planned Tuned card under Muscle Memory simply
+        // won't retain the Unplayable flag we attach here. Non-Tuned Planned cards lock as normal.
         if (!card.TryGetModifier<UnplayableModifier>(out _))
             CardModifier.AddModifier<UnplayableModifier>(card);
         Log.Info($"PlannedModifier.Apply: {card.Id} took slot {newSlot} ({mod.SequenceIndices.Count} slot(s) total on this card)");

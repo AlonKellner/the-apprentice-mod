@@ -9,7 +9,7 @@ public static class UnderstudyKeywords
     public static CardKeyword Planned;
 
     [CustomEnum, KeywordProperties(AutoKeywordPosition.Before)]
-    public static CardKeyword Tense;
+    public static CardKeyword Tuned;
 
     [CustomEnum, KeywordProperties(AutoKeywordPosition.Before)]
     public static CardKeyword Stable;

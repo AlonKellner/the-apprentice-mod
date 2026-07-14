@@ -31,10 +31,10 @@ namespace TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 //     X) powers go back to being ordinary powers: created on demand, visible immediately, removed
 //     when they decay to nothing, exactly like Strength/Dexterity.
 //
-// (3) Pulled Punch dampening: while the player holds PulledPunchPower, every incoming invertible
+// (3) Pulled Punch dampening: while the player holds ApathyPower, every incoming invertible
 //     debuff is softened toward 0 by that power's Amount, inside the same single interception used
 //     for (2). Kept here — rather than as a separate TryModifyPowerAmountReceived listener on
-//     PulledPunchPower — so there is only ever one interceptor for the event and no order-race
+//     ApathyPower — so there is only ever one interceptor for the event and no order-race
 //     against the cancellation (the exact hazard MyOwnLessonPower documents avoiding).
 public class InvertTrackerPower : UnderstudyPower
 {
@@ -105,11 +105,11 @@ public class InvertTrackerPower : UnderstudyPower
             nameof(InvertTrackerPower) + "." + nameof(TryModifyPowerAmountReceived),
             "a previous interception is still pending when a new one is starting — re-entrancy assumption violated");
 
-        // Pulled Punch (job 3): while Owner holds PulledPunchPower, every incoming invertible debuff
+        // Pulled Punch (job 3): while Owner holds ApathyPower, every incoming invertible debuff
         // is softened toward 0 by that power's Amount. Done here rather than as its own
         // TryModifyPowerAmountReceived listener so there is exactly one interceptor for the event and
         // no order-race with the cancellation below (see MyOwnLessonPower for that reasoning).
-        int pulledPunch = Owner.GetPowerAmount<PulledPunchPower>();
+        int pulledPunch = Owner.GetPowerAmount<ApathyPower>();
 
         // Strength/Dexterity sign-flip swap must run before the amount > 0 gate below: a "debuff"
         // gain here is a *negative* amount to this same power, not a positive gain to a separate
@@ -126,7 +126,7 @@ public class InvertTrackerPower : UnderstudyPower
         // the same power, so it also lives below the amount > 0 gate — soften it here.
         if (pulledPunch > 0 && amount < 0m && canonicalPower is StrengthPower or DexterityPower)
         {
-            modifiedAmount = PulledPunchPower.Dampen(amount, isSignFlip: true, pulledPunch);
+            modifiedAmount = ApathyPower.Dampen(amount, isSignFlip: true, pulledPunch);
             return true;
         }
 
@@ -148,7 +148,7 @@ public class InvertTrackerPower : UnderstudyPower
         // Un-X buffs. Only the debuff side is reduced — the Un-X buff powers are beneficial gains.
         decimal originalAmount = amount;
         if (pulledPunch > 0 && IsInvertibleDebuffSide(canonicalPower))
-            amount = PulledPunchPower.Dampen(amount, isSignFlip: false, pulledPunch);
+            amount = ApathyPower.Dampen(amount, isSignFlip: false, pulledPunch);
 
         (int reduced, int consumed) result;
         switch (canonicalPower)

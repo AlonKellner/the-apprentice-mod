@@ -27,13 +27,13 @@ public class TheUnderstudyCardPoolTests
     [Fact]
     public void Performance_CardId_MatchesExpected()
     {
-        Assert.Equal("TheUnderstudy:Performance", Performance.CardId);
+        Assert.Equal("TheUnderstudy:Workshop", Workshop.CardId);
     }
 
     [Fact]
     public void Buildup_CardId_MatchesExpected()
     {
-        Assert.Equal("TheUnderstudy:Buildup", Buildup.CardId);
+        Assert.Equal("TheUnderstudy:WarmUp", WarmUp.CardId);
     }
 
     [Fact]
@@ -43,7 +43,7 @@ public class TheUnderstudyCardPoolTests
     public void Pool_HasExactly36UncommonCards() => Assert.Equal(36, CountBCardsByRarity("Uncommon"));
 
     [Fact]
-    public void Pool_HasExactly26RareCards() => Assert.Equal(26, CountBCardsByRarity("Rare"));
+    public void Pool_HasExactly27RareCards() => Assert.Equal(27, CountBCardsByRarity("Rare"));
 
     [Fact]
     public void UnderstudyCard_IsPrePlannedOverriddenOnlyByPromptAndTableRead()
@@ -62,44 +62,44 @@ public class TheUnderstudyCardPoolTests
             .OrderBy(n => n)
             .ToList();
 
-        Assert.Equal(new[] { "Prompt", "TableRead" }, bCardTypes);
+        Assert.Equal(new[] { "Playlist", "Signature" }, bCardTypes);
     }
 
     [Fact]
-    public void UnderstudyCard_IsPreTenseOverriddenOnlyByExpectedCards()
+    public void UnderstudyCard_IsPreTunedOverriddenOnlyByExpectedCards()
     {
-        // The pre-Tense mechanic (starting a combat already carrying Tense 1, mirroring
+        // The pre-Tuned mechanic (starting a combat already carrying Tuned 1, mirroring
         // IsPrePlanned's shape) is deliberately reused by exactly these B cards — "big one-off
         // moment" cards that read thematically as "one shining chance, then it's spent."
         var bCardTypes = typeof(UnderstudyCard).Assembly.GetTypes()
             .Where(t => t.IsSubclassOf(typeof(UnderstudyCard)) && !t.IsAbstract)
             .Where(t =>
             {
-                var method = t.GetMethod("get_IsPreTense");
+                var method = t.GetMethod("get_IsPreTuned");
                 return method != null && method.DeclaringType == t;
             })
             .Select(t => t.Name)
             .OrderBy(n => n)
             .ToList();
 
-        Assert.Equal(new[] { "CleanSlate", "MissedCue", "Showstopper" }, bCardTypes);
+        Assert.Equal(new[] { "CleanSlate", "Showstopper", "Signature", "StartOver" }, bCardTypes);
     }
 
     [Fact]
-    public void MissedCue_BeforeCombatStart_DoesNotAttachTenseModifier_WhenBare()
+    public void MissedCue_BeforeCombatStart_DoesNotAttachTunedModifier_WhenBare()
     {
-        // MissedCue.IsPreTense is true, but a bare-instantiated card has no Pile (Pile == null,
-        // so IsCombatPile() is false) — the guard in ApplyPreTenseIfNeeded must no-op safely
+        // StartOver.IsPreTuned is true, but a bare-instantiated card has no Pile (Pile == null,
+        // so IsCombatPile() is false) — the guard in ApplyPreTunedIfNeeded must no-op safely
         // rather than crash trying to reach Owner/CombatState on a canonical card.
-        var card = new MissedCue();
+        var card = new StartOver();
         card.BeforeCombatStart();
-        Assert.False(card.TryGetModifier<TenseModifier>(out _));
+        Assert.False(card.TryGetModifier<TunedModifier>(out _));
     }
 
     [Fact]
     public void UnderstudyCard_NoHasExpend_Overrides()
     {
-        // B cards manage Unplayable via TenseModifier (like Expend), not the HasExpend flag.
+        // B cards manage Unplayable via TunedModifier (like Expend), not the HasExpend flag.
         var bCardTypes = typeof(UnderstudyCard).Assembly.GetTypes()
             .Where(t => t.IsSubclassOf(typeof(UnderstudyCard)) && !t.IsAbstract)
             .Where(t =>
@@ -126,18 +126,18 @@ public class TheUnderstudyCardPoolTests
     [Fact]
     public void TableRead_BeforeCombatStart_DoesNotAttachPlannedModifier_WhenBare()
     {
-        // TableRead.IsPrePlanned is true, but a bare-instantiated card has no Pile (Pile == null,
+        // Playlist.IsPrePlanned is true, but a bare-instantiated card has no Pile (Pile == null,
         // so IsCombatPile() is false) — the guard in ApplyPrePlannedIfNeeded must no-op safely
         // rather than crash trying to reach Owner/RelevantCards on a canonical card.
-        var card = new TableRead();
+        var card = new Playlist();
         card.BeforeCombatStart();
         Assert.False(card.TryGetModifier<PlannedModifier>(out _));
     }
 
     [Fact]
-    public void Prompt_BeforeCombatStart_DoesNotAttachPlannedModifier_WhenBare()
+    public void Signature_BeforeCombatStart_DoesNotAttachPlannedModifier_WhenBare()
     {
-        var card = new Prompt();
+        var card = new Signature();
         card.BeforeCombatStart();
         Assert.False(card.TryGetModifier<PlannedModifier>(out _));
     }
@@ -147,7 +147,7 @@ public class TheUnderstudyCardPoolTests
         var root = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", ".."));
         var cardsDir = Path.Combine(root, "TheUnderstudyCode", "Cards");
         var skip = new HashSet<string> { "UnderstudyCard", "PlayAllPlannedCard" };
-        // Match the abstract resolver base too — Curtain Call/Encore/Remix inherit UnderstudyCard through
+        // Match the abstract resolver base too — Curtain Call/DaCapo/Medley inherit UnderstudyCard through
         // PlayAllPlannedCard, so their source declares ": PlayAllPlannedCard".
         var bCardPattern = new System.Text.RegularExpressions.Regex(@":\s*(?:UnderstudyCard|PlayAllPlannedCard)\b");
         var rarityPattern = new System.Text.RegularExpressions.Regex(

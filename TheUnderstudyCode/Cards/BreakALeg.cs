@@ -1,10 +1,9 @@
 using BaseLib.Abstracts;
-using MegaCrit.Sts2.Core.Commands;
+using BaseLib.Utils;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
-using MegaCrit.Sts2.Core.HoverTips;
-using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models.Powers;
+using TheUnderstudy.TheUnderstudyCode.Cards.DynamicVars;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
@@ -12,26 +11,22 @@ public class BreakALeg : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:BreakALeg";
 
-    public BreakALeg() : base(2, CardType.Skill, CardRarity.Uncommon, TargetType.None)
+    public BreakALeg() : base(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
     {
-        WithVars(new EnergyVar(1), new IntVar("Vigor", 3));
-        WithTips(_ => new IHoverTip[] { EnergyHoverTip });
-        WithTip(typeof(VigorPower));
+        WithDamage(15);
+        WithInvertibleTip(typeof(VulnerablePower));
+        WithVar(new SelfDebuffVar("Vulnerable", 1));
     }
 
     protected override void OnUpgrade()
     {
         base.OnUpgrade();
-        DynamicVars["Vigor"].UpgradeValueBy(1m);
+        DynamicVars.Damage.UpgradeValueBy(4m);
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
-        var player = cardPlay.Card.Owner;
-        await PlayerCmd.GainEnergy(DynamicVars.Energy.BaseValue, player);
-
-        var creature = player.Creature;
-        int vigor = (int)DynamicVars["Vigor"].BaseValue;
-        await PowerCmd.Apply<VigorPower>(context, creature, vigor, creature, this, false);
+        await CommonActions.CardAttack(cardPlay.Card, cardPlay).Execute(context);
+        await EmotionalExpression.ApplyVulnerableToSelf(context, cardPlay.Card.Owner.Creature, (int)DynamicVars["Vulnerable"].BaseValue, this);
     }
 }

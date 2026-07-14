@@ -1,9 +1,9 @@
-using System.Linq;
 using BaseLib.Abstracts;
+using BaseLib.Utils;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
-using TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
-using TheUnderstudy.TheUnderstudyCode.Extensions;
+using TheUnderstudy.TheUnderstudyCode.Cards.Powers;
+using TheUnderstudy.TheUnderstudyCode.Cards.DynamicVars;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
@@ -11,19 +11,22 @@ public class StageFright : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:StageFright";
 
-    public StageFright() : base(3, CardType.Skill, CardRarity.Uncommon, TargetType.None)
+    public StageFright() : base(1, CardType.Attack, CardRarity.Uncommon, TargetType.AllEnemies)
     {
-        WithCostUpgradeBy(-1);
-        WithTip(UnderstudyKeywords.Tense);
-        WithTip(CardKeyword.Unplayable);
+        WithDamage(10);
+        WithTip(typeof(ShakenPower));
+        WithVar(new SelfDebuffVar("Shaken", 2));
     }
 
-    protected override Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
+    protected override void OnUpgrade()
     {
-        var player = cardPlay.Card.Owner;
-        var allCards = player.Piles.SelectMany(p => p.Cards).ToList();
-        foreach (var card in allCards.Where(c => c != this && TenseModifier.CanApplyTo(c) && c.IsUnplayable()).ToList())
-            TenseModifier.Apply(card, CombatState!, allCards);
-        return Task.CompletedTask;
+        base.OnUpgrade();
+        DynamicVars.Damage.UpgradeValueBy(3m);
+    }
+
+    protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
+    {
+        await CommonActions.CardAttack(cardPlay.Card, cardPlay).Execute(context);
+        await EmotionalExpression.ApplyShakenToSelf(context, cardPlay.Card.Owner.Creature, (int)DynamicVars["Shaken"].BaseValue, this);
     }
 }

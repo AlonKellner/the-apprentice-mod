@@ -28,7 +28,7 @@ public class CardExtensionsStableTests
     [Fact]
     public void IsStable_PrintedStableCard_ReturnsTrue()
     {
-        // Buildup is Stable via WithKeyword in its constructor (the static/printed path).
-        Assert.True(((CardModel)new Buildup()).IsStable());
+        // WarmUp is Stable via WithKeyword in its constructor (the static/printed path).
+        Assert.True(((CardModel)new WarmUp()).IsStable());
     }
 }

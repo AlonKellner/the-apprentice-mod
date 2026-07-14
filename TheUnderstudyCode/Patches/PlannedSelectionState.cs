@@ -7,7 +7,7 @@ namespace TheUnderstudy.TheUnderstudyCode.Patches;
 // Shared, engine-independent state that couples the Planned appliers to the selection-index badge
 // patches (PlannedGridSelectionPatch / PlannedHandSelectionPatch).
 //
-// Kept deliberately free of any Godot or Log.* calls: the Planned appliers (Foreshadow, Cue, etc.)
+// Kept deliberately free of any Godot or Log.* calls: the Planned appliers (Preview, Development, etc.)
 // call Arm()/OrderFor() from their OnPlay, and any Log.* on a path reachable from a bare-instantiated
 // unit test crashes the xUnit host outright (Godot OS static ctor). See project memory
 // "Log.* crashes the bare test host".
@@ -17,7 +17,7 @@ public static class PlannedSelectionState
     // whichever selection screen opens next (grid Create postfix / hand SelectCards prefix). The
     // screen is constructed before the first await inside CardSelectCmd, so the flag is still set.
     // This is what gates the badge feature to Planned selections only — other CardSelectCmd callers
-    // (Buildup, Safety Net, ...) never Arm(), so their screens stay untagged and unbadged.
+    // (WarmUp, Safety Net, ...) never Arm(), so their screens stay untagged and unbadged.
     private static bool _armed;
 
     // The player's click order for the just-completed draw/discard grid selection, published by

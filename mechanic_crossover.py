@@ -40,7 +40,7 @@ ABBREV = {
     "Apply all self-debuffs": "SlfAll",
     "Apply enemy debuff":   "EnmyDeb",
     "Apply Planned":        "AppPl",
-    "Apply Tense":        "AppTen",
+    "Apply Tuned":        "AppTun",
     "Gain Vigor":           "Vigor",
     "Play all Planned":     "PlayPl",
     "Grant Un-X buff":      "GrantUnX",

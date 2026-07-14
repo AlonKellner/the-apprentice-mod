@@ -41,18 +41,16 @@ public class SelfDebuffValueSchemaTests
     {
         // Attack + Block, 1-cost Common (Base 16)
         new object[] { typeof(FreezeUp),        1, 'W', 16m,  5,  8 },
-        new object[] { typeof(Matinee),         1, 'J', 16m,  7,  8 },
-        new object[] { typeof(Butterflies),     2, 'S', 16m,  7, 12 },
+        new object[] { typeof(RunningOnFumes),         1, 'J', 16m,  7,  8 },
+        new object[] { typeof(TheShakes),     2, 'S', 16m,  7, 12 },
         // Attack + Block, 2-cost Uncommon (Base 23.5)
-        new object[] { typeof(Overcommit),      1, 'V', 23.5m, 8, 14 },
-        new object[] { typeof(Overexert),       2, 'L', 23.5m, 10, 14 },
+        new object[] { typeof(HeartAche),      1, 'V', 23.5m, 8, 14 },
+        new object[] { typeof(Blackout),       2, 'L', 23.5m, 10, 14 },
         // Single-hit Attack, 1-cost (Base 13)
-        new object[] { typeof(Downstage),       1, 'V', 13m, 15,  0 },
-        new object[] { typeof(QuickNap),        1, 'J', 13m, 14,  0 },
-        new object[] { typeof(StageWhisper),    2, 'W', 13m, 18,  0 },
+        new object[] { typeof(BreakALeg),       1, 'V', 13m, 15,  0 },
+        new object[] { typeof(DesperateStrike),    2, 'W', 13m, 18,  0 },
         // AoE Attack, 1-cost Uncommon (Base 4)
-        new object[] { typeof(WideOpen),        1, 'V', 4m,   6,  0 },
-        new object[] { typeof(TakeCenterStage), 2, 'S', 4m,  10,  0 },
+        new object[] { typeof(StageFright), 2, 'S', 4m,  10,  0 },
     };
 
     [Theory]
@@ -72,19 +70,19 @@ public class SelfDebuffValueSchemaTests
     {
         ("attack+block 1-cost Common", new[]
         {
-            (typeof(FreezeUp), 1, 'W'), (typeof(Matinee), 1, 'J'), (typeof(Butterflies), 2, 'S'),
+            (typeof(FreezeUp), 1, 'W'), (typeof(RunningOnFumes), 1, 'J'), (typeof(TheShakes), 2, 'S'),
         }),
         ("attack+block 2-cost Uncommon", new[]
         {
-            (typeof(Overcommit), 1, 'V'), (typeof(Overexert), 2, 'L'),
+            (typeof(HeartAche), 1, 'V'), (typeof(Blackout), 2, 'L'),
         }),
         ("single-hit attack 1-cost", new[]
         {
-            (typeof(Downstage), 1, 'V'), (typeof(QuickNap), 1, 'J'), (typeof(StageWhisper), 2, 'W'),
+            (typeof(BreakALeg), 1, 'V'), (typeof(DesperateStrike), 2, 'W'),
         }),
         ("AoE attack 1-cost Uncommon", new[]
         {
-            (typeof(WideOpen), 1, 'V'), (typeof(TakeCenterStage), 2, 'S'),
+            (typeof(StageFright), 2, 'S'),
         }),
     };
 
@@ -117,7 +115,7 @@ public class SelfDebuffValueSchemaTests
     [Fact]
     public void AllNighter_GainsTwoEnergy()
     {
-        var card = New(typeof(AllNighter));
+        var card = New(typeof(MustGoOn));
         Assert.Equal(2, (int)card.DynamicVars["Energy"].BaseValue);
     }
 }

@@ -12,12 +12,12 @@ public class UnplayableKeywordOrderPatchTests
     public void Postfix_MovesUnplayableToEnd_WhenCustomBeforeKeywordsFollowIt()
     {
         // Mirrors the real runtime shape: base array [..., Unplayable] followed by
-        // BaseLib-appended custom AutoKeywordPosition.Before keywords (Tense, Stable).
+        // BaseLib-appended custom AutoKeywordPosition.Before keywords (Tuned, Stable).
         var array = new[]
         {
             CardKeyword.Ethereal, CardKeyword.Sly, CardKeyword.Retain,
             CardKeyword.Innate, CardKeyword.Unplayable,
-            UnderstudyKeywords.Tense, UnderstudyKeywords.Stable,
+            UnderstudyKeywords.Tuned, UnderstudyKeywords.Stable,
         };
 
         UnplayableKeywordOrderPatch.Postfix(ref array);
@@ -28,7 +28,7 @@ public class UnplayableKeywordOrderPatchTests
     [Fact]
     public void Postfix_NoOp_WhenUnplayableAlreadyLast()
     {
-        var array = new[] { CardKeyword.Ethereal, UnderstudyKeywords.Tense, CardKeyword.Unplayable };
+        var array = new[] { CardKeyword.Ethereal, UnderstudyKeywords.Tuned, CardKeyword.Unplayable };
         var original = array.ToArray();
 
         UnplayableKeywordOrderPatch.Postfix(ref array);

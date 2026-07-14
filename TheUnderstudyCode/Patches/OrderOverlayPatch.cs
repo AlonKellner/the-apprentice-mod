@@ -38,7 +38,7 @@ public static class OrderOverlayPatch
     // time the GPU ever renders a given shader/material pipeline, Godot has to compile it, which can
     // stall the whole frame (reported as the entire game stuttering, not just the card). Building a
     // fresh ShaderMaterial per card risked repeating that stall on every single card, every combat.
-    // One shared instance means there's only ever one pipeline to compile all run, and WarmUp()
+    // One shared instance means there's only ever one pipeline to compile all run, and Schedule()
     // below forces that compile to happen off-screen, well before a player ever needs to see it.
     private static ShaderMaterial? _overlayMaterial;
     private static ShaderMaterial OverlayMaterial => _overlayMaterial ??= new ShaderMaterial { Shader = OverlayShader };
@@ -63,7 +63,7 @@ public static class OrderOverlayPatch
     // actually need the effect (Orders are assigned next turn's AfterPlayerTurnStartLate), giving
     // the one-time compile stall several frames of headroom to finish unnoticed. Idempotent: only
     // the first call in a given game session does anything.
-    public static void WarmUp()
+    public static void Schedule()
     {
         if (_warmedUp) return;
         _warmedUp = true;

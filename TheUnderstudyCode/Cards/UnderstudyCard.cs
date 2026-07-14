@@ -53,21 +53,21 @@ public abstract class UnderstudyCard(
         $"{Id.Entry.RemovePrefix().ToLowerInvariant()}.png".BigCardImagePath()
             ?? TypePlaceholderPortrait;
 
-    // Call in subclass constructors to register the dynamic Tense hover tip. The lambda is
-    // evaluated at hover time with the live card, so it reads the current TenseModifier.Stacks —
-    // returns nothing when Tense hasn't been applied yet (no tip clutter on fresh cards).
-    protected void WithTenseTip()
+    // Call in subclass constructors to register the dynamic Tuned hover tip. The lambda is
+    // evaluated at hover time with the live card, so it reads the current TunedModifier.Stacks —
+    // returns nothing when Tuned hasn't been applied yet (no tip clutter on fresh cards).
+    protected void WithTunedTip()
     {
         WithTips(card =>
         {
-            if (!card.TryGetModifier<TenseModifier>(out var mod) || mod.Stacks <= 0)
+            if (!card.TryGetModifier<TunedModifier>(out var mod) || mod.Stacks <= 0)
                 return Enumerable.Empty<IHoverTip>();
             int s = mod.Stacks;
             return new IHoverTip[]
             {
                 new HoverTip(
-                    new LocString("card_keywords", "THEUNDERSTUDY-TENSE.title"),
-                    $"If this deals damage or grants [gold]Block[/gold], increase it by {s} for each card with [gold]Tense[/gold]."
+                    new LocString("card_keywords", "THEUNDERSTUDY-TUNED.title"),
+                    $"If this deals damage or grants [gold]Block[/gold], increase it by {s} for each card with [gold]Tuned[/gold]."
                 )
             };
         });
@@ -132,7 +132,7 @@ public abstract class UnderstudyCard(
     // resolver's RemoveSlot call has just emptied the modifier out). Without this, a card starts
     // each combat Planned exactly once as intended, but the instant it's actually played and its
     // slot consumed, the very next pile transition would see "no PlannedModifier present" and
-    // silently re-queue it — self-perpetuating, unlike Refrain's genuinely deliberate self-Plan.
+    // silently re-queue it — self-perpetuating, unlike Motif's genuinely deliberate self-Plan.
     private bool _prePlannedThisCombat;
 
     private void ApplyPrePlannedIfNeeded()
@@ -156,31 +156,31 @@ public abstract class UnderstudyCard(
         PlannedModifier.RefreshVisualIndices(PlannedModifier.RelevantCards(Owner));
     }
 
-    // The pre-Tense mechanic (starting a combat already carrying Tense 1) — same shape as
+    // The pre-Tuned mechanic (starting a combat already carrying Tuned 1) — same shape as
     // IsPrePlanned above, for "big one-off moment" B cards that should already be primed to lock
     // after their first play rather than needing a card-side grant.
-    public virtual bool IsPreTense => false;
+    public virtual bool IsPreTuned => false;
 
     // True once this card has actually been pre-Tensified for the current combat — reset only
     // at BeforeCombatStart, same reasoning as _prePlannedThisCombat (AfterCardEnteredCombat fires
     // on every pile transition, not just the first).
-    private bool _preTenseThisCombat;
+    private bool _preTunedThisCombat;
 
-    private void ApplyPreTenseIfNeeded()
+    private void ApplyPreTunedIfNeeded()
     {
-        if (!IsPreTense || _preTenseThisCombat) return;
+        if (!IsPreTuned || _preTunedThisCombat) return;
         if (Pile?.Type.IsCombatPile() != true) return;
-        if (this.TryGetModifier<TenseModifier>(out _)) return;
+        if (this.TryGetModifier<TunedModifier>(out _)) return;
 
-        _preTenseThisCombat = true;
-        TenseModifier.Apply(this, CombatState!, Owner!.Piles.SelectMany(p => p.Cards));
+        _preTunedThisCombat = true;
+        TunedModifier.Apply(this, CombatState!, Owner!.Piles.SelectMany(p => p.Cards));
     }
 
     public override Task BeforeCombatStart()
     {
         var t = base.BeforeCombatStart();
         _prePlannedThisCombat = false;
-        _preTenseThisCombat = false;
+        _preTunedThisCombat = false;
         // Reset (not just lazily set) here: a previous combat's snapshot/StableModifier grant
         // must not leak into a new one — MaybeSnapshotIfStable only ever sets _stableSnapshot
         // once it's null, so without this reset a printed-Stable card would only ever get
@@ -188,12 +188,12 @@ public abstract class UnderstudyCard(
         _stableSnapshot = null;
         EnforceStableNow();
         ApplyPrePlannedIfNeeded();
-        ApplyPreTenseIfNeeded();
+        ApplyPreTunedIfNeeded();
         return t;
     }
 
     // Auto-attach the shared PlannedCounterPower so the queue UI badge is visible whenever
-    // Performance queues cards, and the hidden InvertTrackerPower so Invert can react to
+    // Workshop queues cards, and the hidden InvertTrackerPower so Invert can react to
     // enemy-inflicted (not just self-applied) invertible debuffs and perform its bidirectional
     // debuff/buff cancellation for all 6 pairs (see InvertTrackerPower for why that logic lives
     // there rather than on each Un-X power). (Take Notes' "debuff cleared" detection used to need a
@@ -215,7 +215,7 @@ public abstract class UnderstudyCard(
     {
         EnforceStableNow();
         ApplyPrePlannedIfNeeded();
-        ApplyPreTenseIfNeeded();
+        ApplyPreTunedIfNeeded();
         return Task.CompletedTask;
     }
 
@@ -224,22 +224,22 @@ public abstract class UnderstudyCard(
         EnforceStableNow();
 
         // Planned is only ever removed by an explicit "remove Planned" effect or by a "Play all
-        // Planned" resolver (CurtainCall/Encore/Performance/Remix) consuming the exact slot it's
+        // Planned" resolver (Showtime/DaCapo/Workshop/Medley) consuming the exact slot it's
         // resolving. A card that's simply playable (Unplayable freed some other way, e.g. by
-        // TakeTwo/SafetyNet/MissedCue) just plays normally when clicked manually — its own Planned
-        // slot(s) are untouched and it stays queued to auto-play later too. Tense is the only
+        // TakeTwo/Confidence/StartOver) just plays normally when clicked manually — its own Planned
+        // slot(s) are untouched and it stays queued to auto-play later too. Tuned is the only
         // keyword that changes a card as a result of being played (below).
 
         // Safe to mutate DirectModifiers here: AfterCardPlayed fires once BaseLib's per-modifier
         // OnPlay enumeration (BeforeAfterPlayHooks) has finished for this play, unlike a
         // CardModifier's own OnPlay override, which runs inside that enumeration and throws
         // "Collection was modified" if it tries to add a modifier to the same card.
-        // IsFinalTensePlay gates this to the last CardPlay in a Replay series, so a card with
+        // IsFinalTunedPlay gates this to the last CardPlay in a Replay series, so a card with
         // Replay N only becomes Unplayable after all N+1 plays have resolved. Muscle Memory immunity
         // is NOT checked here — it's enforced centrally in UnplayableModifier.OnInitialApplication,
-        // which drops this attach for a Tense card whose owner has the power.
+        // which drops this attach for a Tuned card whose owner has the power.
         if (cardPlay.Card == this
-            && TenseModifier.IsFinalTensePlay(cardPlay)
+            && TunedModifier.IsFinalTunedPlay(cardPlay)
             && !this.TryGetModifier<UnplayableModifier>(out _))
             CardModifier.AddModifier<UnplayableModifier>(this);
         return Task.CompletedTask;

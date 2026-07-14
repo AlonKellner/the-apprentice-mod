@@ -12,7 +12,7 @@ namespace TheUnderstudy.TheUnderstudyCode.Cards.DynamicVars;
 // of damage/block coloring).
 //
 // The real reduction happens at apply time in InvertTrackerPower's Received-hook interception; this only
-// MIRRORS PulledPunchPower.Dampen for the preview. It deliberately does NOT run the full received hook:
+// MIRRORS ApathyPower.Dampen for the preview. It deliberately does NOT run the full received hook:
 // that interception is a stateful two-phase protocol (_pending -> AfterModifyingPowerAmountReceived) and
 // driving it during a preview would leave that state dirty and trip its own invariant on the next real
 // application. All self-debuffs in scope are positive debuff-type, so isSignFlip is always false.
@@ -24,7 +24,7 @@ public class SelfDebuffVar : DynamicVar
     }
 
     public static decimal ComputePreview(decimal baseValue, int pulledPunch) =>
-        pulledPunch > 0 ? PulledPunchPower.Dampen(baseValue, isSignFlip: false, pulledPunch) : baseValue;
+        pulledPunch > 0 ? ApathyPower.Dampen(baseValue, isSignFlip: false, pulledPunch) : baseValue;
 
     public override void UpdateCardPreview(CardModel card, CardPreviewMode previewMode, Creature? target, bool runGlobalHooks)
     {
@@ -37,7 +37,7 @@ public class SelfDebuffVar : DynamicVar
             return;
         }
 
-        int pulledPunch = card.Owner.Creature.GetPowerAmount<PulledPunchPower>();
+        int pulledPunch = card.Owner.Creature.GetPowerAmount<ApathyPower>();
         PreviewValue = ComputePreview(BaseValue, pulledPunch);
     }
 }

@@ -11,13 +11,13 @@ public class Showstopper : UnderstudyCard
 
     public Showstopper() : base(3, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
     {
-        // Starts Tense 1 — converts from "always replayable" to "one big hit, then needs
+        // Starts Tuned 1 — converts from "always replayable" to "one big hit, then needs
         // freeing," so the damage is raised to compensate.
         WithDamage(34);
-        WithTip(UnderstudyKeywords.Tense);
+        WithTip(UnderstudyKeywords.Tuned);
     }
 
-    public override bool IsPreTense => true;
+    public override bool IsPreTuned => true;
 
     protected override void OnUpgrade()
     {

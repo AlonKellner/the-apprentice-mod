@@ -12,8 +12,8 @@ using TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
-// Simple, high-cost hit — not tagged Tense (no stack growth, stays a flat hit). It never makes ITSELF
-// Unplayable; but whenever it IS Unplayable (from Planned, Tense, Shaken, or any other effect) it
+// Simple, high-cost hit — not tagged Tuned (no stack growth, stays a flat hit). It never makes ITSELF
+// Unplayable; but whenever it IS Unplayable (from Planned, Tuned, Shaken, or any other effect) it
 // frees + replays itself once at the end of the turn and ends free — a one-shot free replay per
 // Unplayable, not a loop. Only its own Unplayable flag is cleared; any Planned/other modifier is left
 // intact, so a Planned Second Nature ends Planned-but-playable.
@@ -36,7 +36,7 @@ public class SecondNature : UnderstudyCard
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
         await CommonActions.CardAttack(cardPlay.Card, cardPlay).Execute(context);
-        // Deliberately does NOT make itself Unplayable — being played (by hand, Performance, or its
+        // Deliberately does NOT make itself Unplayable — being played (by hand, Workshop, or its
         // own end-of-turn replay) never locks it. It only responds to Unplayable applied by other
         // effects (see BeforeSideTurnEnd), matching the card text.
     }
@@ -50,7 +50,7 @@ public class SecondNature : UnderstudyCard
         {
             UnplayableModifier.Remove(this);
             // Target null: CardCmd.AutoPlay rolls a fresh random living enemy for an AnyEnemy
-            // card whenever its target argument is null (relied on by Remix.cs/Encore.cs).
+            // card whenever its target argument is null (relied on by Medley.cs/DaCapo.cs).
             await CardCmd.AutoPlay(context, this, null, AutoPlayType.None, false, false);
             // OnPlay no longer re-adds Unplayable, so the card ends the turn free (a normal playable
             // card). Any Planned slot is untouched — a Planned Second Nature ends Planned-but-playable.

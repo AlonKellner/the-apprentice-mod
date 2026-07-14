@@ -82,7 +82,7 @@ public class PlannedCounterPower : UnderstudyPower
     {
         PlannedModifier.Changed += UpdateDisplayIfChanged;
         // This power is applied lazily (UnderstudyCard.AfterPlayerTurnStartLate, on the first
-        // turn it's missing), well after Performance may already have queued cards with
+        // turn it's missing), well after Workshop may already have queued cards with
         // PlannedModifier attached this combat. Subscribing alone only catches *future*
         // Changed events — sync with whatever's already Planned right now, or the card list stays
         // empty until something else happens to change Planned state.

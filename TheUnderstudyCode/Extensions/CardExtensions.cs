@@ -43,7 +43,7 @@ public static class CardExtensions
     }
 
     // Whether any card in the given set is Unplayable, regardless of type — broader than
-    // UnplayableModifier.AnyIn (Attack/Skill only), matching TakeYourBow's damage-counting scope.
+    // UnplayableModifier.AnyIn (Attack/Skill only), matching LoosenUp's damage-counting scope.
     public static bool AnyUnplayable(IEnumerable<CardModel> cards) => cards.Any(c => c.IsUnplayable());
 
     public static bool IsStable(this CardModel card)

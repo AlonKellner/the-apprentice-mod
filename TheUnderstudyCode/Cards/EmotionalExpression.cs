@@ -225,7 +225,7 @@ public static class EmotionalExpression
 
     // Frail/Unfrail — same shape as Weak/Unweak, reducing Block gain instead of dealt damage.
     // No Understudy card applies Frail directly; this exists purely so Invert (and the
-    // Invert-each variant on Coda) behaves correctly if something external inflicts it.
+    // Invert-each variant on StrikeAPose) behaves correctly if something external inflicts it.
 
     public static async Task ApplyFrailToSelf(PlayerChoiceContext ctx, Creature creature, int stacks, CardModel? card)
     {
@@ -249,7 +249,7 @@ public static class EmotionalExpression
 
     // Whether Invert would have anything at all to act on right now — all 8 invertible pairs
     // (the 5 self-debuffs plus Frail/Strength/Dexterity, matching PickDebuffToInvert's/IsPresent's
-    // scope below). Used by relevance highlighting on Coda/Reprise/SteadyNow/TakeABreath/EverythingIveGot.
+    // scope below). Used by relevance highlighting on StrikeAPose/PracticeStrike/HaveFun/MoveOn/OwnIt.
     public static bool HasAnyInvertibleDebuffPresent(
         int weak, int vulnerable, int shaken, int limited, int jaded, int frail, int strength, int dexterity) =>
         weak > 0 || vulnerable > 0 || shaken > 0 || limited > 0 || jaded > 0 || frail > 0
@@ -267,7 +267,7 @@ public static class EmotionalExpression
 
     // ── Invert dispatcher ────────────────────────────────────────────────────────────────────
     //
-    // "Last modified invertible debuff" tracking, combat-scoped like TenseModifier's own static
+    // "Last modified invertible debuff" tracking, combat-scoped like TunedModifier's own static
     // counter. `_modificationOrder` holds every category touched this combat, most-recent-first.
     // Updated two ways: (1) every Apply/Convert method above calls RecordModified directly for
     // this deck's own self-application/inversion, and (2) InvertTrackerPower — a hidden Power
@@ -406,7 +406,7 @@ public static class EmotionalExpression
     }
 
     // Invert up to `maxEach` stacks of every invertible debuff the creature currently has any
-    // stacks of (Coda's "each invertible debuff you have").
+    // stacks of (StrikeAPose's "each invertible debuff you have").
     public static async Task InvertEach(PlayerChoiceContext ctx, Creature creature, int maxEach)
     {
         foreach (InvertibleDebuff debuff in Enum.GetValues<InvertibleDebuff>())

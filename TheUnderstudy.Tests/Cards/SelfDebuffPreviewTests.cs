@@ -15,30 +15,30 @@ namespace TheUnderstudy.Tests.Cards;
 // (2) render it in cards.json via {<Debuff>:inverseDiff()} so it colors green when Pulled Punch lowers it.
 public class SelfDebuffPreviewTests
 {
-    // Card type -> (var/debuff name, native amount). One self-debuff each. DressRehearsal (5 debuffs from
-    // one var) and Ensemble (also hits enemies, deliberately excluded) are covered/handled separately.
+    // Card type -> (var/debuff name, native amount). One self-debuff each. CenterStage (5 debuffs from
+    // one var) and Pathos (also hits enemies, deliberately excluded) are covered/handled separately.
     public static IEnumerable<object[]> SelfDebuffCards() => new List<object[]>
     {
         new object[] { typeof(FreezeUp), "Weak", 1 },
-        new object[] { typeof(StageWhisper), "Weak", 2 },
-        new object[] { typeof(Understatement), "Weak", 2 },
+        new object[] { typeof(DesperateStrike), "Weak", 2 },
+        new object[] { typeof(WritersBlock), "Weak", 2 },
         new object[] { typeof(WindUp), "Weak", 2 },
-        new object[] { typeof(Downstage), "Vulnerable", 1 },
-        new object[] { typeof(Overcommit), "Vulnerable", 1 },
-        new object[] { typeof(TrueColors), "Vulnerable", 1 },
-        new object[] { typeof(WideOpen), "Vulnerable", 1 },
-        new object[] { typeof(Butterflies), "Shaken", 2 },
-        new object[] { typeof(MissedCue), "Shaken", 2 },
-        new object[] { typeof(OpeningNumber), "Shaken", 1 },
-        new object[] { typeof(TakeCenterStage), "Shaken", 2 },
-        new object[] { typeof(Flourish), "Limited", 1 },
-        new object[] { typeof(FastForward), "Limited", 2 },
-        new object[] { typeof(OffScript), "Limited", 1 },
-        new object[] { typeof(Overexert), "Limited", 2 },
-        new object[] { typeof(Matinee), "Jaded", 1 },
-        new object[] { typeof(QuickNap), "Jaded", 1 },
-        new object[] { typeof(Rerun), "Jaded", 2 },
-        new object[] { typeof(AllNighter), "Jaded", 2 },
+        new object[] { typeof(BreakALeg), "Vulnerable", 1 },
+        new object[] { typeof(HeartAche), "Vulnerable", 1 },
+        new object[] { typeof(Joke), "Vulnerable", 1 },
+        new object[] { typeof(TheWall), "Vulnerable", 1 },
+        new object[] { typeof(TheShakes), "Shaken", 2 },
+        new object[] { typeof(StartOver), "Shaken", 2 },
+        new object[] { typeof(MissedCue), "Shaken", 1 },
+        new object[] { typeof(StageFright), "Shaken", 2 },
+        new object[] { typeof(BuyTime), "Limited", 1 },
+        new object[] { typeof(DrawingBlanks), "Limited", 2 },
+        new object[] { typeof(CribNotes), "Limited", 1 },
+        new object[] { typeof(Blackout), "Limited", 2 },
+        new object[] { typeof(RunningOnFumes), "Jaded", 1 },
+        new object[] { typeof(AllNighter), "Jaded", 1 },
+        new object[] { typeof(Procrastinate), "Jaded", 2 },
+        new object[] { typeof(MustGoOn), "Jaded", 2 },
     };
 
     [Theory]
@@ -67,11 +67,11 @@ public class SelfDebuffPreviewTests
     // Dress Rehearsal applies `amount` of 5 debuffs to self AND schedules an Invert of `amount` next
     // turn. Pulled Punch reduces the applied debuffs but not the Invert, so the two numbers are backed
     // by different vars: a SelfDebuffVar (colored inverseDiff) for the apply line, and the untouched
-    // DressRehearsalPower (normal diff) for the Invert line.
+    // CenterStagePower (normal diff) for the Invert line.
     [Fact]
     public void DressRehearsal_BacksSelfDebuffWithVar()
     {
-        var card = new DressRehearsal();
+        var card = new CenterStage();
         Assert.True(card.DynamicVars.ContainsKey("SelfDebuff"));
         Assert.IsType<SelfDebuffVar>(card.DynamicVars["SelfDebuff"]);
         Assert.Equal(2, (int)card.DynamicVars["SelfDebuff"].BaseValue);
@@ -80,9 +80,9 @@ public class SelfDebuffPreviewTests
     [Fact]
     public void DressRehearsal_Loc_ApplyLineInverseDiff_InvertLineNormalDiff()
     {
-        var desc = LoadDescriptions()["THEUNDERSTUDY-DRESS_REHEARSAL"];
+        var desc = LoadDescriptions()["THEUNDERSTUDY-CENTER_STAGE"];
         Assert.Contains("{SelfDebuff:inverseDiff()}", desc);       // self-debuff apply line (colored)
-        Assert.Contains("{DressRehearsalPower:diff()}", desc);      // Invert line, unchanged by Pulled Punch
+        Assert.Contains("{CenterStagePower:diff()}", desc);      // Invert line, unchanged by Pulled Punch
     }
 
     private static string RepoRoot => Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", ".."));

@@ -31,7 +31,7 @@ public class TheSecondLesson : UnderstudyCard
         power?.ResetTracking();
         // Pre-compile the Order overlay shader off-screen now, a full turn before the earliest a
         // card could actually need it (Orders are assigned next turn's AfterPlayerTurnStartLate) —
-        // see OrderOverlayPatch.WarmUp for why the first-ever render of this shader stalls a frame.
-        OrderOverlayPatch.WarmUp();
+        // see OrderOverlayPatch.Schedule for why the first-ever render of this shader stalls a frame.
+        OrderOverlayPatch.Schedule();
     }
 }

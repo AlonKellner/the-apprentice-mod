@@ -1,5 +1,6 @@
 using System.Linq;
 using BaseLib.Abstracts;
+using BaseLib.Extensions;
 using BaseLib.Utils;
 using MegaCrit.Sts2.Core.CardSelection;
 using MegaCrit.Sts2.Core.Commands;
@@ -33,12 +34,12 @@ public class Arrangement : UnderstudyCard
 
         var player = cardPlay.Card.Owner;
         PlannedSelectionState.Arm();
-        var selected = await CardSelectCmd.FromHand(
+        var selected = await CardSelectCmd.FromCombatPile(
             context,
+            PileType.Discard.GetPile(player),
             player,
             new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-ARRANGEMENT.selectionPrompt"), 0, 2),
-            c => c != this && PlannedModifier.CanApplyTo(c),
-            this);
+            c => c != this && PlannedModifier.CanApplyTo(c));
 
         if (selected == null) return;
         foreach (var card in PlannedSelectionState.OrderFor(selected))
