@@ -206,6 +206,11 @@ public abstract class UnderstudyCard(
             await PowerCmd.Apply<PlannedCounterPower>(context, player.Creature, 1m, player.Creature, null, false);
         if (!player.Creature.Powers.Any(p => p is InvertTrackerPower))
             await PowerCmd.Apply<InvertTrackerPower>(context, player.Creature, 1m, player.Creature, null, false);
+        // Sole owner of the Tuned->Unplayable lock (see TunedLockPower). Hidden observer of every
+        // card play, so it locks colorless/non-Understudy Tuned cards too — which the old per-card
+        // attach in AfterCardPlayed (gated on cardPlay.Card == this) could never reach.
+        if (!player.Creature.Powers.Any(p => p is TunedLockPower))
+            await PowerCmd.Apply<TunedLockPower>(context, player.Creature, 1m, player.Creature, null, false);
     }
 
     // Restore on every card-play and turn boundary so no window exists where a Stable card
@@ -227,21 +232,11 @@ public abstract class UnderstudyCard(
         // Planned" resolver (Showtime/DaCapo/Workshop/Medley) consuming the exact slot it's
         // resolving. A card that's simply playable (Unplayable freed some other way, e.g. by
         // TakeTwo/Confidence/StartOver) just plays normally when clicked manually — its own Planned
-        // slot(s) are untouched and it stays queued to auto-play later too. Tuned is the only
-        // keyword that changes a card as a result of being played (below).
-
-        // Safe to mutate DirectModifiers here: AfterCardPlayed fires once BaseLib's per-modifier
-        // OnPlay enumeration (BeforeAfterPlayHooks) has finished for this play, unlike a
-        // CardModifier's own OnPlay override, which runs inside that enumeration and throws
-        // "Collection was modified" if it tries to add a modifier to the same card.
-        // IsFinalTunedPlay gates this to the last CardPlay in a Replay series, so a card with
-        // Replay N only becomes Unplayable after all N+1 plays have resolved. Muscle Memory immunity
-        // is NOT checked here — it's enforced centrally in UnplayableModifier.OnInitialApplication,
-        // which drops this attach for a Tuned card whose owner has the power.
-        if (cardPlay.Card == this
-            && TunedModifier.IsFinalTunedPlay(cardPlay)
-            && !this.TryGetModifier<UnplayableModifier>(out _))
-            CardModifier.AddModifier<UnplayableModifier>(this);
+        // slot(s) are untouched and it stays queued to auto-play later too.
+        //
+        // The Tuned->Unplayable lock used to live here, but only fired for cards deriving from
+        // UnderstudyCard (colorless Tuned cards escaped it). It now lives in TunedLockPower, a hidden
+        // player power that observes every card play (see AfterPlayerTurnStartLate).
         return Task.CompletedTask;
     }
 
