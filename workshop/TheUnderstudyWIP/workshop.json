@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.9.1 - Balance: self-debuff cards are retuned so a self-Jaded card is worth at least one extra energy of stats. Most self-debuff attacks and blocks hit harder (e.g. Running on Fumes 7/8 -> 12/8, The Shakes 7/12 -> 12/12, Writer's Block 12 -> 18 block, Break a Leg 15 -> 17). Crying Out Loud now grants Vigor when a buff OR debuff of yours clears. Requires BaseLib.",
+  "changeNote": "v1.9.2 - Crying Out Loud reverted to 'Whenever a debuff of yours clears, gain 3(4) Vigor' — the buff-clear version fed Vigor back into itself too strongly. Requires BaseLib.",
   "tags": [],
   "dependencies": [3737335127],
   "contentDescriptors": []

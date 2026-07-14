@@ -66,7 +66,7 @@
   "THEUNDERSTUDY-BUY_TIME.selectionPrompt": "Choose cards to remove [gold]Unplayable[/gold].",
 
   "THEUNDERSTUDY-CRYING_OUT_LOUD.title": "Crying Out Loud",
-  "THEUNDERSTUDY-CRYING_OUT_LOUD.description": "Whenever a buff or debuff of yours clears, gain {IfUpgraded:show:4|3} [gold]Vigor[/gold].",
+  "THEUNDERSTUDY-CRYING_OUT_LOUD.description": "Whenever a debuff of yours clears, gain {IfUpgraded:show:4|3} [gold]Vigor[/gold].",
 
   "THEUNDERSTUDY-PREVIEW.title": "Preview",
   "THEUNDERSTUDY-PREVIEW.description": "Gain {Block:diff()} [gold]Block[/gold].\nApply [gold]Planned[/gold] to {Select:diff()} {Select:plural:attack or skill|attacks and skills} in your draw pile.",
