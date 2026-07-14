@@ -15,7 +15,7 @@ public class WindUp : UnderstudyCard
 
     public WindUp() : base(0, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
     {
-        WithDamage(4);
+        WithDamage(7);
         WithVars(new IntVar("Vigor", 4));
         WithInvertibleTip(typeof(WeakPower));
         WithVar(new SelfDebuffVar("Weak", 2));

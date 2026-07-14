@@ -13,7 +13,7 @@ public class WritersBlock : UnderstudyCard
 
     public WritersBlock() : base(1, CardType.Skill, CardRarity.Common, TargetType.None)
     {
-        WithBlock(12);
+        WithBlock(18);
         WithInvertibleTip(typeof(WeakPower));
         WithVar(new SelfDebuffVar("Weak", 2));
     }

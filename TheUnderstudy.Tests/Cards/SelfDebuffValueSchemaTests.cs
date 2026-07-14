@@ -39,18 +39,18 @@ public class SelfDebuffValueSchemaTests
     // Damage/Block cards: (type, stacks, debuff, groupBase, expectedDmg, expectedBlock).
     public static IEnumerable<object[]> DamageBlockCards() => new List<object[]>
     {
-        // Attack + Block, 1-cost Common (Base 16)
-        new object[] { typeof(FreezeUp),        1, 'W', 16m,  5,  8 },
-        new object[] { typeof(RunningOnFumes),         1, 'J', 16m,  7,  8 },
-        new object[] { typeof(TheShakes),     2, 'S', 16m,  7, 12 },
-        // Attack + Block, 2-cost Uncommon (Base 23.5)
-        new object[] { typeof(HeartAche),      1, 'V', 23.5m, 8, 14 },
-        new object[] { typeof(Blackout),       2, 'L', 23.5m, 10, 14 },
-        // Single-hit Attack, 1-cost (Base 13)
-        new object[] { typeof(BreakALeg),       1, 'V', 13m, 15,  0 },
-        new object[] { typeof(DesperateStrike),    2, 'W', 13m, 18,  0 },
-        // AoE Attack, 1-cost Uncommon (Base 4)
-        new object[] { typeof(StageFright), 2, 'S', 4m,  10,  0 },
+        // Attack + Block, 1-cost Common (Base 21) — Jaded·1 statted as a normal 2-cost card
+        new object[] { typeof(FreezeUp),        1, 'W', 21m, 10,  8 },
+        new object[] { typeof(RunningOnFumes),  1, 'J', 21m, 12,  8 },
+        new object[] { typeof(TheShakes),       2, 'S', 21m, 12, 12 },
+        // Attack + Block, 2-cost Uncommon (Base 28)
+        new object[] { typeof(HeartAche),       1, 'V', 28m, 10, 16 },
+        new object[] { typeof(Blackout),        2, 'L', 28m, 12, 16 },
+        // Single-hit Attack, 1-cost (Base 15)
+        new object[] { typeof(BreakALeg),       1, 'V', 15m, 17,  0 },
+        new object[] { typeof(DesperateStrike), 2, 'W', 15m, 20,  0 },
+        // AoE Attack, 1-cost Uncommon (Base 6)
+        new object[] { typeof(StageFright),     2, 'S', 6m,  12,  0 },
     };
 
     [Theory]

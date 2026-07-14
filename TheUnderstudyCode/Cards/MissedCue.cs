@@ -16,7 +16,7 @@ public class MissedCue : UnderstudyCard
 
     public MissedCue() : base(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
     {
-        WithDamage(6);
+        WithDamage(7);
         WithVars(new EnergyVar(2));
         WithTips(_ => new IHoverTip[] { EnergyHoverTip });
         WithKeyword(CardKeyword.Exhaust, ConstructedCardModel.UpgradeType.Remove);

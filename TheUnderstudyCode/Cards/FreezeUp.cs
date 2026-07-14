@@ -14,7 +14,7 @@ public class FreezeUp : UnderstudyCard
 
     public FreezeUp() : base(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
     {
-        WithDamage(5);
+        WithDamage(10);
         WithBlock(8);
         WithInvertibleTip(typeof(WeakPower));
         WithVar(new SelfDebuffVar("Weak", 1));

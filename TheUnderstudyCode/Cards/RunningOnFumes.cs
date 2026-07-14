@@ -14,7 +14,7 @@ public class RunningOnFumes : UnderstudyCard
 
     public RunningOnFumes() : base(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
     {
-        WithDamage(7);
+        WithDamage(12);
         WithBlock(8);
         WithTip(typeof(JadedPower));
         WithVar(new SelfDebuffVar("Jaded", 1));

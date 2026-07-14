@@ -13,7 +13,7 @@ public class TheShakes : UnderstudyCard
 
     public TheShakes() : base(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
     {
-        WithDamage(7);
+        WithDamage(12);
         WithBlock(12);
         WithTip(typeof(ShakenPower));
         WithVar(new SelfDebuffVar("Shaken", 2));

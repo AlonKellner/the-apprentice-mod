@@ -19,7 +19,7 @@ public class BuyTime : UnderstudyCard
 
     public BuyTime() : base(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
     {
-        WithDamage(6);
+        WithDamage(9);
         WithVars(new CardsVar("Select", 1));
         WithTip(CardKeyword.Unplayable);
         WithTip(typeof(LimitedPower));

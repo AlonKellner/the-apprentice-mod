@@ -13,7 +13,7 @@ public class StageFright : UnderstudyCard
 
     public StageFright() : base(1, CardType.Attack, CardRarity.Uncommon, TargetType.AllEnemies)
     {
-        WithDamage(10);
+        WithDamage(12);
         WithTip(typeof(ShakenPower));
         WithVar(new SelfDebuffVar("Shaken", 2));
     }

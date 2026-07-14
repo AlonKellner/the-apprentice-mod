@@ -4,6 +4,7 @@ using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models;
+using MegaCrit.Sts2.Core.Models.Powers;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 
@@ -30,7 +31,12 @@ public static class DebuffClearNotifier
     public static async Task NotifyDebuffRemoved(PowerModel? power)
     {
         if (DebuffCleared == null) return;
-        if (power == null || power.Type != PowerType.Debuff) return;
+        if (power == null) return;
+        // Crying Out Loud rewards a DEBUFF or a real player BUFF (the invert-economy Un-X powers,
+        // Strength, Dexterity, Vigor) clearing. Deliberately NOT every PowerType.Buff: the deck's
+        // internal bookkeeping powers (PlannedCounter, AutoTune, Schedule, InvertTracker, Venue, ...)
+        // are all Type==Buff too and must never grant Vigor when they end.
+        if (power.Type != PowerType.Debuff && !IsRewardableBuff(power)) return;
         // RemovePowerInternal removes the power from the creature's list but does not null its
         // back-reference, so Owner is still readable here (base-game PowerCmd.Remove itself reads
         // power.Owner for AfterRemoved after RemoveInternal). The handler filters by owner.
@@ -38,4 +44,11 @@ public static class DebuffClearNotifier
         if (owner == null) return;
         await DebuffCleared(new ThrowingPlayerChoiceContext(), owner, power);
     }
+
+    // The buffs a player thinks of as "theirs" — the invert-economy pay-offs (Un-X), the stat buffs
+    // (Strength/Dexterity, which the deck's Invert can create), and Vigor. Excludes the many internal
+    // bookkeeping powers that are also PowerType.Buff.
+    private static bool IsRewardableBuff(PowerModel power) =>
+        power is UnweakPower or UnvulnerablePower or UnshakenPower or UnjadedPower
+              or UnlimitedPower or UnfrailPower or StrengthPower or DexterityPower or VigorPower;
 }

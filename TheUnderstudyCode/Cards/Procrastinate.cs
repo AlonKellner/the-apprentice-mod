@@ -18,7 +18,7 @@ public class Procrastinate : UnderstudyCard
 
     public Procrastinate() : base(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
     {
-        WithDamage(8);
+        WithDamage(13);
         WithTip(UnderstudyKeywords.Planned);
         WithTip(typeof(JadedPower));
         WithVar(new SelfDebuffVar("Jaded", 2));

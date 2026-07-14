@@ -18,7 +18,7 @@ public class CribNotes : UnderstudyCard
 
     public CribNotes() : base(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
     {
-        WithDamage(8);
+        WithDamage(10);
         WithTip(UnderstudyKeywords.Tuned);
         WithTip(typeof(LimitedPower));
         WithVar(new SelfDebuffVar("Limited", 1));

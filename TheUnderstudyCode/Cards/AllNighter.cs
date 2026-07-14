@@ -13,7 +13,7 @@ public class AllNighter : UnderstudyCard
 
     public AllNighter() : base(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
     {
-        WithDamage(8);
+        WithDamage(11);
         WithCards(1);
         WithTip(typeof(JadedPower));
         WithVar(new SelfDebuffVar("Jaded", 1));

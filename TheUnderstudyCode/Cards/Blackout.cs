@@ -13,8 +13,8 @@ public class Blackout : UnderstudyCard
 
     public Blackout() : base(2, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
     {
-        WithDamage(10);
-        WithBlock(14);
+        WithDamage(12);
+        WithBlock(16);
         WithTip(typeof(LimitedPower));
         WithVar(new SelfDebuffVar("Limited", 2));
     }

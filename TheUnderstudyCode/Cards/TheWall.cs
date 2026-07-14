@@ -13,7 +13,7 @@ public class TheWall : UnderstudyCard
 
     public TheWall() : base(1, CardType.Skill, CardRarity.Common, TargetType.None)
     {
-        WithBlock(10);
+        WithBlock(16);
         WithInvertibleTip(typeof(VulnerablePower));
         WithVar(new SelfDebuffVar("Vulnerable", 1));
     }

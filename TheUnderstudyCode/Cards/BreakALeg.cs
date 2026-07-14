@@ -13,7 +13,7 @@ public class BreakALeg : UnderstudyCard
 
     public BreakALeg() : base(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
     {
-        WithDamage(15);
+        WithDamage(17);
         WithInvertibleTip(typeof(VulnerablePower));
         WithVar(new SelfDebuffVar("Vulnerable", 1));
     }

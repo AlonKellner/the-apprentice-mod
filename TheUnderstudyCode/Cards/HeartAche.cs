@@ -13,8 +13,8 @@ public class HeartAche : UnderstudyCard
 
     public HeartAche() : base(2, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
     {
-        WithDamage(8);
-        WithBlock(14);
+        WithDamage(10);
+        WithBlock(16);
         WithInvertibleTip(typeof(VulnerablePower));
         WithVar(new SelfDebuffVar("Vulnerable", 1));
     }

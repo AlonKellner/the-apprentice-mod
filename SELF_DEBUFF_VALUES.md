@@ -54,6 +54,23 @@ Each mechanic has its own `Base` and unit rate:
 For attack+block cards, spend the vp across damage and block **freely** — scale one, or trade between
 them — choosing a split that gives each card in a group a distinct statline.
 
+### The baseline anchor: Jaded·1 = "+1 cost"
+
+Self-**Jaded** costs you ~1 energy on a later turn, so a self-Jaded card should be worth **at least a
+normal card that costs one more**. This sets every group's `Base`: **a self-Jaded·1 card at cost C is
+statted like a normal (non-self-debuff) card at cost C+1.** Since `vp(Jaded·1) = Base + sev(J) = Base + 1`,
+`Base(mech, C) = normalValue(mech, C+1) − 1`. From there the universal `P·(stacks−1) + sev` offsets set
+every other card. Moderate cost premium: **+1 cost ≈ +7 damage / +6 block-vp**.
+
+Normal (non-self-debuff) value curve used for the anchor:
+
+| Mechanic | cost 1 | cost 2 | cost 3 |
+|---|:--:|:--:|:--:|
+| Single-hit ST damage | ~9 | ~16 | ~24 |
+| Attack+block (total vp) | ~15 | ~22 | ~29 |
+| Block-only (block) | ~11 | ~17 | — |
+| AoE damage | ~5 | ~8 | ~11 |
+
 ## Current values
 
 `Δ = P·(stacks−1) + sev(debuff)`. Anchors (marked *) keep their pre-existing values and set each group's
@@ -62,32 +79,36 @@ them — choosing a split that gives each card in a group a distinct statline.
 (Card names below are the current music/creative-theme names; the mechanic and values are unchanged
 from the original theatrical-theme cards unless noted.)
 
-### Attack + Block, 1-cost Common — Base 16 vp
+### Attack + Block, 1-cost Common — Base 21 vp
 | Card | debuff · stacks | Δ | vp | Damage / Block |
 |---|:---:|:---:|:---:|:---:|
-| Freeze Up * | Weak · 1 | −1 | 15 | 5 / 8 |
-| Running on Fumes | Jaded · 1 | +1 | 17 | 7 / 8 |
-| The Shakes | Shaken · 2 | +6 | 22 | 7 / 12 |
+| Freeze Up | Weak · 1 | −1 | 20 | 10 / 8 |
+| Running on Fumes ★ | Jaded · 1 | +1 | 22 | 12 / 8 |
+| The Shakes | Shaken · 2 | +6 | 27 | 12 / 12 |
 
-### Attack + Block, 2-cost Uncommon — Base 23.5 vp
+★ = the Jaded·1 anchor: 22 vp is a normal 2-cost card's worth (the whole group scales from it).
+
+### Attack + Block, 2-cost Uncommon — Base 28 vp
 | Card | debuff · stacks | Δ | vp | Damage / Block |
 |---|:---:|:---:|:---:|:---:|
-| Heart Ache * | Vulnerable · 1 | +2 | 25.5 | 8 / 14 |
-| Blackout | Limited · 2 | +4 | 27.5 | 10 / 14 |
+| Heart Ache | Vulnerable · 1 | +2 | 30 | 10 / 16 |
+| Blackout | Limited · 2 | +4 | 32 | 12 / 16 |
 
 Blackout's 2 mild-Limited stacks only edge out Heart Ache's 1 harsh-Vulnerable stack (the smallest
 2-vs-1 gap, +2 vp) — the severity offset partly cancels the stack premium, exactly as intended.
 
-### Single-hit Attack, 1-cost — Base 13 vp
+### Single-hit Attack, 1-cost — Base 15 vp
 | Card | debuff · stacks | Δ | vp | Damage |
 |---|:---:|:---:|:---:|:---:|
-| Break a Leg * | Vulnerable · 1 | +2 | 15 | 15 |
-| Desperate Strike | Weak · 2 | +5 | 18 | 18 |
+| Break a Leg | Vulnerable · 1 | +2 | 17 | 17 |
+| Desperate Strike | Weak · 2 | +5 | 20 | 20 |
 
-### AoE Attack, 1-cost Uncommon — Base 4 vp
+(A Jaded·1 single-hit here would be 16 damage = a normal 2-cost attack.)
+
+### AoE Attack, 1-cost Uncommon — Base 6 vp
 | Card | debuff · stacks | Δ | vp | AoE Damage |
 |---|:---:|:---:|:---:|:---:|
-| Stage Fright * | Shaken · 2 | +6 | 10 | 10 |
+| Stage Fright | Shaken · 2 | +6 | 12 | 12 |
 
 ### Energy
 Missed Cue (Shaken · 1) is now a 1-cost Attack that deals 6 and gains 2 → net +1 energy plus the strike.
@@ -95,10 +116,13 @@ Must Go On (Jaded · 2) gains 2 at 0 cost → net +2, clearing Missed Cue by its
 
 ## Not priced by a group (same-mechanic singletons)
 
-These have no same-mechanic peer, so there is no duplication constraint; they keep their current values,
-and the schema is the reference if a peer is ever added: Writer's Block and The Wall (block-only —
-The Wall trades a lower block for a harsher Vulnerable · 1), Drawing Blanks (draw), Wind Up (attack +
-Vigor), Joke (attack + Invert + self-Vulnerable), All-Nighter (attack + draw + self-Jaded), Buy Time
-(attack + remove-Unplayable + self-Limited), Crib Notes (attack + self-Tuned + self-Limited),
-Procrastinate (attack + self-Planned + self-Jaded), Center Stage (Rare build-around), Pathos (also
-debuffs enemies).
+These have no same-mechanic peer, so there is no duplication constraint; they take the same baseline
+lift, spending it mostly on stats while a rider (draw / energy / Invert / Vigor / remove-Unplayable /
+Tuned / Planned) absorbs the rest. Current values: Writer's Block (block-only, Weak · 2, **18 block**),
+The Wall (block-only, Vulnerable · 1, **16 block**), All-Nighter (attack + draw, Jaded · 1, **11 dmg**),
+Procrastinate (attack + Planned, Jaded · 2, **13 dmg**), Buy Time (attack + remove-Unplayable,
+Limited · 1, **9 dmg**), Crib Notes (attack + Tuned, Limited · 1, **10 dmg**), Joke (attack + Invert,
+Vulnerable · 1, **7 dmg**), Wind Up (attack + Vigor, Weak · 2, **7 dmg**), Missed Cue (attack + energy,
+Shaken · 1, **7 dmg** — the +2 energy dominates the budget). Payoff-is-the-rider cards left as-is:
+Drawing Blanks (draw 3), Must Go On (+2 energy), Start Over (remove-Unplayable all), Center Stage
+(all-5 build-around), Pathos (also debuffs enemies).
