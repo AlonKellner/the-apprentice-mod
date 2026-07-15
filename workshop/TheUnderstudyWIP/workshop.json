@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.10.1 - Fix: Encore and Swing crashed on play (missing power var); both work now. Joke now inverts a random invertible debuff. Enjoy the Ride wording clarified. Requires BaseLib.",
+  "changeNote": "v1.10.2 - Buy Time now removes Unplayable from cards in hand (with smart plurals). Encore power is now visible and stacks: play it twice to retain Vigor for 2 turns. Requires BaseLib.",
   "tags": [],
   "dependencies": [3737335127],
   "contentDescriptors": []
