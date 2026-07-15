@@ -25,23 +25,23 @@ public class CardRarityMechanicCoverageTests
     {
         ["Invert"] = new[]
         {
-            typeof(Subversion), typeof(HaveFun), typeof(MoveOn), typeof(Joke),
+            typeof(Choreography), typeof(EnjoyTheRide), typeof(MoveOn), typeof(Joke),
             typeof(BrightSide), typeof(Apathy), typeof(StrikeAPose), typeof(DoubleTime),
-            typeof(HeldNote), typeof(MyOwnLesson), typeof(OwnIt),
+            typeof(HeldNote), typeof(MyOwnLesson), typeof(OwnIt), typeof(Swing),
         },
         ["Planned"] = new[]
         {
-            typeof(Development), typeof(Preview), typeof(Subversion), typeof(Innovation),
+            typeof(Orchestration), typeof(Foreshadow), typeof(Choreography), typeof(WriteItDown),
             typeof(Muse), typeof(Showtime), typeof(Signature), typeof(Medley),
-            typeof(Arrangement), typeof(SellOut), typeof(Venue),
+            typeof(Melody), typeof(SellOut), typeof(Venue),
             typeof(CleanSlate), typeof(DaCapo), typeof(MagnumOpus), typeof(Motif), typeof(Playlist),
         },
         ["Tuned"] = new[]
         {
-            typeof(Innovation), typeof(TuningRitual), typeof(PracticeStrike),
-            typeof(Rehearse), typeof(Signature), typeof(Memorize), typeof(Schedule),
+            typeof(WriteItDown), typeof(TuningRitual), typeof(PracticeStrike),
+            typeof(Rehearse), typeof(Signature), typeof(Memorize), typeof(Perfectionism),
             typeof(CleanSlate), typeof(Experience), typeof(OneUp), typeof(StartOver),
-            typeof(MuscleMemory), typeof(AllHands), typeof(Showstopper), typeof(AutoTune),
+            typeof(MuscleMemory), typeof(BackOfMyHand), typeof(Showstopper), typeof(AutoTune),
         },
         ["Weak"] = new[]
         {
@@ -76,8 +76,8 @@ public class CardRarityMechanicCoverageTests
         },
         ["Vigor"] = new[]
         {
-            typeof(Crash), typeof(WindUp), typeof(SonicBoom), typeof(Forte),
-            typeof(Crescendo), typeof(CryingOutLoud),
+            typeof(Crash), typeof(BreakingVoice), typeof(SonicBoom), typeof(Forte),
+            typeof(Crescendo), typeof(CryingOutLoud), typeof(DeceptiveCadence), typeof(Encore),
         },
         ["damage"] = new[]
         {
@@ -86,12 +86,12 @@ public class CardRarityMechanicCoverageTests
         },
         ["block"] = new[]
         {
-            typeof(WritersBlock), typeof(FreezeUp), typeof(Preview), typeof(HaveFun),
+            typeof(WritersBlock), typeof(FreezeUp), typeof(Foreshadow), typeof(EnjoyTheRide),
             typeof(RunningOnFumes), typeof(TheShakes),
         },
         ["draw"] = new[]
         {
-            typeof(Development), typeof(Breather), typeof(MoveOn), typeof(DrawingBlanks),
+            typeof(Orchestration), typeof(Breather), typeof(MoveOn), typeof(DrawingBlanks),
             typeof(Rehearse), typeof(AllNighter),
         },
         ["energy"] = new[]

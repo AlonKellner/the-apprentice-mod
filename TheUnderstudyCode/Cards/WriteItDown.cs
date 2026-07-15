@@ -1,48 +1,52 @@
 using System.Linq;
 using BaseLib.Abstracts;
-using BaseLib.Extensions;
 using BaseLib.Utils;
 using MegaCrit.Sts2.Core.CardSelection;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization;
+using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
 using TheUnderstudy.TheUnderstudyCode.Patches;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
-public class Arrangement : UnderstudyCard
+public class WriteItDown : UnderstudyCard
 {
-    public const string CardId = "TheUnderstudy:Arrangement";
+    public const string CardId = "TheUnderstudy:WriteItDown";
 
-    public Arrangement() : base(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
+    public WriteItDown() : base(1, CardType.Skill, CardRarity.Common, TargetType.None)
     {
-        WithDamage(9);
+        WithVars(new CardsVar("Select", 1));
         WithTip(UnderstudyKeywords.Planned);
+        WithTip(UnderstudyKeywords.Tuned);
     }
 
     protected override void OnUpgrade()
     {
         base.OnUpgrade();
-        DynamicVars.Damage.UpgradeValueBy(3m);
+        DynamicVars["Select"].UpgradeValueBy(1m);
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
-        await CommonActions.CardAttack(cardPlay.Card, cardPlay).Execute(context);
-
         var player = cardPlay.Card.Owner;
+        int maxSelect = (int)DynamicVars["Select"].BaseValue;
         PlannedSelectionState.Arm();
-        var selected = await CardSelectCmd.FromCombatPile(
+        var selected = await CardSelectCmd.FromHand(
             context,
-            PileType.Discard.GetPile(player),
             player,
-            new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-ARRANGEMENT.selectionPrompt"), 0, 2),
-            c => c != this && PlannedModifier.CanApplyTo(c));
-
+            new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-WRITE_IT_DOWN.selectionPrompt"), 0, maxSelect),
+            c => c != this && PlannedModifier.CanApplyTo(c) && TunedModifier.CanApplyTo(c),
+            this);
         if (selected == null) return;
+
+        var tunedAllCards = player.Piles.SelectMany(p => p.Cards);
         foreach (var card in PlannedSelectionState.OrderFor(selected))
+        {
             PlannedModifier.Apply(card, CombatState!);
+            TunedModifier.Apply(card, CombatState!, tunedAllCards);
+        }
     }
 }

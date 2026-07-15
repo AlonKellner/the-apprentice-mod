@@ -22,7 +22,7 @@ public class SelfDebuffPreviewTests
         new object[] { typeof(FreezeUp), "Weak", 1 },
         new object[] { typeof(DesperateStrike), "Weak", 2 },
         new object[] { typeof(WritersBlock), "Weak", 2 },
-        new object[] { typeof(WindUp), "Weak", 2 },
+        new object[] { typeof(BreakingVoice), "Weak", 2 },
         new object[] { typeof(BreakALeg), "Vulnerable", 1 },
         new object[] { typeof(HeartAche), "Vulnerable", 1 },
         new object[] { typeof(Joke), "Vulnerable", 1 },

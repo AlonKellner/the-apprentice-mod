@@ -12,13 +12,13 @@ using TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 
-public class SchedulePower : UnderstudyPower
+public class PerfectionismPower : UnderstudyPower
 {
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Counter;
 
     public override List<(string, string)> Localization => new PowerLoc(
-        "Schedule",
+        "Perfectionism",
         "At the start of your turn, apply [gold]Tuned[/gold] to this many cards.",
         "At the start of your turn, apply [gold]Tuned[/gold] to [blue]{Amount}[/blue] {Amount:plural:card|cards}.");
 
@@ -29,7 +29,7 @@ public class SchedulePower : UnderstudyPower
         var selected = await CardSelectCmd.FromHand(
             context,
             player,
-            new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-SCHEDULE.selectionPrompt"), 0, maxSelect),
+            new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-PERFECTIONISM.selectionPrompt"), 0, maxSelect),
             TunedModifier.CanApplyTo,
             this);
         if (selected == null) return;

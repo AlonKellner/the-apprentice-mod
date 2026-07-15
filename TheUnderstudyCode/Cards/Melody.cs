@@ -1,52 +1,48 @@
 using System.Linq;
 using BaseLib.Abstracts;
+using BaseLib.Extensions;
 using BaseLib.Utils;
 using MegaCrit.Sts2.Core.CardSelection;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization;
-using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
 using TheUnderstudy.TheUnderstudyCode.Patches;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
-public class Innovation : UnderstudyCard
+public class Melody : UnderstudyCard
 {
-    public const string CardId = "TheUnderstudy:Innovation";
+    public const string CardId = "TheUnderstudy:Melody";
 
-    public Innovation() : base(1, CardType.Skill, CardRarity.Common, TargetType.None)
+    public Melody() : base(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
     {
-        WithVars(new CardsVar("Select", 1));
+        WithDamage(9);
         WithTip(UnderstudyKeywords.Planned);
-        WithTip(UnderstudyKeywords.Tuned);
     }
 
     protected override void OnUpgrade()
     {
         base.OnUpgrade();
-        DynamicVars["Select"].UpgradeValueBy(1m);
+        DynamicVars.Damage.UpgradeValueBy(3m);
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
-        var player = cardPlay.Card.Owner;
-        int maxSelect = (int)DynamicVars["Select"].BaseValue;
-        PlannedSelectionState.Arm();
-        var selected = await CardSelectCmd.FromHand(
-            context,
-            player,
-            new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-INNOVATION.selectionPrompt"), 0, maxSelect),
-            c => c != this && PlannedModifier.CanApplyTo(c) && TunedModifier.CanApplyTo(c),
-            this);
-        if (selected == null) return;
+        await CommonActions.CardAttack(cardPlay.Card, cardPlay).Execute(context);
 
-        var tunedAllCards = player.Piles.SelectMany(p => p.Cards);
+        var player = cardPlay.Card.Owner;
+        PlannedSelectionState.Arm();
+        var selected = await CardSelectCmd.FromCombatPile(
+            context,
+            PileType.Discard.GetPile(player),
+            player,
+            new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-MELODY.selectionPrompt"), 0, 2),
+            c => c != this && PlannedModifier.CanApplyTo(c));
+
+        if (selected == null) return;
         foreach (var card in PlannedSelectionState.OrderFor(selected))
-        {
             PlannedModifier.Apply(card, CombatState!);
-            TunedModifier.Apply(card, CombatState!, tunedAllCards);
-        }
     }
 }

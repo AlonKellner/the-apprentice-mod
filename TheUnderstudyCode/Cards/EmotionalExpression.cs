@@ -249,7 +249,7 @@ public static class EmotionalExpression
 
     // Whether Invert would have anything at all to act on right now — all 8 invertible pairs
     // (the 5 self-debuffs plus Frail/Strength/Dexterity, matching PickDebuffToInvert's/IsPresent's
-    // scope below). Used by relevance highlighting on StrikeAPose/PracticeStrike/HaveFun/MoveOn/OwnIt.
+    // scope below). Used by relevance highlighting on StrikeAPose/PracticeStrike/EnjoyTheRide/MoveOn/OwnIt.
     public static bool HasAnyInvertibleDebuffPresent(
         int weak, int vulnerable, int shaken, int limited, int jaded, int frail, int strength, int dexterity) =>
         weak > 0 || vulnerable > 0 || shaken > 0 || limited > 0 || jaded > 0 || frail > 0
@@ -411,6 +411,63 @@ public static class EmotionalExpression
     {
         foreach (InvertibleDebuff debuff in Enum.GetValues<InvertibleDebuff>())
             await InvertDebuff(ctx, creature, debuff, maxEach);
+    }
+
+    // Magnitude of the BUFF side of a pair currently present (mirror of IsPresent's debuff-side test).
+    private static int BuffSideAmount(Creature creature, InvertibleDebuff debuff) => debuff switch
+    {
+        InvertibleDebuff.Weak => creature.GetPowerAmount<UnweakPower>(),
+        InvertibleDebuff.Vulnerable => creature.GetPowerAmount<UnvulnerablePower>(),
+        InvertibleDebuff.Shaken => creature.GetPowerAmount<UnshakenPower>(),
+        InvertibleDebuff.Limited => creature.GetPowerAmount<UnlimitedPower>(),
+        InvertibleDebuff.Jaded => creature.GetPowerAmount<UnjadedPower>(),
+        InvertibleDebuff.Frail => creature.GetPowerAmount<UnfrailPower>(),
+        InvertibleDebuff.Strength => Math.Max(0, creature.GetPowerAmount<StrengthPower>()),
+        InvertibleDebuff.Dexterity => Math.Max(0, creature.GetPowerAmount<DexterityPower>()),
+        _ => 0
+    };
+
+    // Remove `amount` of the buff side of a pair (the 6 Un-X powers, or the positive part of
+    // Strength/Dexterity). Mirror of ApplyBuffSide with a negative sign.
+    private static async Task RemoveBuffSide(PlayerChoiceContext ctx, Creature creature, InvertibleDebuff debuff, int amount)
+    {
+        switch (debuff)
+        {
+            case InvertibleDebuff.Weak: await PowerCmd.Apply<UnweakPower>(ctx, creature, -amount, creature, null, false); break;
+            case InvertibleDebuff.Vulnerable: await PowerCmd.Apply<UnvulnerablePower>(ctx, creature, -amount, creature, null, false); break;
+            case InvertibleDebuff.Shaken: await PowerCmd.Apply<UnshakenPower>(ctx, creature, -amount, creature, null, false); break;
+            case InvertibleDebuff.Limited: await PowerCmd.Apply<UnlimitedPower>(ctx, creature, -amount, creature, null, false); break;
+            case InvertibleDebuff.Jaded: await PowerCmd.Apply<UnjadedPower>(ctx, creature, -amount, creature, null, false); break;
+            case InvertibleDebuff.Frail: await PowerCmd.Apply<UnfrailPower>(ctx, creature, -amount, creature, null, false); break;
+            case InvertibleDebuff.Strength: await PowerCmd.Apply<StrengthPower>(ctx, creature, -amount, creature, null, false); break;
+            case InvertibleDebuff.Dexterity: await PowerCmd.Apply<DexterityPower>(ctx, creature, -amount, creature, null, false); break;
+        }
+    }
+
+    // Reverse of InvertDebuff: turn a present BUFF back into its debuff side, up to `max`. Removes the
+    // buff first so InvertTrackerPower has nothing left to cancel the freshly-applied debuff against
+    // (same ordering rationale as ConvertWeakToUnweak). For Strength/Dexterity the buff removal and
+    // the debuff application both land on the one Power (net -2*convert), flipping +V to -V.
+    public static async Task<int> InvertBuffToDebuff(PlayerChoiceContext ctx, Creature creature, InvertibleDebuff debuff, int max)
+    {
+        int convert = Math.Min(BuffSideAmount(creature, debuff), max);
+        if (convert <= 0) return 0;
+        await RemoveBuffSide(ctx, creature, debuff, convert);
+        await ApplyDebuffSide(ctx, creature, debuff, convert);
+        return convert;
+    }
+
+    // Swing: flip every invertible pair to its opposite polarity, full amount. A pair only ever holds
+    // one side (the two cancel), so per pair we convert whichever side is present — debuff->buff if a
+    // debuff is there, otherwise buff->debuff.
+    public static async Task InvertAllBidirectional(PlayerChoiceContext ctx, Creature creature)
+    {
+        foreach (InvertibleDebuff debuff in Enum.GetValues<InvertibleDebuff>())
+        {
+            int converted = await InvertDebuff(ctx, creature, debuff, int.MaxValue);
+            if (converted == 0)
+                await InvertBuffToDebuff(ctx, creature, debuff, int.MaxValue);
+        }
     }
 
     // Like InvertEach, but for each debuff actually inverted, also re-gain that same buff — at the

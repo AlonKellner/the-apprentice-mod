@@ -10,11 +10,11 @@ using TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
-public class AllHands : UnderstudyCard
+public class BackOfMyHand : UnderstudyCard
 {
-    public const string CardId = "TheUnderstudy:AllHands";
+    public const string CardId = "TheUnderstudy:BackOfMyHand";
 
-    public AllHands() : base(2, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
+    public BackOfMyHand() : base(2, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
     {
         WithDamage(12);
         WithTip(UnderstudyKeywords.Tuned);

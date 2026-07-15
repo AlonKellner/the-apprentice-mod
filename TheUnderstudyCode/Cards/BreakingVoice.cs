@@ -9,11 +9,11 @@ using TheUnderstudy.TheUnderstudyCode.Cards.DynamicVars;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
-public class WindUp : UnderstudyCard
+public class BreakingVoice : UnderstudyCard
 {
-    public const string CardId = "TheUnderstudy:WindUp";
+    public const string CardId = "TheUnderstudy:BreakingVoice";
 
-    public WindUp() : base(0, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
+    public BreakingVoice() : base(0, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
     {
         WithDamage(7);
         WithVars(new IntVar("Vigor", 4));

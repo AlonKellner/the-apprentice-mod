@@ -40,10 +40,10 @@ public class TheUnderstudyCardPoolTests
     public void Pool_HasExactly20CommonCards() => Assert.Equal(20, CountBCardsByRarity("Common"));
 
     [Fact]
-    public void Pool_HasExactly36UncommonCards() => Assert.Equal(36, CountBCardsByRarity("Uncommon"));
+    public void Pool_HasExactly37UncommonCards() => Assert.Equal(37, CountBCardsByRarity("Uncommon"));
 
     [Fact]
-    public void Pool_HasExactly27RareCards() => Assert.Equal(27, CountBCardsByRarity("Rare"));
+    public void Pool_HasExactly29RareCards() => Assert.Equal(29, CountBCardsByRarity("Rare"));
 
     [Fact]
     public void UnderstudyCard_IsPrePlannedOverriddenOnlyByPromptAndTableRead()

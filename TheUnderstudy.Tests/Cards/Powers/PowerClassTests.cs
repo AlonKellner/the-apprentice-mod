@@ -426,17 +426,17 @@ public class PowerClassTests
             "AfterPlayerTurnStartLate", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly));
 
     [Fact]
-    public void WarmUpPower_IsBuff_Counter()
+    public void PerfectionismPower_IsBuff_Counter()
     {
-        var p = new SchedulePower();
+        var p = new PerfectionismPower();
         Assert.Equal(PowerType.Buff, p.Type);
         Assert.Equal(PowerStackType.Counter, p.StackType);
         Assert.NotEmpty(p.Localization);
     }
 
     [Fact]
-    public void WarmUpPower_OverridesAfterPlayerTurnStartLate() =>
-        Assert.NotNull(typeof(SchedulePower).GetMethod(
+    public void PerfectionismPower_OverridesAfterPlayerTurnStartLate() =>
+        Assert.NotNull(typeof(PerfectionismPower).GetMethod(
             "AfterPlayerTurnStartLate", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly));
 
     [Fact]
@@ -451,6 +451,52 @@ public class PowerClassTests
     [Fact]
     public void MuscleMemoryPower_IsActive_FalseForNullCreature() =>
         Assert.False(MuscleMemoryPower.IsActive(null));
+
+    [Fact]
+    public void EncorePower_IsBuff_Single()
+    {
+        var p = new EncorePower();
+        Assert.Equal(PowerType.Buff, p.Type);
+        Assert.Equal(PowerStackType.Single, p.StackType);
+        Assert.NotEmpty(p.Localization);
+    }
+
+    [Fact]
+    public void EncorePower_IsActive_FalseForNullCreature() =>
+        Assert.False(EncorePower.IsActive(null));
+
+    [Fact]
+    public void EncorePower_SelfRemovesAtTurnEnd() =>
+        Assert.NotNull(typeof(EncorePower).GetMethod(
+            "AfterSideTurnEnd", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly));
+
+    [Fact]
+    public void SwingPower_IsBuff_Single()
+    {
+        var p = new SwingPower();
+        Assert.Equal(PowerType.Buff, p.Type);
+        Assert.Equal(PowerStackType.Single, p.StackType);
+        Assert.NotEmpty(p.Localization);
+    }
+
+    [Fact]
+    public void SwingPower_InvertsEachTurnStart() =>
+        Assert.NotNull(typeof(SwingPower).GetMethod(
+            "AfterPlayerTurnStart", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly));
+
+    [Fact]
+    public void EnjoyTheRidePower_IsBuff_Counter()
+    {
+        var p = new EnjoyTheRidePower();
+        Assert.Equal(PowerType.Buff, p.Type);
+        Assert.Equal(PowerStackType.Counter, p.StackType);
+        Assert.NotEmpty(p.Localization);
+    }
+
+    [Fact]
+    public void EnjoyTheRidePower_ReactsToPowerAmountChange() =>
+        Assert.NotNull(typeof(EnjoyTheRidePower).GetMethod(
+            "AfterPowerAmountChanged", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly));
 
     [Fact]
     public void PulledPunchPower_IsBuff_Counter()

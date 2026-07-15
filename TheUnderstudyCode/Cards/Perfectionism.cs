@@ -6,19 +6,19 @@ using TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
-public class Schedule : UnderstudyCard
+public class Perfectionism : UnderstudyCard
 {
-    public const string CardId = "TheUnderstudy:Schedule";
+    public const string CardId = "TheUnderstudy:Perfectionism";
 
-    public Schedule() : base(1, CardType.Power, CardRarity.Uncommon, TargetType.None)
+    public Perfectionism() : base(1, CardType.Power, CardRarity.Uncommon, TargetType.None)
     {
-        WithPowerNoTip<SchedulePower>(1);
+        WithPowerNoTip<PerfectionismPower>(1);
         WithTip(UnderstudyKeywords.Tuned);
         WithKeyword(CardKeyword.Innate, ConstructedCardModel.UpgradeType.Add);
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
-        await CommonActions.Apply<SchedulePower>(context, cardPlay.Card.Owner.Creature, this);
+        await CommonActions.Apply<PerfectionismPower>(context, cardPlay.Card.Owner.Creature, this);
     }
 }

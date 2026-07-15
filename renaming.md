@@ -16,11 +16,11 @@
 
 # Apply Planned
 
-- Foreshadow => Preview (Block, draw-pile)
-- Cue => Development (Draw, hand)
-- Cram Session => Innovation (AppTns, hand)
-- Plot Twist (Invert, hand) => Subversion (Invert, discard)
-- Arrangement (Damage, hand) => Arrangement (Damage, discard)
+- Foreshadow => Foreshadow (Block, draw-pile)
+- Cue => Orchestration (Draw, hand)
+- Cram Session => Write it Down (AppTns, hand)
+- Plot Twist (Invert, hand) => Choreography (Invert, discard)
+- Arrangement (Damage, hand) => Melody (Damage, discard)
 - Refrain => Motif (Damage, self)
 - Magnum Opus => Magnum Opus (draw-pile)
 - Call Sheet => Muse (hand)
@@ -34,9 +34,9 @@
 - Rehearse => Rehearse (Draw)
 - Stage Fright => Memorize
 - Da Capo => One-up (Damage)
-- Nervous Energy (Damage, Energy) => All Hands (Damage)
+- Nervous Energy (Damage, Energy) => Back of my Hand (Damage)
 - Cut the Tension => Experience
-- Warm Up => Schedule
+- Warm Up => Perfectionism
 - NEW => Tuning Ritual (Block)
 
 # Remove Unplayable
@@ -96,12 +96,13 @@
 
 - Take a Breath => Move On (Draw)
 - True Colors => Joke (self-dbf)
-- Plot Twist => Subversion (Planned)
-- Steady Now => Have Fun (Block)
+- Plot Twist => Choreography (Planned)
+- Steady Now => Enjoy the Ride (Block, reactive Invert)
 - Ad Lib => Bright Side
 - Coda => Strike a Pose (Damage)
 - Dress Rehearsal => Center Stage (all-dbf)
 - Everything I've Got => Own It (X)
+- NEW => Swing (Power, invert all invertible buffs and debuffs each turn)
 
 # Misc
 
