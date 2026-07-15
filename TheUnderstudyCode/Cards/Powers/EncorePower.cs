@@ -11,27 +11,28 @@ using MegaCrit.Sts2.Core.Localization;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 
-// Turn-scoped marker applied by the Encore card. While present on a creature, using Vigor doesn't spend
-// it: EncoreVigorRetentionPatch suppresses VigorPower's after-attack consumption (so Vigor keeps
-// applying to every attack this turn), and DeceptiveCadence checks IsActive before spending Vigor for
-// its Block. Removes itself at the end of the player's own turn, so it only lasts "this turn" — next
-// turn Vigor is consumed normally again.
+// Duration buff applied by the Encore card. While present on a creature, using Vigor doesn't spend it:
+// EncoreVigorRetentionPatch suppresses VigorPower's after-attack consumption (so Vigor keeps applying to
+// every attack), and DeceptiveCadence checks IsActive before spending Vigor for its Block. Amount is the
+// number of your turns the retention lasts; it stacks (play twice -> retained 2 turns) and ticks down by
+// 1 at the end of each of your turns, removing itself at 0. Counter (not Single) so the turn count shows.
 public class EncorePower : UnderstudyPower
 {
     public override PowerType Type => PowerType.Buff;
-    public override PowerStackType StackType => PowerStackType.Single;
+    public override PowerStackType StackType => PowerStackType.Counter;
 
     public override List<(string, string)> Localization => new PowerLoc(
         "Encore",
-        "When you use [gold]Vigor[/gold] this turn, you keep it.",
-        "When you use [gold]Vigor[/gold] this turn, you keep it.");
+        "When you use [gold]Vigor[/gold], you keep it.",
+        "When you use [gold]Vigor[/gold], you keep it. Lasts [blue]{Amount}[/blue] more {Amount:plural:turn|turns}.");
 
     // Checked from the sealed-VigorPower Harmony patch (mirrors MuscleMemoryPower/HeldNotePower.IsActive).
+    // Presence-only, so it's unaffected by the stacking Amount.
     public static bool IsActive(Creature? creature) => creature?.GetPower<EncorePower>() != null;
 
     public override async Task AfterSideTurnEnd(PlayerChoiceContext choiceContext, CombatSide side, IEnumerable<Creature> participants)
     {
         if (side == CombatSide.Player)
-            await PowerCmd.Remove(this);
+            await PowerCmd.TickDownDuration(this);
     }
 }

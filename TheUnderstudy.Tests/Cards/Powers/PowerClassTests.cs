@@ -453,11 +453,12 @@ public class PowerClassTests
         Assert.False(MuscleMemoryPower.IsActive(null));
 
     [Fact]
-    public void EncorePower_IsBuff_Single()
+    public void EncorePower_IsBuff_Counter()
     {
         var p = new EncorePower();
         Assert.Equal(PowerType.Buff, p.Type);
-        Assert.Equal(PowerStackType.Single, p.StackType);
+        // Counter (not Single) so the stacking turn-count is visible.
+        Assert.Equal(PowerStackType.Counter, p.StackType);
         Assert.NotEmpty(p.Localization);
     }
 

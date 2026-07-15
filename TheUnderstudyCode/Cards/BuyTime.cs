@@ -38,12 +38,12 @@ public class BuyTime : UnderstudyCard
 
         var player = cardPlay.Card.Owner;
         int maxSelect = (int)DynamicVars["Select"].BaseValue;
-        var selected = await CardSelectCmd.FromCombatPile(
+        var selected = await CardSelectCmd.FromHand(
             context,
-            PileType.Draw.GetPile(player),
             player,
             new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-BUY_TIME.selectionPrompt"), 0, maxSelect),
-            c => c != this && c.IsUnplayable());
+            c => c != this && UnplayableModifier.CanApplyTo(c),
+            this);
         if (selected != null)
             foreach (var card in selected)
                 UnplayableModifier.Remove(card);

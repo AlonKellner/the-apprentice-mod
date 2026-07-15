@@ -62,7 +62,7 @@
   "THEUNDERSTUDY-TAKE_TWO.selectionPrompt": "Choose cards to remove [gold]Unplayable[/gold].",
 
   "THEUNDERSTUDY-BUY_TIME.title": "Buy Time",
-  "THEUNDERSTUDY-BUY_TIME.description": "Deal {Damage:diff()} damage.\nRemove [gold]Unplayable[/gold] from {Select:diff()} attacks and skills in your draw pile.\nApply {Limited:inverseDiff()} [gold]Limited[/gold] to yourself.",
+  "THEUNDERSTUDY-BUY_TIME.description": "Deal {Damage:diff()} damage.\nRemove [gold]Unplayable[/gold] from {Select:diff()} {Select:plural:attack or skill|attacks and skills} in hand.\nApply {Limited:inverseDiff()} [gold]Limited[/gold] to yourself.",
   "THEUNDERSTUDY-BUY_TIME.selectionPrompt": "Choose cards to remove [gold]Unplayable[/gold].",
 
   "THEUNDERSTUDY-CRYING_OUT_LOUD.title": "Crying Out Loud",
