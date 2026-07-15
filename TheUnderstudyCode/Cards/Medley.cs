@@ -24,9 +24,8 @@ public class Medley : PlayAllPlannedCard
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
-        if (!BeginPlayAllThisTurn()) return;
-
         var player = cardPlay.Card.Owner;
+        if (!TryBeginPlayAll(player)) return;
 
         // Locked once recorded and shuffled here — never re-fetched or re-sorted afterward. See
         // Workshop.OnPlay for the full reasoning: a card in this list can itself be a

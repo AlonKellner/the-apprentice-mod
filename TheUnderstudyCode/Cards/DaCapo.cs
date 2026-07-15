@@ -31,9 +31,9 @@ public class DaCapo : PlayAllPlannedCard
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
-        if (!BeginPlayAllThisTurn()) return;
-
         var player = cardPlay.Card.Owner;
+        if (!TryBeginPlayAll(player)) return;
+
         var combatState = player.Creature.CombatState!;
 
         // Locked once recorded here and never re-fetched or re-sorted. See Workshop.OnPlay for

@@ -16,7 +16,7 @@ using TheUnderstudy.TheUnderstudyCode.Patches;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
-public class Workshop : UnderstudyCard
+public class Workshop : PlayAllPlannedCard
 {
     public const string CardId = "TheUnderstudy:Workshop";
 
@@ -36,9 +36,8 @@ public class Workshop : UnderstudyCard
             ? (PlannedModifier.QueueNeedsEnemyTarget(PlannedModifier.RelevantCards(Owner)) ? TargetType.AnyEnemy : TargetType.None)
             : base.TargetType;
 
-    // Glow gold while there are Planned cards to resolve — same cue as the other Planned resolvers
-    // (Showtime/DaCapo/SellOut), signalling that playing this now will play the queue.
-    protected override bool ShouldGlowGoldInternal => PlannedModifier.AnyIn(PlannedModifier.RelevantCards(Owner));
+    // Glow gold while there are Planned cards to resolve is inherited from PlayAllPlannedCard, which
+    // also stops the glow once the once-per-turn resolve has been spent.
 
     protected override void OnUpgrade()
     {
@@ -49,6 +48,14 @@ public class Workshop : UnderstudyCard
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
         var player = cardPlay.Card.Owner;
+
+        // Once-per-turn guard (marks BEFORE resolving the queue). Workshop is Stable so it can't be
+        // Planned, but it's cheap and can be replayed from hand — without this, each replay re-resolves
+        // the queue, which keeps growing as the cards it plays (Melody/Magnum Opus) apply more Planned,
+        // so a Planned engine snowballs unbounded. Same protection DaCapo/Medley/Showtime already have.
+        // TryBeginPlayAll also logs the attempt and asserts the once-per-turn contract.
+        if (!TryBeginPlayAll(player)) return;
+
         var combatState = player.Creature.CombatState!;
 
         // Step 1: Play all currently-Planned cards in queue order, consuming each slot. This list

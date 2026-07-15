@@ -1,3 +1,4 @@
+using System.IO;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using TheUnderstudy.TheUnderstudyCode.Cards;
 using Xunit;
@@ -57,5 +58,29 @@ public class PlayAllPlannedCardTests
         Assert.True(a.Begin());
         // b is unaffected by a being marked — each card gets its own once-per-turn.
         Assert.True(b.Begin());
+    }
+
+    // Regression guard for the Workshop infinite-loop bug: any CARD that resolves the Planned queue
+    // (reads the sorted queue AND auto-plays cards from it) MUST extend PlayAllPlannedCard so it gets
+    // the once-per-turn guard. Workshop was a queue resolver on `: UnderstudyCard` with no guard, so a
+    // Planned+Stable Workshop replayed the growing queue and recursed infinitely. Only top-level card
+    // files are scanned: Powers (e.g. VenuePower in Cards/Powers/) also resolve the queue but do so
+    // from a once-per-turn turn-boundary hook — they can't be Planned/replayed like a card, so they
+    // aren't a recursion vector and need no card guard. Source-scan, no ModelDb needed.
+    [Fact]
+    public void EveryQueueResolvingCard_ExtendsPlayAllPlannedCard()
+    {
+        var cardsDir = Path.GetFullPath(Path.Combine(
+            AppContext.BaseDirectory, "..", "..", "..", "..", "TheUnderstudyCode", "Cards"));
+        foreach (var file in Directory.GetFiles(cardsDir, "*.cs", SearchOption.TopDirectoryOnly))
+        {
+            var text = File.ReadAllText(file);
+            if (!text.Contains("PlannedModifier.GetSorted") || !text.Contains("CardCmd.AutoPlay")) continue;
+            Assert.True(
+                text.Contains(": PlayAllPlannedCard"),
+                $"{Path.GetFileName(file)} resolves the Planned queue but does not extend " +
+                "PlayAllPlannedCard — it lacks the once-per-turn guard and can recurse infinitely " +
+                "when Planned+Stable.");
+        }
     }
 }
