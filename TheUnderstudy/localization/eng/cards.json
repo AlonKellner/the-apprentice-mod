@@ -96,7 +96,7 @@
   "THEUNDERSTUDY-LOOSEN_UP.description": "Deal {Damage:diff()} damage to a random enemy for each [gold]Unplayable[/gold] in hand.\nRemove [gold]Unplayable[/gold] from all attacks and skills in hand.",
 
   "THEUNDERSTUDY-ENJOY_THE_RIDE.title": "Enjoy the Ride",
-  "THEUNDERSTUDY-ENJOY_THE_RIDE.description": "Gain {Block:diff()} [gold]Block[/gold].\nThe next time an invertible debuff is modified, [gold]Invert[/gold] 2 of that debuff.",
+  "THEUNDERSTUDY-ENJOY_THE_RIDE.description": "Gain {Block:diff()} [gold]Block[/gold].\n[gold]Invert[/gold] 2 of the next invertible debuff to be modified.",
 
   "THEUNDERSTUDY-STRIKE_A_POSE.title": "Strike a Pose",
   "THEUNDERSTUDY-STRIKE_A_POSE.description": "Deal {Damage:diff()} damage to ALL enemies.\n[gold]Invert[/gold] {Invert:diff()} of each invertible debuff you have.",
@@ -191,7 +191,7 @@
   "THEUNDERSTUDY-CHOREOGRAPHY.selectionPrompt": "Choose a card to make [gold]Planned[/gold].",
 
   "THEUNDERSTUDY-JOKE.title": "Joke",
-  "THEUNDERSTUDY-JOKE.description": "Deal {Damage:diff()} damage.\n[gold]Invert[/gold] {Invert:diff()} of the last modified invertible debuff.\nApply {Vulnerable:inverseDiff()} [gold]Vulnerable[/gold] to yourself.",
+  "THEUNDERSTUDY-JOKE.description": "Deal {Damage:diff()} damage.\n[gold]Invert[/gold] {Invert:diff()} of a random invertible debuff.\nApply {Vulnerable:inverseDiff()} [gold]Vulnerable[/gold] to yourself.",
 
   "THEUNDERSTUDY-RUNNING_ON_FUMES.title": "Running on Fumes",
   "THEUNDERSTUDY-RUNNING_ON_FUMES.description": "Deal {Damage:diff()} damage.\nGain {Block:diff()} [gold]Block[/gold].\nApply {Jaded:inverseDiff()} [gold]Jaded[/gold] to yourself.",

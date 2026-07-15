@@ -1,6 +1,7 @@
 using BaseLib.Abstracts;
 using BaseLib.Utils;
 using MegaCrit.Sts2.Core.Entities.Cards;
+using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models.Powers;
@@ -35,7 +36,14 @@ public class Joke : UnderstudyCard
 
         var creature = cardPlay.Card.Owner.Creature;
         int invertAmount = (int)DynamicVars["Invert"].BaseValue;
-        await EmotionalExpression.InvertLastModified(context, creature, invertAmount);
+        // Invert a random invertible debuff currently present (deterministic RNG stream, mirroring
+        // BrightSidePower), rather than the last-modified one.
+        var present = EmotionalExpression.GetPresentInvertibleDebuffs(creature);
+        if (present.Count > 0)
+        {
+            var chosen = creature.Player!.RunState.Rng.CombatCardSelection.NextItem(present);
+            await EmotionalExpression.InvertDebuff(context, creature, chosen, invertAmount);
+        }
         await EmotionalExpression.ApplyVulnerableToSelf(context, creature, (int)DynamicVars["Vulnerable"].BaseValue, this);
     }
 }

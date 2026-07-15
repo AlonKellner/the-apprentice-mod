@@ -13,6 +13,7 @@ public class Encore : UnderstudyCard
     public Encore() : base(1, CardType.Skill, CardRarity.Rare, TargetType.None)
     {
         WithCostUpgradeBy(-1);
+        WithPowerNoTip<EncorePower>(1);
         WithTip(typeof(VigorPower));
     }
 

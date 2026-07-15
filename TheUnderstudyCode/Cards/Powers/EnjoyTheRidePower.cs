@@ -20,8 +20,8 @@ public class EnjoyTheRidePower : UnderstudyPower
 
     public override List<(string, string)> Localization => new PowerLoc(
         "Enjoy the Ride",
-        "The next time an invertible debuff is modified, [gold]Invert[/gold] this many of that debuff.",
-        "The next time an invertible debuff is modified, [gold]Invert[/gold] [blue]{Amount}[/blue] of that debuff.");
+        "[gold]Invert[/gold] this many of the next invertible debuff to be modified.",
+        "[gold]Invert[/gold] [blue]{Amount}[/blue] of the next invertible debuff to be modified.");
 
     private bool _fired;
 

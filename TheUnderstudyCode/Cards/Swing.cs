@@ -11,6 +11,7 @@ public class Swing : UnderstudyCard
 
     public Swing() : base(1, CardType.Power, CardRarity.Rare, TargetType.None)
     {
+        WithPowerNoTip<SwingPower>(1);
         WithTip(UnderstudyKeywords.Invert);
     }
 
