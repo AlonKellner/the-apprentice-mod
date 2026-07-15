@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.10.2 - Buy Time now removes Unplayable from cards in hand (with smart plurals). Encore power is now visible and stacks: play it twice to retain Vigor for 2 turns. Requires BaseLib.",
+  "changeNote": "v1.10.3 - Rarity rebalance: Common cards are now all simple (<=2 effects); the 3-effect attacks (Buy Time, Joke, etc.) moved to Uncommon, and simpler cards (Take Two, Drawing Blanks, Must Go On, Stage Fright, etc.) moved to Common. Requires BaseLib.",
   "tags": [],
   "dependencies": [3737335127],
   "contentDescriptors": []
