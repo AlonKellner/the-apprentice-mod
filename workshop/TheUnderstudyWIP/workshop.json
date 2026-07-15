@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.9.3 - Fix: colorless cards (e.g. Bolas) played with Tuned now correctly become Unplayable, instead of being replayable forever. Requires BaseLib.",
+  "changeNote": "v1.10.0 - New cards: Deceptive Cadence (use all Vigor -> Block), Encore (retain Vigor after using it), Swing (invert all buffs & debuffs each turn). Reworked Have Fun into Enjoy the Ride (reactive Invert). Renamed 8 cards. Requires BaseLib.",
   "tags": [],
   "dependencies": [3737335127],
   "contentDescriptors": []
