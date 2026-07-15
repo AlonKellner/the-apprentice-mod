@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.10.5 - Fix: The Second Lesson no longer errors when an ordered card is replayed (Medley/Da Capo/etc.) - each Order resolves once per turn. Also cleaned up Deceptive Cadence's description. Requires BaseLib.",
+  "changeNote": "v1.10.6 - Fix: Workshop now resolves 'Play all Planned' at most once per turn (like Da Capo/Medley/Showtime), stopping the Planned-engine snowball. Added resolver diagnostics + a once-per-turn invariant. Requires BaseLib.",
   "tags": [],
   "dependencies": [3737335127],
   "contentDescriptors": []
