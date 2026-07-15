@@ -16,7 +16,7 @@ public class Melody : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:Melody";
 
-    public Melody() : base(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
+    public Melody() : base(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
     {
         WithDamage(9);
         WithTip(UnderstudyKeywords.Planned);

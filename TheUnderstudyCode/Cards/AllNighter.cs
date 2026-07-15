@@ -11,7 +11,7 @@ public class AllNighter : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:AllNighter";
 
-    public AllNighter() : base(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
+    public AllNighter() : base(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
     {
         WithDamage(11);
         WithCards(1);

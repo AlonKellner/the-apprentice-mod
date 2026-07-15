@@ -14,7 +14,7 @@ public class MissedCue : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:MissedCue";
 
-    public MissedCue() : base(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
+    public MissedCue() : base(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
     {
         WithDamage(7);
         WithVars(new EnergyVar(2));

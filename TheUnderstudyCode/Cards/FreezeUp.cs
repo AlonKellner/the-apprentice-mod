@@ -12,7 +12,7 @@ public class FreezeUp : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:FreezeUp";
 
-    public FreezeUp() : base(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
+    public FreezeUp() : base(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
     {
         WithDamage(10);
         WithBlock(8);

@@ -120,7 +120,8 @@ public class CardRarityMechanicCoverageTests
     [InlineData("Common", "block")]
     [InlineData("Common", "draw")]
     [InlineData("Common", "energy")]
-    // Uncommon must still represent all three builds + all five debuffs.
+    // Uncommon must represent EVERY mechanic too (same full set as Common) — no build, debuff, or
+    // core game mechanic may be locked to a single tier.
     [InlineData("Uncommon", "Invert")]
     [InlineData("Uncommon", "Planned")]
     [InlineData("Uncommon", "Tuned")]
@@ -129,6 +130,12 @@ public class CardRarityMechanicCoverageTests
     [InlineData("Uncommon", "Shaken")]
     [InlineData("Uncommon", "Jaded")]
     [InlineData("Uncommon", "Limited")]
+    [InlineData("Uncommon", "remove-Unplayable")]
+    [InlineData("Uncommon", "Vigor")]
+    [InlineData("Uncommon", "damage")]
+    [InlineData("Uncommon", "block")]
+    [InlineData("Uncommon", "draw")]
+    [InlineData("Uncommon", "energy")]
     // Rare must still represent all three builds + all five debuffs.
     [InlineData("Rare", "Invert")]
     [InlineData("Rare", "Planned")]

@@ -12,7 +12,7 @@ public class RunningOnFumes : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:RunningOnFumes";
 
-    public RunningOnFumes() : base(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
+    public RunningOnFumes() : base(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
     {
         WithDamage(12);
         WithBlock(8);

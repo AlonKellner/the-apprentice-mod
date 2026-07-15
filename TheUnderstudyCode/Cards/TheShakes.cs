@@ -11,7 +11,7 @@ public class TheShakes : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:TheShakes";
 
-    public TheShakes() : base(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
+    public TheShakes() : base(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
     {
         WithDamage(12);
         WithBlock(12);

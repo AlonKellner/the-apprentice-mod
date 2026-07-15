@@ -11,7 +11,7 @@ public class DrawingBlanks : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:DrawingBlanks";
 
-    public DrawingBlanks() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.None)
+    public DrawingBlanks() : base(1, CardType.Skill, CardRarity.Common, TargetType.None)
     {
         WithCards(3);
         WithTip(typeof(LimitedPower));

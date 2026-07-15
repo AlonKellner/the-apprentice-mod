@@ -17,7 +17,7 @@ public class BuyTime : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:BuyTime";
 
-    public BuyTime() : base(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
+    public BuyTime() : base(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
     {
         WithDamage(9);
         WithVars(new CardsVar("Select", 1));

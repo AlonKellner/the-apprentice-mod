@@ -15,7 +15,7 @@ public class TuningRitual : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:TuningRitual";
 
-    public TuningRitual() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.None)
+    public TuningRitual() : base(1, CardType.Skill, CardRarity.Common, TargetType.None)
     {
         WithBlock(8);
         WithVars(new CardsVar("Select", 2));

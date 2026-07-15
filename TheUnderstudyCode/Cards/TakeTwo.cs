@@ -14,7 +14,7 @@ public class TakeTwo : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:TakeTwo";
 
-    public TakeTwo() : base(0, CardType.Skill, CardRarity.Uncommon, TargetType.None)
+    public TakeTwo() : base(0, CardType.Skill, CardRarity.Common, TargetType.None)
     {
         WithVars(new CardsVar("Select", 1));
         WithTip(CardKeyword.Unplayable);

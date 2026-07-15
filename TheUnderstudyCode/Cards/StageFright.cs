@@ -11,7 +11,7 @@ public class StageFright : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:StageFright";
 
-    public StageFright() : base(1, CardType.Attack, CardRarity.Uncommon, TargetType.AllEnemies)
+    public StageFright() : base(1, CardType.Attack, CardRarity.Common, TargetType.AllEnemies)
     {
         WithDamage(12);
         WithTip(typeof(ShakenPower));
