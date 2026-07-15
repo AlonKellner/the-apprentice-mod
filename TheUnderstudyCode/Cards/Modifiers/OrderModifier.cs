@@ -86,6 +86,12 @@ public class OrderModifier : CardModifier
     // gets iterated to dispatch OnPlay) — no manual cardPlay.Card == Owner check needed.
     public override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
+        // Resolve at most once per turn. A card carrying an Order can be played more than once in a
+        // turn — replayed from a Planned queue (Medley/DaCapo/Workshop/Showtime) or via a Replay — and
+        // each extra play would otherwise re-apply the Reward/Punish, breaking SecondLessonPower's
+        // "two Orders resolve per turn" parity invariant. WasPlayed is already set from the first play.
+        if (Resolved) return;
+
         WasPlayed = true;
         var resolution = OnCardPlayed(OrderKind);
         int turn = cardPlay.Card.Owner.Creature.Player?.PlayerCombatState?.TurnNumber ?? -1;

@@ -282,7 +282,7 @@
   "THEUNDERSTUDY-FATE.description": "[gold]Stable[/gold].\nDeal {Damage:diff()} damage 3 times.\nDeal damage equal to the sum of the damage this card has dealt this combat.",
 
   "THEUNDERSTUDY-DECEPTIVE_CADENCE.title": "Deceptive Cadence",
-  "THEUNDERSTUDY-DECEPTIVE_CADENCE.description": "Deal no damage. Use all [gold]Vigor[/gold].\nGain {Block:diff()} [gold]Block[/gold] for each Vigor you had.",
+  "THEUNDERSTUDY-DECEPTIVE_CADENCE.description": "Deal no damage.\nUse all [gold]Vigor[/gold].\nGain {Block:diff()} [gold]Block[/gold] for each [gold]Vigor[/gold] you had.",
 
   "THEUNDERSTUDY-ENCORE.title": "Encore",
   "THEUNDERSTUDY-ENCORE.description": "Retain your [gold]Vigor[/gold] after using it this turn.",
