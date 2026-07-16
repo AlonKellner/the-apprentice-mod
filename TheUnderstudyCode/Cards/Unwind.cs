@@ -10,11 +10,11 @@ using TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
-public class TakeTwo : UnderstudyCard
+public class Unwind : UnderstudyCard
 {
-    public const string CardId = "TheUnderstudy:TakeTwo";
+    public const string CardId = "TheUnderstudy:Unwind";
 
-    public TakeTwo() : base(0, CardType.Skill, CardRarity.Common, TargetType.None)
+    public Unwind() : base(0, CardType.Skill, CardRarity.Common, TargetType.None)
     {
         WithVars(new CardsVar("Select", 1));
         WithTip(CardKeyword.Unplayable);
@@ -36,7 +36,7 @@ public class TakeTwo : UnderstudyCard
         var selected = await CardSelectCmd.FromHand(
             context,
             player,
-            new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-TAKE_TWO.selectionPrompt"), 0, maxSelect),
+            new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-UNWIND.selectionPrompt"), 0, maxSelect),
             c => c != this && UnplayableModifier.CanApplyTo(c),
             this);
 

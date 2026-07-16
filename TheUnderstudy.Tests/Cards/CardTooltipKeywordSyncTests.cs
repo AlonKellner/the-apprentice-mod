@@ -51,7 +51,7 @@ public class CardTooltipKeywordSyncTests
     private static readonly Regex GoldTagPattern = new(@"\[gold\](.*?)\[/gold\]", RegexOptions.Compiled);
     private static readonly Regex RedTagPattern = new(@"\[red\](.*?)\[/red\]", RegexOptions.Compiled);
     // Capital-O only: distinguishes the Order keyword/affliction from ordinary English word "order"
-    // (e.g. Medley's "in a random order").
+    // (e.g. Remix's "in a random order").
     private static readonly Regex OrderWordPattern = new(@"\bOrders?\b", RegexOptions.Compiled);
 
     private static string RepoRoot => Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", ".."));
@@ -79,7 +79,7 @@ public class CardTooltipKeywordSyncTests
             if (i > 0 && char.IsUpper(c))
             {
                 bool afterLower = char.IsLower(pascalCase[i - 1]);
-                // Handles single-letter words inside a run of capitals, e.g. "MoveOn" ->
+                // Handles single-letter words inside a run of capitals, e.g. "TakeABreath" ->
                 // TAKE_A_BREATH: split between the run's last capital and the following word.
                 bool endOfAcronymRun = char.IsUpper(pascalCase[i - 1]) && i + 1 < pascalCase.Length && char.IsLower(pascalCase[i + 1]);
                 if (afterLower || endOfAcronymRun)
@@ -94,7 +94,7 @@ public class CardTooltipKeywordSyncTests
     {
         var cardsDir = Path.Combine(RepoRoot, "TheUnderstudyCode", "Cards");
         var skip = new HashSet<string> { "UnderstudyCard", "PlayAllPlannedCard" };
-        // Also recognize the abstract resolver base (Curtain Call/DaCapo/Medley declare ": PlayAllPlannedCard").
+        // Also recognize the abstract resolver base (Curtain Call/DaCapo/Remix declare ": PlayAllPlannedCard").
         var bCardPattern = new Regex(@":\s*(?:UnderstudyCard|PlayAllPlannedCard)\b");
         foreach (var file in Directory.GetFiles(cardsDir, "*.cs", SearchOption.AllDirectories))
         {

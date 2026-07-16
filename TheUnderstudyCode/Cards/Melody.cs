@@ -7,6 +7,7 @@ using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization;
+using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
 using TheUnderstudy.TheUnderstudyCode.Patches;
 
@@ -19,6 +20,7 @@ public class Melody : UnderstudyCard
     public Melody() : base(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
     {
         WithDamage(9);
+        WithVars(new CardsVar("Select", 1));
         WithTip(UnderstudyKeywords.Planned);
     }
 
@@ -26,6 +28,7 @@ public class Melody : UnderstudyCard
     {
         base.OnUpgrade();
         DynamicVars.Damage.UpgradeValueBy(3m);
+        DynamicVars["Select"].UpgradeValueBy(1m);
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
@@ -38,7 +41,7 @@ public class Melody : UnderstudyCard
             context,
             PileType.Discard.GetPile(player),
             player,
-            new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-MELODY.selectionPrompt"), 0, 2),
+            new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-MELODY.selectionPrompt"), 0, (int)DynamicVars["Select"].BaseValue),
             c => c != this && PlannedModifier.CanApplyTo(c));
 
         if (selected == null) return;

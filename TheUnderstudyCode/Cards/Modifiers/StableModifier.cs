@@ -8,7 +8,7 @@ using TheUnderstudy.TheUnderstudyCode.Extensions;
 namespace TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
 
 // Runtime-grantable counterpart to the printed-only Stable keyword (WithKeyword in a card's own
-// constructor, used by Workshop/WarmUp). Lets a card effect (e.g. Final Draft) make an
+// constructor, used by Workshop/Practice). Lets a card effect (e.g. Final Draft) make an
 // arbitrary Attack/Skill Stable mid-combat instead of only at print-time.
 public class StableModifier : CardModifier
 {

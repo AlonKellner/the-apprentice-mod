@@ -36,8 +36,8 @@ public class StableModifierTests
     [Fact]
     public void CanApplyTo_AlreadyStable_ReturnsFalse()
     {
-        // WarmUp is printed-Stable via WithKeyword in its constructor.
-        Assert.False(StableModifier.CanApplyTo(new WarmUp()));
+        // Practice is printed-Stable via WithKeyword in its constructor.
+        Assert.False(StableModifier.CanApplyTo(new Practice()));
     }
 
     [Fact]

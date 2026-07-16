@@ -50,7 +50,7 @@ public class SecondNature : UnderstudyCard
         {
             UnplayableModifier.Remove(this);
             // Target null: CardCmd.AutoPlay rolls a fresh random living enemy for an AnyEnemy
-            // card whenever its target argument is null (relied on by Medley.cs/DaCapo.cs).
+            // card whenever its target argument is null (relied on by Remix.cs/DaCapo.cs).
             await CardCmd.AutoPlay(context, this, null, AutoPlayType.None, false, false);
             // OnPlay no longer re-adds Unplayable, so the card ends the turn free (a normal playable
             // card). Any Planned slot is untouched — a Planned Second Nature ends Planned-but-playable.

@@ -52,13 +52,13 @@ public class OrderModifierTests
     public void CanApplyTo_PowerCard_ReturnsFalse() => Assert.False(OrderModifier.CanApplyTo(new TheFirstLesson()));
 
     [Fact]
-    public void CanApplyTo_StableSkill_ReturnsFalse() => Assert.False(OrderModifier.CanApplyTo(new WarmUp()));
+    public void CanApplyTo_StableSkill_ReturnsFalse() => Assert.False(OrderModifier.CanApplyTo(new Practice()));
 
     [Fact]
     public void CanApplyTo_RuntimeStableCard_ReturnsFalse()
     {
         // A card made Stable at runtime (via StableModifier, not just the printed keyword) must
-        // be just as ineligible as a printed-Stable card like WarmUp.
+        // be just as ineligible as a printed-Stable card like Practice.
         var card = new UnderstudyStrike();
         CardModifier.AddModifier(card, new StableModifier());
         Assert.False(OrderModifier.CanApplyTo(card));

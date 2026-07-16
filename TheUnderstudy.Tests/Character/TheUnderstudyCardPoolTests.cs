@@ -33,7 +33,7 @@ public class TheUnderstudyCardPoolTests
     [Fact]
     public void Buildup_CardId_MatchesExpected()
     {
-        Assert.Equal("TheUnderstudy:WarmUp", WarmUp.CardId);
+        Assert.Equal("TheUnderstudy:Practice", Practice.CardId);
     }
 
     [Fact]
@@ -147,7 +147,7 @@ public class TheUnderstudyCardPoolTests
         var root = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", ".."));
         var cardsDir = Path.Combine(root, "TheUnderstudyCode", "Cards");
         var skip = new HashSet<string> { "UnderstudyCard", "PlayAllPlannedCard" };
-        // Match the abstract resolver base too — Curtain Call/DaCapo/Medley inherit UnderstudyCard through
+        // Match the abstract resolver base too — Curtain Call/DaCapo/Remix inherit UnderstudyCard through
         // PlayAllPlannedCard, so their source declares ": PlayAllPlannedCard".
         var bCardPattern = new System.Text.RegularExpressions.Regex(@":\s*(?:UnderstudyCard|PlayAllPlannedCard)\b");
         var rarityPattern = new System.Text.RegularExpressions.Regex(

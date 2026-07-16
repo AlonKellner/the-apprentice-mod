@@ -5,11 +5,11 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
-public class MoveOn : UnderstudyCard
+public class RollWithIt : UnderstudyCard
 {
-    public const string CardId = "TheUnderstudy:MoveOn";
+    public const string CardId = "TheUnderstudy:RollWithIt";
 
-    public MoveOn() : base(0, CardType.Skill, CardRarity.Common, TargetType.None)
+    public RollWithIt() : base(0, CardType.Skill, CardRarity.Common, TargetType.None)
     {
         WithCards(1);
         WithTip(UnderstudyKeywords.Invert);

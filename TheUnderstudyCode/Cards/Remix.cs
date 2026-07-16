@@ -10,13 +10,13 @@ using TheUnderstudy.TheUnderstudyCode.Extensions;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
-public class Medley : PlayAllPlannedCard
+public class Remix : PlayAllPlannedCard
 {
-    public const string CardId = "TheUnderstudy:Medley";
+    public const string CardId = "TheUnderstudy:Remix";
 
     // Never targeted by the player — every card in the plan gets its own independently
     // randomized target below, so there's nothing for a player-picked target to feed into.
-    public Medley() : base(0, CardType.Skill, CardRarity.Uncommon, TargetType.None)
+    public Remix() : base(0, CardType.Skill, CardRarity.Uncommon, TargetType.None)
     {
         WithKeyword(CardKeyword.Exhaust, ConstructedCardModel.UpgradeType.Remove);
         WithTip(UnderstudyKeywords.Planned);
@@ -36,7 +36,7 @@ public class Medley : PlayAllPlannedCard
         var allCardsList = PlannedModifier.RelevantCards(player).ToList();
         var planned = PlannedModifier.GetSorted(allCardsList);
         player.RunState.Rng.CombatCardSelection.Shuffle(planned);
-        Log.Info($"Medley.OnPlay: playing {planned.Count} Planned slot(s) in shuffled order, each independently retargeted");
+        Log.Info($"Remix.OnPlay: playing {planned.Count} Planned slot(s) in shuffled order, each independently retargeted");
         foreach (var (card, _, slotSeqIdx) in planned)
         {
             // Does the card still exist? Real, not hypothetical: base-game Transform cards (e.g.
@@ -44,7 +44,7 @@ public class Medley : PlayAllPlannedCard
             // the original from every pile.
             if (card.Pile == null)
             {
-                Log.Info($"Medley.OnPlay: {card.Id} is no longer in any pile — skipped");
+                Log.Info($"Remix.OnPlay: {card.Id} is no longer in any pile — skipped");
                 continue;
             }
 

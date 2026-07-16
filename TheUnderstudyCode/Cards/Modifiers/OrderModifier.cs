@@ -87,7 +87,7 @@ public class OrderModifier : CardModifier
     public override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         // Resolve at most once per turn. A card carrying an Order can be played more than once in a
-        // turn — replayed from a Planned queue (Medley/DaCapo/Workshop/Showtime) or via a Replay — and
+        // turn — replayed from a Planned queue (Remix/DaCapo/Workshop/Showtime) or via a Replay — and
         // each extra play would otherwise re-apply the Reward/Punish, breaking SecondLessonPower's
         // "two Orders resolve per turn" parity invariant. WasPlayed is already set from the first play.
         if (Resolved) return;

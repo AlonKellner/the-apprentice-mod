@@ -229,9 +229,9 @@ public abstract class UnderstudyCard(
         EnforceStableNow();
 
         // Planned is only ever removed by an explicit "remove Planned" effect or by a "Play all
-        // Planned" resolver (Showtime/DaCapo/Workshop/Medley) consuming the exact slot it's
+        // Planned" resolver (Showtime/DaCapo/Workshop/Remix) consuming the exact slot it's
         // resolving. A card that's simply playable (Unplayable freed some other way, e.g. by
-        // TakeTwo/Confidence/StartOver) just plays normally when clicked manually — its own Planned
+        // Unwind/Confidence/StartOver) just plays normally when clicked manually — its own Planned
         // slot(s) are untouched and it stays queued to auto-play later too.
         //
         // The Tuned->Unplayable lock used to live here, but only fired for cards deriving from

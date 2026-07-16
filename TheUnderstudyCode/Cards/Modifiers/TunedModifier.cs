@@ -74,7 +74,7 @@ public class TunedModifier : CardModifier
     // card's own attack/block for THIS play has already been calculated — i.e. the card is
     // granting Tuned to itself, too late for it to have counted this play (Da Capo is currently
     // the only card that does this). Leave null for the normal case of applying Tuned to a
-    // different card (Innovation/Rehearse/WarmUp), where timing-within-this-play is
+    // different card (Innovation/Rehearse/Practice), where timing-within-this-play is
     // irrelevant since that other card isn't the one currently resolving.
     public static void Apply(CardModel card, ICombatState combat, IEnumerable<CardModel> allCards, CardPlay? grantedAfterOwnCheck = null)
     {

@@ -5,7 +5,7 @@ using Xunit;
 
 namespace TheUnderstudy.Tests.Cards;
 
-// PlayAllPlannedCard is the abstract base for the "Play all Planned" resolvers (Curtain Call/DaCapo/Medley).
+// PlayAllPlannedCard is the abstract base for the "Play all Planned" resolvers (Curtain Call/DaCapo/Remix).
 // Its once-per-turn guard is what both caps the effect and — because it marks BEFORE the queue is played —
 // breaks the infinite recursion when such a resolver is itself Planned+Stable. The guard/reset logic is
 // engine-independent, so it's unit-tested here on bare instances; the hook wiring and the real recursion

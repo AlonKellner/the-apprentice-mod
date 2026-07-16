@@ -25,20 +25,20 @@ public class CardRarityMechanicCoverageTests
     {
         ["Invert"] = new[]
         {
-            typeof(Choreography), typeof(EnjoyTheRide), typeof(MoveOn), typeof(Joke),
+            typeof(Choreography), typeof(EnjoyTheRide), typeof(RollWithIt), typeof(Joke),
             typeof(BrightSide), typeof(Apathy), typeof(StrikeAPose), typeof(DoubleTime),
             typeof(HeldNote), typeof(MyOwnLesson), typeof(OwnIt), typeof(Swing),
         },
         ["Planned"] = new[]
         {
             typeof(Orchestration), typeof(Foreshadow), typeof(Choreography), typeof(WriteItDown),
-            typeof(Muse), typeof(Showtime), typeof(Signature), typeof(Medley),
+            typeof(Muse), typeof(Showtime), typeof(Signature), typeof(Remix),
             typeof(Melody), typeof(SellOut), typeof(Venue),
             typeof(CleanSlate), typeof(DaCapo), typeof(MagnumOpus), typeof(Motif), typeof(Playlist),
         },
         ["Tuned"] = new[]
         {
-            typeof(WriteItDown), typeof(TuningRitual), typeof(PracticeStrike),
+            typeof(WriteItDown), typeof(TuningRitual), typeof(RunThrough),
             typeof(Rehearse), typeof(Signature), typeof(Memorize), typeof(Perfectionism),
             typeof(CleanSlate), typeof(Experience), typeof(OneUp), typeof(StartOver),
             typeof(MuscleMemory), typeof(BackOfMyHand), typeof(Showstopper), typeof(AutoTune),
@@ -70,7 +70,7 @@ public class CardRarityMechanicCoverageTests
         },
         ["remove-Unplayable"] = new[]
         {
-            typeof(Breather), typeof(BuyTime), typeof(TakeTwo), typeof(Confidence),
+            typeof(Breather), typeof(BuyTime), typeof(Unwind), typeof(Confidence),
             typeof(Improvise), typeof(LoosenUp), typeof(Balanced),
             typeof(CleanSlate), typeof(StartOver), typeof(SecondNature),
         },
@@ -81,7 +81,7 @@ public class CardRarityMechanicCoverageTests
         },
         ["damage"] = new[]
         {
-            typeof(Crash), typeof(DesperateStrike), typeof(AllNighter), typeof(PracticeStrike),
+            typeof(Crash), typeof(DesperateStrike), typeof(AllNighter), typeof(RunThrough),
             typeof(BreakALeg), typeof(BuyTime),
         },
         ["block"] = new[]
@@ -91,7 +91,7 @@ public class CardRarityMechanicCoverageTests
         },
         ["draw"] = new[]
         {
-            typeof(Orchestration), typeof(Breather), typeof(MoveOn), typeof(DrawingBlanks),
+            typeof(Orchestration), typeof(Breather), typeof(RollWithIt), typeof(DrawingBlanks),
             typeof(Rehearse), typeof(AllNighter),
         },
         ["energy"] = new[]

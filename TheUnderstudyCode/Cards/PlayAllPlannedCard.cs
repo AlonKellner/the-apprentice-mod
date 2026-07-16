@@ -10,7 +10,7 @@ using TheUnderstudy.TheUnderstudyCode.Extensions;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
-// Abstract base for the "Play all Planned" resolver cards (Workshop, Showtime, DaCapo, Medley). Its once-per-turn
+// Abstract base for the "Play all Planned" resolver cards (Workshop, Showtime, DaCapo, Remix). Its once-per-turn
 // guard both caps the effect (per card instance) and — because it marks the card resolved BEFORE the queue
 // is played — breaks the infinite recursion that occurs when such a resolver is itself Planned+Stable:
 // playing it AutoPlays its own Planned slot, re-entering OnPlay; the guard makes that nested self-play a

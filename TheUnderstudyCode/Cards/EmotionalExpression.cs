@@ -249,7 +249,7 @@ public static class EmotionalExpression
 
     // Whether Invert would have anything at all to act on right now — all 8 invertible pairs
     // (the 5 self-debuffs plus Frail/Strength/Dexterity, matching PickDebuffToInvert's/IsPresent's
-    // scope below). Used by relevance highlighting on StrikeAPose/PracticeStrike/EnjoyTheRide/MoveOn/OwnIt.
+    // scope below). Used by relevance highlighting on StrikeAPose/RunThrough/EnjoyTheRide/RollWithIt/OwnIt.
     public static bool HasAnyInvertibleDebuffPresent(
         int weak, int vulnerable, int shaken, int limited, int jaded, int frail, int strength, int dexterity) =>
         weak > 0 || vulnerable > 0 || shaken > 0 || limited > 0 || jaded > 0 || frail > 0

@@ -34,7 +34,7 @@ public class TheUnderstudy : PlaceholderCharacterModel
         ModelDb.Card<UnderstudyDefend>(),
         ModelDb.Card<UnderstudyDefend>(),
         ModelDb.Card<PerformanceCard>(),
-        ModelDb.Card<WarmUp>(),
+        ModelDb.Card<Practice>(),
     ];
 
     public override IReadOnlyList<RelicModel> StartingRelics =>

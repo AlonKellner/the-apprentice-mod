@@ -17,7 +17,7 @@ public static class PlannedSelectionState
     // whichever selection screen opens next (grid Create postfix / hand SelectCards prefix). The
     // screen is constructed before the first await inside CardSelectCmd, so the flag is still set.
     // This is what gates the badge feature to Planned selections only — other CardSelectCmd callers
-    // (WarmUp, Safety Net, ...) never Arm(), so their screens stay untagged and unbadged.
+    // (Practice, Safety Net, ...) never Arm(), so their screens stay untagged and unbadged.
     private static bool _armed;
 
     // The player's click order for the just-completed draw/discard grid selection, published by

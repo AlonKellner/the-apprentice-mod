@@ -52,7 +52,7 @@ public class Workshop : PlayAllPlannedCard
         // Once-per-turn guard (marks BEFORE resolving the queue). Workshop is Stable so it can't be
         // Planned, but it's cheap and can be replayed from hand — without this, each replay re-resolves
         // the queue, which keeps growing as the cards it plays (Melody/Magnum Opus) apply more Planned,
-        // so a Planned engine snowballs unbounded. Same protection DaCapo/Medley/Showtime already have.
+        // so a Planned engine snowballs unbounded. Same protection DaCapo/Remix/Showtime already have.
         // TryBeginPlayAll also logs the attempt and asserts the once-per-turn contract.
         if (!TryBeginPlayAll(player)) return;
 
@@ -60,7 +60,7 @@ public class Workshop : PlayAllPlannedCard
 
         // Step 1: Play all currently-Planned cards in queue order, consuming each slot. This list
         // is locked once recorded here and never re-fetched or re-sorted — a card with two slots
-        // is played twice. If one of these cards is itself a Planned-queue resolver (e.g. Medley),
+        // is played twice. If one of these cards is itself a Planned-queue resolver (e.g. Remix),
         // playing it can resolve some of the OTHER entries still waiting in this same locked list
         // as a side effect of its own nested pass — that's fine and expected: every entry below
         // always gets played regardless, and the per-entry guards just avoid redoing (not
@@ -95,7 +95,7 @@ public class Workshop : PlayAllPlannedCard
 
             // Is the Planned index still on the card? Remove it if so — guarded rather than
             // asserted, since a nested resolver played from elsewhere in this same locked sequence
-            // (e.g. Medley, itself queued earlier in it) may have already removed it as part of its
+            // (e.g. Remix, itself queued earlier in it) may have already removed it as part of its
             // own pass. Either way, this entry was recorded in the locked sequence, so it always
             // gets played below regardless.
             if (card.TryGetModifier<PlannedModifier>(out var stillPlanned) && stillPlanned.SequenceIndices.Contains(slotSeqIdx))

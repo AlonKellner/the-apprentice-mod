@@ -1,43 +1,40 @@
 using System.Linq;
 using BaseLib.Abstracts;
-using BaseLib.Extensions;
 using BaseLib.Utils;
 using MegaCrit.Sts2.Core.CardSelection;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization;
-using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
-public class WarmUp : UnderstudyCard
+public class RunThrough : UnderstudyCard
 {
-    public const string CardId = "TheUnderstudy:WarmUp";
+    public const string CardId = "TheUnderstudy:RunThrough";
 
-    public WarmUp() : base(0, CardType.Skill, CardRarity.Basic, TargetType.None, false)
+    public RunThrough() : base(2, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
     {
-        WithKeyword(UnderstudyKeywords.Stable, ConstructedCardModel.UpgradeType.None);
-        WithKeyword(CardKeyword.Retain, ConstructedCardModel.UpgradeType.None);
-        WithVars(new CardsVar("Select", 2));
+        WithDamage(14);
         WithTip(UnderstudyKeywords.Tuned);
     }
 
     protected override void OnUpgrade()
     {
         base.OnUpgrade();
-        DynamicVars["Select"].UpgradeValueBy(1m);
+        DynamicVars.Damage.UpgradeValueBy(4m);
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
+        await CommonActions.CardAttack(cardPlay.Card, cardPlay).Execute(context);
+
         var player = cardPlay.Card.Owner;
-        var maxSelect = IsUpgraded ? 3 : 2;
         var selected = await CardSelectCmd.FromHand(
             context,
             player,
-            new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-WARM_UP.selectionPrompt"), 0, maxSelect),
+            new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-RUN_THROUGH.selectionPrompt"), 0, 1),
             c => c != this && TunedModifier.CanApplyTo(c),
             this);
 

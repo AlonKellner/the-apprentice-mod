@@ -25,7 +25,7 @@ public class UnplayableModifier : CardModifier
         (card.Type == CardType.Attack || card.Type == CardType.Skill) && card.IsUnplayable();
 
     // Whether any card in the given set is a valid "remove Unplayable" target — used by
-    // TakeTwo/Breather to glow gold only when they'd actually have something to free.
+    // Unwind/Breather to glow gold only when they'd actually have something to free.
     public static bool AnyIn(IEnumerable<CardModel> cards) => cards.Any(CanApplyTo);
 
     // Removes the standalone Unplayable flag. Does not touch PlannedModifier/TunedModifier —

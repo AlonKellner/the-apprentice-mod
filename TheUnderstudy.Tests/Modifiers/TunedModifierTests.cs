@@ -53,8 +53,8 @@ public class TunedModifierTests
     [Fact]
     public void CanApplyTo_Buildup_ReturnsFalse()
     {
-        // WarmUp has no Damage or Block DynamicVar — Tuned cannot benefit it.
-        Assert.False(TunedModifier.CanApplyTo(new WarmUp()));
+        // Practice has no Damage or Block DynamicVar — Tuned cannot benefit it.
+        Assert.False(TunedModifier.CanApplyTo(new Practice()));
     }
 
     [Fact]

@@ -9,9 +9,9 @@
   "THEUNDERSTUDY-WORKSHOP.description": "Play all [gold]Planned[/gold] cards.\nApply [gold]Planned[/gold] to {Select:diff()} attacks and skills in your discard pile.",
   "THEUNDERSTUDY-WORKSHOP.selectionPrompt": "Choose cards to make [gold]Planned[/gold].",
 
-  "THEUNDERSTUDY-WARM_UP.title": "Warm Up",
-  "THEUNDERSTUDY-WARM_UP.description": "Apply [gold]Tuned[/gold] to {Select:diff()} attacks and skills.",
-  "THEUNDERSTUDY-WARM_UP.selectionPrompt": "Choose cards to make [gold]Tuned[/gold].",
+  "THEUNDERSTUDY-PRACTICE.title": "Practice",
+  "THEUNDERSTUDY-PRACTICE.description": "Apply [gold]Tuned[/gold] to {Select:diff()} attacks and skills.",
+  "THEUNDERSTUDY-PRACTICE.selectionPrompt": "Choose cards to make [gold]Tuned[/gold].",
 
   "THEUNDERSTUDY-FREEZE_UP.title": "Freeze Up",
   "THEUNDERSTUDY-FREEZE_UP.description": "Deal {Damage:diff()} damage.\nGain {Block:diff()} [gold]Block[/gold].\nApply {Weak:inverseDiff()} [gold]Weak[/gold] to yourself.",
@@ -19,12 +19,12 @@
   "THEUNDERSTUDY-DESPERATE_STRIKE.title": "Desperate Strike",
   "THEUNDERSTUDY-DESPERATE_STRIKE.description": "Deal {Damage:diff()} damage.\nApply {Weak:inverseDiff()} [gold]Weak[/gold] to yourself.",
 
-  "THEUNDERSTUDY-MOVE_ON.title": "Move On",
-  "THEUNDERSTUDY-MOVE_ON.description": "Draw {Cards:diff()} cards.\n[gold]Invert[/gold] 2 of the last modified invertible debuff.",
+  "THEUNDERSTUDY-ROLL_WITH_IT.title": "Roll With It",
+  "THEUNDERSTUDY-ROLL_WITH_IT.description": "Draw {Cards:diff()} cards.\n[gold]Invert[/gold] 2 of the last modified invertible debuff.",
 
-  "THEUNDERSTUDY-PRACTICE_STRIKE.title": "Practice Strike",
-  "THEUNDERSTUDY-PRACTICE_STRIKE.description": "Deal {Damage:diff()} damage.\nApply [gold]Tuned[/gold] to 1 attack or skill in hand.",
-  "THEUNDERSTUDY-PRACTICE_STRIKE.selectionPrompt": "Choose a card to make [gold]Tuned[/gold].",
+  "THEUNDERSTUDY-RUN_THROUGH.title": "Run Through",
+  "THEUNDERSTUDY-RUN_THROUGH.description": "Deal {Damage:diff()} damage.\nApply [gold]Tuned[/gold] to 1 attack or skill in hand.",
+  "THEUNDERSTUDY-RUN_THROUGH.selectionPrompt": "Choose a card to make [gold]Tuned[/gold].",
 
   "THEUNDERSTUDY-ORCHESTRATION.title": "Orchestration",
   "THEUNDERSTUDY-ORCHESTRATION.description": "Draw {Cards:diff()} {Cards:plural:card|cards}.\nApply [gold]Planned[/gold] to {Select:diff()} {Select:plural:attack or skill|attacks and skills} in your hand.",
@@ -57,9 +57,9 @@
   "THEUNDERSTUDY-BREATHER.description": "Draw {Cards:diff()} cards.\nRemove [gold]Unplayable[/gold] from 2 attacks and skills in hand.",
   "THEUNDERSTUDY-BREATHER.selectionPrompt": "Choose cards to remove [gold]Unplayable[/gold].",
 
-  "THEUNDERSTUDY-TAKE_TWO.title": "Take Two",
-  "THEUNDERSTUDY-TAKE_TWO.description": "Remove [gold]Unplayable[/gold] from {Select:diff()} {Select:plural:attack or skill|attacks and skills} in hand.",
-  "THEUNDERSTUDY-TAKE_TWO.selectionPrompt": "Choose cards to remove [gold]Unplayable[/gold].",
+  "THEUNDERSTUDY-UNWIND.title": "Unwind",
+  "THEUNDERSTUDY-UNWIND.description": "Remove [gold]Unplayable[/gold] from {Select:diff()} {Select:plural:attack or skill|attacks and skills} in hand.",
+  "THEUNDERSTUDY-UNWIND.selectionPrompt": "Choose cards to remove [gold]Unplayable[/gold].",
 
   "THEUNDERSTUDY-BUY_TIME.title": "Buy Time",
   "THEUNDERSTUDY-BUY_TIME.description": "Deal {Damage:diff()} damage.\nRemove [gold]Unplayable[/gold] from {Select:diff()} {Select:plural:attack or skill|attacks and skills} in hand.\nApply {Limited:inverseDiff()} [gold]Limited[/gold] to yourself.",
@@ -77,7 +77,7 @@
   "THEUNDERSTUDY-BALANCED.selectionPrompt": "Choose a card to remove [gold]Unplayable[/gold] from.",
 
   "THEUNDERSTUDY-MELODY.title": "Melody",
-  "THEUNDERSTUDY-MELODY.description": "Deal {Damage:diff()} damage.\nApply [gold]Planned[/gold] to 2 attacks and skills in your discard pile.",
+  "THEUNDERSTUDY-MELODY.description": "Deal {Damage:diff()} damage.\nApply [gold]Planned[/gold] to {Select:diff()} {Select:plural:attack or skill|attacks and skills} in your discard pile.",
   "THEUNDERSTUDY-MELODY.selectionPrompt": "Choose cards to make [gold]Planned[/gold].",
 
   "THEUNDERSTUDY-ONE_UP.title": "One-up",
@@ -146,8 +146,8 @@
   "THEUNDERSTUDY-SHOWSTOPPER.title": "Showstopper",
   "THEUNDERSTUDY-SHOWSTOPPER.description": "{InCombat:cond:|[gold]Tuned[/gold] 1.\n}Deal {Damage:diff()} damage.",
 
-  "THEUNDERSTUDY-MEDLEY.title": "Medley",
-  "THEUNDERSTUDY-MEDLEY.description": "Play all [gold]Planned[/gold] cards in a random order, at most once per turn.",
+  "THEUNDERSTUDY-REMIX.title": "Remix",
+  "THEUNDERSTUDY-REMIX.description": "Play all [gold]Planned[/gold] cards in a random order, at most once per turn.",
 
   "THEUNDERSTUDY-THE_SECOND_LESSON.title": "The Second Lesson",
   "THEUNDERSTUDY-THE_SECOND_LESSON.description": "Obey my [red][sine]Orders[/sine][/red], and be [gold]Rewarded[/gold].\nOtherwise, you'll be [gold]Punished[/gold].",

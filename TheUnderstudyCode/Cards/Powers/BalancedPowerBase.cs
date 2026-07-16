@@ -107,7 +107,7 @@ public abstract class BalancedPowerBase : UnderstudyPower
 
         // Note: a triggering card need NOT still be Unplayable here. The drain is deferred to the
         // Late pass, and between the trigger firing and now the card may have been freed (by this
-        // power, by Breather/Take Two/Touch Up, or during a Workshop auto-play chain) — the
+        // power, by Breather/Unwind/Touch Up, or during a Workshop auto-play chain) — the
         // "whenever a card becomes Unplayable" reaction still stands. We only ever free OTHER cards
         // in hand, guarded by the outside-hand invariant below.
         foreach (var triggeringCard in triggers)

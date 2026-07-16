@@ -67,8 +67,8 @@ public class SecondLessonPowerTests
     [Fact]
     public void SelectFirstTwoEligible_StableCardIsSkipped()
     {
-        // WarmUp is Skill + Stable-tagged — ineligible despite being the right CardType.
-        var stable = new WarmUp();
+        // Practice is Skill + Stable-tagged — ineligible despite being the right CardType.
+        var stable = new Practice();
         var strike = new UnderstudyStrike();
         var (playThis, dontPlayThis, remaining) = SecondLessonPower.SelectFirstTwoEligible(new List<CardModel> { stable, strike });
         Assert.Same(strike, playThis);

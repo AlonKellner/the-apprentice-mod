@@ -10,7 +10,7 @@
 
 - Performance => Workshop (AppPln)
 - Curtain Call => Showtime
-- Remix => Medley
+- Medley => Remix
 - Encore => Da Capo (AppPln)
 - Stage Manager => Venue
 
@@ -27,8 +27,8 @@
 
 # Apply Tense => Apply Tuned
 
-- Buildup => Warm Up
-- Reprise => Practice Strike (Damage)
+- Buildup => Practice
+- Reprise => Run Through (Damage)
 - Touch Up (RmUnp) => XXX
 - Standing Ovation (Damage, Vigor) => XXX
 - Rehearse => Rehearse (Draw)
@@ -42,7 +42,7 @@
 # Remove Unplayable
 
 - Rewrite => Breather (Draw)
-- Take Two => Take Two
+- Take Two => Unwind
 - Improvise => Improvise
 - Safety Net => Confidence (Block)
 - Standing By => Balanced
@@ -94,7 +94,7 @@
 
 # Invert
 
-- Take a Breath => Move On (Draw)
+- Take a Breath => Roll With It (Draw)
 - True Colors => Joke (self-dbf)
 - Plot Twist => Choreography (Planned)
 - Steady Now => Enjoy the Ride (Block, reactive Invert)
