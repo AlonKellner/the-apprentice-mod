@@ -10,7 +10,7 @@ public class Venue : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:Venue";
 
-    public Venue() : base(2, CardType.Power, CardRarity.Rare, TargetType.None)
+    public Venue() : base(2, CardType.Power, CardRarity.Uncommon, TargetType.None)
     {
         WithCostUpgradeBy(-1);
         WithPowerNoTip<VenuePower>(1, 1);

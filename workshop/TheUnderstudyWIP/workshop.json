@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.10.9 - Auto Tune: now gains Retain when upgraded, reworded more concisely, and its per-turn pump increases all Tuned by the power's amount (stacks if replayed). Roll With It: now always draws 1 card and Inverts 2 (3 upgraded) instead of drawing more. Requires BaseLib.",
+  "changeNote": "v1.10.10 - Auto Tune: simplified to just 'At the start of your turn, increase all Tuned by 1' (dropped the 'cards cannot become Tuned' clause and Retain), now costs 3 (2 upgraded), and is now Rare. Venue is now Uncommon. Requires BaseLib.",
   "tags": [],
   "dependencies": [3737335127],
   "contentDescriptors": []

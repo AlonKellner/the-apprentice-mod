@@ -8,7 +8,6 @@ using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.ValueProps;
 using TheUnderstudy.TheUnderstudyCode.Cards;
-using TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 using TheUnderstudy.TheUnderstudyCode.Extensions;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
@@ -81,10 +80,6 @@ public class TunedModifier : CardModifier
         MaybeResetForCombat(combat);
 
         bool firstApplication = !card.TryGetModifier<TunedModifier>(out var mod);
-        // Auto Tune: cards without Tuned cannot become Tuned. Only the FIRST-ever application is
-        // blocked — cards that already carry Tuned still get pumped (including by Auto Tune itself).
-        if (firstApplication && card.IsMutable && AutoTunePower.IsActive(card.Owner?.Creature))
-            return;
         if (firstApplication)
         {
             // First application to this card: count it as a new Tuned card.

@@ -276,7 +276,7 @@
   "THEUNDERSTUDY-SIGNATURE.description": "{InCombat:cond:|[gold]Tuned[/gold] 1.\n}Deal {Damage:diff()} damage.\nDraw {Cards:diff()} cards.\nStarts each combat [gold]Planned[/gold].",
 
   "THEUNDERSTUDY-AUTO_TUNE.title": "Auto Tune",
-  "THEUNDERSTUDY-AUTO_TUNE.description": "Cards cannot become [gold]Tuned[/gold].\nAt the start of your turn, increase all [gold]Tuned[/gold] by 1.",
+  "THEUNDERSTUDY-AUTO_TUNE.description": "At the start of your turn, increase all [gold]Tuned[/gold] by 1.",
 
   "THEUNDERSTUDY-FATE.title": "Fate Knocking",
   "THEUNDERSTUDY-FATE.description": "[gold]Stable[/gold].\nDeal {Damage:diff()} damage 3 times.\nDeal damage equal to the sum of the damage this card has dealt this combat.",

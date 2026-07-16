@@ -10,10 +10,10 @@ public class AutoTune : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:AutoTune";
 
-    public AutoTune() : base(1, CardType.Power, CardRarity.Uncommon, TargetType.None)
+    public AutoTune() : base(3, CardType.Power, CardRarity.Rare, TargetType.None)
     {
         WithPowerNoTip<AutoTunePower>(1);
-        WithKeyword(CardKeyword.Retain, ConstructedCardModel.UpgradeType.Add);
+        WithCostUpgradeBy(-1);
         WithTip(UnderstudyKeywords.Tuned);
     }
 
