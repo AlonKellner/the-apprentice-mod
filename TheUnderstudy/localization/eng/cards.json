@@ -20,7 +20,7 @@
   "THEUNDERSTUDY-DESPERATE_STRIKE.description": "Deal {Damage:diff()} damage.\nApply {Weak:inverseDiff()} [gold]Weak[/gold] to yourself.",
 
   "THEUNDERSTUDY-ROLL_WITH_IT.title": "Roll With It",
-  "THEUNDERSTUDY-ROLL_WITH_IT.description": "Draw {Cards:diff()} cards.\n[gold]Invert[/gold] 2 of the last modified invertible debuff.",
+  "THEUNDERSTUDY-ROLL_WITH_IT.description": "Draw {Cards:diff()} {Cards:plural:card|cards}.\n[gold]Invert[/gold] {Invert:diff()} of the last modified invertible debuff.",
 
   "THEUNDERSTUDY-RUN_THROUGH.title": "Run Through",
   "THEUNDERSTUDY-RUN_THROUGH.description": "Deal {Damage:diff()} damage.\nApply [gold]Tuned[/gold] to 1 attack or skill in hand.",
@@ -276,7 +276,7 @@
   "THEUNDERSTUDY-SIGNATURE.description": "{InCombat:cond:|[gold]Tuned[/gold] 1.\n}Deal {Damage:diff()} damage.\nDraw {Cards:diff()} cards.\nStarts each combat [gold]Planned[/gold].",
 
   "THEUNDERSTUDY-AUTO_TUNE.title": "Auto Tune",
-  "THEUNDERSTUDY-AUTO_TUNE.description": "Cards without [gold]Tuned[/gold] cannot become [gold]Tuned[/gold].\nAt the start of your turn, apply [gold]Tuned[/gold] to all [gold]Tuned[/gold] cards.",
+  "THEUNDERSTUDY-AUTO_TUNE.description": "Cards cannot become [gold]Tuned[/gold].\nAt the start of your turn, increase all [gold]Tuned[/gold] by 1.",
 
   "THEUNDERSTUDY-FATE.title": "Fate Knocking",
   "THEUNDERSTUDY-FATE.description": "[gold]Stable[/gold].\nDeal {Damage:diff()} damage 3 times.\nDeal damage equal to the sum of the damage this card has dealt this combat.",

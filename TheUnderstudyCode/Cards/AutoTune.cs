@@ -13,6 +13,7 @@ public class AutoTune : UnderstudyCard
     public AutoTune() : base(1, CardType.Power, CardRarity.Uncommon, TargetType.None)
     {
         WithPowerNoTip<AutoTunePower>(1);
+        WithKeyword(CardKeyword.Retain, ConstructedCardModel.UpgradeType.Add);
         WithTip(UnderstudyKeywords.Tuned);
     }
 
