@@ -12,8 +12,9 @@ public class Improvise : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:Improvise";
 
-    public Improvise() : base(0, CardType.Skill, CardRarity.Uncommon, TargetType.None)
+    public Improvise() : base(3, CardType.Skill, CardRarity.Uncommon, TargetType.None)
     {
+        WithCostUpgradeBy(-1);
         WithTip(UnderstudyKeywords.Planned);
         WithTip(CardKeyword.Unplayable);
     }
@@ -27,15 +28,9 @@ public class Improvise : UnderstudyCard
         if (plannedCards.Count > 0)
             await CardPileCmd.Draw(context, plannedCards.Count, player);
 
-        if (IsUpgraded)
-            // Upgraded: keep the cards Planned but make them playable now by stripping Unplayable,
-            // so they can be played this turn and still resolve from the Planned queue.
-            foreach (var card in plannedCards)
-                UnplayableModifier.Remove(card);
-        else
-            // PlannedModifier.Remove already strips UnplayableModifier as part of clearing the last
-            // slot, so "remove Unplayable, then remove Planned" happens for free in the right order.
-            foreach (var card in plannedCards)
-                PlannedModifier.Remove(card, allCards);
+        // Keep the cards Planned but make them playable now by stripping Unplayable, so they can be
+        // played this turn and still resolve from the Planned queue.
+        foreach (var card in plannedCards)
+            UnplayableModifier.Remove(card);
     }
 }

@@ -215,7 +215,7 @@
   "THEUNDERSTUDY-MUSCLE_MEMORY.description": "[gold]Tuned[/gold] cards will not become [gold]Unplayable[/gold].",
 
   "THEUNDERSTUDY-IMPROVISE.title": "Improvise",
-  "THEUNDERSTUDY-IMPROVISE.description": "For each [gold]Planned[/gold] card, draw 1 card.\n{IfUpgraded:show:Remove [gold]Unplayable[/gold] from all [gold]Planned[/gold] cards.|Remove [gold]Planned[/gold] from all cards.}",
+  "THEUNDERSTUDY-IMPROVISE.description": "For each [gold]Planned[/gold] card, draw 1 card.\nRemove [gold]Unplayable[/gold] from all [gold]Planned[/gold] cards.",
 
   "THEUNDERSTUDY-CANONICAL.title": "Canonical",
   "THEUNDERSTUDY-CANONICAL.description": "Apply [gold]Stable[/gold] to 1 card in your hand.",
