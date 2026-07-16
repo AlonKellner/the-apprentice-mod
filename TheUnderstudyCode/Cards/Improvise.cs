@@ -12,7 +12,7 @@ public class Improvise : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:Improvise";
 
-    public Improvise() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.None)
+    public Improvise() : base(0, CardType.Skill, CardRarity.Uncommon, TargetType.None)
     {
         WithTip(UnderstudyKeywords.Planned);
         WithTip(CardKeyword.Unplayable);

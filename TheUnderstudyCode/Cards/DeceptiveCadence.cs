@@ -18,7 +18,7 @@ public class DeceptiveCadence : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:DeceptiveCadence";
 
-    public DeceptiveCadence() : base(1, CardType.Attack, CardRarity.Uncommon, TargetType.None)
+    public DeceptiveCadence() : base(0, CardType.Attack, CardRarity.Uncommon, TargetType.None)
     {
         // "Block" is the per-Vigor Block granted; total = Block * Vigor you had (computed in OnPlay).
         WithVars(new IntVar("Block", 3));

@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.10.7 - Renamed cards for clarity: Warm Up -> Practice, Practice Strike -> Run Through, Medley -> Remix, Move On -> Roll With It, Take Two -> Unwind. Rebalanced Planned so it no longer snowballs: Magnum Opus now applies 2 (3 upgraded), Melody now 1 (2 upgraded), and every card that applies Planned starts at 1. Note: renamed cards won't carry into in-progress runs. Requires BaseLib.",
+  "changeNote": "v1.10.8 - Reduced the cost of Improvise and Deceptive Cadence to 0. Requires BaseLib.",
   "tags": [],
   "dependencies": [3737335127],
   "contentDescriptors": []
