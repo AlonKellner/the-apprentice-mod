@@ -189,6 +189,9 @@
   "THEUNDERSTUDY-LIVING_THE_DREAM.title": "Living the Dream",
   "THEUNDERSTUDY-LIVING_THE_DREAM.description": "[gold]Invert[/gold] {Invert:diff()}.",
 
+  "THEUNDERSTUDY-ROLE_REVERSAL.title": "Role Reversal",
+  "THEUNDERSTUDY-ROLE_REVERSAL.description": "[gold]Swap[/gold] {Swap:diff()}.",
+
   "THEUNDERSTUDY-CHOREOGRAPHY.title": "Choreography",
   "THEUNDERSTUDY-CHOREOGRAPHY.description": "[gold]Invert[/gold] {Invert:diff()}.\nApply [gold]Planned[/gold] to 1 attack or skill in your discard pile.",
   "THEUNDERSTUDY-CHOREOGRAPHY.selectionPrompt": "Choose a card to make [gold]Planned[/gold].",

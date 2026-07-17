@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.10.12 - Invert unified: 'Invert X' now always means 'Invert X of each invertible debuff into buffs' - no more last-modified / random / next-modified variants, cards simplified to just 'Invert X.'. New card Living the Dream (pure Invert). Swing removed. Enjoy the Ride now inverts at end of turn; Bright Side inverts each. Most Invert amounts reduced. Requires BaseLib.",
+  "changeNote": "v1.10.13 - New mechanic Swap: give your swappable debuffs to ALL enemies and steal their swappable buffs. New universal buff/debuff pairs Tension/Untension (end of turn: take damage / heal, then removed). Vigor is now invertible via negative values (reduces the next Attack); Tainted is now swappable and gains an Untainted inverse (take less Attack damage). Placeholder card Role Reversal. Requires BaseLib.",
   "tags": [],
   "dependencies": [3737335127],
   "contentDescriptors": []

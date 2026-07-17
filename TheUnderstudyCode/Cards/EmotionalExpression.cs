@@ -221,6 +221,62 @@ public static class EmotionalExpression
         await PowerCmd.Apply<UnfrailPower>(ctx, creature, removeAmount, creature, null, false);        return removeAmount;
     }
 
+    // ── Universal invertible pairs (also Swappable) ────────────────────────────────────────────
+    //
+    // Tainted/Untainted and Tension/Untension are same-shape debuff/buff pairs like Weak/Unweak, and
+    // Vigor is a sign-flip power like Strength/Dexterity. Unlike the eight InvertibleDebuff-enum
+    // pairs above, these are universal (they live on any creature) and are handled outside the enum:
+    // InvertEach/InvertEachWithBonus fan out to them explicitly (see below), so Second Lesson's
+    // enum-driven pair pool and InvertTrackerPower's cancellation are deliberately left untouched.
+
+    public static async Task<int> ConvertTaintedToUntainted(PlayerChoiceContext ctx, Creature creature, int max = int.MaxValue)
+    {
+        int cur = creature.GetPowerAmount<TaintedPower>();
+        int removeAmount = Math.Min(cur, max);
+        if (removeAmount <= 0) return 0;
+        await PowerCmd.Apply<TaintedPower>(ctx, creature, -removeAmount, creature, null, false);
+        await PowerCmd.Apply<UntaintedPower>(ctx, creature, removeAmount, creature, null, false);
+        return removeAmount;
+    }
+
+    public static async Task<int> ConvertTensionToUntension(PlayerChoiceContext ctx, Creature creature, int max = int.MaxValue)
+    {
+        int cur = creature.GetPowerAmount<TensionPower>();
+        int removeAmount = Math.Min(cur, max);
+        if (removeAmount <= 0) return 0;
+        await PowerCmd.Apply<TensionPower>(ctx, creature, -removeAmount, creature, null, false);
+        await PowerCmd.Apply<UntensionPower>(ctx, creature, removeAmount, creature, null, false);
+        return removeAmount;
+    }
+
+    // Vigor sign-flip — identical to Strength/Dexterity (negative Vigor -> positive), enabled by
+    // VigorAllowNegativePatch. Un-X powers are all buffs by convention, so there is no "Unvigor".
+    public static async Task<int> InvertVigorSign(PlayerChoiceContext ctx, Creature creature, int max)
+    {
+        int cur = creature.GetPowerAmount<VigorPower>();
+        var (converted, _) = ComputeSignFlip(cur, max);
+        if (converted <= 0) return 0;
+        await PowerCmd.Apply<VigorPower>(ctx, creature, 2 * converted, creature, null, false);
+        return converted;
+    }
+
+    // The universal-pair fan-out shared by InvertEach (bonusRepeats = 0) and InvertEachWithBonus
+    // (Own It's "gain each inverted buff X more times").
+    private static async Task InvertUniversalPairs(PlayerChoiceContext ctx, Creature creature, int maxEach, int bonusRepeats)
+    {
+        int tainted = await ConvertTaintedToUntainted(ctx, creature, maxEach);
+        for (int i = 0; i < bonusRepeats && tainted > 0; i++)
+            await PowerCmd.Apply<UntaintedPower>(ctx, creature, tainted, creature, null, false);
+
+        int tension = await ConvertTensionToUntension(ctx, creature, maxEach);
+        for (int i = 0; i < bonusRepeats && tension > 0; i++)
+            await PowerCmd.Apply<UntensionPower>(ctx, creature, tension, creature, null, false);
+
+        int vigor = await InvertVigorSign(ctx, creature, maxEach);
+        for (int i = 0; i < bonusRepeats && vigor > 0; i++)
+            await PowerCmd.Apply<VigorPower>(ctx, creature, vigor, creature, null, false);
+    }
+
     // Whether Invert would have anything at all to act on right now — all 8 invertible pairs
     // (the 5 self-debuffs plus Frail/Strength/Dexterity). Used by relevance highlighting on
     // StrikeAPose/RunThrough/EnjoyTheRide/RollWithIt/OwnIt/LivingTheDream.
@@ -315,6 +371,7 @@ public static class EmotionalExpression
     {
         foreach (InvertibleDebuff debuff in Enum.GetValues<InvertibleDebuff>())
             await InvertDebuff(ctx, creature, debuff, maxEach);
+        await InvertUniversalPairs(ctx, creature, maxEach, 0);
     }
 
     // Like InvertEach, but for each debuff actually inverted, also re-gain that same buff — at the
@@ -331,6 +388,7 @@ public static class EmotionalExpression
             for (int i = 0; i < repeats; i++)
                 await ApplyBuffSide(ctx, creature, debuff, converted);
         }
+        await InvertUniversalPairs(ctx, creature, invertMax, repeats);
     }
 
     internal static async Task<int> InvertDebuff(PlayerChoiceContext ctx, Creature creature, InvertibleDebuff debuff, int max) => debuff switch

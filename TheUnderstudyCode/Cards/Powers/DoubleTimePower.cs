@@ -32,7 +32,10 @@ public class DoubleTimePower : UnderstudyPower
             or LimitedPower or UnlimitedPower
             or JadedPower or UnjadedPower
             or FrailPower or UnfrailPower
-            or StrengthPower or DexterityPower;
+            or StrengthPower or DexterityPower
+            or VigorPower
+            or TaintedPower or UntaintedPower
+            or TensionPower or UntensionPower;
 
     // Re-entrancy guard: each extra application below fires this same broadcast hook again (it's
     // a real ModifyAmount call, indistinguishable from an organic one), so this stops those from

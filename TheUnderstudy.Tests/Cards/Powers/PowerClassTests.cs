@@ -614,4 +614,54 @@ public class PowerClassTests
     public void StageManagerPower_OverridesAfterSideTurnEnd() =>
         Assert.NotNull(typeof(VenuePower).GetMethod(
             "AfterSideTurnEnd", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly));
+
+    // ── Swap-mechanic powers ────────────────────────────────────────────────────────────────
+
+    [Fact]
+    public void TensionPower_IsDebuff_Counter()
+    {
+        var p = new TensionPower();
+        Assert.Equal(PowerType.Debuff, p.Type);
+        Assert.Equal(PowerStackType.Counter, p.StackType);
+        Assert.NotEmpty(p.Localization);
+    }
+
+    [Fact]
+    public void TensionPower_DamagesAtTurnEnd() =>
+        Assert.NotNull(typeof(TensionPower).GetMethod(
+            "BeforeSideTurnEnd", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly));
+
+    [Fact]
+    public void UntensionPower_IsBuff_Counter()
+    {
+        var p = new UntensionPower();
+        Assert.Equal(PowerType.Buff, p.Type);
+        Assert.Equal(PowerStackType.Counter, p.StackType);
+        Assert.NotEmpty(p.Localization);
+    }
+
+    [Fact]
+    public void UntensionPower_HealsAtTurnEnd() =>
+        Assert.NotNull(typeof(UntensionPower).GetMethod(
+            "BeforeSideTurnEnd", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly));
+
+    [Fact]
+    public void UntaintedPower_IsBuff_Counter()
+    {
+        var p = new UntaintedPower();
+        Assert.Equal(PowerType.Buff, p.Type);
+        Assert.Equal(PowerStackType.Counter, p.StackType);
+        Assert.NotEmpty(p.Localization);
+    }
+
+    // Untainted reduces incoming Attack damage (mirror of base Tainted) and clears at the opponent's
+    // turn end — so it overrides both ModifyDamageAdditive and AfterSideTurnEnd.
+    [Fact]
+    public void UntaintedPower_OverridesModifyDamageAdditiveAndTurnEnd()
+    {
+        Assert.NotNull(typeof(UntaintedPower).GetMethod(
+            "ModifyDamageAdditive", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly));
+        Assert.NotNull(typeof(UntaintedPower).GetMethod(
+            "AfterSideTurnEnd", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly));
+    }
 }
