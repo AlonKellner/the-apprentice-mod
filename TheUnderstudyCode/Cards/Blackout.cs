@@ -15,8 +15,8 @@ public class Blackout : UnderstudyCard
     {
         WithDamage(12);
         WithBlock(16);
-        WithTip(typeof(LimitedPower));
-        WithVar(new SelfDebuffVar("Limited", 2));
+        WithTip(typeof(TensionPower));
+        WithVar(new SelfDebuffVar("Tension", 2));
     }
 
     protected override void OnUpgrade()
@@ -30,6 +30,6 @@ public class Blackout : UnderstudyCard
     {
         await CommonActions.CardAttack(cardPlay.Card, cardPlay).Execute(context);
         await CommonActions.CardBlock(this, cardPlay);
-        await EmotionalExpression.ApplyLimitedToSelf(context, cardPlay.Card.Owner.Creature, (int)DynamicVars["Limited"].BaseValue, this);
+        await EmotionalExpression.ApplyTensionToSelf(context, cardPlay.Card.Owner.Creature, (int)DynamicVars["Tension"].BaseValue, this);
     }
 }

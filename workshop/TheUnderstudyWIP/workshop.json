@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.10.13 - New mechanic Swap: give your swappable debuffs to ALL enemies and steal their swappable buffs. New universal buff/debuff pairs Tension/Untension (end of turn: take damage / heal, then removed). Vigor is now invertible via negative values (reduces the next Attack); Tainted is now swappable and gains an Untainted inverse (take less Attack damage). Placeholder card Role Reversal. Requires BaseLib.",
+  "changeNote": "v1.10.14 - Card pass: retired the Limited/Shaken/Jaded card slots in favor of Tension and Swap. 8 self-debuff cards now apply Tension; Stage Fright/Buy Time/Procrastinate/Start Over and 3 new cards (Limelight, Body Double, Method Acting) are Swap cards on the larger 3/6/10 scale. Removed Sad/Pop/Old Song, Center Stage, and Playlist (may return later). Deck now has 9 Tension, 8 Swap, 8 Vigor cards. Requires BaseLib.",
   "tags": [],
   "dependencies": [3737335127],
   "contentDescriptors": []

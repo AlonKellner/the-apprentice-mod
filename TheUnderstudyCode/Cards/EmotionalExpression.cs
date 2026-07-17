@@ -229,6 +229,14 @@ public static class EmotionalExpression
     // InvertEach/InvertEachWithBonus fan out to them explicitly (see below), so Second Lesson's
     // enum-driven pair pool and InvertTrackerPower's cancellation are deliberately left untouched.
 
+    // Apply Tension to self (mirror of ApplyShakenToSelf). Tension is the debuff side of the
+    // Tension/Untension universal pair — the self-debuff downside that Tension cards carry.
+    public static async Task ApplyTensionToSelf(PlayerChoiceContext ctx, Creature creature, int stacks, CardModel? card)
+    {
+        if (stacks <= 0) return;
+        await PowerCmd.Apply<TensionPower>(ctx, creature, stacks, creature, card, false);
+    }
+
     public static async Task<int> ConvertTaintedToUntainted(PlayerChoiceContext ctx, Creature creature, int max = int.MaxValue)
     {
         int cur = creature.GetPowerAmount<TaintedPower>();

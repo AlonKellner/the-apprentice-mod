@@ -14,8 +14,8 @@ public class DrawingBlanks : UnderstudyCard
     public DrawingBlanks() : base(1, CardType.Skill, CardRarity.Common, TargetType.None)
     {
         WithCards(3);
-        WithTip(typeof(LimitedPower));
-        WithVar(new SelfDebuffVar("Limited", 2));
+        WithTip(typeof(TensionPower));
+        WithVar(new SelfDebuffVar("Tension", 2));
     }
 
     protected override void OnUpgrade()
@@ -27,6 +27,6 @@ public class DrawingBlanks : UnderstudyCard
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
         await CommonActions.Draw(this, context);
-        await EmotionalExpression.ApplyLimitedToSelf(context, cardPlay.Card.Owner.Creature, (int)DynamicVars["Limited"].BaseValue, this);
+        await EmotionalExpression.ApplyTensionToSelf(context, cardPlay.Card.Owner.Creature, (int)DynamicVars["Tension"].BaseValue, this);
     }
 }

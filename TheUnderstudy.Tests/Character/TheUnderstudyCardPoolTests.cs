@@ -43,14 +43,14 @@ public class TheUnderstudyCardPoolTests
     public void Pool_HasExactly39UncommonCards() => Assert.Equal(39, CountBCardsByRarity("Uncommon"));
 
     [Fact]
-    public void Pool_HasExactly28RareCards() => Assert.Equal(28, CountBCardsByRarity("Rare"));
+    public void Pool_HasExactly26RareCards() => Assert.Equal(26, CountBCardsByRarity("Rare"));
 
     [Fact]
     public void UnderstudyCard_IsPrePlannedOverriddenOnlyByPromptAndTableRead()
     {
         // The pre-planned mechanic (starting a combat already Planned, originally from the
-        // Apprentice's Signature/Prelude cards) is deliberately reused by exactly these two B
-        // cards. Verify no other B card type overrides IsPrePlanned.
+        // Apprentice's Signature/Prelude cards) is deliberately reused by exactly this B card
+        // (Playlist, the other user, was retired). Verify no other B card type overrides IsPrePlanned.
         var bCardTypes = typeof(UnderstudyCard).Assembly.GetTypes()
             .Where(t => t.IsSubclassOf(typeof(UnderstudyCard)) && !t.IsAbstract)
             .Where(t =>
@@ -62,7 +62,7 @@ public class TheUnderstudyCardPoolTests
             .OrderBy(n => n)
             .ToList();
 
-        Assert.Equal(new[] { "Playlist", "Signature" }, bCardTypes);
+        Assert.Equal(new[] { "Signature" }, bCardTypes);
     }
 
     [Fact]
@@ -119,17 +119,6 @@ public class TheUnderstudyCardPoolTests
         // UnderstudyStrike.IsPrePlanned stays false (the default) — BeforeCombatStart's
         // pre-planned wiring on UnderstudyCard is a no-op for any card that doesn't override it.
         var card = new UnderstudyStrike();
-        card.BeforeCombatStart();
-        Assert.False(card.TryGetModifier<PlannedModifier>(out _));
-    }
-
-    [Fact]
-    public void TableRead_BeforeCombatStart_DoesNotAttachPlannedModifier_WhenBare()
-    {
-        // Playlist.IsPrePlanned is true, but a bare-instantiated card has no Pile (Pile == null,
-        // so IsCombatPile() is false) — the guard in ApplyPrePlannedIfNeeded must no-op safely
-        // rather than crash trying to reach Owner/RelevantCards on a canonical card.
-        var card = new Playlist();
         card.BeforeCombatStart();
         Assert.False(card.TryGetModifier<PlannedModifier>(out _));
     }

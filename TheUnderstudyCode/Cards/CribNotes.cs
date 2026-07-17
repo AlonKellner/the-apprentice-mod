@@ -20,8 +20,8 @@ public class CribNotes : UnderstudyCard
     {
         WithDamage(10);
         WithTip(UnderstudyKeywords.Tuned);
-        WithTip(typeof(LimitedPower));
-        WithVar(new SelfDebuffVar("Limited", 1));
+        WithTip(typeof(TensionPower));
+        WithVar(new SelfDebuffVar("Tension", 1));
     }
 
     protected override void OnUpgrade()
@@ -48,6 +48,6 @@ public class CribNotes : UnderstudyCard
                 TunedModifier.Apply(card, CombatState!, allCards);
         }
 
-        await EmotionalExpression.ApplyLimitedToSelf(context, cardPlay.Card.Owner.Creature, (int)DynamicVars["Limited"].BaseValue, this);
+        await EmotionalExpression.ApplyTensionToSelf(context, cardPlay.Card.Owner.Creature, (int)DynamicVars["Tension"].BaseValue, this);
     }
 }

@@ -15,8 +15,8 @@ public class TheShakes : UnderstudyCard
     {
         WithDamage(12);
         WithBlock(12);
-        WithTip(typeof(ShakenPower));
-        WithVar(new SelfDebuffVar("Shaken", 2));
+        WithTip(typeof(TensionPower));
+        WithVar(new SelfDebuffVar("Tension", 2));
     }
 
     protected override void OnUpgrade()
@@ -30,6 +30,6 @@ public class TheShakes : UnderstudyCard
     {
         await CommonActions.CardAttack(cardPlay.Card, cardPlay).Execute(context);
         await CommonActions.CardBlock(this, cardPlay);
-        await EmotionalExpression.ApplyShakenToSelf(context, cardPlay.Card.Owner.Creature, (int)DynamicVars["Shaken"].BaseValue, this);
+        await EmotionalExpression.ApplyTensionToSelf(context, cardPlay.Card.Owner.Creature, (int)DynamicVars["Tension"].BaseValue, this);
     }
 }

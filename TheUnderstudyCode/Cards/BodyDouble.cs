@@ -6,13 +6,14 @@ using MegaCrit.Sts2.Core.Localization.DynamicVars;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
-public class StageFright : UnderstudyCard
+// Defensive Swap — gain Block, then trade fortunes with the enemy team.
+public class BodyDouble : UnderstudyCard
 {
-    public const string CardId = "TheUnderstudy:StageFright";
+    public const string CardId = "TheUnderstudy:BodyDouble";
 
-    public StageFright() : base(1, CardType.Attack, CardRarity.Common, TargetType.AllEnemies)
+    public BodyDouble() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.None)
     {
-        WithDamage(12);
+        WithBlock(8);
         WithVars(new IntVar("Swap", 3));
         WithTip(UnderstudyKeywords.Swap);
     }
@@ -20,12 +21,12 @@ public class StageFright : UnderstudyCard
     protected override void OnUpgrade()
     {
         base.OnUpgrade();
-        DynamicVars.Damage.UpgradeValueBy(3m);
+        DynamicVars.Block.UpgradeValueBy(4m);
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
-        await CommonActions.CardAttack(cardPlay.Card, cardPlay).Execute(context);
+        await CommonActions.CardBlock(this, cardPlay);
         await SceneStealing.SwapEach(context, cardPlay.Card.Owner.Creature, (int)DynamicVars["Swap"].BaseValue);
     }
 }

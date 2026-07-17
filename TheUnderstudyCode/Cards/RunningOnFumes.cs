@@ -16,8 +16,8 @@ public class RunningOnFumes : UnderstudyCard
     {
         WithDamage(12);
         WithBlock(8);
-        WithTip(typeof(JadedPower));
-        WithVar(new SelfDebuffVar("Jaded", 1));
+        WithTip(typeof(TensionPower));
+        WithVar(new SelfDebuffVar("Tension", 1));
     }
 
     protected override void OnUpgrade()
@@ -31,6 +31,6 @@ public class RunningOnFumes : UnderstudyCard
     {
         await CommonActions.CardAttack(cardPlay.Card, cardPlay).Execute(context);
         await CommonActions.CardBlock(this, cardPlay);
-        await EmotionalExpression.ApplyJadedToSelf(context, cardPlay.Card.Owner.Creature, (int)DynamicVars["Jaded"].BaseValue, this);
+        await EmotionalExpression.ApplyTensionToSelf(context, cardPlay.Card.Owner.Creature, (int)DynamicVars["Tension"].BaseValue, this);
     }
 }

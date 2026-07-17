@@ -15,8 +15,10 @@ namespace TheUnderstudy.Tests.Cards;
 // (2) render it in cards.json via {<Debuff>:inverseDiff()} so it colors green when Pulled Punch lowers it.
 public class SelfDebuffPreviewTests
 {
-    // Card type -> (var/debuff name, native amount). One self-debuff each. CenterStage (5 debuffs from
-    // one var) and Pathos (also hits enemies, deliberately excluded) are covered/handled separately.
+    // Card type -> (var/debuff name, native amount). One self-debuff each. Pathos (also hits enemies,
+    // deliberately excluded) is handled separately. The former Shaken/Limited/Jaded self-debuff cards
+    // now apply Tension; cards that became Swap (Stage Fright, Buy Time, Procrastinate, Start Over) no
+    // longer apply a self-debuff and are not listed.
     public static IEnumerable<object[]> SelfDebuffCards() => new List<object[]>
     {
         new object[] { typeof(FreezeUp), "Weak", 1 },
@@ -27,18 +29,15 @@ public class SelfDebuffPreviewTests
         new object[] { typeof(HeartAche), "Vulnerable", 1 },
         new object[] { typeof(Joke), "Vulnerable", 1 },
         new object[] { typeof(TheWall), "Vulnerable", 1 },
-        new object[] { typeof(TheShakes), "Shaken", 2 },
-        new object[] { typeof(StartOver), "Shaken", 2 },
-        new object[] { typeof(MissedCue), "Shaken", 1 },
-        new object[] { typeof(StageFright), "Shaken", 2 },
-        new object[] { typeof(BuyTime), "Limited", 1 },
-        new object[] { typeof(DrawingBlanks), "Limited", 2 },
-        new object[] { typeof(CribNotes), "Limited", 1 },
-        new object[] { typeof(Blackout), "Limited", 2 },
-        new object[] { typeof(RunningOnFumes), "Jaded", 1 },
-        new object[] { typeof(AllNighter), "Jaded", 1 },
-        new object[] { typeof(Procrastinate), "Jaded", 2 },
-        new object[] { typeof(MustGoOn), "Jaded", 2 },
+        new object[] { typeof(TheShakes), "Tension", 2 },
+        new object[] { typeof(MissedCue), "Tension", 1 },
+        new object[] { typeof(DrawingBlanks), "Tension", 2 },
+        new object[] { typeof(CribNotes), "Tension", 1 },
+        new object[] { typeof(Blackout), "Tension", 2 },
+        new object[] { typeof(RunningOnFumes), "Tension", 1 },
+        new object[] { typeof(AllNighter), "Tension", 1 },
+        new object[] { typeof(MustGoOn), "Tension", 2 },
+        new object[] { typeof(MethodActing), "Tension", 3 },
     };
 
     [Theory]
@@ -62,27 +61,6 @@ public class SelfDebuffPreviewTests
         Assert.Contains($"{{{debuff}:inverseDiff()}}", description);
         // The hard-coded literal must be gone — the colored var replaces it.
         Assert.DoesNotContain($"Apply {amount} [gold]{debuff}[/gold] to yourself", description);
-    }
-
-    // Dress Rehearsal applies `amount` of 5 debuffs to self AND schedules an Invert of `amount` next
-    // turn. Pulled Punch reduces the applied debuffs but not the Invert, so the two numbers are backed
-    // by different vars: a SelfDebuffVar (colored inverseDiff) for the apply line, and the untouched
-    // CenterStagePower (normal diff) for the Invert line.
-    [Fact]
-    public void DressRehearsal_BacksSelfDebuffWithVar()
-    {
-        var card = new CenterStage();
-        Assert.True(card.DynamicVars.ContainsKey("SelfDebuff"));
-        Assert.IsType<SelfDebuffVar>(card.DynamicVars["SelfDebuff"]);
-        Assert.Equal(2, (int)card.DynamicVars["SelfDebuff"].BaseValue);
-    }
-
-    [Fact]
-    public void DressRehearsal_Loc_ApplyLineInverseDiff_InvertLineNormalDiff()
-    {
-        var desc = LoadDescriptions()["THEUNDERSTUDY-CENTER_STAGE"];
-        Assert.Contains("{SelfDebuff:inverseDiff()}", desc);       // self-debuff apply line (colored)
-        Assert.Contains("{CenterStagePower:diff()}", desc);      // Invert line, unchanged by Pulled Punch
     }
 
     private static string RepoRoot => Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", ".."));

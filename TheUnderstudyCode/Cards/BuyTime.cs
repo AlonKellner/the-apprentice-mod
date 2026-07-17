@@ -7,8 +7,6 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
-using TheUnderstudy.TheUnderstudyCode.Cards.Powers;
-using TheUnderstudy.TheUnderstudyCode.Cards.DynamicVars;
 using TheUnderstudy.TheUnderstudyCode.Extensions;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
@@ -20,16 +18,15 @@ public class BuyTime : UnderstudyCard
     public BuyTime() : base(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
     {
         WithDamage(9);
-        WithVars(new CardsVar("Select", 1));
+        WithVars(new CardsVar("Select", 1), new IntVar("Swap", 3));
         WithTip(CardKeyword.Unplayable);
-        WithTip(typeof(LimitedPower));
-        WithVar(new SelfDebuffVar("Limited", 1));
+        WithTip(UnderstudyKeywords.Swap);
     }
 
     protected override void OnUpgrade()
     {
         base.OnUpgrade();
-        DynamicVars["Select"].UpgradeValueBy(1m);
+        DynamicVars["Swap"].UpgradeValueBy(3m);
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
@@ -48,6 +45,6 @@ public class BuyTime : UnderstudyCard
             foreach (var card in selected)
                 UnplayableModifier.Remove(card);
 
-        await EmotionalExpression.ApplyLimitedToSelf(context, cardPlay.Card.Owner.Creature, (int)DynamicVars["Limited"].BaseValue, this);
+        await SceneStealing.SwapEach(context, cardPlay.Card.Owner.Creature, (int)DynamicVars["Swap"].BaseValue);
     }
 }

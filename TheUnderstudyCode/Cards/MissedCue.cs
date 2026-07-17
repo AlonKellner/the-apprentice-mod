@@ -20,8 +20,8 @@ public class MissedCue : UnderstudyCard
         WithVars(new EnergyVar(2));
         WithTips(_ => new IHoverTip[] { EnergyHoverTip });
         WithKeyword(CardKeyword.Exhaust, ConstructedCardModel.UpgradeType.Remove);
-        WithTip(typeof(ShakenPower));
-        WithVar(new SelfDebuffVar("Shaken", 1));
+        WithTip(typeof(TensionPower));
+        WithVar(new SelfDebuffVar("Tension", 1));
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
@@ -30,6 +30,6 @@ public class MissedCue : UnderstudyCard
 
         var player = cardPlay.Card.Owner;
         await PlayerCmd.GainEnergy(DynamicVars.Energy.BaseValue, player);
-        await EmotionalExpression.ApplyShakenToSelf(context, player.Creature, (int)DynamicVars["Shaken"].BaseValue, this);
+        await EmotionalExpression.ApplyTensionToSelf(context, player.Creature, (int)DynamicVars["Tension"].BaseValue, this);
     }
 }

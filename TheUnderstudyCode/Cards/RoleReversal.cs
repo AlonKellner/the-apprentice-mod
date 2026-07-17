@@ -14,14 +14,14 @@ public class RoleReversal : UnderstudyCard
 
     public RoleReversal() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.None)
     {
-        WithVars(new IntVar("Swap", 1));
+        WithVars(new IntVar("Swap", 3));
         WithTip(UnderstudyKeywords.Swap);
     }
 
     protected override void OnUpgrade()
     {
         base.OnUpgrade();
-        DynamicVars["Swap"].UpgradeValueBy(1m);
+        DynamicVars["Swap"].UpgradeValueBy(3m);
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)

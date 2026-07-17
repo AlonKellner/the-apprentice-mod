@@ -9,11 +9,11 @@ namespace TheUnderstudy.Tests.Character;
 
 // General guardrail: every core mechanic must remain represented at the rarities where it belongs.
 // This is the executable statement of the deck's rarity intent:
-//   * Common must give an on-ramp to all three core builds (Invert/Planned/Tuned), preview all
-//     five debuffs + remove-Unplayable + Vigor, and cover the four core game mechanics
-//     (damage/block/draw/energy).
-//   * Uncommon and Rare must each still represent all three builds and all five debuffs, so no
-//     build is locked out of a tier.
+//   * Common must give an on-ramp to all three core builds (Invert/Planned/Tuned), preview the
+//     self-debuffs it applies (Weak/Vulnerable/Tension) + Swap + remove-Unplayable + Vigor, and
+//     cover the four core game mechanics (damage/block/draw/energy).
+//   * Uncommon must represent every mechanic too; Rare must still represent all three builds,
+//     Weak/Vulnerable, and Swap. (Legacy Shaken/Limited/Jaded are latent — no card applies them.)
 // Rarity is read live from a bare-instantiated card (same safe pattern as NewDeckCardsTests —
 // no ModelDb/Log paths), so re-rartying a card in source automatically re-computes coverage.
 public class CardRarityMechanicCoverageTests
@@ -34,7 +34,7 @@ public class CardRarityMechanicCoverageTests
             typeof(Orchestration), typeof(Foreshadow), typeof(Choreography), typeof(WriteItDown),
             typeof(Muse), typeof(Showtime), typeof(Signature), typeof(Remix),
             typeof(Melody), typeof(SellOut), typeof(Venue),
-            typeof(CleanSlate), typeof(DaCapo), typeof(MagnumOpus), typeof(Motif), typeof(Playlist),
+            typeof(CleanSlate), typeof(DaCapo), typeof(MagnumOpus), typeof(Motif),
         },
         ["Tuned"] = new[]
         {
@@ -46,27 +46,25 @@ public class CardRarityMechanicCoverageTests
         ["Weak"] = new[]
         {
             typeof(FreezeUp), typeof(DesperateStrike), typeof(WritersBlock),
-            typeof(Pathos), typeof(CenterStage), typeof(FolkSong), typeof(TheFirstLesson),
+            typeof(Pathos), typeof(FolkSong), typeof(TheFirstLesson),
         },
         ["Vulnerable"] = new[]
         {
             typeof(BreakALeg), typeof(Joke), typeof(HeartAche), typeof(TheWall),
-            typeof(Pathos), typeof(CenterStage), typeof(LoveSong), typeof(TheFirstLesson),
+            typeof(Pathos), typeof(LoveSong), typeof(TheFirstLesson),
         },
-        ["Shaken"] = new[]
+        // Tension (universal debuff) is the self-debuff downside these cards now carry, replacing the
+        // legacy Shaken/Limited/Jaded (kept as latent mechanics, no longer applied by any card).
+        ["Tension"] = new[]
         {
-            typeof(TheShakes), typeof(MissedCue), typeof(StageFright),
-            typeof(CenterStage), typeof(StartOver), typeof(SadSong),
+            typeof(TheShakes), typeof(Blackout), typeof(RunningOnFumes), typeof(AllNighter),
+            typeof(MissedCue), typeof(CribNotes), typeof(DrawingBlanks), typeof(MustGoOn),
+            typeof(MethodActing),
         },
-        ["Jaded"] = new[]
+        ["Swap"] = new[]
         {
-            typeof(RunningOnFumes), typeof(AllNighter), typeof(MustGoOn), typeof(Procrastinate),
-            typeof(CenterStage), typeof(PopSong),
-        },
-        ["Limited"] = new[]
-        {
-            typeof(BuyTime), typeof(CribNotes), typeof(DrawingBlanks), typeof(Blackout),
-            typeof(CenterStage), typeof(OldSong), typeof(Playlist),
+            typeof(RoleReversal), typeof(StageFright), typeof(BuyTime), typeof(Procrastinate),
+            typeof(StartOver), typeof(Limelight), typeof(BodyDouble), typeof(MethodActing),
         },
         ["remove-Unplayable"] = new[]
         {
@@ -111,9 +109,8 @@ public class CardRarityMechanicCoverageTests
     [InlineData("Common", "Tuned")]
     [InlineData("Common", "Weak")]
     [InlineData("Common", "Vulnerable")]
-    [InlineData("Common", "Shaken")]
-    [InlineData("Common", "Jaded")]
-    [InlineData("Common", "Limited")]
+    [InlineData("Common", "Tension")]
+    [InlineData("Common", "Swap")]
     [InlineData("Common", "remove-Unplayable")]
     [InlineData("Common", "Vigor")]
     [InlineData("Common", "damage")]
@@ -127,9 +124,8 @@ public class CardRarityMechanicCoverageTests
     [InlineData("Uncommon", "Tuned")]
     [InlineData("Uncommon", "Weak")]
     [InlineData("Uncommon", "Vulnerable")]
-    [InlineData("Uncommon", "Shaken")]
-    [InlineData("Uncommon", "Jaded")]
-    [InlineData("Uncommon", "Limited")]
+    [InlineData("Uncommon", "Tension")]
+    [InlineData("Uncommon", "Swap")]
     [InlineData("Uncommon", "remove-Unplayable")]
     [InlineData("Uncommon", "Vigor")]
     [InlineData("Uncommon", "damage")]
@@ -142,9 +138,7 @@ public class CardRarityMechanicCoverageTests
     [InlineData("Rare", "Tuned")]
     [InlineData("Rare", "Weak")]
     [InlineData("Rare", "Vulnerable")]
-    [InlineData("Rare", "Shaken")]
-    [InlineData("Rare", "Jaded")]
-    [InlineData("Rare", "Limited")]
+    [InlineData("Rare", "Swap")]
     public void Rarity_Represents_Mechanic(string rarity, string mechanic)
     {
         var want = Enum.Parse<CardRarity>(rarity);

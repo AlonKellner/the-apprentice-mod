@@ -23,6 +23,7 @@ public class CardTooltipKeywordSyncTests
         ["Shaken"] = "typeof(ShakenPower)",
         ["Limited"] = "typeof(LimitedPower)",
         ["Jaded"] = "typeof(JadedPower)",
+        ["Tension"] = "typeof(TensionPower)",
         ["Vigor"] = "typeof(VigorPower)",
         ["Planned"] = "UnderstudyKeywords.Planned)",
         ["Tuned"] = "UnderstudyKeywords.Tuned)",

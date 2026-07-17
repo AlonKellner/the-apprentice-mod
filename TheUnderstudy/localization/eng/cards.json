@@ -39,19 +39,19 @@
   "THEUNDERSTUDY-WRITE_IT_DOWN.selectionPrompt": "Choose cards to make [gold]Planned[/gold] and [gold]Tuned[/gold].",
 
   "THEUNDERSTUDY-BLACKOUT.title": "Blackout",
-  "THEUNDERSTUDY-BLACKOUT.description": "Deal {Damage:diff()} damage.\nGain {Block:diff()} [gold]Block[/gold].\nApply {Limited:inverseDiff()} [gold]Limited[/gold] to yourself.",
+  "THEUNDERSTUDY-BLACKOUT.description": "Deal {Damage:diff()} damage.\nGain {Block:diff()} [gold]Block[/gold].\nApply {Tension:inverseDiff()} [gold]Tension[/gold] to yourself.",
 
   "THEUNDERSTUDY-ALL_NIGHTER.title": "All-Nighter",
-  "THEUNDERSTUDY-ALL_NIGHTER.description": "Deal {Damage:diff()} damage.\nDraw {Cards:diff()} {Cards:plural:card|cards}.\nApply {Jaded:inverseDiff()} [gold]Jaded[/gold] to yourself.",
+  "THEUNDERSTUDY-ALL_NIGHTER.description": "Deal {Damage:diff()} damage.\nDraw {Cards:diff()} {Cards:plural:card|cards}.\nApply {Tension:inverseDiff()} [gold]Tension[/gold] to yourself.",
 
   "THEUNDERSTUDY-MUST_GO_ON.title": "Must Go On",
-  "THEUNDERSTUDY-MUST_GO_ON.description": "Gain {Energy:energyIcons()}.\nApply {Jaded:inverseDiff()} [gold]Jaded[/gold] to yourself.",
+  "THEUNDERSTUDY-MUST_GO_ON.description": "Gain {Energy:energyIcons()}.\nApply {Tension:inverseDiff()} [gold]Tension[/gold] to yourself.",
 
   "THEUNDERSTUDY-MISSED_CUE.title": "Missed Cue",
-  "THEUNDERSTUDY-MISSED_CUE.description": "Deal {Damage:diff()} damage.\nGain {Energy:energyIcons()}.\nApply {Shaken:inverseDiff()} [gold]Shaken[/gold] to yourself.",
+  "THEUNDERSTUDY-MISSED_CUE.description": "Deal {Damage:diff()} damage.\nGain {Energy:energyIcons()}.\nApply {Tension:inverseDiff()} [gold]Tension[/gold] to yourself.",
 
   "THEUNDERSTUDY-STAGE_FRIGHT.title": "Stage Fright",
-  "THEUNDERSTUDY-STAGE_FRIGHT.description": "Deal {Damage:diff()} damage to ALL enemies.\nApply {Shaken:inverseDiff()} [gold]Shaken[/gold] to yourself.",
+  "THEUNDERSTUDY-STAGE_FRIGHT.description": "Deal {Damage:diff()} damage to ALL enemies.\n[gold]Swap[/gold] {Swap:diff()}.",
 
   "THEUNDERSTUDY-BREATHER.title": "Breather",
   "THEUNDERSTUDY-BREATHER.description": "Draw {Cards:diff()} cards.\nRemove [gold]Unplayable[/gold] from 2 attacks and skills in hand.",
@@ -62,7 +62,7 @@
   "THEUNDERSTUDY-UNWIND.selectionPrompt": "Choose cards to remove [gold]Unplayable[/gold].",
 
   "THEUNDERSTUDY-BUY_TIME.title": "Buy Time",
-  "THEUNDERSTUDY-BUY_TIME.description": "Deal {Damage:diff()} damage.\nRemove [gold]Unplayable[/gold] from {Select:diff()} {Select:plural:attack or skill|attacks and skills} in hand.\nApply {Limited:inverseDiff()} [gold]Limited[/gold] to yourself.",
+  "THEUNDERSTUDY-BUY_TIME.description": "Deal {Damage:diff()} damage.\nRemove [gold]Unplayable[/gold] from {Select:diff()} {Select:plural:attack or skill|attacks and skills} in hand.\n[gold]Swap[/gold] {Swap:diff()}.",
   "THEUNDERSTUDY-BUY_TIME.selectionPrompt": "Choose cards to remove [gold]Unplayable[/gold].",
 
   "THEUNDERSTUDY-CRYING_OUT_LOUD.title": "Crying Out Loud",
@@ -107,18 +107,6 @@
   "THEUNDERSTUDY-LOVE_SONG.title": "Love Song",
   "THEUNDERSTUDY-LOVE_SONG.description": "Gain {Unvulnerable:diff()} [gold]Unvulnerable[/gold].",
 
-  "THEUNDERSTUDY-SAD_SONG.title": "Sad Song",
-  "THEUNDERSTUDY-SAD_SONG.description": "Gain {Unshaken:diff()} [gold]Unshaken[/gold].",
-
-  "THEUNDERSTUDY-POP_SONG.title": "Pop Song",
-  "THEUNDERSTUDY-POP_SONG.description": "Gain {Unjaded:diff()} [gold]Unjaded[/gold].",
-
-  "THEUNDERSTUDY-OLD_SONG.title": "Old Song",
-  "THEUNDERSTUDY-OLD_SONG.description": "Gain {Unlimited:diff()} [gold]Unlimited[/gold].",
-
-  "THEUNDERSTUDY-CENTER_STAGE.title": "Center Stage",
-  "THEUNDERSTUDY-CENTER_STAGE.description": "Apply {SelfDebuff:inverseDiff()} [gold]Weak[/gold], [gold]Vulnerable[/gold], [gold]Shaken[/gold], [gold]Jaded[/gold], and [gold]Limited[/gold] to yourself.\nAt the start of next turn, [gold]Invert[/gold] {CenterStagePower:diff()}.",
-
   "THEUNDERSTUDY-MASTER_FORM.title": "Master Form",
   "THEUNDERSTUDY-MASTER_FORM.description": "When attacks or skills without [gold]Replay[/gold] become [gold]Unplayable[/gold], they gain [gold]Replay[/gold] 1.",
 
@@ -162,10 +150,10 @@
   "THEUNDERSTUDY-HEART_ACHE.description": "Deal {Damage:diff()} damage.\nGain {Block:diff()} [gold]Block[/gold].\nApply {Vulnerable:inverseDiff()} [gold]Vulnerable[/gold] to yourself.",
 
   "THEUNDERSTUDY-DRAWING_BLANKS.title": "Drawing Blanks",
-  "THEUNDERSTUDY-DRAWING_BLANKS.description": "Draw {Cards:diff()} cards.\nApply {Limited:inverseDiff()} [gold]Limited[/gold] to yourself.",
+  "THEUNDERSTUDY-DRAWING_BLANKS.description": "Draw {Cards:diff()} cards.\nApply {Tension:inverseDiff()} [gold]Tension[/gold] to yourself.",
 
   "THEUNDERSTUDY-START_OVER.title": "Start Over",
-  "THEUNDERSTUDY-START_OVER.description": "{InCombat:cond:|[gold]Tuned[/gold] 1.\n}Remove [gold]Unplayable[/gold] from all attacks and skills.\nApply {Shaken:inverseDiff()} [gold]Shaken[/gold] to yourself.",
+  "THEUNDERSTUDY-START_OVER.description": "{InCombat:cond:|[gold]Tuned[/gold] 1.\n}Remove [gold]Unplayable[/gold] from all attacks and skills.\n[gold]Swap[/gold] {Swap:diff()}.",
 
   "THEUNDERSTUDY-MAGNUM_OPUS.title": "Magnum Opus",
   "THEUNDERSTUDY-MAGNUM_OPUS.description": "Apply [gold]Planned[/gold] to {Select:diff()} attacks or skills in your draw pile.",
@@ -192,6 +180,15 @@
   "THEUNDERSTUDY-ROLE_REVERSAL.title": "Role Reversal",
   "THEUNDERSTUDY-ROLE_REVERSAL.description": "[gold]Swap[/gold] {Swap:diff()}.",
 
+  "THEUNDERSTUDY-LIMELIGHT.title": "Limelight",
+  "THEUNDERSTUDY-LIMELIGHT.description": "[gold]Swap[/gold] {Swap:diff()}.",
+
+  "THEUNDERSTUDY-BODY_DOUBLE.title": "Body Double",
+  "THEUNDERSTUDY-BODY_DOUBLE.description": "Gain {Block:diff()} [gold]Block[/gold].\n[gold]Swap[/gold] {Swap:diff()}.",
+
+  "THEUNDERSTUDY-METHOD_ACTING.title": "Method Acting",
+  "THEUNDERSTUDY-METHOD_ACTING.description": "Apply {Tension:inverseDiff()} [gold]Tension[/gold] to yourself.\n[gold]Swap[/gold] {Swap:diff()}.",
+
   "THEUNDERSTUDY-CHOREOGRAPHY.title": "Choreography",
   "THEUNDERSTUDY-CHOREOGRAPHY.description": "[gold]Invert[/gold] {Invert:diff()}.\nApply [gold]Planned[/gold] to 1 attack or skill in your discard pile.",
   "THEUNDERSTUDY-CHOREOGRAPHY.selectionPrompt": "Choose a card to make [gold]Planned[/gold].",
@@ -200,10 +197,7 @@
   "THEUNDERSTUDY-JOKE.description": "Deal {Damage:diff()} damage.\n[gold]Invert[/gold] {Invert:diff()}.\nApply {Vulnerable:inverseDiff()} [gold]Vulnerable[/gold] to yourself.",
 
   "THEUNDERSTUDY-RUNNING_ON_FUMES.title": "Running on Fumes",
-  "THEUNDERSTUDY-RUNNING_ON_FUMES.description": "Deal {Damage:diff()} damage.\nGain {Block:diff()} [gold]Block[/gold].\nApply {Jaded:inverseDiff()} [gold]Jaded[/gold] to yourself.",
-
-  "THEUNDERSTUDY-PLAYLIST.title": "Playlist",
-  "THEUNDERSTUDY-PLAYLIST.description": "Gain 1 [gold]Unweak[/gold], 1 [gold]Unvulnerable[/gold], 1 [gold]Unshaken[/gold], 1 [gold]Unlimited[/gold], and 1 [gold]Unjaded[/gold].\nStarts each combat [gold]Planned[/gold].",
+  "THEUNDERSTUDY-RUNNING_ON_FUMES.description": "Deal {Damage:diff()} damage.\nGain {Block:diff()} [gold]Block[/gold].\nApply {Tension:inverseDiff()} [gold]Tension[/gold] to yourself.",
 
   "THEUNDERSTUDY-CONFIDENCE.title": "Confidence",
   "THEUNDERSTUDY-CONFIDENCE.description": "Gain {Block:diff()} [gold]Block[/gold].\nRemove [gold]Unplayable[/gold] from {Select:diff()} {Select:plural:attack or skill|attacks and skills} in hand.",
@@ -243,14 +237,14 @@
   "THEUNDERSTUDY-BREAK_A_LEG.description": "Deal {Damage:diff()} damage.\nApply {Vulnerable:inverseDiff()} [gold]Vulnerable[/gold] to yourself.",
 
   "THEUNDERSTUDY-THE_SHAKES.title": "The Shakes",
-  "THEUNDERSTUDY-THE_SHAKES.description": "Deal {Damage:diff()} damage.\nGain {Block:diff()} [gold]Block[/gold].\nApply {Shaken:inverseDiff()} [gold]Shaken[/gold] to yourself.",
+  "THEUNDERSTUDY-THE_SHAKES.description": "Deal {Damage:diff()} damage.\nGain {Block:diff()} [gold]Block[/gold].\nApply {Tension:inverseDiff()} [gold]Tension[/gold] to yourself.",
 
   "THEUNDERSTUDY-CRIB_NOTES.title": "Crib Notes",
-  "THEUNDERSTUDY-CRIB_NOTES.description": "Deal {Damage:diff()} damage.\nApply [gold]Tuned[/gold] to 1 attack or skill in hand.\nApply {Limited:inverseDiff()} [gold]Limited[/gold] to yourself.",
+  "THEUNDERSTUDY-CRIB_NOTES.description": "Deal {Damage:diff()} damage.\nApply [gold]Tuned[/gold] to 1 attack or skill in hand.\nApply {Tension:inverseDiff()} [gold]Tension[/gold] to yourself.",
   "THEUNDERSTUDY-CRIB_NOTES.selectionPrompt": "Choose a card to make [gold]Tuned[/gold].",
 
   "THEUNDERSTUDY-PROCRASTINATE.title": "Procrastinate",
-  "THEUNDERSTUDY-PROCRASTINATE.description": "Deal {Damage:diff()} damage.\nApply [gold]Planned[/gold] to 1 attack or skill in your draw pile.\nApply {Jaded:inverseDiff()} [gold]Jaded[/gold] to yourself.",
+  "THEUNDERSTUDY-PROCRASTINATE.description": "Deal {Damage:diff()} damage.\nApply [gold]Planned[/gold] to 1 attack or skill in your draw pile.\n[gold]Swap[/gold] {Swap:diff()}.",
   "THEUNDERSTUDY-PROCRASTINATE.selectionPrompt": "Choose a card to make [gold]Planned[/gold].",
 
   "THEUNDERSTUDY-APATHY.title": "Apathy",

@@ -15,9 +15,9 @@ public class MustGoOn : UnderstudyCard
 
     public MustGoOn() : base(0, CardType.Skill, CardRarity.Common, TargetType.None)
     {
-        WithVars(new SelfDebuffVar("Jaded", 2), new EnergyVar(2));
+        WithVars(new SelfDebuffVar("Tension", 2), new EnergyVar(2));
         WithTips(_ => new IHoverTip[] { EnergyHoverTip });
-        WithTip(typeof(JadedPower));
+        WithTip(typeof(TensionPower));
     }
 
     protected override void OnUpgrade()
@@ -30,7 +30,7 @@ public class MustGoOn : UnderstudyCard
     {
         var player = cardPlay.Card.Owner;
         await PlayerCmd.GainEnergy(DynamicVars.Energy.BaseValue, player);
-        int jaded = (int)DynamicVars["Jaded"].BaseValue;
-        await EmotionalExpression.ApplyJadedToSelf(context, player.Creature, jaded, this);
+        int tension = (int)DynamicVars["Tension"].BaseValue;
+        await EmotionalExpression.ApplyTensionToSelf(context, player.Creature, tension, this);
     }
 }
