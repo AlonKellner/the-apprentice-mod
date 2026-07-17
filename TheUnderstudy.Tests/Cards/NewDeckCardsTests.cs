@@ -38,7 +38,7 @@ public class NewDeckCardsTests
     [InlineData(typeof(DoubleTime), "TheUnderstudy:DoubleTime", CardType.Power, CardRarity.Rare, TargetType.None)]
     [InlineData(typeof(LoosenUp), "TheUnderstudy:LoosenUp", CardType.Attack, CardRarity.Uncommon, TargetType.RandomEnemy)]
     [InlineData(typeof(EnjoyTheRide), "TheUnderstudy:EnjoyTheRide", CardType.Skill, CardRarity.Common, TargetType.None)]
-    [InlineData(typeof(Swing), "TheUnderstudy:Swing", CardType.Power, CardRarity.Rare, TargetType.None)]
+    [InlineData(typeof(LivingTheDream), "TheUnderstudy:LivingTheDream", CardType.Skill, CardRarity.Uncommon, TargetType.None)]
     [InlineData(typeof(StrikeAPose), "TheUnderstudy:StrikeAPose", CardType.Attack, CardRarity.Rare, TargetType.AllEnemies)]
     [InlineData(typeof(FolkSong), "TheUnderstudy:FolkSong", CardType.Skill, CardRarity.Uncommon, TargetType.None)]
     [InlineData(typeof(LoveSong), "TheUnderstudy:LoveSong", CardType.Skill, CardRarity.Uncommon, TargetType.None)]

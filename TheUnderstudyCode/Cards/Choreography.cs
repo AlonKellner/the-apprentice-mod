@@ -17,7 +17,7 @@ public class Choreography : UnderstudyCard
 
     public Choreography() : base(1, CardType.Skill, CardRarity.Common, TargetType.None)
     {
-        WithVars(new IntVar("Invert", 2));
+        WithVars(new IntVar("Invert", 1));
         WithTip(UnderstudyKeywords.Invert);
         WithTip(UnderstudyKeywords.Planned);
     }
@@ -33,7 +33,7 @@ public class Choreography : UnderstudyCard
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
         int invertAmount = (int)DynamicVars["Invert"].BaseValue;
-        await EmotionalExpression.InvertLastModified(context, cardPlay.Card.Owner.Creature, invertAmount);
+        await EmotionalExpression.InvertEach(context, cardPlay.Card.Owner.Creature, invertAmount);
 
         var player = cardPlay.Card.Owner;
         PlannedSelectionState.Arm();

@@ -12,15 +12,10 @@ using TheUnderstudy.TheUnderstudyCode.Extensions;
 namespace TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 
 // Silently auto-attached to the player at combat start (see UnderstudyCard.AfterPlayerTurnStartLate,
-// mirroring PlannedCounterPower's own auto-attach). Three jobs, all relying on being an
+// mirroring PlannedCounterPower's own auto-attach). Two jobs, both relying on being an
 // always-attached, always-hidden observer of every power change on the player:
 //
-// (1) Feeds EmotionalExpression's "last modified invertible debuff" tracker via the global
-//     AfterPowerAmountChanged broadcast — this is what lets an enemy-inflicted (or otherwise
-//     externally-caused) Weak/Vulnerable/etc. register as "last modified" for Invert, not just
-//     this deck's own Apply/Convert calls.
-//
-// (2) Bidirectional cancellation for all 6 invertible debuff/buff pairs (Weak/Unweak,
+// (1) Bidirectional cancellation for all 6 invertible debuff/buff pairs (Weak/Unweak,
 //     Vulnerable/Unvulnerable, Shaken/Unshaken, Limited/Unlimited, Jaded/Unjaded, Frail/Unfrail)
 //     via TryModifyPowerAmountReceived/AfterModifyingPowerAmountReceived. This used to live on
 //     each Un-X power itself, which required every Un-X power to be pre-attached (even while
@@ -31,9 +26,9 @@ namespace TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 //     X) powers go back to being ordinary powers: created on demand, visible immediately, removed
 //     when they decay to nothing, exactly like Strength/Dexterity.
 //
-// (3) Pulled Punch dampening: while the player holds ApathyPower, every incoming invertible
+// (2) Pulled Punch dampening: while the player holds ApathyPower, every incoming invertible
 //     debuff is softened toward 0 by that power's Amount, inside the same single interception used
-//     for (2). Kept here — rather than as a separate TryModifyPowerAmountReceived listener on
+//     for (1). Kept here — rather than as a separate TryModifyPowerAmountReceived listener on
 //     ApathyPower — so there is only ever one interceptor for the event and no order-race
 //     against the cancellation (the exact hazard MyOwnLessonPower documents avoiding).
 public class InvertTrackerPower : UnderstudyPower
@@ -44,28 +39,6 @@ public class InvertTrackerPower : UnderstudyPower
     protected override bool IsVisibleInternal => false;
 
     public override List<(string, string)> Localization => new PowerLoc("Invert Tracker", "", "");
-
-    public override Task AfterPowerAmountChanged(
-        PlayerChoiceContext choiceContext, PowerModel power, decimal amount, Creature? applier, CardModel? cardSource)
-    {
-        if (power.Owner != Owner || amount == 0m) return Task.CompletedTask;
-        var debuff = MapToInvertibleDebuff(power);
-        if (debuff != null) EmotionalExpression.RecordModified(Owner, debuff.Value);
-        return Task.CompletedTask;
-    }
-
-    private static InvertibleDebuff? MapToInvertibleDebuff(PowerModel power) => power switch
-    {
-        WeakPower or UnweakPower => InvertibleDebuff.Weak,
-        VulnerablePower or UnvulnerablePower => InvertibleDebuff.Vulnerable,
-        ShakenPower or UnshakenPower => InvertibleDebuff.Shaken,
-        LimitedPower or UnlimitedPower => InvertibleDebuff.Limited,
-        JadedPower or UnjadedPower => InvertibleDebuff.Jaded,
-        FrailPower or UnfrailPower => InvertibleDebuff.Frail,
-        StrengthPower => InvertibleDebuff.Strength,
-        DexterityPower => InvertibleDebuff.Dexterity,
-        _ => null
-    };
 
     // Only one interception can be "in flight" at a time (TryModifyPowerAmountReceived always
     // runs to completion, synchronously, before AfterModifyingPowerAmountReceived is called for

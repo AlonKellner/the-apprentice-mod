@@ -31,6 +31,7 @@ public class TunedLockPowerTests
     private static CardPlay MakePlay(CardModel card, int index, int count) => new()
     {
         Card = card,
+        Player = null!,  // bare test: no combat player; none of the exercised guard paths read it
         Target = null,
         ResultPile = PileType.Discard,
         Resources = default,

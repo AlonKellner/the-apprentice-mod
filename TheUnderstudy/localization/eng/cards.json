@@ -20,7 +20,7 @@
   "THEUNDERSTUDY-DESPERATE_STRIKE.description": "Deal {Damage:diff()} damage.\nApply {Weak:inverseDiff()} [gold]Weak[/gold] to yourself.",
 
   "THEUNDERSTUDY-ROLL_WITH_IT.title": "Roll With It",
-  "THEUNDERSTUDY-ROLL_WITH_IT.description": "Draw {Cards:diff()} {Cards:plural:card|cards}.\n[gold]Invert[/gold] {Invert:diff()} of the last modified invertible debuff.",
+  "THEUNDERSTUDY-ROLL_WITH_IT.description": "Draw {Cards:diff()} {Cards:plural:card|cards}.\n[gold]Invert[/gold] {Invert:diff()}.",
 
   "THEUNDERSTUDY-RUN_THROUGH.title": "Run Through",
   "THEUNDERSTUDY-RUN_THROUGH.description": "Deal {Damage:diff()} damage.\nApply [gold]Tuned[/gold] to 1 attack or skill in hand.",
@@ -96,10 +96,10 @@
   "THEUNDERSTUDY-LOOSEN_UP.description": "Deal {Damage:diff()} damage to a random enemy for each [gold]Unplayable[/gold] in hand.\nRemove [gold]Unplayable[/gold] from all attacks and skills in hand.",
 
   "THEUNDERSTUDY-ENJOY_THE_RIDE.title": "Enjoy the Ride",
-  "THEUNDERSTUDY-ENJOY_THE_RIDE.description": "Gain {Block:diff()} [gold]Block[/gold].\n[gold]Invert[/gold] 2 of the next invertible debuff to be modified.",
+  "THEUNDERSTUDY-ENJOY_THE_RIDE.description": "Gain {Block:diff()} [gold]Block[/gold].\nAt the end of your turn, [gold]Invert[/gold] 2.",
 
   "THEUNDERSTUDY-STRIKE_A_POSE.title": "Strike a Pose",
-  "THEUNDERSTUDY-STRIKE_A_POSE.description": "Deal {Damage:diff()} damage to ALL enemies.\n[gold]Invert[/gold] {Invert:diff()} of each invertible debuff you have.",
+  "THEUNDERSTUDY-STRIKE_A_POSE.description": "Deal {Damage:diff()} damage to ALL enemies.\n[gold]Invert[/gold] {Invert:diff()}.",
 
   "THEUNDERSTUDY-FOLK_SONG.title": "Folk Song",
   "THEUNDERSTUDY-FOLK_SONG.description": "Gain {Unweak:diff()} [gold]Unweak[/gold].",
@@ -117,7 +117,7 @@
   "THEUNDERSTUDY-OLD_SONG.description": "Gain {Unlimited:diff()} [gold]Unlimited[/gold].",
 
   "THEUNDERSTUDY-CENTER_STAGE.title": "Center Stage",
-  "THEUNDERSTUDY-CENTER_STAGE.description": "Apply {SelfDebuff:inverseDiff()} [gold]Weak[/gold], [gold]Vulnerable[/gold], [gold]Shaken[/gold], [gold]Jaded[/gold], and [gold]Limited[/gold] to yourself.\nAt the start of next turn, [gold]Invert[/gold] {CenterStagePower:diff()} of each invertible debuff.",
+  "THEUNDERSTUDY-CENTER_STAGE.description": "Apply {SelfDebuff:inverseDiff()} [gold]Weak[/gold], [gold]Vulnerable[/gold], [gold]Shaken[/gold], [gold]Jaded[/gold], and [gold]Limited[/gold] to yourself.\nAt the start of next turn, [gold]Invert[/gold] {CenterStagePower:diff()}.",
 
   "THEUNDERSTUDY-MASTER_FORM.title": "Master Form",
   "THEUNDERSTUDY-MASTER_FORM.description": "When attacks or skills without [gold]Replay[/gold] become [gold]Unplayable[/gold], they gain [gold]Replay[/gold] 1.",
@@ -132,7 +132,7 @@
   "THEUNDERSTUDY-SELL_OUT.description": "Deal {Damage:diff()} damage for each [gold]Planned[/gold] card you have.\nExhaust all [gold]Planned[/gold] cards.",
 
   "THEUNDERSTUDY-OWN_IT.title": "Own It",
-  "THEUNDERSTUDY-OWN_IT.description": "[gold]Invert[/gold] {IfUpgraded:show:2|1} of each invertible debuff you have.\nGain each inverted buff X more times.",
+  "THEUNDERSTUDY-OWN_IT.description": "[gold]Invert[/gold] {IfUpgraded:show:2|1}.\nGain each inverted buff X more times.",
 
   "THEUNDERSTUDY-SONIC_BOOM.title": "Sonic Boom",
   "THEUNDERSTUDY-SONIC_BOOM.description": "Gain {IfUpgraded:show:6|4} [gold]Vigor[/gold], X times.",
@@ -186,12 +186,15 @@
   "THEUNDERSTUDY-CRASH.title": "Crash",
   "THEUNDERSTUDY-CRASH.description": "Deal {Damage:diff()} damage.\nGain {Vigor:diff()} [gold]Vigor[/gold].",
 
+  "THEUNDERSTUDY-LIVING_THE_DREAM.title": "Living the Dream",
+  "THEUNDERSTUDY-LIVING_THE_DREAM.description": "[gold]Invert[/gold] {Invert:diff()}.",
+
   "THEUNDERSTUDY-CHOREOGRAPHY.title": "Choreography",
-  "THEUNDERSTUDY-CHOREOGRAPHY.description": "[gold]Invert[/gold] {Invert:diff()} of the last modified invertible debuff.\nApply [gold]Planned[/gold] to 1 attack or skill in your discard pile.",
+  "THEUNDERSTUDY-CHOREOGRAPHY.description": "[gold]Invert[/gold] {Invert:diff()}.\nApply [gold]Planned[/gold] to 1 attack or skill in your discard pile.",
   "THEUNDERSTUDY-CHOREOGRAPHY.selectionPrompt": "Choose a card to make [gold]Planned[/gold].",
 
   "THEUNDERSTUDY-JOKE.title": "Joke",
-  "THEUNDERSTUDY-JOKE.description": "Deal {Damage:diff()} damage.\n[gold]Invert[/gold] {Invert:diff()} of a random invertible debuff.\nApply {Vulnerable:inverseDiff()} [gold]Vulnerable[/gold] to yourself.",
+  "THEUNDERSTUDY-JOKE.description": "Deal {Damage:diff()} damage.\n[gold]Invert[/gold] {Invert:diff()}.\nApply {Vulnerable:inverseDiff()} [gold]Vulnerable[/gold] to yourself.",
 
   "THEUNDERSTUDY-RUNNING_ON_FUMES.title": "Running on Fumes",
   "THEUNDERSTUDY-RUNNING_ON_FUMES.description": "Deal {Damage:diff()} damage.\nGain {Block:diff()} [gold]Block[/gold].\nApply {Jaded:inverseDiff()} [gold]Jaded[/gold] to yourself.",
@@ -257,7 +260,7 @@
   "THEUNDERSTUDY-PATHOS.description": "Deal {Damage:diff()} damage to ALL enemies.\nApply 2 [gold]Vulnerable[/gold] and 2 [gold]Weak[/gold] to yourself and ALL enemies.",
 
   "THEUNDERSTUDY-BRIGHT_SIDE.title": "Bright Side",
-  "THEUNDERSTUDY-BRIGHT_SIDE.description": "At the end of your turn, Invert {IfUpgraded:show:2|1} random [gold]invertible[/gold] debuff you currently have.",
+  "THEUNDERSTUDY-BRIGHT_SIDE.description": "At the end of your turn, [gold]Invert[/gold] {IfUpgraded:show:2|1}.",
 
   "THEUNDERSTUDY-CRESCENDO.title": "Crescendo",
   "THEUNDERSTUDY-CRESCENDO.description": "Double all gained [gold]Vigor[/gold].",
@@ -285,8 +288,5 @@
   "THEUNDERSTUDY-DECEPTIVE_CADENCE.description": "Deal no damage.\nUse all [gold]Vigor[/gold].\nGain {Block:diff()} [gold]Block[/gold] for each [gold]Vigor[/gold] you had.",
 
   "THEUNDERSTUDY-ENCORE.title": "Encore",
-  "THEUNDERSTUDY-ENCORE.description": "Retain your [gold]Vigor[/gold] after using it this turn.",
-
-  "THEUNDERSTUDY-SWING.title": "Swing",
-  "THEUNDERSTUDY-SWING.description": "At the start of your turn, [gold]Invert[/gold] all invertible buffs and debuffs."
+  "THEUNDERSTUDY-ENCORE.description": "Retain your [gold]Vigor[/gold] after using it this turn."
 }

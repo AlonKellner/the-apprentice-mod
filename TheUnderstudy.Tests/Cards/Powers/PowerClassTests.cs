@@ -472,20 +472,6 @@ public class PowerClassTests
             "AfterSideTurnEnd", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly));
 
     [Fact]
-    public void SwingPower_IsBuff_Single()
-    {
-        var p = new SwingPower();
-        Assert.Equal(PowerType.Buff, p.Type);
-        Assert.Equal(PowerStackType.Single, p.StackType);
-        Assert.NotEmpty(p.Localization);
-    }
-
-    [Fact]
-    public void SwingPower_InvertsEachTurnStart() =>
-        Assert.NotNull(typeof(SwingPower).GetMethod(
-            "AfterPlayerTurnStart", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly));
-
-    [Fact]
     public void EnjoyTheRidePower_IsBuff_Counter()
     {
         var p = new EnjoyTheRidePower();
@@ -494,10 +480,12 @@ public class PowerClassTests
         Assert.NotEmpty(p.Localization);
     }
 
+    // Now a one-shot end-of-turn Invert (like Bright Side's hook but self-removing), no longer
+    // the old reactive "next modified debuff" AfterPowerAmountChanged trigger.
     [Fact]
-    public void EnjoyTheRidePower_ReactsToPowerAmountChange() =>
+    public void EnjoyTheRidePower_InvertsAtTurnEnd() =>
         Assert.NotNull(typeof(EnjoyTheRidePower).GetMethod(
-            "AfterPowerAmountChanged", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly));
+            "BeforeSideTurnEnd", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly));
 
     [Fact]
     public void PulledPunchPower_IsBuff_Counter()
@@ -560,12 +548,12 @@ public class PowerClassTests
     }
 
     [Fact]
-    public void AdLibPower_Localization_MentionsInvertible()
+    public void AdLibPower_Localization_MentionsInvert()
     {
         var descriptions = new BrightSidePower().Localization
             .Where(e => e.Item1 == "description" || e.Item1 == "smartDescription")
             .Select(e => e.Item2);
-        Assert.All(descriptions, d => Assert.Contains("invertible", d, StringComparison.OrdinalIgnoreCase));
+        Assert.All(descriptions, d => Assert.Contains("Invert", d, StringComparison.OrdinalIgnoreCase));
     }
 
     [Fact]

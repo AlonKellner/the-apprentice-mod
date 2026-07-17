@@ -15,17 +15,12 @@ public class BrightSidePower : UnderstudyPower
 
     public override List<(string, string)> Localization => new PowerLoc(
         "Bright Side",
-        "At the end of your turn, Invert 1 random [gold]invertible[/gold] debuff you currently have.",
-        "At the end of your turn, Invert {Amount} random [gold]invertible[/gold] debuff you currently have.");
+        "At the end of your turn, [gold]Invert[/gold] this many.",
+        "At the end of your turn, [gold]Invert[/gold] {Amount}.");
 
     public override async Task BeforeSideTurnEnd(PlayerChoiceContext context, CombatSide side, IEnumerable<Creature> creatures)
     {
         if (side != CombatSide.Player || Owner.Player == null) return;
-
-        var present = EmotionalExpression.GetPresentInvertibleDebuffs(Owner);
-        if (present.Count == 0) return;
-
-        var chosen = Owner.Player.RunState.Rng.CombatCardSelection.NextItem(present);
-        await EmotionalExpression.InvertDebuff(context, Owner, chosen, Amount);
+        await EmotionalExpression.InvertEach(context, Owner, Amount);
     }
 }

@@ -16,7 +16,7 @@ public class Joke : UnderstudyCard
     public Joke() : base(0, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
     {
         WithDamage(7);
-        WithVars(new IntVar("Invert", 2));
+        WithVars(new IntVar("Invert", 1));
         WithTip(UnderstudyKeywords.Invert);
         WithInvertibleTip(typeof(VulnerablePower));
         WithVar(new SelfDebuffVar("Vulnerable", 1));
@@ -36,14 +36,7 @@ public class Joke : UnderstudyCard
 
         var creature = cardPlay.Card.Owner.Creature;
         int invertAmount = (int)DynamicVars["Invert"].BaseValue;
-        // Invert a random invertible debuff currently present (deterministic RNG stream, mirroring
-        // BrightSidePower), rather than the last-modified one.
-        var present = EmotionalExpression.GetPresentInvertibleDebuffs(creature);
-        if (present.Count > 0)
-        {
-            var chosen = creature.Player!.RunState.Rng.CombatCardSelection.NextItem(present);
-            await EmotionalExpression.InvertDebuff(context, creature, chosen, invertAmount);
-        }
+        await EmotionalExpression.InvertEach(context, creature, invertAmount);
         await EmotionalExpression.ApplyVulnerableToSelf(context, creature, (int)DynamicVars["Vulnerable"].BaseValue, this);
     }
 }

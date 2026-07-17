@@ -71,25 +71,19 @@ public static class EmotionalExpression
     public static async Task ApplyWeakToSelf(PlayerChoiceContext ctx, Creature creature, int stacks, CardModel? card)
     {
         if (stacks <= 0) return;
-        await PowerCmd.Apply<WeakPower>(ctx, creature, stacks, creature, card, false);
-        RecordModified(creature, InvertibleDebuff.Weak);
-    }
+        await PowerCmd.Apply<WeakPower>(ctx, creature, stacks, creature, card, false);    }
 
     // Apply Vulnerable to self. Mirror of ApplyWeakToSelf.
     public static async Task ApplyVulnerableToSelf(PlayerChoiceContext ctx, Creature creature, int stacks, CardModel? card)
     {
         if (stacks <= 0) return;
-        await PowerCmd.Apply<VulnerablePower>(ctx, creature, stacks, creature, card, false);
-        RecordModified(creature, InvertibleDebuff.Vulnerable);
-    }
+        await PowerCmd.Apply<VulnerablePower>(ctx, creature, stacks, creature, card, false);    }
 
     // Apply Unweak to self. Mirror of ApplyWeakToSelf (Unweak is the buff side of the same pair).
     public static async Task ApplyUnweakToSelf(PlayerChoiceContext ctx, Creature creature, int stacks, CardModel? card)
     {
         if (stacks <= 0) return;
-        await PowerCmd.Apply<UnweakPower>(ctx, creature, stacks, creature, card, false);
-        RecordModified(creature, InvertibleDebuff.Weak);
-    }
+        await PowerCmd.Apply<UnweakPower>(ctx, creature, stacks, creature, card, false);    }
 
     // Convert up to max WeakPower to UnweakPower. The raw removeAmount (not a pre-reduced value)
     // is what's granted to Unweak — InvertTrackerPower's interception (canonicalPower is
@@ -105,9 +99,7 @@ public static class EmotionalExpression
         await PowerCmd.Apply<WeakPower>(ctx, creature, -removeAmount, creature, null, false);
         Invariants.CheckEqual(curWeak - removeAmount, creature.GetPowerAmount<WeakPower>(),
             nameof(EmotionalExpression) + "." + nameof(ConvertWeakToUnweak), "Weak after removal");
-        await PowerCmd.Apply<UnweakPower>(ctx, creature, removeAmount, creature, null, false);
-        RecordModified(creature, InvertibleDebuff.Weak);
-        return removeAmount;
+        await PowerCmd.Apply<UnweakPower>(ctx, creature, removeAmount, creature, null, false);        return removeAmount;
     }
 
     // Mirror of ConvertWeakToUnweak for Vulnerable/Unvulnerable.
@@ -119,9 +111,7 @@ public static class EmotionalExpression
         await PowerCmd.Apply<VulnerablePower>(ctx, creature, -removeAmount, creature, null, false);
         Invariants.CheckEqual(curVul - removeAmount, creature.GetPowerAmount<VulnerablePower>(),
             nameof(EmotionalExpression) + "." + nameof(ConvertVulnerableToUnvulnerable), "Vulnerable after removal");
-        await PowerCmd.Apply<UnvulnerablePower>(ctx, creature, removeAmount, creature, null, false);
-        RecordModified(creature, InvertibleDebuff.Vulnerable);
-        return removeAmount;
+        await PowerCmd.Apply<UnvulnerablePower>(ctx, creature, removeAmount, creature, null, false);        return removeAmount;
     }
 
     // Remove up to max Weak from source and apply to target.
@@ -162,9 +152,7 @@ public static class EmotionalExpression
     public static async Task ApplyShakenToSelf(PlayerChoiceContext ctx, Creature creature, int stacks, CardModel? card)
     {
         if (stacks <= 0) return;
-        await PowerCmd.Apply<ShakenPower>(ctx, creature, stacks, creature, card, false);
-        RecordModified(creature, InvertibleDebuff.Shaken);
-    }
+        await PowerCmd.Apply<ShakenPower>(ctx, creature, stacks, creature, card, false);    }
 
     public static async Task<int> ConvertShakenToUnshaken(PlayerChoiceContext ctx, Creature creature, int max = int.MaxValue)
     {
@@ -174,9 +162,7 @@ public static class EmotionalExpression
         await PowerCmd.Apply<ShakenPower>(ctx, creature, -removeAmount, creature, null, false);
         Invariants.CheckEqual(curShaken - removeAmount, creature.GetPowerAmount<ShakenPower>(),
             nameof(EmotionalExpression) + "." + nameof(ConvertShakenToUnshaken), "Shaken after removal");
-        await PowerCmd.Apply<UnshakenPower>(ctx, creature, removeAmount, creature, null, false);
-        RecordModified(creature, InvertibleDebuff.Shaken);
-        return removeAmount;
+        await PowerCmd.Apply<UnshakenPower>(ctx, creature, removeAmount, creature, null, false);        return removeAmount;
     }
 
     // Limited/Unlimited — same shape as Weak/Unweak, throttling draw instead of dealt damage.
@@ -184,9 +170,7 @@ public static class EmotionalExpression
     public static async Task ApplyLimitedToSelf(PlayerChoiceContext ctx, Creature creature, int stacks, CardModel? card)
     {
         if (stacks <= 0) return;
-        await PowerCmd.Apply<LimitedPower>(ctx, creature, stacks, creature, card, false);
-        RecordModified(creature, InvertibleDebuff.Limited);
-    }
+        await PowerCmd.Apply<LimitedPower>(ctx, creature, stacks, creature, card, false);    }
 
     public static async Task<int> ConvertLimitedToUnlimited(PlayerChoiceContext ctx, Creature creature, int max = int.MaxValue)
     {
@@ -196,9 +180,7 @@ public static class EmotionalExpression
         await PowerCmd.Apply<LimitedPower>(ctx, creature, -removeAmount, creature, null, false);
         Invariants.CheckEqual(curLimited - removeAmount, creature.GetPowerAmount<LimitedPower>(),
             nameof(EmotionalExpression) + "." + nameof(ConvertLimitedToUnlimited), "Limited after removal");
-        await PowerCmd.Apply<UnlimitedPower>(ctx, creature, removeAmount, creature, null, false);
-        RecordModified(creature, InvertibleDebuff.Limited);
-        return removeAmount;
+        await PowerCmd.Apply<UnlimitedPower>(ctx, creature, removeAmount, creature, null, false);        return removeAmount;
     }
 
     // Jaded/Unjaded — same shape as Limited/Unlimited, throttling next turn's Energy instead of draw.
@@ -206,9 +188,7 @@ public static class EmotionalExpression
     public static async Task ApplyJadedToSelf(PlayerChoiceContext ctx, Creature creature, int stacks, CardModel? card)
     {
         if (stacks <= 0) return;
-        await PowerCmd.Apply<JadedPower>(ctx, creature, stacks, creature, card, false);
-        RecordModified(creature, InvertibleDebuff.Jaded);
-    }
+        await PowerCmd.Apply<JadedPower>(ctx, creature, stacks, creature, card, false);    }
 
     public static async Task<int> ConvertJadedToUnjaded(PlayerChoiceContext ctx, Creature creature, int max = int.MaxValue)
     {
@@ -218,9 +198,7 @@ public static class EmotionalExpression
         await PowerCmd.Apply<JadedPower>(ctx, creature, -removeAmount, creature, null, false);
         Invariants.CheckEqual(curJaded - removeAmount, creature.GetPowerAmount<JadedPower>(),
             nameof(EmotionalExpression) + "." + nameof(ConvertJadedToUnjaded), "Jaded after removal");
-        await PowerCmd.Apply<UnjadedPower>(ctx, creature, removeAmount, creature, null, false);
-        RecordModified(creature, InvertibleDebuff.Jaded);
-        return removeAmount;
+        await PowerCmd.Apply<UnjadedPower>(ctx, creature, removeAmount, creature, null, false);        return removeAmount;
     }
 
     // Frail/Unfrail — same shape as Weak/Unweak, reducing Block gain instead of dealt damage.
@@ -230,9 +208,7 @@ public static class EmotionalExpression
     public static async Task ApplyFrailToSelf(PlayerChoiceContext ctx, Creature creature, int stacks, CardModel? card)
     {
         if (stacks <= 0) return;
-        await PowerCmd.Apply<FrailPower>(ctx, creature, stacks, creature, card, false);
-        RecordModified(creature, InvertibleDebuff.Frail);
-    }
+        await PowerCmd.Apply<FrailPower>(ctx, creature, stacks, creature, card, false);    }
 
     public static async Task<int> ConvertFrailToUnfrail(PlayerChoiceContext ctx, Creature creature, int max = int.MaxValue)
     {
@@ -242,14 +218,12 @@ public static class EmotionalExpression
         await PowerCmd.Apply<FrailPower>(ctx, creature, -removeAmount, creature, null, false);
         Invariants.CheckEqual(curFrail - removeAmount, creature.GetPowerAmount<FrailPower>(),
             nameof(EmotionalExpression) + "." + nameof(ConvertFrailToUnfrail), "Frail after removal");
-        await PowerCmd.Apply<UnfrailPower>(ctx, creature, removeAmount, creature, null, false);
-        RecordModified(creature, InvertibleDebuff.Frail);
-        return removeAmount;
+        await PowerCmd.Apply<UnfrailPower>(ctx, creature, removeAmount, creature, null, false);        return removeAmount;
     }
 
     // Whether Invert would have anything at all to act on right now — all 8 invertible pairs
-    // (the 5 self-debuffs plus Frail/Strength/Dexterity, matching PickDebuffToInvert's/IsPresent's
-    // scope below). Used by relevance highlighting on StrikeAPose/RunThrough/EnjoyTheRide/RollWithIt/OwnIt.
+    // (the 5 self-debuffs plus Frail/Strength/Dexterity). Used by relevance highlighting on
+    // StrikeAPose/RunThrough/EnjoyTheRide/RollWithIt/OwnIt/LivingTheDream.
     public static bool HasAnyInvertibleDebuffPresent(
         int weak, int vulnerable, int shaken, int limited, int jaded, int frail, int strength, int dexterity) =>
         weak > 0 || vulnerable > 0 || shaken > 0 || limited > 0 || jaded > 0 || frail > 0
@@ -266,76 +240,6 @@ public static class EmotionalExpression
         creature.GetPowerAmount<DexterityPower>());
 
     // ── Invert dispatcher ────────────────────────────────────────────────────────────────────
-    //
-    // "Last modified invertible debuff" tracking, combat-scoped like TunedModifier's own static
-    // counter. `_modificationOrder` holds every category touched this combat, most-recent-first.
-    // Updated two ways: (1) every Apply/Convert method above calls RecordModified directly for
-    // this deck's own self-application/inversion, and (2) InvertTrackerPower — a hidden Power
-    // silently auto-attached to the player (see UnderstudyCard.AfterPlayerTurnStartLate, mirroring
-    // PlannedCounterPower) — observes MegaCrit.Sts2.Core.Hooks.Hook.AfterPowerAmountChanged, a
-    // global broadcast fired for every power amount change regardless of source, and calls
-    // RecordModified for enemy-inflicted or otherwise externally-applied changes too. (1) is
-    // technically redundant with (2) now but kept as a belt-and-suspenders direct call.
-    private static ICombatState? _lastCombat;
-    private static readonly List<InvertibleDebuff> _modificationOrder = new();
-
-    public static void RecordModified(Creature creature, InvertibleDebuff debuff)
-    {
-        var combat = creature.CombatState;
-        if (!ReferenceEquals(combat, _lastCombat))
-        {
-            _lastCombat = combat;
-            _modificationOrder.Clear();
-        }
-        _modificationOrder.Remove(debuff);
-        _modificationOrder.Insert(0, debuff);
-    }
-
-    private static bool IsPresent(Creature creature, InvertibleDebuff debuff) => debuff switch
-    {
-        InvertibleDebuff.Weak => creature.GetPowerAmount<WeakPower>() > 0,
-        InvertibleDebuff.Vulnerable => creature.GetPowerAmount<VulnerablePower>() > 0,
-        InvertibleDebuff.Shaken => creature.GetPowerAmount<ShakenPower>() > 0,
-        InvertibleDebuff.Limited => creature.GetPowerAmount<LimitedPower>() > 0,
-        InvertibleDebuff.Jaded => creature.GetPowerAmount<JadedPower>() > 0,
-        InvertibleDebuff.Frail => creature.GetPowerAmount<FrailPower>() > 0,
-        InvertibleDebuff.Strength => creature.GetPowerAmount<StrengthPower>() < 0,
-        InvertibleDebuff.Dexterity => creature.GetPowerAmount<DexterityPower>() < 0,
-        _ => false
-    };
-
-    // All invertible debuffs currently present on a creature, in fixed enum order — the candidate
-    // list for Ad Lib's "invert 1 random invertible debuff you currently have" (as opposed to
-    // PickDebuffToInvert's "last modified" selection below).
-    internal static List<InvertibleDebuff> GetPresentInvertibleDebuffs(Creature creature) =>
-        Enum.GetValues<InvertibleDebuff>().Where(d => IsPresent(creature, d)).ToList();
-
-    // Picks which invertible debuff Invert should act on: the most recently modified one that's
-    // still actually present (walking back through modification history, since the very latest
-    // entry may have already been fully cleared by something else), or — if nothing tracked is
-    // present, e.g. tracking missed it or nothing has been modified yet this combat — falls back
-    // to any currently-present invertible debuff at all, in fixed enum order. Returns null only
-    // if the creature has no invertible debuff whatsoever right now.
-    private static InvertibleDebuff? PickDebuffToInvert(Creature creature)
-    {
-        if (ReferenceEquals(_lastCombat, creature.CombatState))
-            foreach (var debuff in _modificationOrder)
-                if (IsPresent(creature, debuff)) return debuff;
-
-        foreach (InvertibleDebuff debuff in Enum.GetValues<InvertibleDebuff>())
-            if (IsPresent(creature, debuff)) return debuff;
-
-        return null;
-    }
-
-    // Invert up to `max` stacks of whichever invertible debuff Invert should currently act on
-    // (see PickDebuffToInvert). No-op only if the creature has no invertible debuff at all.
-    public static async Task InvertLastModified(PlayerChoiceContext ctx, Creature creature, int max)
-    {
-        var debuff = PickDebuffToInvert(creature);
-        if (debuff == null) return;
-        await InvertDebuff(ctx, creature, debuff.Value, max);
-    }
 
     // Apply `stacks` of the buff side of one of the 8 invertible pairs (the 6 real Un-X powers, or a
     // positive Strength/Dexterity gain). Used by InvertEachWithBonus below, and reused by
@@ -373,7 +277,7 @@ public static class EmotionalExpression
 
     // Mirror of ApplyBuffSide for the debuff side of one of the 8 invertible pairs (the 6 real X
     // powers, or a negative Strength/Dexterity gain). Reuses the existing per-pair Apply*ToSelf
-    // methods above for the 6 real pairs (also recording modification history for Invert).
+    // methods above for the 6 real pairs.
     public static async Task ApplyDebuffSide(PlayerChoiceContext ctx, Creature creature, InvertibleDebuff debuff, int stacks)
     {
         switch (debuff)
@@ -411,63 +315,6 @@ public static class EmotionalExpression
     {
         foreach (InvertibleDebuff debuff in Enum.GetValues<InvertibleDebuff>())
             await InvertDebuff(ctx, creature, debuff, maxEach);
-    }
-
-    // Magnitude of the BUFF side of a pair currently present (mirror of IsPresent's debuff-side test).
-    private static int BuffSideAmount(Creature creature, InvertibleDebuff debuff) => debuff switch
-    {
-        InvertibleDebuff.Weak => creature.GetPowerAmount<UnweakPower>(),
-        InvertibleDebuff.Vulnerable => creature.GetPowerAmount<UnvulnerablePower>(),
-        InvertibleDebuff.Shaken => creature.GetPowerAmount<UnshakenPower>(),
-        InvertibleDebuff.Limited => creature.GetPowerAmount<UnlimitedPower>(),
-        InvertibleDebuff.Jaded => creature.GetPowerAmount<UnjadedPower>(),
-        InvertibleDebuff.Frail => creature.GetPowerAmount<UnfrailPower>(),
-        InvertibleDebuff.Strength => Math.Max(0, creature.GetPowerAmount<StrengthPower>()),
-        InvertibleDebuff.Dexterity => Math.Max(0, creature.GetPowerAmount<DexterityPower>()),
-        _ => 0
-    };
-
-    // Remove `amount` of the buff side of a pair (the 6 Un-X powers, or the positive part of
-    // Strength/Dexterity). Mirror of ApplyBuffSide with a negative sign.
-    private static async Task RemoveBuffSide(PlayerChoiceContext ctx, Creature creature, InvertibleDebuff debuff, int amount)
-    {
-        switch (debuff)
-        {
-            case InvertibleDebuff.Weak: await PowerCmd.Apply<UnweakPower>(ctx, creature, -amount, creature, null, false); break;
-            case InvertibleDebuff.Vulnerable: await PowerCmd.Apply<UnvulnerablePower>(ctx, creature, -amount, creature, null, false); break;
-            case InvertibleDebuff.Shaken: await PowerCmd.Apply<UnshakenPower>(ctx, creature, -amount, creature, null, false); break;
-            case InvertibleDebuff.Limited: await PowerCmd.Apply<UnlimitedPower>(ctx, creature, -amount, creature, null, false); break;
-            case InvertibleDebuff.Jaded: await PowerCmd.Apply<UnjadedPower>(ctx, creature, -amount, creature, null, false); break;
-            case InvertibleDebuff.Frail: await PowerCmd.Apply<UnfrailPower>(ctx, creature, -amount, creature, null, false); break;
-            case InvertibleDebuff.Strength: await PowerCmd.Apply<StrengthPower>(ctx, creature, -amount, creature, null, false); break;
-            case InvertibleDebuff.Dexterity: await PowerCmd.Apply<DexterityPower>(ctx, creature, -amount, creature, null, false); break;
-        }
-    }
-
-    // Reverse of InvertDebuff: turn a present BUFF back into its debuff side, up to `max`. Removes the
-    // buff first so InvertTrackerPower has nothing left to cancel the freshly-applied debuff against
-    // (same ordering rationale as ConvertWeakToUnweak). For Strength/Dexterity the buff removal and
-    // the debuff application both land on the one Power (net -2*convert), flipping +V to -V.
-    public static async Task<int> InvertBuffToDebuff(PlayerChoiceContext ctx, Creature creature, InvertibleDebuff debuff, int max)
-    {
-        int convert = Math.Min(BuffSideAmount(creature, debuff), max);
-        if (convert <= 0) return 0;
-        await RemoveBuffSide(ctx, creature, debuff, convert);
-        await ApplyDebuffSide(ctx, creature, debuff, convert);
-        return convert;
-    }
-
-    // Swing: flip every invertible pair to its opposite polarity, full amount. A pair only ever holds
-    // one side (the two cancel), so per pair we convert whichever side is present — debuff->buff if a
-    // debuff is there, otherwise buff->debuff.
-    public static async Task InvertAllBidirectional(PlayerChoiceContext ctx, Creature creature)
-    {
-        foreach (InvertibleDebuff debuff in Enum.GetValues<InvertibleDebuff>())
-        {
-            int converted = await InvertDebuff(ctx, creature, debuff, int.MaxValue);
-            if (converted == 0)
-                await InvertBuffToDebuff(ctx, creature, debuff, int.MaxValue);
-        }
     }
 
     // Like InvertEach, but for each debuff actually inverted, also re-gain that same buff — at the

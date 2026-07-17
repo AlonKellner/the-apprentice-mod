@@ -27,7 +27,7 @@ public class CardRarityMechanicCoverageTests
         {
             typeof(Choreography), typeof(EnjoyTheRide), typeof(RollWithIt), typeof(Joke),
             typeof(BrightSide), typeof(Apathy), typeof(StrikeAPose), typeof(DoubleTime),
-            typeof(HeldNote), typeof(MyOwnLesson), typeof(OwnIt), typeof(Swing),
+            typeof(HeldNote), typeof(MyOwnLesson), typeof(OwnIt), typeof(LivingTheDream),
         },
         ["Planned"] = new[]
         {

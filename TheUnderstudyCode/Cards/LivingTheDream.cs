@@ -6,14 +6,15 @@ using MegaCrit.Sts2.Core.Localization.DynamicVars;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
-public class RollWithIt : UnderstudyCard
+// Pure Invert: nothing but the deck's signature debuff->buff flip. The designated (very rare)
+// Invert 3 card alongside Center Stage.
+public class LivingTheDream : UnderstudyCard
 {
-    public const string CardId = "TheUnderstudy:RollWithIt";
+    public const string CardId = "TheUnderstudy:LivingTheDream";
 
-    public RollWithIt() : base(0, CardType.Skill, CardRarity.Common, TargetType.None)
+    public LivingTheDream() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.None)
     {
-        WithCards(1);
-        WithVars(new IntVar("Invert", 1));
+        WithVars(new IntVar("Invert", 2));
         WithTip(UnderstudyKeywords.Invert);
     }
 
@@ -27,7 +28,6 @@ public class RollWithIt : UnderstudyCard
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
-        await CommonActions.Draw(this, context);
         int invertAmount = (int)DynamicVars["Invert"].BaseValue;
         await EmotionalExpression.InvertEach(context, cardPlay.Card.Owner.Creature, invertAmount);
     }

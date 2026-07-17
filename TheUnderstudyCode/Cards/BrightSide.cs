@@ -13,7 +13,7 @@ public class BrightSide : UnderstudyCard
     public BrightSide() : base(1, CardType.Power, CardRarity.Uncommon, TargetType.None)
     {
         WithPowerNoTip<BrightSidePower>(1, 1);
-        WithTip(UnderstudyKeywords.Invertible);
+        WithTip(UnderstudyKeywords.Invert);
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
