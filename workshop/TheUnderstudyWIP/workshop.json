@@ -2,8 +2,10 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.11.0 - Major card redesign: 87-card deck (20 Common / 36 Uncommon / 27 Rare). Reintroduced Shaken/Jaded/Limited as Un- inversion siblings (Sad/Pop/Old Song, Playlist); 25 new cards, 27 retired. Held Note now freezes ALL turn-based buffs/debuffs. My Own Lesson: invertible buff gains become nothing. Fate Knocking sums actual dealt damage; Practice is Stable + Tuned. Renames: Fate->Fate Knocking, Venue->Intermission, Crescendo->Reverb. Requires BaseLib.",
+  "changeNote": "v1.11.2 - Practice now has only Stable and Tuned 1 (Retain removed). Stable keyword description clarified: \"May not be modified or turned Unplayable during combat.\"",
   "tags": [],
-  "dependencies": [3737335127],
+  "dependencies": [
+    3737335127
+  ],
   "contentDescriptors": []
 }

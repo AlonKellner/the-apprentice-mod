@@ -4,7 +4,7 @@
   "THEUNDERSTUDY-TUNED.title": "Tuned",
   "THEUNDERSTUDY-TUNED.description": "Becomes [gold]Unplayable[/gold] when played. Increases damage or [gold]Block[/gold] by 1 for each card with [gold]Tuned[/gold].",
   "THEUNDERSTUDY-STABLE.title": "Stable",
-  "THEUNDERSTUDY-STABLE.description": "May not be modified during combat.",
+  "THEUNDERSTUDY-STABLE.description": "May not be modified or turned [gold]Unplayable[/gold] during combat.",
   "THEUNDERSTUDY-INVERT.title": "Invert",
   "THEUNDERSTUDY-INVERT.description": "Convert this many of each invertible debuff into buffs. Not all debuffs are invertible.",
   "THEUNDERSTUDY-INVERTIBLE.title": "Invertible",
