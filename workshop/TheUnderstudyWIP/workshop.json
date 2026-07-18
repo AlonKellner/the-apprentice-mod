@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.10.14 - Card pass: retired the Limited/Shaken/Jaded card slots in favor of Tension and Swap. 8 self-debuff cards now apply Tension; Stage Fright/Buy Time/Procrastinate/Start Over and 3 new cards (Limelight, Body Double, Method Acting) are Swap cards on the larger 3/6/10 scale. Removed Sad/Pop/Old Song, Center Stage, and Playlist (may return later). Deck now has 9 Tension, 8 Swap, 8 Vigor cards. Requires BaseLib.",
+  "changeNote": "v1.11.0 - Major card redesign: 87-card deck (20 Common / 36 Uncommon / 27 Rare). Reintroduced Shaken/Jaded/Limited as Un- inversion siblings (Sad/Pop/Old Song, Playlist); 25 new cards, 27 retired. Held Note now freezes ALL turn-based buffs/debuffs. My Own Lesson: invertible buff gains become nothing. Fate Knocking sums actual dealt damage; Practice is Stable + Tuned. Renames: Fate->Fate Knocking, Venue->Intermission, Crescendo->Reverb. Requires BaseLib.",
   "tags": [],
   "dependencies": [3737335127],
   "contentDescriptors": []
