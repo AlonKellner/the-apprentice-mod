@@ -10,7 +10,7 @@ public class AutoTune : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:AutoTune";
 
-    public AutoTune() : base(3, CardType.Power, CardRarity.Rare, TargetType.None)
+    public AutoTune() : base(2, CardType.Power, CardRarity.Rare, TargetType.None)
     {
         WithPowerNoTip<AutoTunePower>(1);
         WithCostUpgradeBy(-1);

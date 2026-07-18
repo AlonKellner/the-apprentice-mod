@@ -10,11 +10,11 @@ public class OneTake : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:OneTake";
 
-    public OneTake() : base(2, CardType.Power, CardRarity.Rare, TargetType.None)
+    public OneTake() : base(3, CardType.Power, CardRarity.Rare, TargetType.None)
     {
-        WithCostUpgradeBy(-1);
         WithPowerNoTip<OneTakePower>(1);
         WithTip(CardKeyword.Unplayable);
+        WithKeyword(CardKeyword.Innate, ConstructedCardModel.UpgradeType.Add);
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)

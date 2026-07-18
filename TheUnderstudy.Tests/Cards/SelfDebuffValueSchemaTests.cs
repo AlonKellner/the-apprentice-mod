@@ -37,20 +37,18 @@ public class SelfDebuffValueSchemaTests
     private static decimal Vp(int dmg, int block) => dmg + BlockVp * block;
 
     // Damage/Block cards: (type, stacks, debuff, groupBase, expectedDmg, expectedBlock).
+    // The clean "damage/block + one self-debuff" schema cards after the redesign. Meltdown/Dead Weight
+    // (also debuff enemies, like Pathos) and the singletons with a non-damage rider (Nervous Energy =
+    // +energy, Cram = draw, Burn Out = +energy, Go for Broke = remove-Unplayable) are priced as
+    // singletons in SELF_DEBUFF_VALUES.md and not group-constrained here.
     public static IEnumerable<object[]> DamageBlockCards() => new List<object[]>
     {
-        // Attack + Block, 1-cost Common (Base 21) — Jaded·1 statted as a normal 2-cost card
-        new object[] { typeof(FreezeUp),        1, 'W', 21m, 10,  8 },
-        new object[] { typeof(RunningOnFumes),  1, 'J', 21m, 12,  8 },
-        new object[] { typeof(TheShakes),       2, 'S', 21m, 12, 12 },
-        // Attack + Block, 2-cost Uncommon (Base 28)
+        // Attack + Block, 2-cost Uncommon (Base 28). Freeze Up moved from 1-cost to 2-cost in the
+        // redesign, so it re-stats up into this group (12/12 = 27 vp = 28 + Weak·1's −1).
+        new object[] { typeof(FreezeUp),        1, 'W', 28m, 12, 12 },
         new object[] { typeof(HeartAche),       1, 'V', 28m, 10, 16 },
-        new object[] { typeof(Blackout),        2, 'L', 28m, 12, 16 },
         // Single-hit Attack, 1-cost (Base 15)
-        new object[] { typeof(BreakALeg),       1, 'V', 15m, 17,  0 },
         new object[] { typeof(DesperateStrike), 2, 'W', 15m, 20,  0 },
-        // AoE Attack, 1-cost Uncommon (Base 6)
-        new object[] { typeof(StageFright),     2, 'S', 6m,  12,  0 },
     };
 
     [Theory]
@@ -68,21 +66,13 @@ public class SelfDebuffValueSchemaTests
     // the schema offset (2-stack always beats 1-stack; harsher debuff breaks ties).
     private static readonly (string name, (Type type, int stacks, char debuff)[] members)[] Groups =
     {
-        ("attack+block 1-cost Common", new[]
-        {
-            (typeof(FreezeUp), 1, 'W'), (typeof(RunningOnFumes), 1, 'J'), (typeof(TheShakes), 2, 'S'),
-        }),
         ("attack+block 2-cost Uncommon", new[]
         {
-            (typeof(HeartAche), 1, 'V'), (typeof(Blackout), 2, 'L'),
+            (typeof(FreezeUp), 1, 'W'), (typeof(HeartAche), 1, 'V'),
         }),
         ("single-hit attack 1-cost", new[]
         {
-            (typeof(BreakALeg), 1, 'V'), (typeof(DesperateStrike), 2, 'W'),
-        }),
-        ("AoE attack 1-cost Uncommon", new[]
-        {
-            (typeof(StageFright), 2, 'S'),
+            (typeof(DesperateStrike), 2, 'W'),
         }),
     };
 
@@ -112,10 +102,4 @@ public class SelfDebuffValueSchemaTests
         }
     }
 
-    [Fact]
-    public void AllNighter_GainsTwoEnergy()
-    {
-        var card = New(typeof(MustGoOn));
-        Assert.Equal(2, (int)card.DynamicVars["Energy"].BaseValue);
-    }
 }

@@ -12,7 +12,7 @@ public class LivingTheDream : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:LivingTheDream";
 
-    public LivingTheDream() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.None)
+    public LivingTheDream() : base(1, CardType.Skill, CardRarity.Common, TargetType.None)
     {
         WithVars(new IntVar("Invert", 2));
         WithTip(UnderstudyKeywords.Invert);

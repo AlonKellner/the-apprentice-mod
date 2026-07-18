@@ -21,81 +21,80 @@ public class CardRarityMechanicCoverageTests
     // mechanic -> the cards that embody it (curated from the card set; rarity-agnostic).
     // Lists are kept reasonably complete so the guardrail survives future single-card re-rarities
     // without false alarms. damage/block/draw only need enough representatives to cover Common.
+    // NOTE (redesign, in progress): lists updated to the surviving/renamed cards; new cards (Upstage,
+    // GiveAndTake, StagePresence, Composure, SilverLining, Muffle, DeadWeight, SingAlong, NervousEnergy,
+    // TakeNotes, Cram, GoForBroke, BurnOut, ...) are added as they are created in the new-card phase.
+    // "Tension" is dropped (no card applies it post-redesign; TensionPower stays latent like
+    // Shaken/Jaded/Limited).
     private static readonly Dictionary<string, Type[]> MechanicCards = new()
     {
         ["Invert"] = new[]
         {
-            typeof(Choreography), typeof(EnjoyTheRide), typeof(RollWithIt), typeof(Joke),
-            typeof(BrightSide), typeof(Apathy), typeof(StrikeAPose), typeof(DoubleTime),
+            typeof(Joke), typeof(BrightSide), typeof(Apathy),
             typeof(HeldNote), typeof(MyOwnLesson), typeof(OwnIt), typeof(LivingTheDream),
+            typeof(Freestyle), typeof(SilverLining), typeof(GiveAndTake), typeof(TurnItAround),
         },
         ["Planned"] = new[]
         {
-            typeof(Orchestration), typeof(Foreshadow), typeof(Choreography), typeof(WriteItDown),
+            typeof(Orchestration), typeof(Foreshadow), typeof(WriteItDown),
             typeof(Muse), typeof(Showtime), typeof(Signature), typeof(Remix),
-            typeof(Melody), typeof(SellOut), typeof(Venue),
+            typeof(Melody), typeof(Intermission),
             typeof(CleanSlate), typeof(DaCapo), typeof(MagnumOpus), typeof(Motif),
         },
         ["Tuned"] = new[]
         {
             typeof(WriteItDown), typeof(TuningRitual), typeof(RunThrough),
-            typeof(Rehearse), typeof(Signature), typeof(Memorize), typeof(Perfectionism),
-            typeof(CleanSlate), typeof(Experience), typeof(OneUp), typeof(StartOver),
+            typeof(Signature), typeof(Memorize), typeof(Perfectionism),
+            typeof(CleanSlate), typeof(Experience), typeof(OneUp),
             typeof(MuscleMemory), typeof(BackOfMyHand), typeof(Showstopper), typeof(AutoTune),
+            typeof(ShowerThought), typeof(TakeNotes),
         },
         ["Weak"] = new[]
         {
-            typeof(FreezeUp), typeof(DesperateStrike), typeof(WritersBlock),
-            typeof(Pathos), typeof(FolkSong), typeof(TheFirstLesson),
+            typeof(FreezeUp), typeof(DesperateStrike),
+            typeof(Pathos), typeof(FolkSong), typeof(TheFirstLesson), typeof(DeadWeight),
         },
         ["Vulnerable"] = new[]
         {
-            typeof(BreakALeg), typeof(Joke), typeof(HeartAche), typeof(TheWall),
+            typeof(Joke), typeof(HeartAche), typeof(TheWall),
             typeof(Pathos), typeof(LoveSong), typeof(TheFirstLesson),
-        },
-        // Tension (universal debuff) is the self-debuff downside these cards now carry, replacing the
-        // legacy Shaken/Limited/Jaded (kept as latent mechanics, no longer applied by any card).
-        ["Tension"] = new[]
-        {
-            typeof(TheShakes), typeof(Blackout), typeof(RunningOnFumes), typeof(AllNighter),
-            typeof(MissedCue), typeof(CribNotes), typeof(DrawingBlanks), typeof(MustGoOn),
-            typeof(MethodActing),
+            typeof(Meltdown), typeof(NervousEnergy),
         },
         ["Swap"] = new[]
         {
-            typeof(RoleReversal), typeof(StageFright), typeof(BuyTime), typeof(Procrastinate),
-            typeof(StartOver), typeof(Limelight), typeof(BodyDouble), typeof(MethodActing),
+            typeof(RoleReversal), typeof(BodyDouble),
+            typeof(Upstage), typeof(GiveAndTake), typeof(StagePresence),
         },
         ["remove-Unplayable"] = new[]
         {
-            typeof(Breather), typeof(BuyTime), typeof(Unwind), typeof(Confidence),
             typeof(Improvise), typeof(LoosenUp), typeof(Balanced),
-            typeof(CleanSlate), typeof(StartOver), typeof(SecondNature),
+            typeof(CleanSlate), typeof(SecondNature),
+            typeof(Comeback), typeof(Composure), typeof(TurnItAround), typeof(GoForBroke),
         },
         ["Vigor"] = new[]
         {
             typeof(Crash), typeof(BreakingVoice), typeof(SonicBoom), typeof(Forte),
-            typeof(Crescendo), typeof(CryingOutLoud), typeof(DeceptiveCadence), typeof(Encore),
+            typeof(Reverb), typeof(CryingOutLoud), typeof(Encore),
+            typeof(Muffle), typeof(Feedback), typeof(SingAlong), typeof(Silence),
         },
         ["damage"] = new[]
         {
-            typeof(Crash), typeof(DesperateStrike), typeof(AllNighter), typeof(RunThrough),
-            typeof(BreakALeg), typeof(BuyTime),
+            typeof(Crash), typeof(DesperateStrike), typeof(RunThrough),
+            typeof(FreezeUp), typeof(HeartAche), typeof(Pathos),
         },
         ["block"] = new[]
         {
-            typeof(WritersBlock), typeof(FreezeUp), typeof(Foreshadow), typeof(EnjoyTheRide),
-            typeof(RunningOnFumes), typeof(TheShakes),
+            typeof(FreezeUp), typeof(Foreshadow), typeof(TheWall),
+            typeof(Composure), typeof(SilverLining), typeof(Muffle), typeof(DeadWeight),
         },
         ["draw"] = new[]
         {
-            typeof(Orchestration), typeof(Breather), typeof(RollWithIt), typeof(DrawingBlanks),
-            typeof(Rehearse), typeof(AllNighter),
+            typeof(Orchestration), typeof(Signature),
+            typeof(TakeNotes), typeof(Cram),
         },
         ["energy"] = new[]
         {
-            typeof(MissedCue), typeof(MustGoOn), typeof(Forte),
-            typeof(Showstopper),
+            typeof(Forte), typeof(BurnOut), typeof(NervousEnergy),
         },
     };
 
@@ -109,7 +108,6 @@ public class CardRarityMechanicCoverageTests
     [InlineData("Common", "Tuned")]
     [InlineData("Common", "Weak")]
     [InlineData("Common", "Vulnerable")]
-    [InlineData("Common", "Tension")]
     [InlineData("Common", "Swap")]
     [InlineData("Common", "remove-Unplayable")]
     [InlineData("Common", "Vigor")]
@@ -124,7 +122,6 @@ public class CardRarityMechanicCoverageTests
     [InlineData("Uncommon", "Tuned")]
     [InlineData("Uncommon", "Weak")]
     [InlineData("Uncommon", "Vulnerable")]
-    [InlineData("Uncommon", "Tension")]
     [InlineData("Uncommon", "Swap")]
     [InlineData("Uncommon", "remove-Unplayable")]
     [InlineData("Uncommon", "Vigor")]

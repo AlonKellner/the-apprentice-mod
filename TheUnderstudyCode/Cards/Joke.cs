@@ -13,9 +13,9 @@ public class Joke : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:Joke";
 
-    public Joke() : base(0, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
+    public Joke() : base(0, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
     {
-        WithDamage(7);
+        WithDamage(6);
         WithVars(new IntVar("Invert", 1));
         WithTip(UnderstudyKeywords.Invert);
         WithInvertibleTip(typeof(VulnerablePower));

@@ -3,6 +3,10 @@ using BaseLib.Utils;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 
+using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.HoverTips;
+using MegaCrit.Sts2.Core.Localization.DynamicVars;
+
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
 public class Signature : UnderstudyCard
@@ -11,8 +15,9 @@ public class Signature : UnderstudyCard
 
     public Signature() : base(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
     {
-        WithDamage(10);
-        WithCards(2);
+        WithDamage(6);
+        WithVars(new EnergyVar(1));
+        WithTips(_ => new IHoverTip[] { EnergyHoverTip });
         WithTip(UnderstudyKeywords.Tuned);
         WithTip(UnderstudyKeywords.Planned);
     }
@@ -26,12 +31,12 @@ public class Signature : UnderstudyCard
     protected override void OnUpgrade()
     {
         base.OnUpgrade();
-        DynamicVars.Damage.UpgradeValueBy(3m);
+        DynamicVars.Damage.UpgradeValueBy(4m);
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
         await CommonActions.CardAttack(cardPlay.Card, cardPlay).Execute(context);
-        await CommonActions.Draw(this, context);
+        await PlayerCmd.GainEnergy(DynamicVars.Energy.BaseValue, cardPlay.Card.Owner);
     }
 }

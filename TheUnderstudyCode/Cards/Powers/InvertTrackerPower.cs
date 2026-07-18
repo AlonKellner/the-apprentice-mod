@@ -90,8 +90,11 @@ public class InvertTrackerPower : UnderstudyPower
         if (!_isSwapping && amount != 0m && canonicalPower is StrengthPower or DexterityPower
             && Owner.GetPowerAmount<MyOwnLessonPower>() > 0)
         {
-            _pendingSignFlipSwap = (canonicalPower is StrengthPower, (int)amount);
             modifiedAmount = 0m;
+            // My Own Lesson: a debuff (negative sign-flip) gain flips to a buff; a buff (positive)
+            // gain becomes nothing (cancelled outright, not flipped to a debuff).
+            if (amount < 0m)
+                _pendingSignFlipSwap = (canonicalPower is StrengthPower, (int)amount);
             return true;
         }
 
@@ -110,8 +113,11 @@ public class InvertTrackerPower : UnderstudyPower
             var pair = EmotionalExpression.IdentifyPair(canonicalPower);
             if (pair != null)
             {
-                _pendingPairSwap = (pair.Value.Debuff, !pair.Value.IsDebuffSide, (int)amount);
                 modifiedAmount = 0m;
+                // My Own Lesson: invertible debuff gains become buffs; invertible buff gains become
+                // nothing (cancelled outright, not flipped to a debuff).
+                if (pair.Value.IsDebuffSide)
+                    _pendingPairSwap = (pair.Value.Debuff, false, (int)amount);
                 return true;
             }
         }

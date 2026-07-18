@@ -14,7 +14,6 @@ public class HeldNote : UnderstudyCard
     {
         WithCostUpgradeBy(-1);
         WithPowerNoTip<HeldNotePower>(1, 1);
-        WithTip(UnderstudyKeywords.Invertible);
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)

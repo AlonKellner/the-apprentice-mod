@@ -12,10 +12,10 @@ public class FreezeUp : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:FreezeUp";
 
-    public FreezeUp() : base(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
+    public FreezeUp() : base(2, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
     {
-        WithDamage(10);
-        WithBlock(8);
+        WithDamage(12);
+        WithBlock(12);
         WithInvertibleTip(typeof(WeakPower));
         WithVar(new SelfDebuffVar("Weak", 1));
     }

@@ -16,13 +16,18 @@ public class Practice : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:Practice";
 
-    public Practice() : base(0, CardType.Skill, CardRarity.Basic, TargetType.None, false)
+    public Practice() : base(0, CardType.Attack, CardRarity.Basic, TargetType.AnyEnemy, false)
     {
         WithKeyword(UnderstudyKeywords.Stable, ConstructedCardModel.UpgradeType.None);
         WithKeyword(CardKeyword.Retain, ConstructedCardModel.UpgradeType.None);
+        WithDamage(1);
         WithVars(new CardsVar("Select", 2));
         WithTip(UnderstudyKeywords.Tuned);
     }
+
+    // Stable + pre-Tuned: Practice starts each combat carrying Tuned 1 (so it grows in value as more
+    // Tuned cards are created this combat), but Stable keeps it from ever becoming Unplayable.
+    public override bool IsPreTuned => true;
 
     protected override void OnUpgrade()
     {
@@ -32,6 +37,7 @@ public class Practice : UnderstudyCard
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
+        await CommonActions.CardAttack(cardPlay.Card, cardPlay).Execute(context);
         var player = cardPlay.Card.Owner;
         var maxSelect = IsUpgraded ? 3 : 2;
         var selected = await CardSelectCmd.FromHand(

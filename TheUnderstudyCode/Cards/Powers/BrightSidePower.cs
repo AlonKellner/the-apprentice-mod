@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using BaseLib.Abstracts;
 using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Entities.Creatures;
+using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 
@@ -15,12 +16,12 @@ public class BrightSidePower : UnderstudyPower
 
     public override List<(string, string)> Localization => new PowerLoc(
         "Bright Side",
-        "At the end of your turn, [gold]Invert[/gold] this many.",
-        "At the end of your turn, [gold]Invert[/gold] {Amount}.");
+        "At the start of your turn, [gold]Invert[/gold] this many.",
+        "At the start of your turn, [gold]Invert[/gold] {Amount}.");
 
-    public override async Task BeforeSideTurnEnd(PlayerChoiceContext context, CombatSide side, IEnumerable<Creature> creatures)
+    public override async Task AfterPlayerTurnStart(PlayerChoiceContext context, Player player)
     {
-        if (side != CombatSide.Player || Owner.Player == null) return;
+        if (player != Owner.Player) return;
         await EmotionalExpression.InvertEach(context, Owner, Amount);
     }
 }

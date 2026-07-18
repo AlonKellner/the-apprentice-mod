@@ -186,9 +186,13 @@ public abstract class UnderstudyCard(
         // once it's null, so without this reset a printed-Stable card would only ever get
         // snapshotted on its very first combat, never refreshed on later ones.
         _stableSnapshot = null;
+        // Apply pre-Tuned BEFORE the first Stable snapshot so a Stable + pre-Tuned card (Practice)
+        // freezes WITH its Tuned stack. Otherwise the snapshot (taken without Tuned) would treat the
+        // pre-Tuned modifier as foreign and strip it on the next restore. This is a no-op for the
+        // non-Stable pre-Tuned cards (EnforceStableNow does nothing for them).
+        ApplyPreTunedIfNeeded();
         EnforceStableNow();
         ApplyPrePlannedIfNeeded();
-        ApplyPreTunedIfNeeded();
         return t;
     }
 

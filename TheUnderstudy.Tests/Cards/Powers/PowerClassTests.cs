@@ -557,36 +557,36 @@ public class PowerClassTests
     }
 
     [Fact]
-    public void AdLibPower_OverridesBeforeSideTurnEnd() =>
+    public void AdLibPower_OverridesAfterPlayerTurnStart() =>
         Assert.NotNull(typeof(BrightSidePower).GetMethod(
-            "BeforeSideTurnEnd", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly));
+            "AfterPlayerTurnStart", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly));
 
     [Fact]
-    public void CrescendoPower_IsBuff_Counter()
+    public void ReverbPower_IsBuff_Counter()
     {
-        var p = new CrescendoPower();
+        var p = new ReverbPower();
         Assert.Equal(PowerType.Buff, p.Type);
         Assert.Equal(PowerStackType.Counter, p.StackType);
     }
 
     [Fact]
-    public void CrescendoPower_Localization_MentionsVigor()
+    public void ReverbPower_Localization_MentionsVigor()
     {
-        var descriptions = new CrescendoPower().Localization
+        var descriptions = new ReverbPower().Localization
             .Where(e => e.Item1 == "description" || e.Item1 == "smartDescription")
             .Select(e => e.Item2);
         Assert.All(descriptions, d => Assert.Contains("Vigor", d));
     }
 
     [Fact]
-    public void CrescendoPower_OverridesModifyPowerAmountGivenMultiplicative() =>
-        Assert.NotNull(typeof(CrescendoPower).GetMethod(
+    public void ReverbPower_OverridesModifyPowerAmountGivenMultiplicative() =>
+        Assert.NotNull(typeof(ReverbPower).GetMethod(
             "ModifyPowerAmountGivenMultiplicative", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly));
 
     [Fact]
     public void StageManagerPower_IsBuff_Single()
     {
-        var p = new VenuePower();
+        var p = new IntermissionPower();
         Assert.Equal(PowerType.Buff, p.Type);
         Assert.Equal(PowerStackType.Single, p.StackType);
     }
@@ -594,7 +594,7 @@ public class PowerClassTests
     [Fact]
     public void StageManagerPower_Localization_MentionsPlanned()
     {
-        var descriptions = new VenuePower().Localization
+        var descriptions = new IntermissionPower().Localization
             .Where(e => e.Item1 == "description" || e.Item1 == "smartDescription")
             .Select(e => e.Item2);
         Assert.All(descriptions, d => Assert.Contains("Planned", d));
@@ -602,17 +602,17 @@ public class PowerClassTests
 
     [Fact]
     public void StageManagerPower_OverridesAfterCardPlayed() =>
-        Assert.NotNull(typeof(VenuePower).GetMethod(
+        Assert.NotNull(typeof(IntermissionPower).GetMethod(
             "AfterCardPlayed", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly));
 
     [Fact]
     public void StageManagerPower_OverridesAfterPlayerTurnStartLate() =>
-        Assert.NotNull(typeof(VenuePower).GetMethod(
+        Assert.NotNull(typeof(IntermissionPower).GetMethod(
             "AfterPlayerTurnStartLate", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly));
 
     [Fact]
     public void StageManagerPower_OverridesAfterSideTurnEnd() =>
-        Assert.NotNull(typeof(VenuePower).GetMethod(
+        Assert.NotNull(typeof(IntermissionPower).GetMethod(
             "AfterSideTurnEnd", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly));
 
     // ── Swap-mechanic powers ────────────────────────────────────────────────────────────────

@@ -1,12 +1,8 @@
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using BaseLib.Abstracts;
-using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Powers;
-using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization;
-using MegaCrit.Sts2.Core.Models.Powers;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 
@@ -17,29 +13,15 @@ public class HeldNotePower : UnderstudyPower
 
     public override List<(string, string)> Localization => new PowerLoc(
         "Held Note",
-        "Invertible debuffs and buffs no longer decrease by 1 each turn.",
-        "Invertible debuffs and buffs no longer decrease by 1 each turn.");
+        "Turn-based buffs and debuffs no longer decrease by 1 each turn.",
+        "Turn-based buffs and debuffs no longer decrease by 1 each turn.");
 
-    // Checked directly by Shaken/Unshaken/Limited/Unlimited/Jaded/Unjaded/Unweak/Unvulnerable/Unfrail
-    // before their own per-turn decrement, so suppression doesn't depend on hook execution order
-    // between different Powers. WeakPower/VulnerablePower/FrailPower are sealed base-game classes
-    // we can't add a matching guard to, so those three are instead suppressed via
-    // SkipNextDurationTick below.
+    // Two suppression paths cover every turn-based buff/debuff while Held Note is on the owner:
+    //   1. Base-game duration powers (Weak, Vulnerable, Frail, Blur, Intangible, Temporary
+    //      Str/Dex/Focus, Dampen, Shrink, Constrict, Poison-count, ...) all decrement through the
+    //      single shared gate PowerCmd.TickDownDuration — HeldNoteTickDownPatch skips it generically.
+    //   2. The mod's own invertible powers (Shaken/Jaded/Limited + their Un- buffs, Unweak,
+    //      Unvulnerable, Tension, ...) self-decrement in their own turn hook and each check IsActive
+    //      directly before decrementing, so they don't depend on the base-game gate.
     public static bool IsActive(Creature? creature) => creature?.GetPower<HeldNotePower>() != null;
-
-    public override Task BeforeSideTurnEnd(PlayerChoiceContext context, CombatSide side, IEnumerable<Creature> creatures)
-    {
-        // BeforeSideTurnEnd is guaranteed to run before AfterSideTurnEnd for the same side, which
-        // is where base-game Weak/Vulnerable/Frail tick down (per SkipNextDurationTick's own doc comment).
-        if (side == CombatSide.Enemy && Owner != null)
-        {
-            var weak = Owner.GetPower<WeakPower>();
-            if (weak != null) weak.SkipNextDurationTick = true;
-            var vulnerable = Owner.GetPower<VulnerablePower>();
-            if (vulnerable != null) vulnerable.SkipNextDurationTick = true;
-            var frail = Owner.GetPower<FrailPower>();
-            if (frail != null) frail.SkipNextDurationTick = true;
-        }
-        return Task.CompletedTask;
-    }
 }

@@ -16,28 +16,16 @@ namespace TheUnderstudy.Tests.Cards;
 public class SelfDebuffPreviewTests
 {
     // Card type -> (var/debuff name, native amount). One self-debuff each. Pathos (also hits enemies,
-    // deliberately excluded) is handled separately. The former Shaken/Limited/Jaded self-debuff cards
-    // now apply Tension; cards that became Swap (Stage Fright, Buy Time, Procrastinate, Start Over) no
-    // longer apply a self-debuff and are not listed.
+    // deliberately excluded) is handled separately. Post-redesign, Tension is no longer applied by any
+    // card; new self-debuff cards are added here as they are created.
     public static IEnumerable<object[]> SelfDebuffCards() => new List<object[]>
     {
         new object[] { typeof(FreezeUp), "Weak", 1 },
         new object[] { typeof(DesperateStrike), "Weak", 2 },
-        new object[] { typeof(WritersBlock), "Weak", 2 },
         new object[] { typeof(BreakingVoice), "Weak", 2 },
-        new object[] { typeof(BreakALeg), "Vulnerable", 1 },
         new object[] { typeof(HeartAche), "Vulnerable", 1 },
         new object[] { typeof(Joke), "Vulnerable", 1 },
         new object[] { typeof(TheWall), "Vulnerable", 1 },
-        new object[] { typeof(TheShakes), "Tension", 2 },
-        new object[] { typeof(MissedCue), "Tension", 1 },
-        new object[] { typeof(DrawingBlanks), "Tension", 2 },
-        new object[] { typeof(CribNotes), "Tension", 1 },
-        new object[] { typeof(Blackout), "Tension", 2 },
-        new object[] { typeof(RunningOnFumes), "Tension", 1 },
-        new object[] { typeof(AllNighter), "Tension", 1 },
-        new object[] { typeof(MustGoOn), "Tension", 2 },
-        new object[] { typeof(MethodActing), "Tension", 3 },
     };
 
     [Theory]

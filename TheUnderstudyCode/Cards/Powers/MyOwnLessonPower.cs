@@ -17,6 +17,6 @@ public class MyOwnLessonPower : UnderstudyPower
 
     public override List<(string, string)> Localization => new PowerLoc(
         "My Own Lesson",
-        "Whenever you gain an [gold]Invertible[/gold] debuff, gain a buff instead. Whenever you gain an [gold]Invertible[/gold] buff, gain a debuff instead.",
-        "Whenever you gain an [gold]Invertible[/gold] debuff, gain a buff instead. Whenever you gain an [gold]Invertible[/gold] buff, gain a debuff instead.");
+        "Whenever you gain an [gold]Invertible[/gold] debuff, gain a buff instead. Whenever you gain an [gold]Invertible[/gold] buff, gain nothing instead.",
+        "Whenever you gain an [gold]Invertible[/gold] debuff, gain a buff instead. Whenever you gain an [gold]Invertible[/gold] buff, gain nothing instead.");
 }

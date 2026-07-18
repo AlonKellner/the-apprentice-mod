@@ -29,11 +29,11 @@ public class Pathos : UnderstudyCard
         await CommonActions.CardAttack(cardPlay.Card, cardPlay).Execute(context);
 
         var creature = cardPlay.Card.Owner.Creature;
-        await EmotionalExpression.ApplyVulnerableToSelf(context, creature, 2, this);
-        await EmotionalExpression.ApplyWeakToSelf(context, creature, 2, this);
+        await EmotionalExpression.ApplyVulnerableToSelf(context, creature, 1, this);
+        await EmotionalExpression.ApplyWeakToSelf(context, creature, 1, this);
 
         var enemies = creature.CombatState!.HittableEnemies;
-        await PowerCmd.Apply<VulnerablePower>(context, enemies, 2, creature, cardPlay.Card, false);
-        await PowerCmd.Apply<WeakPower>(context, enemies, 2, creature, cardPlay.Card, false);
+        await PowerCmd.Apply<VulnerablePower>(context, enemies, 1, creature, cardPlay.Card, false);
+        await PowerCmd.Apply<WeakPower>(context, enemies, 1, creature, cardPlay.Card, false);
     }
 }

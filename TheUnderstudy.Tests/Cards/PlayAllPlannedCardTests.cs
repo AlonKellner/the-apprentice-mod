@@ -64,7 +64,7 @@ public class PlayAllPlannedCardTests
     // (reads the sorted queue AND auto-plays cards from it) MUST extend PlayAllPlannedCard so it gets
     // the once-per-turn guard. Workshop was a queue resolver on `: UnderstudyCard` with no guard, so a
     // Planned+Stable Workshop replayed the growing queue and recursed infinitely. Only top-level card
-    // files are scanned: Powers (e.g. VenuePower in Cards/Powers/) also resolve the queue but do so
+    // files are scanned: Powers (e.g. IntermissionPower in Cards/Powers/) also resolve the queue but do so
     // from a once-per-turn turn-boundary hook — they can't be Planned/replayed like a card, so they
     // aren't a recursion vector and need no card guard. Source-scan, no ModelDb needed.
     [Fact]

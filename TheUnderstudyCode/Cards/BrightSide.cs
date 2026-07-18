@@ -12,8 +12,9 @@ public class BrightSide : UnderstudyCard
 
     public BrightSide() : base(1, CardType.Power, CardRarity.Uncommon, TargetType.None)
     {
-        WithPowerNoTip<BrightSidePower>(1, 1);
+        WithPowerNoTip<BrightSidePower>(1);
         WithTip(UnderstudyKeywords.Invert);
+        WithKeyword(CardKeyword.Innate, ConstructedCardModel.UpgradeType.Add);
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)

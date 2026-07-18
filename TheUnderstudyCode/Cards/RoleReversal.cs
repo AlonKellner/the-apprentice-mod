@@ -6,22 +6,21 @@ using MegaCrit.Sts2.Core.Localization.DynamicVars;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
-// PLACEHOLDER reference card for the Swap mechanic — the upcoming card pass will design the real
-// Swap cards and likely replace or rework this. It exists so Swap can be exercised in real combat.
+// The deck's single pure-Swap card: nothing but the debuff/buff-to-enemy swap.
 public class RoleReversal : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:RoleReversal";
 
-    public RoleReversal() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.None)
+    public RoleReversal() : base(1, CardType.Skill, CardRarity.Common, TargetType.None)
     {
-        WithVars(new IntVar("Swap", 3));
+        WithVars(new IntVar("Swap", 6));
         WithTip(UnderstudyKeywords.Swap);
     }
 
     protected override void OnUpgrade()
     {
         base.OnUpgrade();
-        DynamicVars["Swap"].UpgradeValueBy(3m);
+        DynamicVars["Swap"].UpgradeValueBy(4m);
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)

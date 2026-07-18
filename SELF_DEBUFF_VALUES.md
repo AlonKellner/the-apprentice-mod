@@ -79,23 +79,16 @@ Normal (non-self-debuff) value curve used for the anchor:
 (Card names below are the current music/creative-theme names; the mechanic and values are unchanged
 from the original theatrical-theme cards unless noted.)
 
-### Attack + Block, 1-cost Common — Base 21 vp
-| Card | debuff · stacks | Δ | vp | Damage / Block |
-|---|:---:|:---:|:---:|:---:|
-| Freeze Up | Weak · 1 | −1 | 20 | 10 / 8 |
-| Running on Fumes ★ | Jaded · 1 | +1 | 22 | 12 / 8 |
-| The Shakes | Shaken · 2 | +6 | 27 | 12 / 12 |
-
-★ = the Jaded·1 anchor: 22 vp is a normal 2-cost card's worth (the whole group scales from it).
-
 ### Attack + Block, 2-cost Uncommon — Base 28 vp
 | Card | debuff · stacks | Δ | vp | Damage / Block |
 |---|:---:|:---:|:---:|:---:|
+| Freeze Up | Weak · 1 | −1 | 27 | 12 / 12 |
 | Heart Ache | Vulnerable · 1 | +2 | 30 | 10 / 16 |
-| Blackout | Limited · 2 | +4 | 32 | 12 / 16 |
 
-Blackout's 2 mild-Limited stacks only edge out Heart Ache's 1 harsh-Vulnerable stack (the smallest
-2-vs-1 gap, +2 vp) — the severity offset partly cancels the stack premium, exactly as intended.
+The redesign retired the 1-cost Common attack+block group (Running on Fumes / The Shakes) and Blackout;
+damage+block hybrids now cost ≥2, so Freeze Up moved up into this 2-cost group (re-statted 10/8 → 12/12
+to match Base 28). Freeze Up's Weak·1 (−1) and Heart Ache's Vulnerable·1 (+2) stay distinct by the
+severity offset.
 
 ### Single-hit Attack, 1-cost — Base 15 vp
 | Card | debuff · stacks | Δ | vp | Damage |

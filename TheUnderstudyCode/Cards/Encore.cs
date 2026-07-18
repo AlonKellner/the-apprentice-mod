@@ -4,6 +4,9 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models.Powers;
 using TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 
+using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.Localization.DynamicVars;
+
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
 public class Encore : UnderstudyCard
@@ -12,13 +15,21 @@ public class Encore : UnderstudyCard
 
     public Encore() : base(1, CardType.Skill, CardRarity.Rare, TargetType.None)
     {
-        WithCostUpgradeBy(-1);
+        WithVars(new IntVar("Vigor", 3));
         WithPowerNoTip<EncorePower>(1);
         WithTip(typeof(VigorPower));
     }
 
+    protected override void OnUpgrade()
+    {
+        base.OnUpgrade();
+        DynamicVars["Vigor"].UpgradeValueBy(3m);
+    }
+
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
-        await CommonActions.Apply<EncorePower>(context, cardPlay.Card.Owner.Creature, this);
+        var creature = cardPlay.Card.Owner.Creature;
+        await PowerCmd.Apply<VigorPower>(context, creature, (int)DynamicVars["Vigor"].BaseValue, creature, this, false);
+        await CommonActions.Apply<EncorePower>(context, creature, this);
     }
 }
