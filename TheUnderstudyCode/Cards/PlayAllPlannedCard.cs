@@ -26,6 +26,13 @@ public abstract class PlayAllPlannedCard(
 {
     private bool _resolvedThisTurn;
 
+    // Whether this resolver may resolve the queue only ONCE per turn (the default: Remix/Showtime/DaCapo).
+    // A resolver overrides this to false only if it is safe to replay freely within a turn — which requires
+    // it to be printed-Stable so it can never itself be Planned (the Planned+Stable self-play is the exact
+    // infinite recursion this guard exists to break). Workshop is the sole such card: it's cheap and meant
+    // to be replayed to keep resolving a growing plan.
+    protected virtual bool IsOncePerTurn => true;
+
     // Call at the very top of OnPlay: returns false (card does nothing) if the play-all already resolved
     // this turn; otherwise marks it resolved and returns true. Marking happens before the queue is played.
     protected bool BeginPlayAllThisTurn()
@@ -52,6 +59,14 @@ public abstract class PlayAllPlannedCard(
         int turn = player.Creature.Player?.PlayerCombatState?.TurnNumber ?? -1;
         int id = RuntimeHelpers.GetHashCode(this);
 
+        // Freely-replayable resolver (Workshop): no once-per-turn cap, and no recursion break needed since
+        // it can't be Planned. Skip the guard/marking entirely so each play resolves the current queue.
+        if (!IsOncePerTurn)
+        {
+            Log.Info($"{GetType().Name}#{id}[turn {turn}]: play-all RESOLVING (not once-per-turn)");
+            return true;
+        }
+
         if (!BeginPlayAllThisTurn())
         {
             Log.Info($"{GetType().Name}#{id}[turn {turn}]: play-all BLOCKED — already resolved this turn (once-per-turn guard held)");
@@ -72,9 +87,10 @@ public abstract class PlayAllPlannedCard(
         return true;
     }
 
-    // Glow gold only while there's a plan to resolve AND this card hasn't spent its once-per-turn yet.
+    // Glow gold while there's a plan to resolve — and, for once-per-turn resolvers, only while this card
+    // hasn't spent its resolve yet. A freely-replayable resolver (Workshop) glows whenever a plan exists.
     protected override bool ShouldGlowGoldInternal =>
-        !_resolvedThisTurn && PlannedModifier.AnyIn(PlannedModifier.RelevantCards(Owner));
+        (!IsOncePerTurn || !_resolvedThisTurn) && PlannedModifier.AnyIn(PlannedModifier.RelevantCards(Owner));
 
     public override Task BeforeCombatStart()
     {

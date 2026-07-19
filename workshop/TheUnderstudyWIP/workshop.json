@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.11.19 - Rarity pass: Turn It Around is now a cost-1 Skill (no damage), moved to Uncommon; Joke moved to Uncommon; Strike a Pose moved to Common and now hits twice; Showstopper and Back of my Hand moved to Uncommon; Stereo, Intermission and Improvise promoted to Rare.",
+  "changeNote": "v1.11.20 - Workshop can now play all Planned more than once per turn (the once-per-turn limit stays on Remix, Showtime and Da Capo). Experience now starts Tuned, drops Exhaust, and starts each combat Planned when upgraded. Tidied the Swap and Planned keyword descriptions.",
   "tags": [],
   "dependencies": [
     3737335127

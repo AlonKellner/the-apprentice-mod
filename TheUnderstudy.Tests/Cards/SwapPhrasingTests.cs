@@ -57,13 +57,12 @@ public class SwapPhrasingTests
     }
 
     [Fact]
-    public void SwapKeyword_TooltipDescribesRepeatableSingleTarget()
+    public void SwapKeyword_TooltipDescribesSingleTarget()
     {
         var keywords = LoadJsonStrings(Path.Combine("TheUnderstudy", "localization", "eng", "card_keywords.json"));
         Assert.True(keywords.TryGetValue("THEUNDERSTUDY-SWAP.description", out var desc),
             "Missing THEUNDERSTUDY-SWAP.description in card_keywords.json");
-        // The meaning now lives here: "most recently changed" single target, and the repeat wording.
+        // The meaning now lives here: the "most recently changed" single-target give/take.
         Assert.Contains("most recently", desc, StringComparison.OrdinalIgnoreCase);
-        Assert.Contains("times", desc, StringComparison.OrdinalIgnoreCase);
     }
 }

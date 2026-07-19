@@ -108,7 +108,7 @@
   "THEUNDERSTUDY-CLEAN_SLATE.title": "Clean Slate",
   "THEUNDERSTUDY-CLEAN_SLATE.description": "{InCombat:cond:|[gold]Tuned[/gold] 1.\n}Exhaust all [gold]Unplayable[/gold] cards. Deal {Damage:diff()} damage for each exhausted.",
   "THEUNDERSTUDY-EXPERIENCE.title": "Experience",
-  "THEUNDERSTUDY-EXPERIENCE.description": "Deal {Damage:diff()} damage.\nDouble [gold]Tuned[/gold] on all cards.",
+  "THEUNDERSTUDY-EXPERIENCE.description": "{InCombat:cond:|[gold]Tuned[/gold] 1.\n}Deal {Damage:diff()} damage.\nDouble [gold]Tuned[/gold] on all cards.{IfUpgraded:show:\nStarts each combat [gold]Planned[/gold].|}",
   "THEUNDERSTUDY-SECOND_NATURE.title": "Second Nature",
   "THEUNDERSTUDY-SECOND_NATURE.description": "Deal {Damage:diff()} damage.\nAt the end of your turn, if this is [gold]Unplayable[/gold], remove [gold]Unplayable[/gold] and play it.",
   "THEUNDERSTUDY-APATHY.title": "Apathy",

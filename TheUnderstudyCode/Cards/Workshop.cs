@@ -36,8 +36,12 @@ public class Workshop : PlayAllPlannedCard
             ? (PlannedModifier.QueueNeedsEnemyTarget(PlannedModifier.RelevantCards(Owner)) ? TargetType.AnyEnemy : TargetType.None)
             : base.TargetType;
 
-    // Glow gold while there are Planned cards to resolve is inherited from PlayAllPlannedCard, which
-    // also stops the glow once the once-per-turn resolve has been spent.
+    // Unlike the other resolvers, Workshop is deliberately NOT once-per-turn: it's a cheap, replayable
+    // engine you can play repeatedly in a turn to keep resolving a growing plan. Safe because it's printed
+    // Stable and so can never be Planned (the Planned+Stable self-play recursion the once-per-turn guard
+    // exists to break can't occur here). Glow-gold (inherited from PlayAllPlannedCard) therefore lights up
+    // whenever any plan exists, with no once-per-turn cutoff.
+    protected override bool IsOncePerTurn => false;
 
     protected override void OnUpgrade()
     {
@@ -49,11 +53,9 @@ public class Workshop : PlayAllPlannedCard
     {
         var player = cardPlay.Card.Owner;
 
-        // Once-per-turn guard (marks BEFORE resolving the queue). Workshop is Stable so it can't be
-        // Planned, but it's cheap and can be replayed from hand — without this, each replay re-resolves
-        // the queue, which keeps growing as the cards it plays (Melody/Magnum Opus) apply more Planned,
-        // so a Planned engine snowballs unbounded. Same protection DaCapo/Remix/Showtime already have.
-        // TryBeginPlayAll also logs the attempt and asserts the once-per-turn contract.
+        // Workshop overrides IsOncePerTurn => false, so this never blocks (it just logs the resolve):
+        // Workshop is intentionally replayable within a turn to keep resolving a growing plan. Kept as a
+        // call so the diagnostic log line still fires and so all resolvers funnel through the same entry point.
         if (!TryBeginPlayAll(player)) return;
 
         var combatState = player.Creature.CombatState!;

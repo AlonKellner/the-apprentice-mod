@@ -1,6 +1,6 @@
 {
   "THEUNDERSTUDY-PLANNED.title": "Planned",
-  "THEUNDERSTUDY-PLANNED.description": "When a card becomes [gold]Planned[/gold], it also becomes [gold]Unplayable[/gold]. Some cards can play all [gold]Planned[/gold] cards in the order they were planned.",
+  "THEUNDERSTUDY-PLANNED.description": "When a card becomes [gold]Planned[/gold], it also becomes [gold]Unplayable[/gold].",
   "THEUNDERSTUDY-TUNED.title": "Tuned",
   "THEUNDERSTUDY-TUNED.description": "Becomes [gold]Unplayable[/gold] when played. Increases damage or [gold]Block[/gold] by 1 for each card with [gold]Tuned[/gold].",
   "THEUNDERSTUDY-STABLE.title": "Stable",
@@ -10,7 +10,7 @@
   "THEUNDERSTUDY-INVERTIBLE.title": "Invertible",
   "THEUNDERSTUDY-INVERTIBLE.description": "A debuff that can be converted into a buff. Not all debuffs are invertible.",
   "THEUNDERSTUDY-SWAP.title": "Swap",
-  "THEUNDERSTUDY-SWAP.description": "Give up to 10 of your most recently changed swappable debuff to ALL enemies. Take up to 10 of each enemy's most recently changed swappable buff. 'Twice' or 'N times' repeats this, recalculating each time.",
+  "THEUNDERSTUDY-SWAP.description": "Give up to 10 of your most recently changed swappable debuff to ALL enemies. Take up to 10 of each enemy's most recently changed swappable buff.",
   "THEUNDERSTUDY-SWAPPABLE.title": "Swappable",
   "THEUNDERSTUDY-SWAPPABLE.description": "A universal buff or debuff that Swap can move between you and enemies. Not all buffs and debuffs are swappable."
 }

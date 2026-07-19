@@ -13,9 +13,14 @@ public class Experience : UnderstudyCard
     public Experience() : base(2, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
     {
         WithDamage(1);
-        WithKeyword(CardKeyword.Exhaust, ConstructedCardModel.UpgradeType.Remove);
         WithTip(UnderstudyKeywords.Tuned);
+        WithTip(UnderstudyKeywords.Planned);
     }
+
+    public override bool IsPreTuned => true;
+
+    // Upgrade grants "starts each combat Planned" (see loc's IfUpgraded branch), mirroring Playlist.
+    public override bool IsPrePlanned => IsUpgraded;
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {

@@ -103,8 +103,12 @@ public class NewDeckCardsTests
         Assert.Equal(3m, new CleanSlate().DynamicVars.Damage.BaseValue);
 
     [Fact]
-    public void CutTheTension_HasExhaustKeyword() =>
-        Assert.True(new Experience().Keywords.Contains(CardKeyword.Exhaust));
+    public void Experience_HasNoExhaust_AndIsPrePlannedOnlyWhenUpgraded()
+    {
+        var card = new Experience();
+        Assert.False(card.Keywords.Contains(CardKeyword.Exhaust));
+        Assert.False(card.IsPrePlanned); // bare (unupgraded) — pre-Planned is an upgrade
+    }
 
     [Fact]
     public void SecondNature_DamageIs24() =>
