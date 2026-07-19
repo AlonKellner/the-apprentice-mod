@@ -7,6 +7,8 @@ using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 
+using TheUnderstudy.TheUnderstudyCode.Cards.DynamicVars;
+
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
 public class Signature : UnderstudyCard
@@ -15,7 +17,7 @@ public class Signature : UnderstudyCard
 
     public Signature() : base(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
     {
-        WithDamage(6);
+        WithVars(new PreTunedDamageVar(5));
         WithVars(new EnergyVar(1));
         WithTips(_ => new IHoverTip[] { EnergyHoverTip });
         WithTip(UnderstudyKeywords.Tuned);

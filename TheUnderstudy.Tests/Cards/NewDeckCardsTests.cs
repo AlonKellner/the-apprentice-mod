@@ -87,8 +87,8 @@ public class NewDeckCardsTests
     public void Showstopper_IsPreTuned() => Assert.True(new Showstopper().IsPreTuned);
 
     [Fact]
-    public void Showstopper_DamageIs28() =>
-        Assert.Equal(28m, new Showstopper().DynamicVars.Damage.BaseValue);
+    public void Showstopper_DamageIs27() =>
+        Assert.Equal(27m, new Showstopper().DynamicVars.Damage.BaseValue);
 
     [Fact]
     public void FinalDraft_HasExhaustKeyword() =>
@@ -98,8 +98,8 @@ public class NewDeckCardsTests
     public void CleanSlate_IsPreTuned() => Assert.True(new CleanSlate().IsPreTuned);
 
     [Fact]
-    public void CleanSlate_DamageIs4() =>
-        Assert.Equal(4m, new CleanSlate().DynamicVars.Damage.BaseValue);
+    public void CleanSlate_DamageIs3() =>
+        Assert.Equal(3m, new CleanSlate().DynamicVars.Damage.BaseValue);
 
     [Fact]
     public void CutTheTension_HasExhaustKeyword() =>

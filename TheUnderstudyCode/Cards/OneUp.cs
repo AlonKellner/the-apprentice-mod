@@ -7,6 +7,8 @@ using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
 using TheUnderstudy.TheUnderstudyCode.Extensions;
 
+using TheUnderstudy.TheUnderstudyCode.Cards.DynamicVars;
+
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
 public class OneUp : UnderstudyCard
@@ -15,10 +17,14 @@ public class OneUp : UnderstudyCard
 
     public OneUp() : base(1, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
     {
-        WithDamage(3);
+        WithVars(new PreTunedDamageVar(2));
         WithVars(new RepeatVar(3));
         WithTip(UnderstudyKeywords.Tuned);
     }
+
+    // Starts each combat pre-Tuned (Tuned 1), then applies Tuned to itself again on play — so it both
+    // counts toward every Tuned card's bonus from turn 1 and keeps ramping as it's replayed.
+    public override bool IsPreTuned => true;
 
     protected override void OnUpgrade()
     {

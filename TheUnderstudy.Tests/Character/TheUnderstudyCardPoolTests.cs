@@ -84,7 +84,7 @@ public class TheUnderstudyCardPoolTests
             .OrderBy(n => n)
             .ToList();
 
-        Assert.Equal(new[] { "CleanSlate", "Practice", "ShowerThought", "Showstopper", "Signature" }, bCardTypes);
+        Assert.Equal(new[] { "CleanSlate", "FateKnocking", "OneUp", "Practice", "ShowerThought", "Showstopper", "Signature" }, bCardTypes);
     }
 
     [Fact]

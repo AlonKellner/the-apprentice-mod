@@ -7,6 +7,8 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models;
 
+using TheUnderstudy.TheUnderstudyCode.Cards.DynamicVars;
+
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
 public class FateKnocking : UnderstudyCard
@@ -23,13 +25,17 @@ public class FateKnocking : UnderstudyCard
 
     public FateKnocking() : base(2, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
     {
-        // Base: Stable (fixed statline, and can't be Tuned/Planned). The upgrade removes Stable so it
-        // can then be buffed/Tuned — the finisher sums the card's real dealt damage either way, so it
-        // is no longer coupled to a fixed statline.
+        // Base: Stable + pre-Tuned (like Practice) — the per-strike base is 0, and its own Tuned 1 makes
+        // each strike land for 1 (scaling with more Tuned cards); Stable keeps it from being turned
+        // Unplayable. The upgrade removes Stable so it can then be freely buffed/Tuned. The finisher
+        // sums the card's real dealt damage either way, so it's no longer coupled to a fixed statline.
         WithKeyword(UnderstudyKeywords.Stable, ConstructedCardModel.UpgradeType.Remove);
         WithTip(UnderstudyKeywords.Stable);
-        WithDamage(1);
+        WithTip(UnderstudyKeywords.Tuned);
+        WithVars(new PreTunedDamageVar(0));
     }
+
+    public override bool IsPreTuned => true;
 
     protected override void OnUpgrade()
     {
