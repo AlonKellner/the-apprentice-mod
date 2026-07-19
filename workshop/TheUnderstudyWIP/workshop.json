@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.11.4 - Pre-Tuned cards now bake in their own Tuned 1: base damage is one lower and cards preview base+1 (Practice deals 1, Showstopper 28, etc.). One-up and Fate Knocking now start pre-Tuned, so all pre-Tuned cards count each other from combat start (Practice + One-up => Practice deals 2).",
+  "changeNote": "v1.11.5 - Draw/discard pile previews now show each card's live combat value (base damage/block plus its current Tuned bonus, scaling with every Tuned card in your deck), so you can see what a card will actually hit or block for without playing it.",
   "tags": [],
   "dependencies": [
     3737335127

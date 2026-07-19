@@ -30,11 +30,16 @@ internal static class TunedPreview
     {
         if (runGlobalHooks) return; // active in-hand preview already applied the bonus via the hooks
 
-        if (card.IsMutable)
+        // Prefer a live TunedModifier when one is attached (in combat): show the real bonus,
+        // Stacks × (# distinct Tuned cards this combat) — the same formula the in-hand hooks apply.
+        if (card.TryGetModifier<TunedModifier>(out var tuned))
         {
-            if (card.TryGetModifier<TunedModifier>(out var tuned))
-                var.PreviewValue += tuned!.Stacks * TunedModifier.TunedCreated;
+            var.PreviewValue += tuned!.Stacks * TunedModifier.TunedCreated;
         }
+        // Otherwise, a pre-Tuned card carries no modifier yet (deck view, Compendium, card reward,
+        // or pre-combat) — it will start each combat with Tuned 1, so preview its intended base + 1.
+        // Gate on modifier presence, NOT IsMutable: deck/Compendium cards are mutable instances that
+        // simply don't have the modifier, so an IsMutable check would wrongly skip them.
         else if (card is UnderstudyCard { IsPreTuned: true })
         {
             var.PreviewValue += 1;
