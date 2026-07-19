@@ -453,9 +453,9 @@ public class PowerClassTests
         Assert.False(MuscleMemoryPower.IsActive(null));
 
     [Fact]
-    public void EncorePower_IsBuff_Counter()
+    public void ReverbPower_IsBuff_Counter()
     {
-        var p = new EncorePower();
+        var p = new ReverbPower();
         Assert.Equal(PowerType.Buff, p.Type);
         // Counter (not Single) so the stacking turn-count is visible.
         Assert.Equal(PowerStackType.Counter, p.StackType);
@@ -463,12 +463,12 @@ public class PowerClassTests
     }
 
     [Fact]
-    public void EncorePower_IsActive_FalseForNullCreature() =>
-        Assert.False(EncorePower.IsActive(null));
+    public void ReverbPower_IsActive_FalseForNullCreature() =>
+        Assert.False(ReverbPower.IsActive(null));
 
     [Fact]
-    public void EncorePower_SelfRemovesAtTurnEnd() =>
-        Assert.NotNull(typeof(EncorePower).GetMethod(
+    public void ReverbPower_SelfRemovesAtTurnEnd() =>
+        Assert.NotNull(typeof(ReverbPower).GetMethod(
             "AfterSideTurnEnd", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly));
 
     [Fact]
@@ -562,25 +562,25 @@ public class PowerClassTests
             "AfterPlayerTurnStart", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly));
 
     [Fact]
-    public void ReverbPower_IsBuff_Counter()
+    public void StereoPower_IsBuff_Counter()
     {
-        var p = new ReverbPower();
+        var p = new StereoPower();
         Assert.Equal(PowerType.Buff, p.Type);
         Assert.Equal(PowerStackType.Counter, p.StackType);
     }
 
     [Fact]
-    public void ReverbPower_Localization_MentionsVigor()
+    public void StereoPower_Localization_MentionsVigor()
     {
-        var descriptions = new ReverbPower().Localization
+        var descriptions = new StereoPower().Localization
             .Where(e => e.Item1 == "description" || e.Item1 == "smartDescription")
             .Select(e => e.Item2);
         Assert.All(descriptions, d => Assert.Contains("Vigor", d));
     }
 
     [Fact]
-    public void ReverbPower_OverridesModifyPowerAmountGivenMultiplicative() =>
-        Assert.NotNull(typeof(ReverbPower).GetMethod(
+    public void StereoPower_OverridesModifyPowerAmountGivenMultiplicative() =>
+        Assert.NotNull(typeof(StereoPower).GetMethod(
             "ModifyPowerAmountGivenMultiplicative", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly));
 
     [Fact]

@@ -9,7 +9,7 @@ namespace TheUnderstudy.Tests.Cards;
 // The 3-argument CommonActions.Apply<TPower>(context, creature, card) overload reads the power's amount
 // from a card DynamicVar keyed by the power type name, which only exists if the card constructor also
 // declared WithPower<TPower>(...) / WithPowerNoTip<TPower>(...). Omitting it compiles fine but throws
-// KeyNotFoundException at play time (the given key '<TPower>' was not present in the dictionary) — Encore
+// KeyNotFoundException at play time (the given key '<TPower>' was not present in the dictionary) — Reverb
 // and Swing both shipped that way. This scans card source to keep the two in sync — no ModelDb/combat
 // needed. Only the amount-less 3-arg form is matched; the explicit-amount overload
 // (Apply<T>(ctx, creature, card, N)) doesn't read the var, so it needs no WithPower (e.g. Balanced).

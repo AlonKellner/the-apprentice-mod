@@ -74,7 +74,7 @@ public class CardRarityMechanicCoverageTests
         ["Vigor"] = new[]
         {
             typeof(Crash), typeof(BreakingVoice), typeof(SonicBoom), typeof(Forte),
-            typeof(Reverb), typeof(CryingOutLoud), typeof(Encore),
+            typeof(Stereo), typeof(CryingOutLoud), typeof(Reverb),
             typeof(Muffle), typeof(Feedback), typeof(SingAlong), typeof(Silence),
         },
         ["damage"] = new[]

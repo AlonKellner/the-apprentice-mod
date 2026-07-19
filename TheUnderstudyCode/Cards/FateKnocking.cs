@@ -21,7 +21,7 @@ public class FateKnocking : UnderstudyCard
     private static ICombatState? _lastCombat;
     private static readonly Dictionary<CardModel, int> _damageDealt = new();
 
-    public FateKnocking() : base(2, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
+    public FateKnocking() : base(1, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
     {
         // Base card is Stable — it can't be buffed or turned Unplayable, a fixed & safe finisher-sum
         // attack. The ONLY upgrade effect is removing Stable (via UpgradeType.Remove), which then lets

@@ -9,7 +9,7 @@ using MegaCrit.Sts2.Core.Models.Powers;
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
 // Get the whole room singing: everyone gains Vigor. A symmetric payoff-enabler (feeds enemies too),
-// so it wants Vigor-drain / Reverb backing. (Vigor = Sounds theme.)
+// so it wants Vigor-drain / Stereo backing. (Vigor = Sounds theme.)
 public class SingAlong : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:SingAlong";

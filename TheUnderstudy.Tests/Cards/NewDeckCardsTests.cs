@@ -59,14 +59,14 @@ public class NewDeckCardsTests
     [InlineData(typeof(OneTake), "TheUnderstudy:OneTake", CardType.Power, CardRarity.Rare, TargetType.None)]
     [InlineData(typeof(Pathos), "TheUnderstudy:Pathos", CardType.Attack, CardRarity.Uncommon, TargetType.AllEnemies)]
     [InlineData(typeof(BrightSide), "TheUnderstudy:BrightSide", CardType.Power, CardRarity.Uncommon, TargetType.None)]
-    [InlineData(typeof(Reverb), "TheUnderstudy:Reverb", CardType.Power, CardRarity.Uncommon, TargetType.None)]
+    [InlineData(typeof(Stereo), "TheUnderstudy:Stereo", CardType.Power, CardRarity.Uncommon, TargetType.None)]
     [InlineData(typeof(Intermission), "TheUnderstudy:Intermission", CardType.Power, CardRarity.Uncommon, TargetType.None)]
     [InlineData(typeof(TheWall), "TheUnderstudy:TheWall", CardType.Skill, CardRarity.Common, TargetType.None)]
     [InlineData(typeof(TuningRitual), "TheUnderstudy:TuningRitual", CardType.Skill, CardRarity.Common, TargetType.None)]
     [InlineData(typeof(Signature), "TheUnderstudy:Signature", CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)]
     [InlineData(typeof(AutoTune), "TheUnderstudy:AutoTune", CardType.Power, CardRarity.Rare, TargetType.None)]
     [InlineData(typeof(FateKnocking), "TheUnderstudy:FateKnocking", CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)]
-    [InlineData(typeof(Encore), "TheUnderstudy:Encore", CardType.Skill, CardRarity.Rare, TargetType.None)]
+    [InlineData(typeof(Reverb), "TheUnderstudy:Reverb", CardType.Skill, CardRarity.Rare, TargetType.None)]
     [InlineData(typeof(Duet), "TheUnderstudy:Duet", CardType.Skill, CardRarity.Uncommon, TargetType.AnyPlayer)]
     public void Card_ConstructsWithExpectedShape(
         System.Type cardType, string expectedId, CardType expectedType, CardRarity expectedRarity, TargetType expectedTarget)
