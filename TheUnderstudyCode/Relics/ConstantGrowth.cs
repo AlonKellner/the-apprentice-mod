@@ -1,8 +1,11 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization;
 using TheUnderstudy.TheUnderstudyCode.Cards;
+using TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 
 namespace TheUnderstudy.TheUnderstudyCode.Relics;
 
@@ -16,6 +19,10 @@ public class ConstantGrowth : UnderstudyStarterRelic
 
     protected override LocString SelectionPrompt =>
         new("relics", "THEUNDERSTUDY-CONSTANT_GROWTH.selectionPrompt");
+
+    // Show the Unweak keyword tooltip on hover (mirrors Constant Struggle's Weak tip).
+    protected override IEnumerable<IHoverTip> ExtraHoverTips =>
+        new[] { HoverTipFactory.FromPower<UnweakPower>() };
 
     protected override async Task ApplyOnTurnOneSetup(PlayerChoiceContext ctx, Creature creature) =>
         await EmotionalExpression.ApplyUnweakToSelf(ctx, creature, 2, null);
