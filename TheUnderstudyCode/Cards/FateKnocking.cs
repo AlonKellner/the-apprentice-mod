@@ -7,8 +7,6 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models;
 
-using TheUnderstudy.TheUnderstudyCode.Cards.DynamicVars;
-
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
 public class FateKnocking : UnderstudyCard
@@ -32,7 +30,7 @@ public class FateKnocking : UnderstudyCard
         WithKeyword(UnderstudyKeywords.Stable, ConstructedCardModel.UpgradeType.Remove);
         WithTip(UnderstudyKeywords.Stable);
         WithTip(UnderstudyKeywords.Tuned);
-        WithVars(new PreTunedDamageVar(0));
+        WithDamage(0);
     }
 
     public override bool IsPreTuned => true;

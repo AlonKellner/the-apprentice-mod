@@ -48,6 +48,11 @@ public class TunedModifier : CardModifier
     private static ICombatState? _lastCombat;
     private static int _tunedCreated;
 
+    // Distinct Tuned cards this combat — the multiplier every Tuned card's damage/block bonus scales
+    // by. Exposed so the card-preview patch can show the live bonus on cards viewed in the draw/discard
+    // pile (where the game doesn't run the damage/block hooks).
+    public static int TunedCreated => _tunedCreated;
+
     private static void MaybeResetForCombat(ICombatState combat)
     {
         if (!ReferenceEquals(combat, _lastCombat))

@@ -3,8 +3,6 @@ using BaseLib.Utils;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 
-using TheUnderstudy.TheUnderstudyCode.Cards.DynamicVars;
-
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
 // A cheap idea that arrives pre-tuned. (Tuned = Preparations theme.)
@@ -14,7 +12,7 @@ public class ShowerThought : UnderstudyCard
 
     public ShowerThought() : base(0, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
     {
-        WithVars(new PreTunedDamageVar(2));
+        WithDamage(2);
         WithCards(1);
         WithTip(UnderstudyKeywords.Tuned);
     }

@@ -3,8 +3,6 @@ using BaseLib.Utils;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 
-using TheUnderstudy.TheUnderstudyCode.Cards.DynamicVars;
-
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
 public class Showstopper : UnderstudyCard
@@ -15,7 +13,7 @@ public class Showstopper : UnderstudyCard
     {
         // Starts Tuned 1 — converts from "always replayable" to "one big hit, then needs
         // freeing," so the damage is raised to compensate.
-        WithVars(new PreTunedDamageVar(27));
+        WithDamage(27);
         WithTip(UnderstudyKeywords.Tuned);
     }
 

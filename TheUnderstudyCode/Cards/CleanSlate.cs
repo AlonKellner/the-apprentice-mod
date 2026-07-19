@@ -8,8 +8,6 @@ using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
 using TheUnderstudy.TheUnderstudyCode.Extensions;
 
-using TheUnderstudy.TheUnderstudyCode.Cards.DynamicVars;
-
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
 public class CleanSlate : UnderstudyCard
@@ -18,7 +16,7 @@ public class CleanSlate : UnderstudyCard
 
     public CleanSlate() : base(1, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
     {
-        WithVars(new PreTunedDamageVar(3));
+        WithDamage(3);
         WithTip(CardKeyword.Unplayable);
         WithTip(UnderstudyKeywords.Tuned);
     }

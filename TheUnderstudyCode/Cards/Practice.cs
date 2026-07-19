@@ -10,8 +10,6 @@ using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
 
-using TheUnderstudy.TheUnderstudyCode.Cards.DynamicVars;
-
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
 public class Practice : UnderstudyCard
@@ -21,7 +19,7 @@ public class Practice : UnderstudyCard
     public Practice() : base(0, CardType.Attack, CardRarity.Basic, TargetType.AnyEnemy, false)
     {
         WithKeyword(UnderstudyKeywords.Stable, ConstructedCardModel.UpgradeType.None);
-        WithVars(new PreTunedDamageVar(0));
+        WithDamage(0);
         WithVars(new CardsVar("Select", 2));
         WithTip(UnderstudyKeywords.Tuned);
     }

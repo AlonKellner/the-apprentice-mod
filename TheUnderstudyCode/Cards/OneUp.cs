@@ -7,8 +7,6 @@ using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
 using TheUnderstudy.TheUnderstudyCode.Extensions;
 
-using TheUnderstudy.TheUnderstudyCode.Cards.DynamicVars;
-
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
 public class OneUp : UnderstudyCard
@@ -17,7 +15,7 @@ public class OneUp : UnderstudyCard
 
     public OneUp() : base(1, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
     {
-        WithVars(new PreTunedDamageVar(2));
+        WithDamage(2);
         WithVars(new RepeatVar(3));
         WithTip(UnderstudyKeywords.Tuned);
     }
