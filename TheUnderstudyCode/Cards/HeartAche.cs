@@ -15,7 +15,7 @@ public class HeartAche : UnderstudyCard
     {
         WithDamage(10);
         WithBlock(16);
-        WithInvertibleTip(typeof(VulnerablePower));
+        WithDebuffTip(typeof(VulnerablePower));
         WithVar(new SelfDebuffVar("Vulnerable", 1));
     }
 

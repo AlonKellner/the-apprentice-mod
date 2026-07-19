@@ -17,7 +17,7 @@ public class Meltdown : UnderstudyCard
     public Meltdown() : base(2, CardType.Attack, CardRarity.Uncommon, TargetType.AllEnemies)
     {
         WithDamage(10);
-        WithInvertibleTip(typeof(VulnerablePower));
+        WithDebuffTip(typeof(VulnerablePower));
     }
 
     protected override void OnUpgrade()

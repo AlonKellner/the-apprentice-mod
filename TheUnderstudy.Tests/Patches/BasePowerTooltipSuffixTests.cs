@@ -3,6 +3,8 @@ using TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 using TheUnderstudy.TheUnderstudyCode.Patches;
 using Xunit;
 
+// (see below for IsInvertible/IsSwappable classification tests)
+
 namespace TheUnderstudy.Tests.Patches;
 
 // Pure-logic tests for the merged Invertible/Swappable tooltip-suffix decision. The actual
@@ -57,5 +59,28 @@ public class BasePowerTooltipSuffixTests
         Assert.Equal("",
             BasePowerTooltipSuffixPatch.MissingSuffix(new WeakPower(),
                 "Weak. [gold]Invertible[/gold]. [gold]Swappable[/gold]."));
+    }
+
+    // Shared classification used identically by BOTH the live power-icon patch and the card-tip helper
+    // (UnderstudyCard.WithDebuffTip). Weak/Vulnerable/Frail are swappable base debuffs; the mod's own
+    // invertible power Shaken is NOT swappable (and not in the base invertible set either — it carries
+    // its "Invertible" wording in its own PowerLoc, so MissingSuffix stays a no-op for it).
+    [Fact]
+    public void IsSwappable_CoversBaseDebuffs_ExcludesShaken()
+    {
+        Assert.True(BasePowerTooltipSuffixPatch.IsSwappable(new WeakPower()));
+        Assert.True(BasePowerTooltipSuffixPatch.IsSwappable(new VulnerablePower()));
+        Assert.True(BasePowerTooltipSuffixPatch.IsSwappable(new FrailPower()));
+        Assert.False(BasePowerTooltipSuffixPatch.IsSwappable(new StrengthPower()));
+        Assert.False(BasePowerTooltipSuffixPatch.IsSwappable(new ShakenPower()));
+    }
+
+    [Fact]
+    public void IsInvertible_CoversBaseInvertiblePowers_ExcludesShaken()
+    {
+        Assert.True(BasePowerTooltipSuffixPatch.IsInvertible(new WeakPower()));
+        Assert.True(BasePowerTooltipSuffixPatch.IsInvertible(new StrengthPower()));
+        Assert.False(BasePowerTooltipSuffixPatch.IsInvertible(new PoisonPower()));
+        Assert.False(BasePowerTooltipSuffixPatch.IsInvertible(new ShakenPower()));
     }
 }

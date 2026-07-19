@@ -18,6 +18,7 @@ using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.Rooms;
 using TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
+using TheUnderstudy.TheUnderstudyCode.Patches;
 using TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 using TheUnderstudy.TheUnderstudyCode.Character;
 using TheUnderstudy.TheUnderstudyCode.Extensions;
@@ -73,29 +74,36 @@ public abstract class UnderstudyCard(
         });
     }
 
-    private static readonly PropertyInfo InvertibleTipDescriptionProperty =
+    private static readonly PropertyInfo TipDescriptionProperty =
         typeof(HoverTip).GetProperty(nameof(HoverTip.Description))!;
 
-    // Use instead of a plain WithTip(typeof(X)) when referencing one of the 5 invertible base
-    // powers (Weak/Vulnerable/Frail/Strength/Dexterity). WithTip(typeof(X)) resolves through
-    // HoverTipFactory.FromPower<T> -> ModelDb.Power<T>().GetDumbHoverTip(), a fully static/canonical
-    // lookup with no notion of "which card is asking" — InvertibleBasePowerTooltipPatch (a Harmony
-    // patch on the live PowerModel.HoverTips getter, gated on the CURRENT creature carrying
-    // InvertTrackerPower) only covers hovering an actual applied power icon on a creature mid-combat;
-    // it can never reach this path, and couldn't distinguish "an Understudy card is asking" from any
-    // other character's card doing the same even if it could. Baking "Invertible" into the tip here
-    // instead needs no runtime player/creature state at all, so it's correct in hand, reward screens,
-    // deck view, and the Compendium — with or without an active run, not just mid-combat.
-    // HoverTip is a sealed record struct we don't own with a private Description setter, so mutating
-    // the boxed instance via reflection (same technique as InvertibleBasePowerTooltipPatch) is what
-    // lets us append the suffix — never cast the IHoverTip reference to (HoverTip) before the
-    // SetValue call, or it unboxes into a throwaway copy and the mutation is lost.
-    protected void WithInvertibleTip(Type powerType)
+    // Use instead of a plain WithTip(typeof(X)) when a card references a base-game power that the
+    // Understudy's Invert/Swap mechanics act on (Weak/Vulnerable/Frail/Strength/Dexterity for Invert;
+    // Weak/Vulnerable/Frail/Poison/Doom/Constrict/Tainted for Swap). Invertible and Swappable are
+    // treated IDENTICALLY here: both are appended by the exact same BasePowerTooltipSuffixPatch.MissingSuffix
+    // used by the live power-icon path, so a card's keyword tip and an applied power icon always agree.
+    //
+    // WithTip(typeof(X)) resolves through HoverTipFactory.FromPower<T> -> a fully static/canonical
+    // lookup with no notion of "which card is asking"; the live-icon Harmony patch is gated on the
+    // creature carrying InvertTrackerPower and so can never reach this canonical path. Baking the
+    // suffix in here needs no runtime creature state, so it's correct in hand, reward screens, deck
+    // view, and the Compendium, with or without an active run.
+    //
+    // Mod powers (Shaken/Tension/Un-pairs) already carry their suffix in their own PowerLoc, so
+    // MissingSuffix is a no-op for them (they're not in the base classification sets, and it's
+    // idempotent) — no duplication. HoverTip is a sealed record struct we don't own with a private
+    // Description setter, so we mutate the boxed instance via reflection — never cast the IHoverTip
+    // reference to (HoverTip) before the SetValue call, or it unboxes into a throwaway copy and the
+    // mutation is lost.
+    protected void WithDebuffTip(Type powerType)
     {
         WithTips(_ =>
         {
-            IHoverTip tip = HoverTipFactory.FromPower(ModelDb.DebugPower(powerType));
-            InvertibleTipDescriptionProperty.SetValue(tip, ((HoverTip)tip).Description + " [gold]Invertible[/gold].");
+            var power = ModelDb.DebugPower(powerType);
+            IHoverTip tip = HoverTipFactory.FromPower(power);
+            string description = ((HoverTip)tip).Description;
+            description += BasePowerTooltipSuffixPatch.MissingSuffix(power, description);
+            TipDescriptionProperty.SetValue(tip, description);
             return new IHoverTip[] { tip };
         });
     }

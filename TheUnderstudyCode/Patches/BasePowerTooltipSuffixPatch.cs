@@ -34,10 +34,17 @@ public static class BasePowerTooltipSuffixPatch
     private static readonly PropertyInfo DescriptionProperty =
         typeof(HoverTip).GetProperty(nameof(HoverTip.Description))!;
 
-    private static bool IsInvertible(PowerModel p) =>
+    // The base-game powers Invert acts on. Public so the card-side tip helper
+    // (UnderstudyCard.WithDebuffTip) shares one source of truth with this live-icon patch.
+    // NOTE: the mod's own invertible powers (Shaken/Jaded/Limited + Un- pairs) are NOT here — they
+    // carry their own "Invertible" wording directly in their PowerLoc, so no suffix is appended for
+    // them on either path (MissingSuffix returns "" and stays idempotent).
+    public static bool IsInvertible(PowerModel p) =>
         p is WeakPower or VulnerablePower or FrailPower or StrengthPower or DexterityPower;
 
-    private static bool IsSwappable(PowerModel p) =>
+    // The base-game debuffs Swap acts on (mirrors SceneStealing.SwappableDebuffs minus Tension, which
+    // self-tips). Public for the same card-side reuse.
+    public static bool IsSwappable(PowerModel p) =>
         p is WeakPower or VulnerablePower or FrailPower or PoisonPower or DoomPower or ConstrictPower
             or TaintedPower;
 

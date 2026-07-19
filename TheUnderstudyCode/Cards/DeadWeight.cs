@@ -15,7 +15,7 @@ public class DeadWeight : UnderstudyCard
     public DeadWeight() : base(2, CardType.Skill, CardRarity.Uncommon, TargetType.None)
     {
         WithBlock(12);
-        WithInvertibleTip(typeof(WeakPower));
+        WithDebuffTip(typeof(WeakPower));
     }
 
     protected override void OnUpgrade()

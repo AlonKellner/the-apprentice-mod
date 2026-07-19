@@ -14,8 +14,8 @@ public class Pathos : UnderstudyCard
     public Pathos() : base(1, CardType.Attack, CardRarity.Uncommon, TargetType.AllEnemies)
     {
         WithDamage(4);
-        WithInvertibleTip(typeof(VulnerablePower));
-        WithInvertibleTip(typeof(WeakPower));
+        WithDebuffTip(typeof(VulnerablePower));
+        WithDebuffTip(typeof(WeakPower));
     }
 
     protected override void OnUpgrade()
