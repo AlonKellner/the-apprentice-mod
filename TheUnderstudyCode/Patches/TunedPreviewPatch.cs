@@ -7,43 +7,48 @@ using TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
 
 namespace TheUnderstudy.TheUnderstudyCode.Patches;
 
-// Show Tuned's damage/block bonus in the card preview everywhere it's relevant, not just on the card
-// actively being played.
+// Dynamic base: color and display a card's damage/block relative to (printed base + the card's own
+// Tuned amount), not the bare printed base.
 //
-// DamageVar/BlockVar.UpdateCardPreview only runs the game's damage/block hooks (which is where Tuned's
-// bonus is injected, via BaseLib's ModifyBaseDamagePatches / our ModifyBaseBlockPatch) when
-// runGlobalHooks is true — i.e. for the single active in-hand preview. Cards sitting in the draw or
-// discard pile are previewed with runGlobalHooks == false, so their numbers would otherwise show the
-// bare printed base, ignoring the Tuned stacks they're currently carrying. That makes it hard to see
-// how much a Tuned card will actually hit/block for.
+// The game colors a card's number by comparing (int)PreviewValue to (int)EnchantedValue in
+// DynamicVar.ToHighlightedString (which the {Damage:diff()} card-text token writes). EnchantedValue is
+// the game's "part of the card, not colored like a buff" baseline (defaults to BaseValue). So we
+// decompose a Tuned card's value into two parts:
+//   * dynamicBasePart = the card's OWN Tuned amount (Stacks, the "Tuned N" shown on it). Folded into
+//     EnchantedValue -> it's the color-neutral baseline ("used as the base value in practice").
+//   * total           = the card's full Tuned bonus (Stacks * TunedCreated). Added to the displayed
+//     value. The surplus over the dynamic base (total - Stacks, i.e. the extra from other Tuned cards'
+//     multiplier) therefore colors green like Strength, and external modifiers (Weak/Strength/...)
+//     color on top as usual.
 //
-// So, only when the base preview did NOT run the hooks (runGlobalHooks == false):
-//   * In combat (mutable card): add the card's live Tuned bonus, Stacks × (# distinct Tuned cards this
-//     combat) — the same formula the in-hand hooks apply — so pile previews match the real value,
-//     scaling with every Tuned card currently in the deck.
-//   * Out of combat (canonical/ownerless card in deck/reward/library): a pre-Tuned card has no live
-//     modifier yet, so add the single Tuned stack it will start each combat with, so it still previews
-//     its intended value (base + 1).
-internal static class TunedPreview
+// This is NOT pre-Tuned gated -- it's driven by whatever Tuned the card currently carries. Out of
+// combat a pre-Tuned card has no modifier yet but starts each combat Tuned 1, so it previews (1, 1).
+//
+// DamageVar/BlockVar.UpdateCardPreview only runs the damage/block hooks (which inject the full Tuned
+// bonus) when runGlobalHooks == true (the active in-hand card). For pile / out-of-combat previews
+// (false) the hooks don't run, so we add `total` to the displayed value here.
+public static class TunedPreview
 {
+    // (dynamicBasePart, total) for this card's Tuned state. See the class comment.
+    public static (int dynamicBasePart, int total) TunedParts(CardModel card) =>
+        card.TryGetModifier<TunedModifier>(out var t) ? (t!.Stacks, t.Bonus)
+        : card is UnderstudyCard { IsPreTuned: true } ? (1, 1)
+        : (0, 0);
+
     public static void Add(DynamicVar var, CardModel card, bool runGlobalHooks)
     {
-        if (runGlobalHooks) return; // active in-hand preview already applied the bonus via the hooks
+        var (dynamicBasePart, total) = TunedParts(card);
+        if (dynamicBasePart == 0 && total == 0) return;
 
-        // Prefer a live TunedModifier when one is attached (in combat): show the real bonus,
-        // Stacks × (# distinct Tuned cards this combat) — the same formula the in-hand hooks apply.
-        if (card.TryGetModifier<TunedModifier>(out var tuned))
-        {
-            var.PreviewValue += tuned!.Stacks * TunedModifier.TunedCreated;
-        }
-        // Otherwise, a pre-Tuned card carries no modifier yet (deck view, Compendium, card reward,
-        // or pre-combat) — it will start each combat with Tuned 1, so preview its intended base + 1.
-        // Gate on modifier presence, NOT IsMutable: deck/Compendium cards are mutable instances that
-        // simply don't have the modifier, so an IsMutable check would wrongly skip them.
-        else if (card is UnderstudyCard { IsPreTuned: true })
-        {
-            var.PreviewValue += 1;
-        }
+        // Dynamic base = the game's "part of the card" baseline + the card's own Tuned amount.
+        // Recompute from a stable baseline each call so repeated previews stay idempotent
+        // (EnchantedValue has no reset of its own for un-enchanted cards).
+        decimal baseline = card.Enchantment != null ? var.EnchantedValue : var.BaseValue;
+        var.EnchantedValue = baseline + dynamicBasePart;
+
+        // Displayed value: the active in-hand preview already had the full Tuned bonus applied by the
+        // hook; pile & out-of-combat previews (no hooks ran) add it here.
+        if (!runGlobalHooks) var.PreviewValue += total;
     }
 }
 

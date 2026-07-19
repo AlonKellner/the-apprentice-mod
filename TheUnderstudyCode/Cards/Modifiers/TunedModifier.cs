@@ -48,10 +48,11 @@ public class TunedModifier : CardModifier
     private static ICombatState? _lastCombat;
     private static int _tunedCreated;
 
-    // Distinct Tuned cards this combat — the multiplier every Tuned card's damage/block bonus scales
-    // by. Exposed so the card-preview patch can show the live bonus on cards viewed in the draw/discard
-    // pile (where the game doesn't run the damage/block hooks).
-    public static int TunedCreated => _tunedCreated;
+    // This card's full Tuned damage/block bonus: its stack count times the number of distinct Tuned
+    // cards this combat (Strength/Dexterity-style flat additive). Single source of truth, reused by
+    // both ModifyBase*Additive below and the card-preview patch (which shows the bonus on cards viewed
+    // in the draw/discard pile, where the game doesn't run the damage/block hooks).
+    public int Bonus => Stacks * _tunedCreated;
 
     private static void MaybeResetForCombat(ICombatState combat)
     {
@@ -135,12 +136,12 @@ public class TunedModifier : CardModifier
     public override decimal ModifyBaseDamageAdditive(decimal originalDamage, ValueProp props)
     {
         if (!props.IsPoweredAttack()) return 0m;
-        return Stacks * _tunedCreated;
+        return Bonus;
     }
 
     public override decimal ModifyBaseBlockAdditive(decimal originalBlock)
     {
-        return Stacks * _tunedCreated;
+        return Bonus;
     }
 
     // ── Instance overrides ───────────────────────────────────────────────────────────────────

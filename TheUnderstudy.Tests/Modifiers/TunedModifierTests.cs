@@ -219,6 +219,15 @@ public class TunedModifierTests
     }
 
     [Fact]
+    public void Bonus_IsStacksTimesTunedCreated()
+    {
+        var mod = new TunedModifier();
+        SetStacks(mod, 2);
+        SetTunedCreated(3);
+        Assert.Equal(6, mod.Bonus);
+    }
+
+    [Fact]
     public void ModifyBaseDamageAdditive_PoweredAttack_ReturnsStacksScaledBonus()
     {
         var mod = new TunedModifier();
