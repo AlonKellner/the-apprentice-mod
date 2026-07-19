@@ -10,7 +10,7 @@ public class Intermission : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:Intermission";
 
-    public Intermission() : base(2, CardType.Power, CardRarity.Uncommon, TargetType.None)
+    public Intermission() : base(2, CardType.Power, CardRarity.Rare, TargetType.None)
     {
         WithCostUpgradeBy(-1);
         WithPowerNoTip<IntermissionPower>(1, 1);

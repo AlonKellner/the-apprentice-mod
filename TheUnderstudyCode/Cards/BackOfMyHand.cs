@@ -14,7 +14,7 @@ public class BackOfMyHand : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:BackOfMyHand";
 
-    public BackOfMyHand() : base(2, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
+    public BackOfMyHand() : base(2, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
     {
         WithDamage(12);
         WithTip(UnderstudyKeywords.Tuned);

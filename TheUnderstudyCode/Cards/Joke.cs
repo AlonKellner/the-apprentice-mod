@@ -13,7 +13,7 @@ public class Joke : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:Joke";
 
-    public Joke() : base(0, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
+    public Joke() : base(0, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
     {
         WithDamage(6);
         WithVars(new IntVar("Invert", 1));

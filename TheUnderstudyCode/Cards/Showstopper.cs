@@ -9,7 +9,7 @@ public class Showstopper : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:Showstopper";
 
-    public Showstopper() : base(3, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
+    public Showstopper() : base(3, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
     {
         // Starts Tuned 1 — converts from "always replayable" to "one big hit, then needs
         // freeing," so the damage is raised to compensate.

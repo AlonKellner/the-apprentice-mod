@@ -11,7 +11,7 @@ public class Stereo : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:Stereo";
 
-    public Stereo() : base(2, CardType.Power, CardRarity.Uncommon, TargetType.None)
+    public Stereo() : base(2, CardType.Power, CardRarity.Rare, TargetType.None)
     {
         WithCostUpgradeBy(-1);
         WithPowerNoTip<StereoPower>(1);

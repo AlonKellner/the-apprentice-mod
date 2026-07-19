@@ -9,14 +9,13 @@ using TheUnderstudy.TheUnderstudyCode.Extensions;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
-// A full comeback swing: hit, flip your debuffs to buffs, and clear the whole jammed hand.
+// A full comeback swing: flip your debuffs to buffs, and clear the whole jammed hand.
 public class TurnItAround : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:TurnItAround";
 
-    public TurnItAround() : base(2, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
+    public TurnItAround() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.None)
     {
-        WithDamage(10);
         WithVars(new IntVar("Invert", 1));
         WithTip(UnderstudyKeywords.Invert);
         WithTip(CardKeyword.Unplayable);
@@ -32,7 +31,6 @@ public class TurnItAround : UnderstudyCard
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
-        await CommonActions.CardAttack(cardPlay.Card, cardPlay).Execute(context);
         var creature = cardPlay.Card.Owner.Creature;
         await EmotionalExpression.InvertEach(context, creature, (int)DynamicVars["Invert"].BaseValue);
         var handCards = PileType.Hand.GetPile(cardPlay.Card.Owner).Cards.Where(c => c != this).ToList();
