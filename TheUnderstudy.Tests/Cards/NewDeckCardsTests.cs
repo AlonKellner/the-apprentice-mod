@@ -67,6 +67,7 @@ public class NewDeckCardsTests
     [InlineData(typeof(AutoTune), "TheUnderstudy:AutoTune", CardType.Power, CardRarity.Rare, TargetType.None)]
     [InlineData(typeof(FateKnocking), "TheUnderstudy:FateKnocking", CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)]
     [InlineData(typeof(Encore), "TheUnderstudy:Encore", CardType.Skill, CardRarity.Rare, TargetType.None)]
+    [InlineData(typeof(Duet), "TheUnderstudy:Duet", CardType.Skill, CardRarity.Uncommon, TargetType.AnyPlayer)]
     public void Card_ConstructsWithExpectedShape(
         System.Type cardType, string expectedId, CardType expectedType, CardRarity expectedRarity, TargetType expectedTarget)
     {
