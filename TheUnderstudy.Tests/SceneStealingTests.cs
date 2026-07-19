@@ -26,6 +26,17 @@ public class SceneStealingTests
     public void ComputeTransfer_NegativeHolding_NeverNegative() =>
         Assert.Equal(0, SceneStealing.ComputeTransfer(have: -4, x: 2));
 
+    // Give-negative half (sign-flip buffs Strength/Dexterity/Vigor): the magnitude of your NEGATIVE
+    // portion given to enemies is ComputeTransfer(-have, x). E.g. -6 Vigor with Swap 6 gives 6 (you -> 0,
+    // each enemy -6 more); capped at X; nothing to give when the holding is non-negative.
+    [Fact]
+    public void GiveNegative_MagnitudeIsNegatedHoldingCappedAtX()
+    {
+        Assert.Equal(6, SceneStealing.ComputeTransfer(have: -(-6), x: 6)); // -6 Vigor, Swap 6 -> give 6
+        Assert.Equal(2, SceneStealing.ComputeTransfer(have: -(-6), x: 2)); // capped at Swap 2
+        Assert.Equal(0, SceneStealing.ComputeTransfer(have: -3, x: 6));    // positive holding -> nothing given
+    }
+
     // ComputeSteal — total taken across enemies, up to X (positive only) from each, summed.
 
     [Fact]

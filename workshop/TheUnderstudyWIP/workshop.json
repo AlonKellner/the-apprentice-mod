@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.11.15 - Fate Knocking no longer shows Stable twice, drops the Tuned 1 (just Stable now), and its upgrade only removes Stable (base damage unchanged).",
+  "changeNote": "v1.11.16 - Renamed Encore -> Reverb and the old Reverb (double Vigor) -> Stereo. Fate Knocking now costs 1.",
   "tags": [],
   "dependencies": [
     3737335127

@@ -36,8 +36,9 @@ public static class SceneStealing
         ModelDb.Power<TensionPower>(),
     };
 
-    // Buffs you steal from enemies. Strength/Dexterity/Vigor are AllowNegative — only their positive
-    // (true buff) portion is stolen.
+    // Buffs you steal from enemies (their positive portion). Strength/Dexterity/Vigor are AllowNegative:
+    // only their positive (true buff) portion is stolen here — their negative (debuff) portion is instead
+    // GIVEN to enemies, see SignFlipBuffs / the give-negative loop in SwapEach.
     public static IReadOnlyList<PowerModel> SwappableBuffs => _swappableBuffs ??= new PowerModel[]
     {
         ModelDb.Power<StrengthPower>(),
@@ -53,8 +54,20 @@ public static class SceneStealing
         ModelDb.Power<UntensionPower>(),
     };
 
+    // The AllowNegative buffs (Strength/Dexterity/Vigor) — their POSITIVE portion is a buff (stolen from
+    // enemies, above) and their NEGATIVE portion is a debuff (given to enemies, like Weak). Subset of
+    // SwappableBuffs; only these have a meaningful negative side (Regen/Thorns/Artifact/Un- are always >= 0).
+    private static IReadOnlyList<PowerModel>? _signFlipBuffs;
+    public static IReadOnlyList<PowerModel> SignFlipBuffs => _signFlipBuffs ??= new PowerModel[]
+    {
+        ModelDb.Power<StrengthPower>(),
+        ModelDb.Power<DexterityPower>(),
+        ModelDb.Power<VigorPower>(),
+    };
+
     // Pure: how much of a debuff you hold (`have`) transfers per Swap X — capped at X and at what you
-    // actually have (never negative).
+    // actually have (never negative). Also used for the negative portion of a sign-flip buff by passing
+    // its magnitude (-have): e.g. -6 Vigor, Swap 6 => ComputeTransfer(6, 6) = 6.
     public static int ComputeTransfer(int have, int x) => Math.Max(0, Math.Min(have, x));
 
     // Pure: total stolen across a set of enemy amounts, taking up to X (positive only) from each.
@@ -83,6 +96,20 @@ public static class SceneStealing
             await PowerCmd.Apply(ctx, Fresh(debuff), self, -take, self, null);
             foreach (var enemy in enemies)
                 await PowerCmd.Apply(ctx, Fresh(debuff), enemy, take, self, null);
+        }
+
+        // GIVE (negative side of sign-flip buffs) — a NEGATIVE Strength/Dexterity/Vigor is a debuff on
+        // you, so Swap hands it to every enemy too, exactly like Weak (up to X of the magnitude). This is
+        // the give-half that pairs with the positive-steal below (e.g. your -6 Vigor + enemy -6 Vigor
+        // and Swap 6 => you 0, enemy -12).
+        foreach (var power in SignFlipBuffs)
+        {
+            int have = self.GetPower(power.Id)?.Amount ?? 0;
+            int give = ComputeTransfer(-have, x); // magnitude of the negative portion, capped at X (0 if have >= 0)
+            if (give <= 0) continue;
+            await PowerCmd.Apply(ctx, Fresh(power), self, give, self, null); // remove it from you (toward 0)
+            foreach (var enemy in enemies)
+                await PowerCmd.Apply(ctx, Fresh(power), enemy, -give, self, null); // pile the negative onto each enemy
         }
 
         // TAKE (steal, summed) — remove up to X of each swappable buff from each enemy; you gain the total.
