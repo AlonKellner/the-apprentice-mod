@@ -60,6 +60,14 @@ public static class SceneStealing
     public static int ComputeSteal(IEnumerable<int> enemyAmounts, int x) =>
         enemyAmounts.Sum(a => Math.Max(0, Math.Min(a, x)));
 
+    // The SwappableDebuffs/SwappableBuffs registries hold CANONICAL powers (ModelDb.Power<T>()) — fine
+    // for reading Id/amount, but PowerCmd.Apply's new-application path calls power.AssertMutable(), and
+    // BaseLib's SelfApplyDebuffPatch postfix re-invokes Apply with the same instance. So every apply
+    // must get a FRESH mutable clone, mirroring what PowerCmd.Apply<T> does internally. Passing the raw
+    // canonical throws "Canonical model … used in incorrect place" the moment a swappable base debuff
+    // (e.g. Weak from Constant Struggle) is actually transferred.
+    private static PowerModel Fresh(PowerModel canonical) => (PowerModel)canonical.MutableClone();
+
     public static async Task SwapEach(PlayerChoiceContext ctx, Creature self, int x)
     {
         if (x <= 0) return;
@@ -71,9 +79,9 @@ public static class SceneStealing
             int have = self.GetPower(debuff.Id)?.Amount ?? 0;
             int take = ComputeTransfer(have, x);
             if (take <= 0) continue;
-            await PowerCmd.Apply(ctx, debuff, self, -take, self, null);
+            await PowerCmd.Apply(ctx, Fresh(debuff), self, -take, self, null);
             foreach (var enemy in enemies)
-                await PowerCmd.Apply(ctx, debuff, enemy, take, self, null);
+                await PowerCmd.Apply(ctx, Fresh(debuff), enemy, take, self, null);
         }
 
         // TAKE (steal, summed) — remove up to X of each swappable buff from each enemy; you gain the total.
@@ -85,11 +93,11 @@ public static class SceneStealing
                 int amt = enemy.GetPower(buff.Id)?.Amount ?? 0;
                 int take = Math.Max(0, Math.Min(amt, x)); // positive only — handles AllowNegative Str/Dex/Vigor
                 if (take <= 0) continue;
-                await PowerCmd.Apply(ctx, buff, enemy, -take, self, null);
+                await PowerCmd.Apply(ctx, Fresh(buff), enemy, -take, self, null);
                 stolen += take;
             }
             if (stolen > 0)
-                await PowerCmd.Apply(ctx, buff, self, stolen, self, null);
+                await PowerCmd.Apply(ctx, Fresh(buff), self, stolen, self, null);
         }
     }
 }
