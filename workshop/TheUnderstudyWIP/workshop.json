@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.11.20 - Workshop can now play all Planned more than once per turn (the once-per-turn limit stays on Remix, Showtime and Da Capo). Experience now starts Tuned, drops Exhaust, and starts each combat Planned when upgraded. Tidied the Swap and Planned keyword descriptions.",
+  "changeNote": "v1.11.21 - Rewrote the Swap keyword tooltip to be shorter and clearer: give/take on separate lines with a shared cap, and colored the number and 'swappable' to match base-game keyword styling.",
   "tags": [],
   "dependencies": [
     3737335127
