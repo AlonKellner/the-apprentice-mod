@@ -46,7 +46,7 @@
   "THEUNDERSTUDY-LOVE_SONG.title": "Love Song",
   "THEUNDERSTUDY-LOVE_SONG.description": "Gain {Unvulnerable:diff()} [gold]Unvulnerable[/gold].",
   "THEUNDERSTUDY-MASTER_FORM.title": "Master Form",
-  "THEUNDERSTUDY-MASTER_FORM.description": "When attacks or skills without [gold]Replay[/gold] become [gold]Unplayable[/gold], they gain [gold]Replay[/gold] 1.",
+  "THEUNDERSTUDY-MASTER_FORM.description": "When attacks or skills without [gold]Replay[/gold] are played, they gain [gold]Replay[/gold] 1.",
   "THEUNDERSTUDY-HELD_NOTE.title": "Held Note",
   "THEUNDERSTUDY-HELD_NOTE.description": "Turn-based buffs and debuffs no longer decrease by 1 each turn.",
   "THEUNDERSTUDY-SHOWTIME.title": "Showtime",

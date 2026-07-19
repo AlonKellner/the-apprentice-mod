@@ -14,7 +14,6 @@ public class MasterForm : UnderstudyCard
     {
         WithKeyword(CardKeyword.Retain, ConstructedCardModel.UpgradeType.Add);
         WithPowerNoTip<MasterFormPower>(1);
-        WithTip(CardKeyword.Unplayable);
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)

@@ -6,30 +6,22 @@ namespace TheUnderstudy.Tests.Cards.Powers;
 
 public class MasterFormPowerTests
 {
+    // Now a plain per-play hook (grant Replay when an Attack/Skill without Replay is played), so no
+    // static event subscription and no AfterApplied/AfterCombatEnd teardown is needed.
     [Fact]
-    public void MasterFormPower_OverridesAfterApplied()
+    public void MasterFormPower_OverridesAfterCardPlayed()
     {
         var method = typeof(MasterFormPower).GetMethod(
-            "AfterApplied", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-        Assert.Equal(typeof(MasterFormPower), method?.DeclaringType);
-    }
-
-    // NOT AfterRemoved: Creature.RemoveAllPowersInternalExcept (the bulk power wipe at combat end)
-    // is documented to skip that hook entirely, so cleanup lives in AfterCombatEnd instead — see
-    // MasterFormPower's own comment on why.
-    [Fact]
-    public void MasterFormPower_OverridesAfterCombatEnd()
-    {
-        var method = typeof(MasterFormPower).GetMethod(
-            "AfterCombatEnd", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            "AfterCardPlayed", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
         Assert.Equal(typeof(MasterFormPower), method?.DeclaringType);
     }
 
     [Fact]
-    public void Localization_MentionsUnplayable_NotPlannedOrTuned()
+    public void Localization_MentionsReplay_NotUnplayableOrPlannedOrTuned()
     {
         var p = new MasterFormPower();
-        Assert.Contains(p.Localization, entry => entry.Item2.Contains("[gold]Unplayable[/gold]"));
+        Assert.Contains(p.Localization, entry => entry.Item2.Contains("[gold]Replay[/gold]"));
+        Assert.DoesNotContain(p.Localization, entry => entry.Item2.Contains("Unplayable"));
         Assert.DoesNotContain(p.Localization, entry => entry.Item2.Contains("Planned"));
         Assert.DoesNotContain(p.Localization, entry => entry.Item2.Contains("Tuned"));
     }
