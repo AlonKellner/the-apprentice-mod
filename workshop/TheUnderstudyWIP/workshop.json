@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.11.13 - Vigor (and Strength/Dexterity) now show Invertible + Swappable in tooltips (e.g. on Forte); Unweak/Unvulnerable/Unfrail now show Swappable; every buff/debuff inversion pair is now consistently both-swappable or both-non-swappable.",
+  "changeNote": "v1.11.14 - New multiplayer card Duet (Uncommon, cost 1): target another player and run Swap 6/10 + Invert 2/3 for them simultaneously - a co-op ultimate version of Give and Take.",
   "tags": [],
   "dependencies": [
     3737335127

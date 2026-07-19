@@ -133,7 +133,7 @@
   "THEUNDERSTUDY-AUTO_TUNE.title": "Auto Tune",
   "THEUNDERSTUDY-AUTO_TUNE.description": "At the start of your turn, apply [gold]Tuned[/gold] to all [gold]Tuned[/gold] cards.",
   "THEUNDERSTUDY-FATE_KNOCKING.title": "Fate Knocking",
-  "THEUNDERSTUDY-FATE_KNOCKING.description": "{IfUpgraded:show:|[gold]Stable[/gold].\n}{InCombat:cond:|[gold]Tuned[/gold] 1.\n}Deal {Damage:diff()} damage 3 times.\nDeal damage equal to the sum of the damage this card has dealt this combat.",
+  "THEUNDERSTUDY-FATE_KNOCKING.description": "Deal {Damage:diff()} damage 3 times.\nDeal damage equal to the sum of the damage this card has dealt this combat.",
   "THEUNDERSTUDY-ENCORE.title": "Encore",
   "THEUNDERSTUDY-ENCORE.description": "Gain {Vigor:diff()} [gold]Vigor[/gold].\nRetain your [gold]Vigor[/gold] after using it this turn.",
   "THEUNDERSTUDY-SAD_SONG.title": "Sad Song",

@@ -23,22 +23,11 @@ public class FateKnocking : UnderstudyCard
 
     public FateKnocking() : base(2, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
     {
-        // Base: Stable + pre-Tuned (like Practice) — the per-strike base is 0, and its own Tuned 1 makes
-        // each strike land for 1 (scaling with more Tuned cards); Stable keeps it from being turned
-        // Unplayable. The upgrade removes Stable so it can then be freely buffed/Tuned. The finisher
-        // sums the card's real dealt damage either way, so it's no longer coupled to a fixed statline.
+        // Base card is Stable — it can't be buffed or turned Unplayable, a fixed & safe finisher-sum
+        // attack. The ONLY upgrade effect is removing Stable (via UpgradeType.Remove), which then lets
+        // Strength/etc. scale the strikes and thus the finisher sum. Damage doesn't change on upgrade.
         WithKeyword(UnderstudyKeywords.Stable, ConstructedCardModel.UpgradeType.Remove);
-        WithTip(UnderstudyKeywords.Stable);
-        WithTip(UnderstudyKeywords.Tuned);
-        WithDamage(0);
-    }
-
-    public override bool IsPreTuned => true;
-
-    protected override void OnUpgrade()
-    {
-        base.OnUpgrade();
-        DynamicVars.Damage.UpgradeValueBy(1m);
+        WithDamage(1);
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
