@@ -16,7 +16,7 @@ public class Silence : UnderstudyCard
     public Silence() : base(2, CardType.Attack, CardRarity.Uncommon, TargetType.AllEnemies)
     {
         WithDamage(6);
-        WithTip(typeof(VigorPower));
+        WithMarkedTip(typeof(VigorPower));
     }
 
     protected override void OnUpgrade()

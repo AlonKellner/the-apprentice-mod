@@ -16,7 +16,7 @@ public class Feedback : UnderstudyCard
     {
         WithDamage(9);
         WithBlock(9);
-        WithTip(typeof(VigorPower));
+        WithMarkedTip(typeof(VigorPower));
     }
 
     protected override void OnUpgrade()

@@ -17,7 +17,7 @@ public class GoForBroke : UnderstudyCard
     public GoForBroke() : base(2, CardType.Skill, CardRarity.Rare, TargetType.None)
     {
         WithTip(CardKeyword.Unplayable);
-        WithDebuffTip(typeof(ShakenPower));
+        WithMarkedTip(typeof(ShakenPower));
         WithVar(new SelfDebuffVar("Shaken", 2));
     }
 

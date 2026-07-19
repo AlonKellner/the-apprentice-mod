@@ -78,10 +78,11 @@ public abstract class UnderstudyCard(
         typeof(HoverTip).GetProperty(nameof(HoverTip.Description))!;
 
     // Use instead of a plain WithTip(typeof(X)) when a card references a base-game power that the
-    // Understudy's Invert/Swap mechanics act on (Weak/Vulnerable/Frail/Strength/Dexterity for Invert;
-    // Weak/Vulnerable/Frail/Poison/Doom/Constrict/Tainted for Swap). Invertible and Swappable are
-    // treated IDENTICALLY here: both are appended by the exact same BasePowerTooltipSuffixPatch.MissingSuffix
-    // used by the live power-icon path, so a card's keyword tip and an applied power icon always agree.
+    // Understudy's Invert/Swap mechanics act on — a debuff (Weak/Vulnerable/Frail/…) OR a buff
+    // (Vigor/Strength/Dexterity/…). Invertible and Swappable are appended by the exact same
+    // BasePowerTooltipSuffixPatch.MissingSuffix used by the live power-icon path (whose classification
+    // derives from DoubleTimePower.IsInvertiblePower + SceneStealing's Swap registries), so a card's
+    // keyword tip and an applied power icon always agree and can't drift from the mechanic.
     //
     // WithTip(typeof(X)) resolves through HoverTipFactory.FromPower<T> -> a fully static/canonical
     // lookup with no notion of "which card is asking"; the live-icon Harmony patch is gated on the
@@ -95,7 +96,7 @@ public abstract class UnderstudyCard(
     // Description setter, so we mutate the boxed instance via reflection — never cast the IHoverTip
     // reference to (HoverTip) before the SetValue call, or it unboxes into a throwaway copy and the
     // mutation is lost.
-    protected void WithDebuffTip(Type powerType)
+    protected void WithMarkedTip(Type powerType)
     {
         WithTips(_ =>
         {

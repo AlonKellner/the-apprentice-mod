@@ -15,7 +15,7 @@ public class Reverb : UnderstudyCard
     {
         WithCostUpgradeBy(-1);
         WithPowerNoTip<ReverbPower>(1);
-        WithTip(typeof(VigorPower));
+        WithMarkedTip(typeof(VigorPower));
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)

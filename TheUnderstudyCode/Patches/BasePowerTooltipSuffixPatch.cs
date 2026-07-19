@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Reflection;
+using BaseLib.Abstracts;
 using HarmonyLib;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.HoverTips;
@@ -20,11 +21,9 @@ namespace TheUnderstudy.TheUnderstudyCode.Patches;
 // suffix is added exactly once, Invertible before Swappable, so Weak/Vulnerable/Frail show both.
 //
 // Gated on the owner carrying InvertTrackerPower (auto-attached only to an Understudy player), so the
-// suffixes appear only when an Understudy deck holding these mechanics is in play, and owner-relative
-// (Invert/Swap act on YOUR debuffs). The invertible set (Weak/Vulnerable/Frail/Strength/Dexterity)
-// mirrors EmotionalExpression.IdentifyPair; the swappable set (Weak/Vulnerable/Frail/Poison/Doom/
-// Constrict/Tainted) mirrors SceneStealing.SwappableDebuffs minus Tension, whose own PowerLoc already
-// carries "[gold]Swappable[/gold]." directly.
+// suffixes appear only when an Understudy deck holding these mechanics is in play. The invertible set
+// derives from DoubleTimePower.IsInvertiblePower; the swappable set mirrors SceneStealing's Swap
+// registries — see IsInvertible/IsSwappable below.
 [HarmonyPatch(typeof(PowerModel), nameof(PowerModel.HoverTips), MethodType.Getter)]
 public static class BasePowerTooltipSuffixPatch
 {
@@ -34,19 +33,22 @@ public static class BasePowerTooltipSuffixPatch
     private static readonly PropertyInfo DescriptionProperty =
         typeof(HoverTip).GetProperty(nameof(HoverTip.Description))!;
 
-    // The base-game powers Invert acts on. Public so the card-side tip helper
-    // (UnderstudyCard.WithDebuffTip) shares one source of truth with this live-icon patch.
-    // NOTE: the mod's own invertible powers (Shaken/Jaded/Limited + Un- pairs) are NOT here — they
-    // carry their own "Invertible" wording directly in their PowerLoc, so no suffix is appended for
-    // them on either path (MissingSuffix returns "" and stays idempotent).
+    // Base-game powers Invert acts on. DERIVED from the canonical invertible predicate so it can't
+    // drift out of sync (it already includes Strength/Dexterity/Vigor's sign-flip and Tainted). Mod
+    // powers (ICustomModel: Shaken/Jaded/Limited + Un- pairs, Tension/Untension/Untainted) are excluded
+    // here because they carry their own "Invertible" wording directly in their PowerLoc — so no suffix
+    // is appended for them on either path. Public so the card-side helper (WithMarkedTip) reuses it.
     public static bool IsInvertible(PowerModel p) =>
-        p is WeakPower or VulnerablePower or FrailPower or StrengthPower or DexterityPower;
+        p is not ICustomModel && DoubleTimePower.IsInvertiblePower(p);
 
-    // The base-game debuffs Swap acts on (mirrors SceneStealing.SwappableDebuffs minus Tension, which
-    // self-tips). Public for the same card-side reuse.
+    // Base-game powers Swap acts on — the base-game entries of SceneStealing.SwappableDebuffs (top row)
+    // and SwappableBuffs (bottom row). Kept as a type list because the registries are ModelDb-backed
+    // (this stays bare-testable); it MUST mirror those registries' base-game entries. Mod swappable
+    // powers (Tension/Untension/Untainted) self-tip via PowerLoc.
     public static bool IsSwappable(PowerModel p) =>
         p is WeakPower or VulnerablePower or FrailPower or PoisonPower or DoomPower or ConstrictPower
-            or TaintedPower;
+            or TaintedPower
+            or StrengthPower or DexterityPower or VigorPower or RegenPower or ThornsPower or ArtifactPower;
 
     // The suffix text this base power still needs, given its current tooltip description (so repeated
     // getter calls stay idempotent). Invertible is appended before Swappable, so a power that is both

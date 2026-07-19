@@ -17,7 +17,7 @@ public class Encore : UnderstudyCard
     {
         WithVars(new IntVar("Vigor", 3));
         WithPowerNoTip<EncorePower>(1);
-        WithTip(typeof(VigorPower));
+        WithMarkedTip(typeof(VigorPower));
     }
 
     protected override void OnUpgrade()

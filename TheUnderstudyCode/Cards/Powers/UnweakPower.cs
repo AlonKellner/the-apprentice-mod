@@ -20,8 +20,8 @@ public class UnweakPower : UnderstudyPower
 
     public override List<(string, string)> Localization => new PowerLoc(
         "Unweak",
-        "Unweakened creatures deal [blue]25%[/blue] more damage with Attacks. Cancels out with Weak. [gold]Invertible[/gold].",
-        "Unweakened creatures deal [blue]25%[/blue] more damage with Attacks. Cancels out with Weak. [gold]Invertible[/gold].");
+        "Unweakened creatures deal [blue]25%[/blue] more damage with Attacks. Cancels out with Weak. [gold]Invertible[/gold]. [gold]Swappable[/gold].",
+        "Unweakened creatures deal [blue]25%[/blue] more damage with Attacks. Cancels out with Weak. [gold]Invertible[/gold]. [gold]Swappable[/gold].");
 
     public override decimal ModifyDamageMultiplicative(Creature? target, decimal amount, ValueProp props, Creature? dealer, CardModel? cardSource, CardPlay? cardPlay)
     {

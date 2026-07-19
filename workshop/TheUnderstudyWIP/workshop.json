@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.11.11 - Base debuff card tooltips (e.g. Weak on Freeze Up) now show BOTH Invertible and Swappable, matching the power icon; Invertible and Swappable are handled by one shared mechanism. Also fixes Shaken showing Invertible twice on Go For Broke.",
+  "changeNote": "v1.11.12 - Fix crash when Swap (Upstage, Body Double, Give and Take, Role Reversal) transferred a base-game debuff like Weak; swapping your Constant Struggle Weak now works.",
   "tags": [],
   "dependencies": [
     3737335127

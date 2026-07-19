@@ -16,7 +16,7 @@ public class FreezeUp : UnderstudyCard
     {
         WithDamage(12);
         WithBlock(12);
-        WithDebuffTip(typeof(WeakPower));
+        WithMarkedTip(typeof(WeakPower));
         WithVar(new SelfDebuffVar("Weak", 1));
     }
 

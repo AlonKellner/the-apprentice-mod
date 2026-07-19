@@ -17,9 +17,9 @@ public class BreakingVoice : UnderstudyCard
     {
         WithDamage(7);
         WithVars(new IntVar("Vigor", 4));
-        WithDebuffTip(typeof(WeakPower));
+        WithMarkedTip(typeof(WeakPower));
         WithVar(new SelfDebuffVar("Weak", 2));
-        WithTip(typeof(VigorPower));
+        WithMarkedTip(typeof(VigorPower));
     }
 
     protected override void OnUpgrade()

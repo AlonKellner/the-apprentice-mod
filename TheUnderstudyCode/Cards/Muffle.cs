@@ -15,7 +15,7 @@ public class Muffle : UnderstudyCard
     public Muffle() : base(0, CardType.Skill, CardRarity.Common, TargetType.None)
     {
         WithBlock(7);
-        WithTip(typeof(VigorPower));
+        WithMarkedTip(typeof(VigorPower));
     }
 
     protected override void OnUpgrade()

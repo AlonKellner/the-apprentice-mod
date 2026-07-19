@@ -48,6 +48,7 @@ public static class SceneStealing
         ModelDb.Power<ArtifactPower>(),
         ModelDb.Power<UnweakPower>(),
         ModelDb.Power<UnvulnerablePower>(),
+        ModelDb.Power<UnfrailPower>(),
         ModelDb.Power<UntaintedPower>(),
         ModelDb.Power<UntensionPower>(),
     };

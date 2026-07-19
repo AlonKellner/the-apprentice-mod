@@ -29,10 +29,14 @@ public class BasePowerTooltipSuffixTests
     }
 
     [Fact]
-    public void Strength_IsInvertibleOnly()
+    public void Strength_And_Vigor_AreBoth()
     {
-        Assert.Equal(" [gold]Invertible[/gold].",
+        // Sign-flip buffs: invertible (InvertVigorSign / Strength sign-flip) AND swappable (stolen
+        // from enemies via SwappableBuffs). This is the fix for Vigor not appearing (e.g. on Forte).
+        Assert.Equal(" [gold]Invertible[/gold]. [gold]Swappable[/gold].",
             BasePowerTooltipSuffixPatch.MissingSuffix(new StrengthPower(), "Strength."));
+        Assert.Equal(" [gold]Invertible[/gold]. [gold]Swappable[/gold].",
+            BasePowerTooltipSuffixPatch.MissingSuffix(new VigorPower(), "Vigor."));
     }
 
     [Fact]
@@ -45,7 +49,8 @@ public class BasePowerTooltipSuffixTests
     [Fact]
     public void Unweak_GetsNoSuffix()
     {
-        // Unweak is the mod's own power (neither an invertible nor swappable base debuff).
+        // Unweak is the mod's own (ICustomModel) power — it self-describes Invertible+Swappable in its
+        // PowerLoc, so the base-power patch/helper adds nothing.
         Assert.Equal("", BasePowerTooltipSuffixPatch.MissingSuffix(new UnweakPower(), "Unweak."));
     }
 
@@ -62,25 +67,25 @@ public class BasePowerTooltipSuffixTests
     }
 
     // Shared classification used identically by BOTH the live power-icon patch and the card-tip helper
-    // (UnderstudyCard.WithDebuffTip). Weak/Vulnerable/Frail are swappable base debuffs; the mod's own
-    // invertible power Shaken is NOT swappable (and not in the base invertible set either — it carries
-    // its "Invertible" wording in its own PowerLoc, so MissingSuffix stays a no-op for it).
+    // (UnderstudyCard.WithMarkedTip). Mod powers (ICustomModel, e.g. Shaken) are excluded from both
+    // sets — they self-describe in their PowerLoc.
     [Fact]
-    public void IsSwappable_CoversBaseDebuffs_ExcludesShaken()
+    public void IsSwappable_CoversBaseSwapRegistryPowers_ExcludesModPowers()
     {
-        Assert.True(BasePowerTooltipSuffixPatch.IsSwappable(new WeakPower()));
-        Assert.True(BasePowerTooltipSuffixPatch.IsSwappable(new VulnerablePower()));
-        Assert.True(BasePowerTooltipSuffixPatch.IsSwappable(new FrailPower()));
-        Assert.False(BasePowerTooltipSuffixPatch.IsSwappable(new StrengthPower()));
-        Assert.False(BasePowerTooltipSuffixPatch.IsSwappable(new ShakenPower()));
+        Assert.True(BasePowerTooltipSuffixPatch.IsSwappable(new WeakPower()));       // SwappableDebuffs
+        Assert.True(BasePowerTooltipSuffixPatch.IsSwappable(new FrailPower()));      // SwappableDebuffs
+        Assert.True(BasePowerTooltipSuffixPatch.IsSwappable(new StrengthPower()));   // SwappableBuffs
+        Assert.True(BasePowerTooltipSuffixPatch.IsSwappable(new VigorPower()));      // SwappableBuffs
+        Assert.False(BasePowerTooltipSuffixPatch.IsSwappable(new ShakenPower()));    // mod power
     }
 
     [Fact]
-    public void IsInvertible_CoversBaseInvertiblePowers_ExcludesShaken()
+    public void IsInvertible_DerivesFromCanonicalPredicate_ExcludesModPowers()
     {
         Assert.True(BasePowerTooltipSuffixPatch.IsInvertible(new WeakPower()));
         Assert.True(BasePowerTooltipSuffixPatch.IsInvertible(new StrengthPower()));
-        Assert.False(BasePowerTooltipSuffixPatch.IsInvertible(new PoisonPower()));
-        Assert.False(BasePowerTooltipSuffixPatch.IsInvertible(new ShakenPower()));
+        Assert.True(BasePowerTooltipSuffixPatch.IsInvertible(new VigorPower()));     // sign-flip invertible
+        Assert.False(BasePowerTooltipSuffixPatch.IsInvertible(new PoisonPower()));   // base, but not invertible
+        Assert.False(BasePowerTooltipSuffixPatch.IsInvertible(new ShakenPower()));   // mod power (self-describes)
     }
 }

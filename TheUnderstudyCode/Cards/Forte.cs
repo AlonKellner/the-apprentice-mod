@@ -16,7 +16,7 @@ public class Forte : UnderstudyCard
     {
         WithVars(new EnergyVar(1), new IntVar("Vigor", 3));
         WithTips(_ => new IHoverTip[] { EnergyHoverTip });
-        WithTip(typeof(VigorPower));
+        WithMarkedTip(typeof(VigorPower));
     }
 
     protected override void OnUpgrade()

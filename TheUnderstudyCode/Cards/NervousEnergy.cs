@@ -20,7 +20,7 @@ public class NervousEnergy : UnderstudyCard
         WithVars(new EnergyVar(2));
         WithCostUpgradeBy(-1);
         WithTips(_ => new IHoverTip[] { EnergyHoverTip });
-        WithDebuffTip(typeof(VulnerablePower));
+        WithMarkedTip(typeof(VulnerablePower));
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)

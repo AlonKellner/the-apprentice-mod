@@ -16,7 +16,7 @@ public class Crash : UnderstudyCard
     {
         WithDamage(7);
         WithVars(new IntVar("Vigor", 3));
-        WithTip(typeof(VigorPower));
+        WithMarkedTip(typeof(VigorPower));
     }
 
     protected override void OnUpgrade()

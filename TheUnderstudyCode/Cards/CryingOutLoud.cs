@@ -14,7 +14,7 @@ public class CryingOutLoud : UnderstudyCard
     public CryingOutLoud() : base(1, CardType.Power, CardRarity.Uncommon, TargetType.None)
     {
         WithPowerNoTip<CryingOutLoudPower>(3, 1);
-        WithTip(typeof(VigorPower));
+        WithMarkedTip(typeof(VigorPower));
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)

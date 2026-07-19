@@ -14,8 +14,8 @@ public class TheFirstLesson : UnderstudyCard
     public TheFirstLesson() : base(1, CardType.Power, CardRarity.Rare, TargetType.None)
     {
         WithPowerNoTip<TheFirstLessonPower>(1);
-        WithDebuffTip(typeof(WeakPower));
-        WithDebuffTip(typeof(VulnerablePower));
+        WithMarkedTip(typeof(WeakPower));
+        WithMarkedTip(typeof(VulnerablePower));
         WithKeyword(CardKeyword.Retain, ConstructedCardModel.UpgradeType.Add);
     }
 

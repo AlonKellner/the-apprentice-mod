@@ -18,7 +18,7 @@ public class Joke : UnderstudyCard
         WithDamage(6);
         WithVars(new IntVar("Invert", 1));
         WithTip(UnderstudyKeywords.Invert);
-        WithDebuffTip(typeof(VulnerablePower));
+        WithMarkedTip(typeof(VulnerablePower));
         WithVar(new SelfDebuffVar("Vulnerable", 1));
     }
 

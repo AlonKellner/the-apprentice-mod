@@ -17,7 +17,7 @@ public class SingAlong : UnderstudyCard
     public SingAlong() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.None)
     {
         WithCostUpgradeBy(-1);
-        WithTip(typeof(VigorPower));
+        WithMarkedTip(typeof(VigorPower));
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)

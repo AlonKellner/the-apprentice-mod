@@ -15,7 +15,7 @@ public class SonicBoom : UnderstudyCard
 
     public SonicBoom() : base(0, CardType.Skill, CardRarity.Rare, TargetType.None)
     {
-        WithTip(typeof(VigorPower));
+        WithMarkedTip(typeof(VigorPower));
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)

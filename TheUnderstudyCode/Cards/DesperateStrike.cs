@@ -14,7 +14,7 @@ public class DesperateStrike : UnderstudyCard
     public DesperateStrike() : base(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
     {
         WithDamage(20);
-        WithDebuffTip(typeof(WeakPower));
+        WithMarkedTip(typeof(WeakPower));
         WithVar(new SelfDebuffVar("Weak", 2));
     }
 
