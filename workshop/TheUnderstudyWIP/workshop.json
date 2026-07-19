@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.11.6 - Fix: pre-Tuned cards (Practice, Signature, etc.) now correctly preview base+1 in the Deck view and Compendium too, matching what they show in combat.",
+  "changeNote": "v1.11.8 - Tuned cards now color their damage/block relative to their 'dynamic base' (printed base + the card's own Tuned): a Tuned card reads neutral with no other modifier, red when Weakened, and green when boosted by extra Tuned from other cards or by Strength/Vulnerable.",
   "tags": [],
   "dependencies": [
     3737335127

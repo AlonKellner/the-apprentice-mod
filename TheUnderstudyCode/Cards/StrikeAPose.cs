@@ -6,12 +6,12 @@ using MegaCrit.Sts2.Core.Localization.DynamicVars;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
-// Let loose: three quick hits, then flip a debuff. (Invert = Self / Positive / Fun theme.)
-public class Freestyle : UnderstudyCard
+// Strike a pose: three quick hits, then flip a debuff. (Invert = Self / Positive / Fun theme.)
+public class StrikeAPose : UnderstudyCard
 {
-    public const string CardId = "TheUnderstudy:Freestyle";
+    public const string CardId = "TheUnderstudy:StrikeAPose";
 
-    public Freestyle() : base(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
+    public StrikeAPose() : base(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
     {
         WithDamage(3);
         WithVars(new IntVar("Invert", 1));

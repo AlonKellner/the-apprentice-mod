@@ -31,7 +31,7 @@ attack targeting **4 AoE / 1 random / rest single** (base-game ratio).
 - "" — Attack · Common · cost 1: Deal 3 damage twice. Remove [gold]Unplayable[/gold] from all attacks and skills in hand.  ⤷ upg: dmg 3→4  ⤷ # suggest: Comeback
 - "Melody" — Attack · Common · cost 1: Deal 9 damage. Apply [gold]Planned[/gold] to -1-+2+ attacks and skills in your discard pile.  ⤷ note: kept existing dmg 9 (draft's 7 is a nerf)
 - "Run Through" — Attack · Common · cost 2: Deal 14 damage. Apply [gold]Tuned[/gold] to 1 attack or skill in hand.  ⤷ note: use existing Run Through here; dropped the "Deal 12 + Tuned 3" version (too close to Back of my Hand)
-- "" — Attack · Uncommon · cost 1: Deal 3 damage 3 times. [gold]Invert[/gold] -1-+2+.  ⤷ note: single-target now (was random) — targeting rebalance  ⤷ # suggest: Freestyle
+- "Strike a Pose" — Attack · Uncommon · cost 1: Deal 3 damage 3 times. [gold]Invert[/gold] -1-+2+.  ⤷ note: single-target now (was random) — targeting rebalance
 - "" — Attack · Common · cost 1: Deal 6 damage to ALL enemies. [gold]Swap[/gold] -3-+6+.  ⤷ note: AoE (revives Stage Fright's AoE-Swap; supplies the +1 AoE)  ⤷ # suggest: Upstage
 - "Crash" — Attack · Common · cost 1: Deal 7 damage. Gain 3 [gold]Vigor[/gold].  ⤷ upg: +3 dmg
 - "Desperate Strike" — Attack · Common · cost 1: Deal -20-+24+ damage. Apply -2-+1+ [gold]Weak[/gold] to yourself.

@@ -32,7 +32,7 @@ public class CardRarityMechanicCoverageTests
         {
             typeof(Joke), typeof(BrightSide), typeof(Apathy),
             typeof(HeldNote), typeof(MyOwnLesson), typeof(OwnIt), typeof(LivingTheDream),
-            typeof(Freestyle), typeof(SilverLining), typeof(GiveAndTake), typeof(TurnItAround),
+            typeof(StrikeAPose), typeof(SilverLining), typeof(GiveAndTake), typeof(TurnItAround),
         },
         ["Planned"] = new[]
         {
