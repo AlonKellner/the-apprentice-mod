@@ -38,7 +38,7 @@
   "THEUNDERSTUDY-DA_CAPO.title": "Da Capo",
   "THEUNDERSTUDY-DA_CAPO.description": "Play all [gold]Planned[/gold] cards, at most once per turn.\nApply [gold]Planned[/gold] to each card played this way.",
   "THEUNDERSTUDY-BREAKING_VOICE.title": "Breaking Voice",
-  "THEUNDERSTUDY-BREAKING_VOICE.description": "Deal {Damage:diff()} damage.\nApply {Weak:inverseDiff()} [gold]Weak[/gold] to yourself.\nGain {Vigor:diff()} [gold]Vigor[/gold].",
+  "THEUNDERSTUDY-BREAKING_VOICE.description": "Deal {Damage:diff()} damage.\nGain {Vigor:diff()} [gold]Vigor[/gold].\nApply {Weak:inverseDiff()} [gold]Weak[/gold] to yourself.",
   "THEUNDERSTUDY-LOOSEN_UP.title": "Loosen Up",
   "THEUNDERSTUDY-LOOSEN_UP.description": "Deal {Damage:diff()} damage to a random enemy for each [gold]Unplayable[/gold] in hand.\nRemove [gold]Unplayable[/gold] from all attacks and skills in hand.",
   "THEUNDERSTUDY-FOLK_SONG.title": "Folk Song",

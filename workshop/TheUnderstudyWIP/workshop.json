@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.11.21 - Rewrote the Swap keyword tooltip to be shorter and clearer: give/take on separate lines with a shared cap, and colored the number and 'swappable' to match base-game keyword styling.",
+  "changeNote": "v1.11.22 - Breaking Voice now lists its effects shortest-to-longest: Deal 7 damage, Gain 4 Vigor, Apply 2 Weak to yourself (and resolves in that order).",
   "tags": [],
   "dependencies": [
     3737335127

@@ -34,8 +34,8 @@ public class BreakingVoice : UnderstudyCard
         await CommonActions.CardAttack(cardPlay.Card, cardPlay).Execute(context);
 
         var creature = cardPlay.Card.Owner.Creature;
-        await EmotionalExpression.ApplyWeakToSelf(context, creature, (int)DynamicVars["Weak"].BaseValue, this);
         int vigor = (int)DynamicVars["Vigor"].BaseValue;
         await PowerCmd.Apply<VigorPower>(context, creature, vigor, creature, this, false);
+        await EmotionalExpression.ApplyWeakToSelf(context, creature, (int)DynamicVars["Weak"].BaseValue, this);
     }
 }
