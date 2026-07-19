@@ -13,19 +13,19 @@ public class RoleReversal : UnderstudyCard
 
     public RoleReversal() : base(1, CardType.Skill, CardRarity.Common, TargetType.None)
     {
-        WithVars(new IntVar("Swap", 6));
+        WithVars(new IntVar("Swap", 2));
         WithTip(UnderstudyKeywords.Swap);
     }
 
     protected override void OnUpgrade()
     {
         base.OnUpgrade();
-        DynamicVars["Swap"].UpgradeValueBy(4m);
+        DynamicVars["Swap"].UpgradeValueBy(1m); // Swap twice -> Swap 3 times
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
-        int swapAmount = (int)DynamicVars["Swap"].BaseValue;
-        await SceneStealing.SwapEach(context, cardPlay.Card.Owner.Creature, swapAmount);
+        int repeats = (int)DynamicVars["Swap"].BaseValue;
+        await SceneStealing.Swap(context, cardPlay.Card.Owner.Creature, repeats);
     }
 }

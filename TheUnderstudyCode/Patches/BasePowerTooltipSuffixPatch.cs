@@ -44,11 +44,12 @@ public static class BasePowerTooltipSuffixPatch
     // Base-game powers Swap acts on — the base-game entries of SceneStealing.SwappableDebuffs (top row)
     // and SwappableBuffs (bottom row). Kept as a type list because the registries are ModelDb-backed
     // (this stays bare-testable); it MUST mirror those registries' base-game entries. Mod swappable
-    // powers (Tension/Untension/Untainted) self-tip via PowerLoc.
+    // powers (Tension/Untension/Untainted) self-tip via PowerLoc. Strength/Dexterity are deliberately
+    // NOT here — they are Invertible but no longer Swappable (see SceneStealing.SwappableBuffs).
     public static bool IsSwappable(PowerModel p) =>
         p is WeakPower or VulnerablePower or FrailPower or PoisonPower or DoomPower or ConstrictPower
             or TaintedPower
-            or StrengthPower or DexterityPower or VigorPower or RegenPower or ThornsPower or ArtifactPower;
+            or VigorPower or RegenPower or ThornsPower or ArtifactPower;
 
     // The suffix text this base power still needs, given its current tooltip description (so repeated
     // getter calls stay idempotent). Invertible is appended before Swappable, so a power that is both

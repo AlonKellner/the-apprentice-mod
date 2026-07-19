@@ -29,12 +29,21 @@ public class BasePowerTooltipSuffixTests
     }
 
     [Fact]
-    public void Strength_And_Vigor_AreBoth()
+    public void Strength_IsInvertibleOnly()
     {
-        // Sign-flip buffs: invertible (InvertVigorSign / Strength sign-flip) AND swappable (stolen
-        // from enemies via SwappableBuffs). This is the fix for Vigor not appearing (e.g. on Forte).
-        Assert.Equal(" [gold]Invertible[/gold]. [gold]Swappable[/gold].",
+        // Strength/Dexterity are sign-flip invertible but deliberately NOT swappable (too many enemies
+        // scale off them — they were dropped from SceneStealing.SwappableBuffs).
+        Assert.Equal(" [gold]Invertible[/gold].",
             BasePowerTooltipSuffixPatch.MissingSuffix(new StrengthPower(), "Strength."));
+        Assert.Equal(" [gold]Invertible[/gold].",
+            BasePowerTooltipSuffixPatch.MissingSuffix(new DexterityPower(), "Dexterity."));
+    }
+
+    [Fact]
+    public void Vigor_IsBoth()
+    {
+        // Vigor stays a sign-flip buff that is both invertible (InvertVigorSign) AND swappable (stolen
+        // from enemies via SwappableBuffs).
         Assert.Equal(" [gold]Invertible[/gold]. [gold]Swappable[/gold].",
             BasePowerTooltipSuffixPatch.MissingSuffix(new VigorPower(), "Vigor."));
     }
@@ -72,11 +81,12 @@ public class BasePowerTooltipSuffixTests
     [Fact]
     public void IsSwappable_CoversBaseSwapRegistryPowers_ExcludesModPowers()
     {
-        Assert.True(BasePowerTooltipSuffixPatch.IsSwappable(new WeakPower()));       // SwappableDebuffs
-        Assert.True(BasePowerTooltipSuffixPatch.IsSwappable(new FrailPower()));      // SwappableDebuffs
-        Assert.True(BasePowerTooltipSuffixPatch.IsSwappable(new StrengthPower()));   // SwappableBuffs
-        Assert.True(BasePowerTooltipSuffixPatch.IsSwappable(new VigorPower()));      // SwappableBuffs
-        Assert.False(BasePowerTooltipSuffixPatch.IsSwappable(new ShakenPower()));    // mod power
+        Assert.True(BasePowerTooltipSuffixPatch.IsSwappable(new WeakPower()));        // SwappableDebuffs
+        Assert.True(BasePowerTooltipSuffixPatch.IsSwappable(new FrailPower()));       // SwappableDebuffs
+        Assert.True(BasePowerTooltipSuffixPatch.IsSwappable(new VigorPower()));       // SwappableBuffs
+        Assert.False(BasePowerTooltipSuffixPatch.IsSwappable(new StrengthPower()));   // Invertible but NOT swappable
+        Assert.False(BasePowerTooltipSuffixPatch.IsSwappable(new DexterityPower()));  // Invertible but NOT swappable
+        Assert.False(BasePowerTooltipSuffixPatch.IsSwappable(new ShakenPower()));     // mod power
     }
 
     [Fact]

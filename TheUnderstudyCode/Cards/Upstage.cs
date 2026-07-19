@@ -14,20 +14,20 @@ public class Upstage : UnderstudyCard
     public Upstage() : base(1, CardType.Attack, CardRarity.Uncommon, TargetType.AllEnemies)
     {
         WithDamage(6);
-        WithVars(new IntVar("Swap", 3));
+        WithVars(new IntVar("Swap", 1));
         WithTip(UnderstudyKeywords.Swap);
     }
 
     protected override void OnUpgrade()
     {
         base.OnUpgrade();
-        DynamicVars["Swap"].UpgradeValueBy(3m);
+        DynamicVars["Swap"].UpgradeValueBy(1m); // Swap -> Swap twice
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
         await CommonActions.CardAttack(cardPlay.Card, cardPlay).Execute(context);
-        int swapAmount = (int)DynamicVars["Swap"].BaseValue;
-        await SceneStealing.SwapEach(context, cardPlay.Card.Owner.Creature, swapAmount);
+        int repeats = (int)DynamicVars["Swap"].BaseValue;
+        await SceneStealing.Swap(context, cardPlay.Card.Owner.Creature, repeats);
     }
 }

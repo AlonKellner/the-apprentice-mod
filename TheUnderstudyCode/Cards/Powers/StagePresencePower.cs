@@ -7,21 +7,21 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 
-// Recurring passive Swap: every turn start, push your invertible debuffs onto enemies. Amount is the
-// per-turn Swap count (2), fixed — the upgrade adds Innate, not more Swap.
+// Recurring passive Swap: every turn start, trade fortunes with the enemy team once. Amount is the
+// per-turn Swap repeat count (1), fixed — the upgrade adds Innate, not more Swap.
 public class StagePresencePower : UnderstudyPower
 {
     public override PowerType Type => PowerType.Buff;
-    public override PowerStackType StackType => PowerStackType.Counter;
+    public override PowerStackType StackType => PowerStackType.Single;
 
     public override List<(string, string)> Localization => new PowerLoc(
         "Stage Presence",
-        "At the start of your turn, [gold]Swap[/gold] this many.",
-        "At the start of your turn, [gold]Swap[/gold] {Amount}.");
+        "At the start of your turn, [gold]Swap[/gold].",
+        "At the start of your turn, [gold]Swap[/gold].");
 
     public override async Task AfterPlayerTurnStart(PlayerChoiceContext context, Player player)
     {
         if (player != Owner.Player) return;
-        await SceneStealing.SwapEach(context, Owner, (int)Amount);
+        await SceneStealing.Swap(context, Owner, (int)Amount);
     }
 }

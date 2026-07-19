@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.11.16 - Renamed Encore -> Reverb and the old Reverb (double Vigor) -> Stereo. Fate Knocking now costs 1.",
+  "changeNote": "v1.11.18 - Swap reworked: no value, scales as Swap/Swap twice/Swap 3 times. Each Swap gives up to 10 of your most recently changed swappable debuff to ALL enemies and steals up to 10 of each enemy's most recently changed swappable buff. Strength/Dexterity are no longer swappable (Vigor still is).",
   "tags": [],
   "dependencies": [
     3737335127

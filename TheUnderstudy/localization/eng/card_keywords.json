@@ -10,7 +10,7 @@
   "THEUNDERSTUDY-INVERTIBLE.title": "Invertible",
   "THEUNDERSTUDY-INVERTIBLE.description": "A debuff that can be converted into a buff. Not all debuffs are invertible.",
   "THEUNDERSTUDY-SWAP.title": "Swap",
-  "THEUNDERSTUDY-SWAP.description": "Give this many of each swappable debuff you have to ALL enemies. Take this many of each swappable buff from ALL enemies.",
+  "THEUNDERSTUDY-SWAP.description": "Give up to 10 of your most recently changed swappable debuff to ALL enemies. Take up to 10 of each enemy's most recently changed swappable buff. 'Twice' or 'N times' repeats this, recalculating each time.",
   "THEUNDERSTUDY-SWAPPABLE.title": "Swappable",
   "THEUNDERSTUDY-SWAPPABLE.description": "A universal buff or debuff that Swap can move between you and enemies. Not all buffs and debuffs are swappable."
 }

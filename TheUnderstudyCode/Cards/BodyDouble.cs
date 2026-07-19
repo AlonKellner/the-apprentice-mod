@@ -14,7 +14,7 @@ public class BodyDouble : UnderstudyCard
     public BodyDouble() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.None)
     {
         WithBlock(8);
-        WithVars(new IntVar("Swap", 3));
+        WithVars(new IntVar("Swap", 1));
         WithTip(UnderstudyKeywords.Swap);
     }
 
@@ -27,6 +27,6 @@ public class BodyDouble : UnderstudyCard
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
         await CommonActions.CardBlock(this, cardPlay);
-        await SceneStealing.SwapEach(context, cardPlay.Card.Owner.Creature, (int)DynamicVars["Swap"].BaseValue);
+        await SceneStealing.Swap(context, cardPlay.Card.Owner.Creature, (int)DynamicVars["Swap"].BaseValue);
     }
 }

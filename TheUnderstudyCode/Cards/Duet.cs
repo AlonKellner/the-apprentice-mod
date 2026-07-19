@@ -17,7 +17,7 @@ public class Duet : UnderstudyCard
 
     public Duet() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.AnyPlayer)
     {
-        WithVars(new IntVar("Swap", 6), new IntVar("Invert", 2));
+        WithVars(new IntVar("Swap", 2), new IntVar("Invert", 2));
         WithTip(UnderstudyKeywords.Swap);
         WithTip(UnderstudyKeywords.Invert);
     }
@@ -25,7 +25,7 @@ public class Duet : UnderstudyCard
     protected override void OnUpgrade()
     {
         base.OnUpgrade();
-        DynamicVars["Swap"].UpgradeValueBy(4m);   // 6 -> 10
+        DynamicVars["Swap"].UpgradeValueBy(1m);   // Swap twice -> Swap 3 times
         DynamicVars["Invert"].UpgradeValueBy(1m); // 2 -> 3
     }
 
@@ -34,7 +34,7 @@ public class Duet : UnderstudyCard
         // The chosen teammate's creature — Swap/Invert operate relative to them (their debuffs go to
         // the enemies, their remaining debuffs flip), exactly like Give and Take does for its owner.
         if (cardPlay.Target is not { } target) return;
-        await SceneStealing.SwapEach(context, target, (int)DynamicVars["Swap"].BaseValue);
+        await SceneStealing.Swap(context, target, (int)DynamicVars["Swap"].BaseValue);
         await EmotionalExpression.InvertEach(context, target, (int)DynamicVars["Invert"].BaseValue);
     }
 }

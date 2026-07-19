@@ -14,7 +14,7 @@ public class GiveAndTake : UnderstudyCard
 
     public GiveAndTake() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.None)
     {
-        WithVars(new IntVar("Swap", 3), new IntVar("Invert", 1));
+        WithVars(new IntVar("Swap", 1), new IntVar("Invert", 1));
         WithTip(UnderstudyKeywords.Swap);
         WithTip(UnderstudyKeywords.Invert);
     }
@@ -22,7 +22,7 @@ public class GiveAndTake : UnderstudyCard
     protected override void OnUpgrade()
     {
         base.OnUpgrade();
-        DynamicVars["Swap"].UpgradeValueBy(3m);
+        DynamicVars["Swap"].UpgradeValueBy(1m); // Swap -> Swap twice
         DynamicVars["Invert"].UpgradeValueBy(1m);
     }
 
@@ -31,7 +31,7 @@ public class GiveAndTake : UnderstudyCard
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
         var creature = cardPlay.Card.Owner.Creature;
-        await SceneStealing.SwapEach(context, creature, (int)DynamicVars["Swap"].BaseValue);
+        await SceneStealing.Swap(context, creature, (int)DynamicVars["Swap"].BaseValue);
         await EmotionalExpression.InvertEach(context, creature, (int)DynamicVars["Invert"].BaseValue);
     }
 }

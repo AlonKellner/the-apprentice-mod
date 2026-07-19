@@ -13,7 +13,7 @@ public class StagePresence : UnderstudyCard
 
     public StagePresence() : base(1, CardType.Power, CardRarity.Rare, TargetType.None)
     {
-        WithPowerNoTip<StagePresencePower>(2);
+        WithPowerNoTip<StagePresencePower>(1);
         WithTip(UnderstudyKeywords.Swap);
         WithKeyword(CardKeyword.Innate, ConstructedCardModel.UpgradeType.Add);
     }
