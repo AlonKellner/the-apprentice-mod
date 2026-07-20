@@ -62,6 +62,7 @@ public static class SceneStealing
         ModelDb.Power<UnfrailPower>(),
         ModelDb.Power<UntaintedPower>(),
         ModelDb.Power<UntensionPower>(),
+        ModelDb.Power<UndoomPower>(),
     };
 
     // The AllowNegative buffs whose POSITIVE portion is a buff (stolen from enemies, above) and whose

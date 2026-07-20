@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.11.23 - Live damage previews: Clean Slate and Loosen Up now show '(Hits N times)', and Fate Knocking shows '(Deals N damage)' for its finisher (accounts for the 3 strikes and all damage modifiers), matching base-game card previews.",
+  "changeNote": "v1.11.24 - New Undoom power: the inverse of Doom (heals up to X at the end of the enemy turn); Doom & Undoom are now an invertible/swappable pair. The Second Lesson now draws from ALL invertible pairs (adds Vigor, Tainted/Untainted, Tension/Untension, Doom/Undoom), via a single unified pair registry. Adds Tension/Untension/Undoom/Untainted icons.",
   "tags": [],
   "dependencies": [
     3737335127

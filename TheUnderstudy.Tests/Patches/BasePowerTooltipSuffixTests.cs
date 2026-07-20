@@ -56,6 +56,22 @@ public class BasePowerTooltipSuffixTests
     }
 
     [Fact]
+    public void Doom_IsBoth()
+    {
+        // Base-game Doom is Swappable and, now that Doom/Undoom is an InvertiblePairs entry, Invertible too.
+        Assert.Equal(" [gold]Invertible[/gold]. [gold]Swappable[/gold].",
+            BasePowerTooltipSuffixPatch.MissingSuffix(new DoomPower(), "Doom."));
+    }
+
+    [Fact]
+    public void Undoom_GetsNoSuffix()
+    {
+        // Undoom is the mod's own (ICustomModel) power — it self-describes Invertible+Swappable in its
+        // PowerLoc, so the base-power patch/helper adds nothing.
+        Assert.Equal("", BasePowerTooltipSuffixPatch.MissingSuffix(new UndoomPower(), "Undoom."));
+    }
+
+    [Fact]
     public void Unweak_GetsNoSuffix()
     {
         // Unweak is the mod's own (ICustomModel) power — it self-describes Invertible+Swappable in its

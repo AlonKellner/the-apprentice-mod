@@ -321,6 +321,7 @@ public class PowerClassTests
         Assert.NotEmpty(new AnotherBrickPower().Localization);
         Assert.NotEmpty(new UnfrailPower().Localization);
         Assert.NotEmpty(new InvertTrackerPower().Localization);
+        Assert.NotEmpty(new UndoomPower().Localization);
     }
 
     [Fact]
@@ -362,10 +363,11 @@ public class PowerClassTests
     public void MyOwnLessonPower_HasNoInterceptionOverrides() => AssertHasNoInterceptionOverrides(typeof(MyOwnLessonPower));
 
     [Fact]
-    public void ApplyBuffSide_And_ApplyDebuffSide_Exist()
+    public void InvertiblePair_ExposesApplyBuffAndDebuffSide()
     {
-        Assert.NotNull(typeof(EmotionalExpression).GetMethod("ApplyBuffSide", BindingFlags.Public | BindingFlags.Static));
-        Assert.NotNull(typeof(EmotionalExpression).GetMethod("ApplyDebuffSide", BindingFlags.Public | BindingFlags.Static));
+        // Reward/Punish resolution goes through pair.ApplyBuffSide / pair.ApplyDebuffSide (registry-driven).
+        Assert.NotNull(typeof(InvertiblePair).GetMethod("ApplyBuffSide", BindingFlags.Public | BindingFlags.Instance));
+        Assert.NotNull(typeof(InvertiblePair).GetMethod("ApplyDebuffSide", BindingFlags.Public | BindingFlags.Instance));
     }
 
     [Fact]
@@ -664,4 +666,24 @@ public class PowerClassTests
         Assert.NotNull(typeof(UntaintedPower).GetMethod(
             "AfterSideTurnEnd", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly));
     }
+
+    // Undoom — buff mirror of base Doom. Heals up to X at the end of the opponent's turn (AfterSideTurnEnd),
+    // does not remove itself. Its cancellation with Doom is centralized on InvertTrackerPower (no local
+    // interception overrides).
+    [Fact]
+    public void UndoomPower_IsBuff_Counter()
+    {
+        var p = new UndoomPower();
+        Assert.Equal(PowerType.Buff, p.Type);
+        Assert.Equal(PowerStackType.Counter, p.StackType);
+        Assert.NotEmpty(p.Localization);
+    }
+
+    [Fact]
+    public void UndoomPower_HealsAtOpponentTurnEnd() =>
+        Assert.NotNull(typeof(UndoomPower).GetMethod(
+            "AfterSideTurnEnd", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly));
+
+    [Fact]
+    public void UndoomPower_HasNoInterceptionOverrides() => AssertHasNoInterceptionOverrides(typeof(UndoomPower));
 }

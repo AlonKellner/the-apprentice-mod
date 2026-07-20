@@ -25,17 +25,9 @@ public class DoubleTimePower : UnderstudyPower
         "All [gold]invertible[/gold] buff and debuff gains are applied an additional time.",
         "All [gold]invertible[/gold] buff and debuff gains are applied [blue]{Amount}[/blue] additional {Amount:plural:time|times}.");
 
-    internal static bool IsInvertiblePower(PowerModel power) =>
-        power is WeakPower or UnweakPower
-            or VulnerablePower or UnvulnerablePower
-            or ShakenPower or UnshakenPower
-            or LimitedPower or UnlimitedPower
-            or JadedPower or UnjadedPower
-            or FrailPower or UnfrailPower
-            or StrengthPower or DexterityPower
-            or VigorPower
-            or TaintedPower or UntaintedPower
-            or TensionPower or UntensionPower;
+    // Derived from the single source of truth — every power in any InvertiblePairs.All entry (incl.
+    // Doom/Undoom). Drives Double Time's repeat AND BasePowerTooltipSuffixPatch.IsInvertible.
+    internal static bool IsInvertiblePower(PowerModel power) => InvertiblePairs.For(power) != null;
 
     // Re-entrancy guard: each extra application below fires this same broadcast hook again (it's
     // a real ModifyAmount call, indistinguishable from an organic one), so this stops those from

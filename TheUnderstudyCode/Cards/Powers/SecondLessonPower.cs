@@ -125,9 +125,9 @@ public class SecondLessonPower : UnderstudyPower
         var rewarded = Owner.GetPower<RewardedPower>();
         if (rewarded == null || rewarded.Amount <= 0) return;
         var categories = EmotionalExpression.BuildCategories(Owner);
-        var debuff = EmotionalExpression.PickByPriority(categories, EmotionalExpression.RewardPriority, PickRandom);
-        Log.Info($"SecondLessonPower[turn {turn}]: applying Reward buff {debuff} x{rewarded.Amount}");
-        await EmotionalExpression.ApplyBuffSide(ctx, Owner, debuff, rewarded.Amount);
+        var pair = EmotionalExpression.PickByPriority(categories, EmotionalExpression.RewardPriority, PickRandom);
+        Log.Info($"SecondLessonPower[turn {turn}]: applying Reward buff {pair.Name} x{rewarded.Amount}");
+        await pair.ApplyBuffSide(ctx, Owner, rewarded.Amount);
     }
 
     private async Task ResolvePunishTurn(PlayerChoiceContext ctx, int turn)
@@ -137,12 +137,12 @@ public class SecondLessonPower : UnderstudyPower
         var categories = EmotionalExpression.BuildCategories(Owner);
         bool firstLessonActive = Owner.GetPowerAmount<TheFirstLessonPower>() > 0;
         var filtered = EmotionalExpression.ExcludeForPunishIfFirstLessonActive(categories, firstLessonActive);
-        var debuff = EmotionalExpression.PickByPriority(filtered, EmotionalExpression.PunishPriority, PickRandom);
-        Log.Info($"SecondLessonPower[turn {turn}]: applying Punish debuff {debuff} x{punished.Amount}");
-        await EmotionalExpression.ApplyDebuffSide(ctx, Owner, debuff, punished.Amount);
+        var pair = EmotionalExpression.PickByPriority(filtered, EmotionalExpression.PunishPriority, PickRandom);
+        Log.Info($"SecondLessonPower[turn {turn}]: applying Punish debuff {pair.Name} x{punished.Amount}");
+        await pair.ApplyDebuffSide(ctx, Owner, punished.Amount);
     }
 
-    private InvertibleDebuff PickRandom(IReadOnlyList<InvertibleDebuff> candidates) =>
+    private InvertiblePair PickRandom(IReadOnlyList<InvertiblePair> candidates) =>
         Owner.Player!.RunState.Rng.CombatCardSelection.NextItem(candidates);
 
     private async Task AssignOrders(PlayerChoiceContext ctx, Player player, int turn)
