@@ -126,44 +126,13 @@ public abstract class UnderstudyCard(
     // base-game keyword edits like Ethereal). Cleared per combat.
     private bool _stableKeywordWatch;
 
-    // The pre-Planned mechanic (starting a combat already queued) — revived from the original,
-    // now-deleted Apprentice character's ApprenticeCard.IsPrePlanned, scoped to just the handful
-    // of B cards that override this (see ApplyPrePlannedIfNeeded). Manually attaches
-    // PlannedModifier with sentinel slot -1 (always sorts first in PlannedModifier.GetSorted, and
-    // never collides with Apply's own auto-incrementing max+1 numbering) rather than calling
-    // PlannedModifier.Apply, since Apply always assigns a fresh non-negative slot.
+    // The pre-Planned mechanic (starting a combat already queued) — scoped to the handful of B cards
+    // that override this (Signature, upgraded Experience). The actual queuing is no longer per-card:
+    // PrePlannedSetup runs once per combat and assigns every pre-Planned card a concrete, unique slot
+    // from the normal PlannedSlotSequencer in deck order (see AfterPlayerTurnStartLate below), so they
+    // keep their deck position and take the lowest slots. (Previously each attached a shared sentinel
+    // slot -1, so pre-Planned cards all overlapped with no distinct order.)
     public virtual bool IsPrePlanned => false;
-
-    // True once this card has actually been pre-Planned for the current combat — reset only at
-    // BeforeCombatStart. Guards against ApplyPrePlannedIfNeeded re-firing every time this card
-    // re-enters a combat pile (AfterCardEnteredCombat isn't a one-shot "entered combat" hook — it
-    // fires on every pile transition, including moving to Discard right after a "Play all Planned"
-    // resolver's RemoveSlot call has just emptied the modifier out). Without this, a card starts
-    // each combat Planned exactly once as intended, but the instant it's actually played and its
-    // slot consumed, the very next pile transition would see "no PlannedModifier present" and
-    // silently re-queue it — self-perpetuating, unlike Motif's genuinely deliberate self-Plan.
-    private bool _prePlannedThisCombat;
-
-    private void ApplyPrePlannedIfNeeded()
-    {
-        if (!IsPrePlanned) return;
-        if (_prePlannedThisCombat) return;
-        if (Pile?.Type.IsCombatPile() != true) return;
-        if (this.TryGetModifier<PlannedModifier>(out _)) return;
-
-        _prePlannedThisCombat = true;
-        CardModifier.AddModifier<PlannedModifier>(this);
-        this.TryGetModifier<PlannedModifier>(out var mod);
-        // BaseLib shallow-clones modifier prototypes, so a freshly-attached instance shares its
-        // SequenceIndices/VisualBySeq with every other clone until reinitialized — same reason
-        // PlannedModifier.Apply always calls this for a brand-new attachment.
-        mod!.ReinitCollections();
-        mod.SequenceIndices.Add(-1);
-        if (!this.TryGetModifier<UnplayableModifier>(out _))
-            CardModifier.AddModifier<UnplayableModifier>(this);
-        PlannedModifier.InvokeChanged();
-        PlannedModifier.RefreshVisualIndices(PlannedModifier.RelevantCards(Owner));
-    }
 
     // The pre-Tuned mechanic (starting a combat already carrying Tuned 1) — same shape as
     // IsPrePlanned above, for "big one-off moment" B cards that should already be primed to lock
@@ -188,7 +157,6 @@ public abstract class UnderstudyCard(
     public override Task BeforeCombatStart()
     {
         var t = base.BeforeCombatStart();
-        _prePlannedThisCombat = false;
         _preTunedThisCombat = false;
         // Reset (not just lazily set) here: a previous combat's snapshot/StableModifier grant
         // must not leak into a new one — MaybeSnapshotIfStable only ever sets _stableSnapshot
@@ -201,7 +169,6 @@ public abstract class UnderstudyCard(
         // non-Stable pre-Tuned cards (EnforceStableNow does nothing for them).
         ApplyPreTunedIfNeeded();
         EnforceStableNow();
-        ApplyPrePlannedIfNeeded();
         return t;
     }
 
@@ -215,6 +182,10 @@ public abstract class UnderstudyCard(
     {
         EnforceStableNow();
         if (player != Owner) return;
+        // Once per combat: give every pre-Planned card a concrete, unique Planned slot in deck order.
+        // Driven here (rather than per-card at BeforeCombatStart) because by turn 1's start every combat
+        // card is present in the draw/hand piles, so the ordered pass sees them all.
+        PrePlannedSetup.AssignIfNeeded(player, CombatState!);
         if (!player.Creature.Powers.Any(p => p is PlannedCounterPower))
             await PowerCmd.Apply<PlannedCounterPower>(context, player.Creature, 1m, player.Creature, null, false);
         if (!player.Creature.Powers.Any(p => p is InvertTrackerPower))
@@ -232,7 +203,6 @@ public abstract class UnderstudyCard(
     public override Task AfterCardEnteredCombat(CardModel triggeredBy)
     {
         EnforceStableNow();
-        ApplyPrePlannedIfNeeded();
         ApplyPreTunedIfNeeded();
         return Task.CompletedTask;
     }

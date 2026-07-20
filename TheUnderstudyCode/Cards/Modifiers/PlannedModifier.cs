@@ -146,18 +146,43 @@ public class PlannedModifier : CardModifier
     // and Blackout both ending up on slot 3 in the same combat).
     private static readonly PlannedSlotSequencer _slots = new();
 
+    // The sequencer's resync point: highest live slot + 1. Only invoked on a combat-token change
+    // (see PlannedSlotSequencer), so a mid-combat save/reload can't re-hand an already-restored slot.
+    private static int NextResyncStart(Player? owner)
+    {
+        int max = -1;
+        foreach (var c in RelevantCards(owner))
+            if (c.TryGetModifier<PlannedModifier>(out var existing))
+                foreach (var s in existing.SequenceIndices)
+                    if (s > max) max = s;
+        return max + 1;
+    }
+
+    // Attaches a concrete, sequencer-assigned Planned slot to a card that STARTS a combat Planned
+    // (pre-Planned). Unlike Apply, it does NOT raise Applied: a card that begins already queued is not
+    // an "apply Planned" action, so it must not trigger reactive hooks (Master Form etc.). Idempotent
+    // — a card already carrying a Planned slot is skipped. Callers assign pre-Planned cards in deck
+    // order at combat start (see PrePlannedSetup), so they take the lowest slots (0,1,2,…) and always
+    // sort before any Planned applied later in the combat.
+    public static void ApplyPrePlanned(CardModel card, ICombatState combat)
+    {
+        if (card.TryGetModifier<PlannedModifier>(out _)) return;
+
+        int newSlot = _slots.Next(combat, () => NextResyncStart(card.Owner));
+        CardModifier.AddModifier<PlannedModifier>(card);
+        card.TryGetModifier<PlannedModifier>(out var mod);
+        mod!.ReinitCollections();
+        mod.SequenceIndices.Add(newSlot);
+        if (!card.TryGetModifier<UnplayableModifier>(out _))
+            CardModifier.AddModifier<UnplayableModifier>(card);
+        InvokeChanged();
+        RefreshVisualIndices(RelevantCards(card.Owner));
+    }
+
     // Appends a new queue slot to the card. Creates the modifier if the card doesn't have one yet.
     public static void Apply(CardModel card, ICombatState combat)
     {
-        int newSlot = _slots.Next(combat, () =>
-        {
-            int max = -1;
-            foreach (var c in RelevantCards(card.Owner))
-                if (c.TryGetModifier<PlannedModifier>(out var existing))
-                    foreach (var s in existing.SequenceIndices)
-                        if (s > max) max = s;
-            return max + 1;
-        });
+        int newSlot = _slots.Next(combat, () => NextResyncStart(card.Owner));
 
         if (!card.TryGetModifier<PlannedModifier>(out var mod))
         {
