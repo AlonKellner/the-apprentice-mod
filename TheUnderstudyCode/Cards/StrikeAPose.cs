@@ -6,14 +6,17 @@ using MegaCrit.Sts2.Core.Localization.DynamicVars;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
-// Strike a pose: two quick hits, then flip a debuff. (Invert = Self / Positive / Fun theme.)
+// Strike a pose: three quick hits at random enemies, then flip a debuff. Random multi-hit sets it
+// apart from Comeback (its single-target twin). (Invert = Self / Positive / Fun theme.)
 public class StrikeAPose : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:StrikeAPose";
 
-    public StrikeAPose() : base(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
+    private const int Hits = 3;
+
+    public StrikeAPose() : base(1, CardType.Attack, CardRarity.Common, TargetType.RandomEnemy)
     {
-        WithDamage(3);
+        WithDamage(4);
         WithVars(new IntVar("Invert", 1));
         WithTip(UnderstudyKeywords.Invert);
     }
@@ -28,7 +31,7 @@ public class StrikeAPose : UnderstudyCard
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
-        await CommonActions.CardAttack(cardPlay.Card, cardPlay, 2).Execute(context);
+        await CommonActions.CardAttack(cardPlay.Card, cardPlay, Hits).Execute(context);
         int invertAmount = (int)DynamicVars["Invert"].BaseValue;
         await EmotionalExpression.InvertEach(context, cardPlay.Card.Owner.Creature, invertAmount);
     }

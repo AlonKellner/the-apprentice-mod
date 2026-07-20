@@ -12,7 +12,7 @@ namespace TheUnderstudy.Tests.Cards;
 // Contract for the live "(Hits N times)" preview on the "deal X damage for each Y" cards. Each such card
 // must (1) back the hit count with a CalculatedVar named "CalculatedHits" over CalculationBase 0 /
 // CalculationExtra 1 (so the previewed value equals the raw count), and (2) render it in cards.json via
-// {CalculatedHits:diff()} + the plural formatter, gated to combat by {InCombat:cond:...}. Mirrors base-game
+// {CalculatedHits:diff()} + the plural formatter, gated to combat by {InCombat:(preview)|}. Mirrors base-game
 // FlakCannon/Flechettes. The live value itself needs a real Owner/combat, so it's verified in-game — these
 // bare tests only pin the var wiring and the loc reference.
 public class HitCountPreviewTests
@@ -48,8 +48,9 @@ public class HitCountPreviewTests
 
         Assert.Contains("{CalculatedHits:diff()}", description);
         Assert.Contains("{CalculatedHits:plural:time|times}", description);
-        // Gated to combat (no live hand/queue to count out of combat).
-        Assert.Contains("{InCombat:cond:", description);
+        // Gated to combat-only via the base-game pattern: the preview sits in the InCombat TRUE branch
+        // ({InCombat:(preview)|}), so it shows during combat and not in the Compendium.
+        Assert.Contains("{InCombat:\n(Hits {CalculatedHits:diff()}", description);
     }
 
     private static string RepoRoot => Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", ".."));

@@ -25,7 +25,7 @@ public class NewDeckCardsTests
     [InlineData(typeof(OneUp), "TheUnderstudy:OneUp", CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)]
     [InlineData(typeof(DaCapo), "TheUnderstudy:DaCapo", CardType.Skill, CardRarity.Rare, TargetType.AnyEnemy)]
     [InlineData(typeof(BreakingVoice), "TheUnderstudy:BreakingVoice", CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)]
-    [InlineData(typeof(LoosenUp), "TheUnderstudy:LoosenUp", CardType.Attack, CardRarity.Uncommon, TargetType.RandomEnemy)]
+    [InlineData(typeof(LoosenUp), "TheUnderstudy:LoosenUp", CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)]
     [InlineData(typeof(LivingTheDream), "TheUnderstudy:LivingTheDream", CardType.Skill, CardRarity.Common, TargetType.None)]
     [InlineData(typeof(FolkSong), "TheUnderstudy:FolkSong", CardType.Skill, CardRarity.Uncommon, TargetType.None)]
     [InlineData(typeof(LoveSong), "TheUnderstudy:LoveSong", CardType.Skill, CardRarity.Uncommon, TargetType.None)]

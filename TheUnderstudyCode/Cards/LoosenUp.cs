@@ -14,7 +14,7 @@ public class LoosenUp : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:LoosenUp";
 
-    public LoosenUp() : base(2, CardType.Attack, CardRarity.Uncommon, TargetType.RandomEnemy)
+    public LoosenUp() : base(2, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
     {
         WithDamage(5);
         // Live "(Hits N times)" preview: N = number of Unplayable cards in hand (each drives one hit).

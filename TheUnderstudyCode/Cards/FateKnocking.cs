@@ -23,13 +23,11 @@ public class FateKnocking : UnderstudyCard
     private static ICombatState? _lastCombat;
     private static readonly Dictionary<CardModel, int> _damageDealt = new();
 
-    public FateKnocking() : base(1, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
+    public FateKnocking() : base(2, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
     {
-        // Base card is printed Stable — it can't be Tuned or turned Unplayable (Stable blocks card
-        // modifiers). The upgrade removes Stable, which lets Tuned attach and scale the strikes/finisher.
-        // Note: Strength/Vigor/Weak/Vulnerable apply whether Stable or not (they're creature powers, not
-        // card modifiers). Damage doesn't change on upgrade.
-        WithKeyword(UnderstudyKeywords.Stable, ConstructedCardModel.UpgradeType.Remove);
+        // 3 strikes, then a finisher equal to the running sum of damage this card has dealt this combat.
+        // Not Stable, so Tuned/Planned can attach and scale the strikes/finisher. Strength/Vigor/Weak/
+        // Vulnerable apply as usual (creature powers). Upgrade raises the per-strike base damage 1 -> 2.
         WithDamage(1);
 
         // Display-only, Body-Slam-style preview of the finisher hit. Raw value = CalculationBase(0) +
@@ -43,6 +41,12 @@ public class FateKnocking : UnderstudyCard
             new ExtraDamageVar(1m),
             new CalculatedDamageVar(ValueProp.Move).WithMultiplier(static (card, _) =>
                 ComputeFinisherBase(PriorSumThisCombat(card), Strikes, card.DynamicVars.Damage.PreviewValue)));
+    }
+
+    protected override void OnUpgrade()
+    {
+        base.OnUpgrade();
+        DynamicVars.Damage.UpgradeValueBy(1m);
     }
 
     // Pure: the finisher's raw (pre-ModifyDamage) base = the accumulated prior sum plus the 3 upcoming

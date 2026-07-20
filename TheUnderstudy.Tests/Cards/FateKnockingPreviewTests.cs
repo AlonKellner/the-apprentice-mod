@@ -46,7 +46,8 @@ public class FateKnockingPreviewTests
     {
         var description = LoadDescriptions()["THEUNDERSTUDY-FATE_KNOCKING"];
         Assert.Contains("{CalculatedDamage:diff()}", description);
-        Assert.Contains("{InCombat:cond:", description); // gated to combat (no sum to show out of combat)
+        // Combat-only via the base-game pattern: preview in the InCombat TRUE branch ({InCombat:(preview)|}).
+        Assert.Contains("{InCombat:\n(Deals {CalculatedDamage:diff()} damage)|}", description);
     }
 
     private static string RepoRoot => Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", ".."));
