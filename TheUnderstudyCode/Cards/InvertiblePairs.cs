@@ -28,6 +28,13 @@ public abstract class InvertiblePair
     public abstract Task ApplyDebuffSide(PlayerChoiceContext ctx, Creature c, int stacks);
     public abstract Task<int> Invert(PlayerChoiceContext ctx, Creature c, int max);  // debuff -> buff, returns converted
 
+    // Give & Take's per-pair resolution: computes Swap's give and Invert's flip from the SAME snapshot of
+    // this pair's debuff, removes the consumed debuff from `self` once (capped, never below zero), then
+    // grants the inverted buff to `self` and applies the given debuff to every enemy — so "Swap & Invert
+    // simultaneously" both act on the original amount instead of Swap consuming what Invert needed.
+    public abstract Task ResolveGiveAndTake(
+        PlayerChoiceContext ctx, Creature self, IReadOnlyList<Creature> enemies, int swapCap, int invertMax);
+
     // Same-shape net-cancellation support, used by InvertTrackerPower. `IsDebuffSide` says which side a power
     // is; `OpposingStock` is the current stock of the OTHER side of the pair (0 for sign-flip, which self-nets).
     public abstract bool IsDebuffSide(PowerModel power);
@@ -65,6 +72,25 @@ public sealed class SameShapePair<TDebuff, TBuff> : InvertiblePair
         await PowerCmd.Apply<TDebuff>(ctx, c, -removeAmount, c, null, false);
         await PowerCmd.Apply<TBuff>(ctx, c, removeAmount, c, null, false);
         return removeAmount;
+    }
+
+    public override async Task ResolveGiveAndTake(
+        PlayerChoiceContext ctx, Creature self, IReadOnlyList<Creature> enemies, int swapCap, int invertMax)
+    {
+        int amount = self.GetPowerAmount<TDebuff>();
+        if (amount <= 0) return;
+
+        // Only debuffs in the Swap registry are pushed onto enemies; the rest are invert-only.
+        bool swappable = SceneStealing.IsSwappableEntry(ModelDb.Power<TDebuff>().Id.Entry);
+        var (swapRemove, invertRemove, selfRemove) =
+            InvertiblePairs.ComputeGiveAndTake(amount, swappable ? swapCap : 0, invertMax);
+
+        // Remove the consumed debuff from yourself FIRST, so the Un-X buff you gain next isn't live-netted
+        // against the very debuff it was inverted from (InvertTrackerPower cancels opposing sides).
+        if (selfRemove > 0) await PowerCmd.Apply<TDebuff>(ctx, self, -selfRemove, self, null, false);
+        if (invertRemove > 0) await PowerCmd.Apply<TBuff>(ctx, self, invertRemove, self, null, false);
+        foreach (var enemy in enemies)
+            if (swapRemove > 0) await PowerCmd.Apply<TDebuff>(ctx, enemy, swapRemove, self, null, false);
     }
 
     public override int OpposingStock(Creature c, PowerModel gainedSide) =>
@@ -106,6 +132,13 @@ public sealed class SignFlipPair<TPower> : InvertiblePair where TPower : PowerMo
         return converted;
     }
 
+    // Sign-flip debuffs (negative Vigor/Strength/Dexterity) are inverted on yourself only — not pushed onto
+    // enemies. Give-to-enemy + flip-on-self + removal don't compose cleanly on a single signed power, and a
+    // player holding negative Vigor/Strength/Dexterity when playing this is a rare edge.
+    public override Task ResolveGiveAndTake(
+        PlayerChoiceContext ctx, Creature self, IReadOnlyList<Creature> enemies, int swapCap, int invertMax) =>
+        Invert(ctx, self, invertMax);
+
     public override int OpposingStock(Creature c, PowerModel gainedSide) => 0;
     public override Task DecrementOpposing(Creature c, PowerModel gainedSide, int count) => Task.CompletedTask;
 }
@@ -129,4 +162,17 @@ public static class InvertiblePairs
     };
 
     public static InvertiblePair? For(PowerModel power) => All.FirstOrDefault(p => p.Contains(power));
+
+    // Pure Give & Take math for one debuff of magnitude `amount`: how much Swap gives to each enemy
+    // (capped by `swapCap`), how much Invert flips into a buff on you (capped by `invertMax`), and how much
+    // total to strip from yourself — both operations read `amount` (the snapshot), and the self-removal is
+    // capped at `amount` so it can never go below zero even when swap+invert together exceed what you hold.
+    public static (int swapRemove, int invertRemove, int selfRemove) ComputeGiveAndTake(
+        int amount, int swapCap, int invertMax)
+    {
+        int swapRemove = Math.Max(0, Math.Min(amount, swapCap));
+        int invertRemove = Math.Max(0, Math.Min(amount, invertMax));
+        int selfRemove = Math.Min(amount, swapRemove + invertRemove);
+        return (swapRemove, invertRemove, selfRemove);
+    }
 }

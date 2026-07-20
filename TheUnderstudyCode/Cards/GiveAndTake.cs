@@ -1,3 +1,4 @@
+using System.Linq;
 using BaseLib.Abstracts;
 using BaseLib.Utils;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -6,8 +7,10 @@ using MegaCrit.Sts2.Core.Localization.DynamicVars;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
-// Swap and Invert together — they never clash: Swap pushes your debuffs onto enemies, Invert flips
-// what's left into buffs. (Swap = Audience / Interaction, Invert = Self / Positive / Fun.)
+// "Give & Take": Swap and Invert resolved SIMULTANEOUSLY. For each of your debuffs, both effects read the
+// same starting amount — Invert flips up to {Invert} of it into a buff on you, and Swap pushes it onto every
+// enemy — then the debuff is stripped once. So from 1 Weak you become Unweak AND every enemy gains Weak,
+// instead of Swap consuming the Weak before Invert could flip it. (Swap = Audience, Invert = Self.)
 public class GiveAndTake : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:GiveAndTake";
@@ -30,8 +33,14 @@ public class GiveAndTake : UnderstudyCard
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
-        var creature = cardPlay.Card.Owner.Creature;
-        await SceneStealing.Swap(context, creature, (int)DynamicVars["Swap"].BaseValue);
-        await EmotionalExpression.InvertEach(context, creature, (int)DynamicVars["Invert"].BaseValue);
+        var self = cardPlay.Card.Owner.Creature;
+        var enemies = self.CombatState!.HittableEnemies.ToList();
+        int swapCap = SceneStealing.SwapCap * (int)DynamicVars["Swap"].BaseValue;
+        int invertMax = (int)DynamicVars["Invert"].BaseValue;
+
+        // Each pair resolves Swap + Invert on the same snapshot of its debuff (see InvertiblePair
+        // .ResolveGiveAndTake), so the two effects never consume each other's input.
+        foreach (var pair in InvertiblePairs.All)
+            await pair.ResolveGiveAndTake(context, self, enemies, swapCap, invertMax);
     }
 }
