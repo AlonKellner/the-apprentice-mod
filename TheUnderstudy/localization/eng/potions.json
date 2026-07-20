@@ -1,0 +1,27 @@
+{
+  "THEUNDERSTUDY-INVERT_POTION.title": "Invert Potion",
+  "THEUNDERSTUDY-INVERT_POTION.description": "[gold]Invert[/gold] 3.",
+
+  "THEUNDERSTUDY-SWAP_POTION.title": "Swap Potion",
+  "THEUNDERSTUDY-SWAP_POTION.description": "[gold]Swap[/gold] 3 times.",
+
+  "THEUNDERSTUDY-PLANNED_POTION.title": "Planned Potion",
+  "THEUNDERSTUDY-PLANNED_POTION.description": "Apply [gold]Planned[/gold] to a card from your draw pile, a card in your hand, and a card from your discard pile.",
+  "THEUNDERSTUDY-PLANNED_POTION.selectionPrompt": "Choose a card to apply [gold]Planned[/gold] to.",
+
+  "THEUNDERSTUDY-TUNED_POTION.title": "Tuned Potion",
+  "THEUNDERSTUDY-TUNED_POTION.description": "Apply [gold]Tuned[/gold] to up to 3 cards in your hand.",
+  "THEUNDERSTUDY-TUNED_POTION.selectionPrompt": "Choose cards to apply [gold]Tuned[/gold] to.",
+
+  "THEUNDERSTUDY-MILKSHAKE.title": "Milkshake",
+  "THEUNDERSTUDY-MILKSHAKE.description": "Remove [gold]Unplayable[/gold] from all cards in your hand.",
+
+  "THEUNDERSTUDY-LOVE_POTION.title": "Love Potion",
+  "THEUNDERSTUDY-LOVE_POTION.description": "Gain 2 [gold]Unvulnerable[/gold].",
+
+  "THEUNDERSTUDY-PROTEIN_POTION.title": "Protein Potion",
+  "THEUNDERSTUDY-PROTEIN_POTION.description": "Gain 2 [gold]Unweak[/gold].",
+
+  "THEUNDERSTUDY-VIGOR_POTION.title": "Vigor Potion",
+  "THEUNDERSTUDY-VIGOR_POTION.description": "Gain 10 [gold]Vigor[/gold]."
+}

@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.11.24 - New Undoom power: the inverse of Doom (heals up to X at the end of the enemy turn); Doom & Undoom are now an invertible/swappable pair. The Second Lesson now draws from ALL invertible pairs (adds Vigor, Tainted/Untainted, Tension/Untension, Doom/Undoom), via a single unified pair registry. Adds Tension/Untension/Undoom/Untainted icons.",
+  "changeNote": "v1.11.25 - Adds the character's first 8 Potions (Invert, Swap, Planned, Tuned, Milkshake, Love, Protein, Vigor) and 5 Relics: Rosin (apply an extra Tuned the first time a card is Tuned), Lozenge (gain 2 Vigor at the start of each turn), Safety Net (start each combat with 1 Unvulnerable and 1 Unfrail), Cue Light (every 5 cards that become Unplayable, apply 2 Weak to a random enemy), and Greasepaint (every 5 debuffs applied to you, apply 2 Vulnerable to a random enemy). Potions/relics currently use placeholder art.",
   "tags": [],
   "dependencies": [
     3737335127
