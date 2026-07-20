@@ -57,12 +57,14 @@ public class SwapPhrasingTests
     }
 
     [Fact]
-    public void SwapKeyword_TooltipDescribesSingleTarget()
+    public void SwapKeyword_TooltipDescribesTheTrade()
     {
         var keywords = LoadJsonStrings(Path.Combine("TheUnderstudy", "localization", "eng", "card_keywords.json"));
         Assert.True(keywords.TryGetValue("THEUNDERSTUDY-SWAP.description", out var desc),
             "Missing THEUNDERSTUDY-SWAP.description in card_keywords.json");
-        // The meaning now lives here: the "most recently changed" single-target give/take.
-        Assert.Contains("most recently", desc, StringComparison.OrdinalIgnoreCase);
+        // The meaning lives here: trade a debuff of yours for a buff from each enemy, capped at 10.
+        Assert.Contains("Trade", desc, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("debuff", desc, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("10", desc);
     }
 }
