@@ -16,7 +16,7 @@ public class OneUp : UnderstudyCard
     public OneUp() : base(1, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
     {
         WithDamage(2);
-        WithVars(new RepeatVar(3));
+        WithVars(new RepeatVar(4));
         WithTip(UnderstudyKeywords.Tuned);
     }
 
