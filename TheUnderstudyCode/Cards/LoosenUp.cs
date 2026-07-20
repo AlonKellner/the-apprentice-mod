@@ -3,6 +3,8 @@ using BaseLib.Abstracts;
 using BaseLib.Utils;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.Localization.DynamicVars;
+using MegaCrit.Sts2.Core.Models;
 using TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
 using TheUnderstudy.TheUnderstudyCode.Extensions;
 
@@ -15,8 +17,20 @@ public class LoosenUp : UnderstudyCard
     public LoosenUp() : base(2, CardType.Attack, CardRarity.Uncommon, TargetType.RandomEnemy)
     {
         WithDamage(5);
+        // Live "(Hits N times)" preview: N = number of Unplayable cards in hand (each drives one hit).
+        // CalculationBase 0 + CalculationExtra 1 * count. Mirrors base-game Flechettes.
+        WithVars(
+            new CalculationBaseVar(0m),
+            new CalculationExtraVar(1m),
+            new CalculatedVar("CalculatedHits").WithMultiplier(static (card, _) => UnplayableHandCount(card)));
         WithTip(CardKeyword.Unplayable);
     }
+
+    // Unplayable cards in hand (excluding this card) — the number of hits this deals. Shared by the live
+    // preview var above and OnPlay so the shown count and the real hit count can't drift. Static so the
+    // CalculatedVar multiplier delegate captures no instance.
+    private static int UnplayableHandCount(CardModel card) =>
+        PileType.Hand.GetPile(card.Owner).Cards.Count(c => c != card && c.IsUnplayable());
 
     protected override void OnUpgrade()
     {
@@ -33,8 +47,9 @@ public class LoosenUp : UnderstudyCard
         var handCards = PileType.Hand.GetPile(player).Cards.Where(c => c != this).ToList();
 
         // Damage counts every Unplayable card in hand, regardless of type — but only attacks and
-        // skills actually have their Unplayable removed (Planned/Tuned/Free's usual scope).
-        int unplayableCount = handCards.Count(c => c.IsUnplayable());
+        // skills actually have their Unplayable removed (Planned/Tuned/Free's usual scope). The count
+        // comes from the same static helper the preview var uses, so text and effect always agree.
+        int unplayableCount = UnplayableHandCount(cardPlay.Card);
         var toFree = handCards.Where(UnplayableModifier.CanApplyTo).ToList();
         Invariants.Check(toFree.Count <= unplayableCount, nameof(LoosenUp) + "." + nameof(OnPlay),
             $"freeing {toFree.Count} card(s), more than the {unplayableCount} counted for damage — toFree must be a subset");
