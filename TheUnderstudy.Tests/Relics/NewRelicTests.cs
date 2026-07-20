@@ -22,6 +22,8 @@ public class NewRelicTests
         new object[] { typeof(SafetyNet), RelicRarity.Common },
         new object[] { typeof(CueLight), RelicRarity.Uncommon },
         new object[] { typeof(Greasepaint), RelicRarity.Uncommon },
+        new object[] { typeof(FoldableStage), RelicRarity.Uncommon },
+        new object[] { typeof(Score), RelicRarity.Uncommon },
     };
 
     private static CustomRelicModel Create(Type type) => (CustomRelicModel)Activator.CreateInstance(type)!;

@@ -7,6 +7,7 @@ using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Models;
+using TheUnderstudy.TheUnderstudyCode.Enchantments;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
 
@@ -21,10 +22,10 @@ public static class PrePlannedSetup
     // multiplayer), but the ordered pass must run exactly once for each player each combat.
     private static readonly ConditionalWeakTable<Player, object> _assignedFor = new();
 
-    // A card is pre-Planned if its class declares it (Signature, upgraded Experience). Part C also
-    // counts a persistent PrePlanned enchantment applied out of combat by the Score relic.
+    // A card is pre-Planned if its class declares it (Signature, upgraded Experience) or it carries a
+    // persistent PrePlanned enchantment applied out of combat by the Score relic.
     public static bool IsPrePlanned(CardModel card) =>
-        card is UnderstudyCard uc && uc.IsPrePlanned;
+        (card is UnderstudyCard uc && uc.IsPrePlanned) || card.Enchantment is PrePlanned;
 
     // Pure: order pre-Planned cards by deck-acquisition rank, stable for equal ranks (identical
     // duplicate copies keep their encounter order). The caller then hands each the next sequencer
@@ -54,5 +55,12 @@ public static class PrePlannedSetup
 
         foreach (var clone in OrderByDeckRank(prePlanned, DeckRank))
             PlannedModifier.ApplyPrePlanned(clone, combat);
+
+        // Pre-Tuned enchantment (Foldable Stage): grant Tuned to any enchanted card not already Tuned.
+        // Order-independent, so no coordination needed — just apply once. Driven here (not from the
+        // enchantment's own hooks) so it works for any card type, including colorless cards.
+        foreach (var card in PlannedModifier.RelevantCards(player).ToList())
+            if (card.Enchantment is PreTuned && !card.TryGetModifier<TunedModifier>(out _))
+                TunedModifier.Apply(card, combat, player.Piles.SelectMany(p => p.Cards));
     }
 }

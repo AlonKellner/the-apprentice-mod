@@ -1,0 +1,9 @@
+{
+  "OPTION_THEUNDERSTUDY_SCORE.name": "Score",
+  "OPTION_THEUNDERSTUDY_SCORE.description": "Enchant a card in your deck with [gold]Planned[/gold].",
+  "OPTION_THEUNDERSTUDY_SCORE.selectionPrompt": "Choose a card to enchant with [gold]Planned[/gold].",
+
+  "OPTION_THEUNDERSTUDY_FOLDABLE_STAGE.name": "Foldable Stage",
+  "OPTION_THEUNDERSTUDY_FOLDABLE_STAGE.description": "Enchant a card in your deck with [gold]Tuned[/gold].",
+  "OPTION_THEUNDERSTUDY_FOLDABLE_STAGE.selectionPrompt": "Choose a card to enchant with [gold]Tuned[/gold]."
+}
