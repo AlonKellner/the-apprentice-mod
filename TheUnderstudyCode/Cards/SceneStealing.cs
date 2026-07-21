@@ -115,13 +115,44 @@ public static class SceneStealing
     {
         if (repeats <= 0) return;
         var enemies = self.CombatState!.HittableEnemies.ToList();
-
         for (int r = 0; r < repeats; r++)
+            await SwapOnce(ctx, self, enemies);
+    }
+
+    // One Swap application, two-phase. Both the debuff to give and each enemy's buff to take are chosen from
+    // the CURRENT state first; then everything is REMOVED from both sides (your debuff, each enemy's buff);
+    // then everything is APPLIED to both sides (your debuff onto the enemies, the stolen buffs onto you).
+    // Removing before applying means interacting powers get out of the way instead of cancelling pre-swap:
+    // an enemy's Artifact is gone before the debuff lands (so it isn't eaten), and a Weak/Unweak or other
+    // buff/debuff pair is cleared on both sides before its opposite arrives — so they genuinely swap.
+    private static async Task SwapOnce(PlayerChoiceContext ctx, Creature self, IReadOnlyList<Creature> enemies)
+    {
+        // SELECT (read state before any transfer).
+        var chosen = SelectDebuff(self);
+        int move = chosen.HasValue ? ComputeTransfer(chosen.Value.magnitude) : 0;
+        bool giving = move > 0;
+
+        var takes = new List<(Creature enemy, PowerModel buff, int amount)>();
+        foreach (var enemy in enemies)
         {
-            await GiveLastDebuff(ctx, self, enemies);
-            foreach (var enemy in enemies)
-                await TakeLastBuff(ctx, self, enemy);
+            var buff = SelectBuff(enemy);
+            if (buff == null) continue;
+            int take = ComputeTransfer(enemy.GetPower(buff.Id)?.Amount ?? 0);
+            if (take > 0) takes.Add((enemy, buff, take));
         }
+
+        // PHASE 1 — remove from both sides. Sign-flip Vigor moves toward 0 on you; a normal debuff is removed.
+        if (giving)
+            await PowerCmd.Apply(ctx, Fresh(chosen!.Value.power), self, chosen.Value.signFlip ? move : -move, self, null);
+        foreach (var (enemy, buff, take) in takes)
+            await PowerCmd.Apply(ctx, Fresh(buff), enemy, -take, self, null);
+
+        // PHASE 2 — apply to both sides. Sign-flip piles the negative onto enemies; a normal debuff is added.
+        if (giving)
+            foreach (var enemy in enemies)
+                await PowerCmd.Apply(ctx, Fresh(chosen!.Value.power), enemy, chosen.Value.signFlip ? -move : move, self, null);
+        foreach (var (enemy, buff, take) in takes)
+            await PowerCmd.Apply(ctx, Fresh(buff), self, take, self, null);
     }
 
     // The TAKE half of Swap on its own: from each enemy, steal that enemy's most recently modified swappable
@@ -134,32 +165,6 @@ public static class SceneStealing
         for (int r = 0; r < repeats; r++)
             foreach (var enemy in enemies)
                 await TakeLastBuff(ctx, self, enemy);
-    }
-
-    // GIVE half: transfer up to SwapCap of the player's most recently modified swappable debuff to every
-    // enemy. A sign-flip Vigor counts as a debuff while negative — nudged toward 0 on you and piled as
-    // more-negative onto each enemy (the same shape the old "give negative" half used).
-    private static async Task GiveLastDebuff(PlayerChoiceContext ctx, Creature self, IReadOnlyList<Creature> enemies)
-    {
-        var chosen = SelectDebuff(self);
-        if (chosen == null) return;
-        var (power, magnitude, signFlip) = chosen.Value;
-
-        int move = ComputeTransfer(magnitude);
-        if (move <= 0) return;
-
-        if (signFlip)
-        {
-            await PowerCmd.Apply(ctx, Fresh(power), self, move, self, null);         // toward 0 on you
-            foreach (var enemy in enemies)
-                await PowerCmd.Apply(ctx, Fresh(power), enemy, -move, self, null);   // pile the negative onto each enemy
-        }
-        else
-        {
-            await PowerCmd.Apply(ctx, Fresh(power), self, -move, self, null);        // remove from you
-            foreach (var enemy in enemies)
-                await PowerCmd.Apply(ctx, Fresh(power), enemy, move, self, null);    // add to each enemy
-        }
     }
 
     // TAKE half: from a single enemy, steal up to SwapCap of that enemy's own most recently modified
