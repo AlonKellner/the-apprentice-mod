@@ -1,6 +1,25 @@
 {
-  "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.0-0r.char": "Who are you?",
-  "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.0-0r.next": "1",
-  "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.0-1r.ancient": "An ancient awaits...",
-  "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.0-attack": "Begin."
+  "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.0-0.ancient": "You return? I killed you once already.",
+  "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.0-0.next": "Explain",
+  "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.0-1.char": "I froze, that day. I couldn't raise my hands against you.",
+  "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.0-1.next": "Continue",
+  "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.0-2.ancient": "A student who would not fight his master. You are my student no longer.",
+
+  "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.1-0r.ancient": "You again. This is tedious.",
+  "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.1-0r.next": "Answer",
+  "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.1-1r.char": "You used to watch me practice. For hours. Don't you remember?",
+  "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.1-1r.next": "Continue",
+  "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.1-2r.ancient": "I remember wasted potential.",
+
+  "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.2-0r.ancient": "Back from the dead. How many times now?",
+  "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.2-0r.next": "Plead",
+  "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.2-1r.char": "I thought you might be glad I'm still alive.",
+  "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.2-1r.next": "Continue",
+  "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.2-2r.ancient": "Glad. You understand nothing of what I built you for.",
+
+  "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.3-0r.ancient": "Still here. Still begging to be heard.",
+  "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.3-0r.next": "Refuse",
+  "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.3-1r.char": "No. Not anymore. I stopped writing this for you - this one's mine.",
+  "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.3-1r.next": "Continue",
+  "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.3-2r.ancient": "...Then play."
 }
