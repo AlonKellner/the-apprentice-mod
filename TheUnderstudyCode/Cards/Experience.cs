@@ -12,7 +12,9 @@ public class Experience : UnderstudyCard
 
     public Experience() : base(2, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
     {
-        WithDamage(1);
+        // Base 0 on purpose: the card is always pre-Tuned and its damage is purely its Tuned bonus, so the
+        // dynamic base damage shown/dealt equals the total Tuned across the deck.
+        WithDamage(0);
         WithTip(UnderstudyKeywords.Tuned);
         WithTip(UnderstudyKeywords.Planned);
     }
