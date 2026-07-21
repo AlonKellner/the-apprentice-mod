@@ -1,9 +1,11 @@
 {
-  "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.0-0.ancient": "You return? I killed you once already.",
-  "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.0-0.next": "Explain",
-  "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.0-1.char": "I froze, that day. I couldn't raise my hands against you.",
-  "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.0-1.next": "Continue",
-  "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.0-2.ancient": "A student who would not fight his master. You are my student no longer.",
+  "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.0-0r.char": "Master. I climbed all the way back to you.",
+  "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.0-0r.next": "Continue",
+  "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.0-1r.ancient": "You return? I killed you once already - and you never even raised your hands.",
+  "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.0-2r.char": "I froze. I couldn't fight you. I'm still not sure I can.",
+  "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.0-2r.next": "Continue",
+  "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.0-3r.ancient": "A student who will not fight his master. You are my student no longer.",
+  "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.0-attack": "Architect",
 
   "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.1-0r.ancient": "You again. This is tedious.",
   "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.1-0r.next": "Answer",

@@ -111,19 +111,28 @@ Pronouns: **he/him**. Title/description unchanged.
 
 ## 8. Architect Confrontation (implemented in `ancients.json`)
 
-Four exchanges, matching the base-game schema exactly (verified against Necrobinder/Defect):
-exchange `0` has **no `r` suffix** = guaranteed **first visit**; exchanges `1r`/`2r`/`3r`
-cycle on **repeat visits** (each death-and-return). Every exchange is 3 beats
-(ancient → char → ancient), ends on the Architect, and has `.next` button labels. There is
-**no `.attack` key** — the base game has none; the final Architect line flows into combat.
+Four exchanges keyed by visit index — exchange `0` = **first visit**, `1`/`2`/`3` = later
+visits (each death-and-return). All use the `r` step suffix.
 
-The Architect stays cold, proprietary, order-obsessed, and never grants full personhood. The
+**Schema notes (verified by decompiling BaseLib `AncientDialogueUtil.GetDialoguesForKey`):**
+- BaseLib's runtime loops exchange index `i = 0,1,2,…` (`DialogueExists`), reading step lines
+  via `{key}{i}-{step}r.{ancient|char}` — so multi-exchange **is** supported for mod characters.
+- `{key}{i}-attack` is **not a spoken line** — it's an `ArchitectAttackers` enum
+  (`None|Player|Architect|…`) controlling who attacks as combat begins; absent → defaults to
+  `Architect`. We set `0-attack: "Architect"`.
+- BaseLib's **compile-time analyzer (STS001)** requires exchange `0` to provide, at minimum,
+  `0-0r.char` + `0-0r.next` + `0-1r.ancient` + `0-attack`. That forces **exchange 0 to be
+  char-first** — which is why the Understudy opens the first meeting (calling his maker
+  "Master" suits the approval-hungry read anyway).
+
+The Architect stays cold, proprietary, order-obsessed, never granting full personhood. The
 Understudy arcs from pleading to quiet self-possession — but never reaches healthy
 self-acceptance (that blindness is the character).
 
-- **0 (first visit — lore drop):** *"You return? I killed you once already."* → [Explain] →
-  *"I froze, that day. I couldn't raise my hands against you."* → [Continue] →
-  *"A student who would not fight his master. You are my student no longer."*
+- **0 (first visit — lore drop, char-first):** *"Master. I climbed all the way back to you."*
+  → [Continue] → *"You return? I killed you once already - and you never even raised your
+  hands."* → *"I froze. I couldn't fight you. I'm still not sure I can."* → [Continue] →
+  *"A student who will not fight his master. You are my student no longer."*
 - **1r (the watching):** *"You again. This is tedious."* → [Answer] →
   *"You used to watch me practice. For hours. Don't you remember?"* → [Continue] →
   *"I remember wasted potential."*
