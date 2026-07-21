@@ -28,12 +28,13 @@ public abstract class InvertiblePair
     public abstract Task ApplyDebuffSide(PlayerChoiceContext ctx, Creature c, int stacks);
     public abstract Task<int> Invert(PlayerChoiceContext ctx, Creature c, int max);  // debuff -> buff, returns converted
 
-    // Give & Take's per-pair resolution: computes Swap's give and Invert's flip from the SAME snapshot of
-    // this pair's debuff, removes the consumed debuff from `self` once (capped, never below zero), then
-    // grants the inverted buff to `self` and applies the given debuff to every enemy — so "Swap & Invert
-    // simultaneously" both act on the original amount instead of Swap consuming what Invert needed.
-    public abstract Task ResolveGiveAndTake(
-        PlayerChoiceContext ctx, Creature self, IReadOnlyList<Creature> enemies, int swapCap, int invertMax);
+    // Best of Both is interleaved Swap + Invert on the SAME capture -> remove -> apply pipeline as regular
+    // Swap (see SceneStealing.SwapPlan). This stages one pair's contribution into the plan: from a single
+    // snapshot of the debuff, remove the consumed amount from `self` (Swap's give + Invert's flip, capped,
+    // never below zero), grant the inverted buff to `self`, and hand the debuff to every enemy — as Remove
+    // and Apply moves, so the shared executor clears both sides before applying anything.
+    public abstract void CaptureGiveAndInvert(
+        SceneStealing.SwapPlan plan, Creature self, IReadOnlyList<Creature> enemies, int swapCap, int invertMax);
 
     // Same-shape net-cancellation support, used by InvertTrackerPower. `IsDebuffSide` says which side a power
     // is; `OpposingStock` is the current stock of the OTHER side of the pair (0 for sign-flip, which self-nets).
@@ -74,8 +75,8 @@ public sealed class SameShapePair<TDebuff, TBuff> : InvertiblePair
         return removeAmount;
     }
 
-    public override async Task ResolveGiveAndTake(
-        PlayerChoiceContext ctx, Creature self, IReadOnlyList<Creature> enemies, int swapCap, int invertMax)
+    public override void CaptureGiveAndInvert(
+        SceneStealing.SwapPlan plan, Creature self, IReadOnlyList<Creature> enemies, int swapCap, int invertMax)
     {
         int amount = self.GetPowerAmount<TDebuff>();
         if (amount <= 0) return;
@@ -85,12 +86,14 @@ public sealed class SameShapePair<TDebuff, TBuff> : InvertiblePair
         var (swapRemove, invertRemove, selfRemove) =
             InvertiblePairs.ComputeGiveAndTake(amount, swappable ? swapCap : 0, invertMax);
 
-        // Remove the consumed debuff from yourself FIRST, so the Un-X buff you gain next isn't live-netted
-        // against the very debuff it was inverted from (InvertTrackerPower cancels opposing sides).
-        if (selfRemove > 0) await PowerCmd.Apply<TDebuff>(ctx, self, -selfRemove, self, null, false);
-        if (invertRemove > 0) await PowerCmd.Apply<TBuff>(ctx, self, invertRemove, self, null, false);
-        foreach (var enemy in enemies)
-            if (swapRemove > 0) await PowerCmd.Apply<TDebuff>(ctx, enemy, swapRemove, self, null, false);
+        var debuff = ModelDb.Power<TDebuff>();
+        // Remove the consumed debuff from yourself (both Swap's and Invert's share), then in the apply phase
+        // gain the inverted buff and hand the debuff to the enemies — the debuff is gone from you before its
+        // Un-X lands, and lands on enemies only after their interacting buffs were removed.
+        if (selfRemove > 0) plan.Removes.Add(new SceneStealing.PowerMove(debuff, self, -selfRemove));
+        if (invertRemove > 0) plan.Applies.Add(new SceneStealing.PowerMove(ModelDb.Power<TBuff>(), self, invertRemove));
+        if (swapRemove > 0)
+            foreach (var enemy in enemies) plan.Applies.Add(new SceneStealing.PowerMove(debuff, enemy, swapRemove));
     }
 
     public override int OpposingStock(Creature c, PowerModel gainedSide) =>
@@ -133,11 +136,14 @@ public sealed class SignFlipPair<TPower> : InvertiblePair where TPower : PowerMo
     }
 
     // Sign-flip debuffs (negative Vigor/Strength/Dexterity) are inverted on yourself only — not pushed onto
-    // enemies. Give-to-enemy + flip-on-self + removal don't compose cleanly on a single signed power, and a
-    // player holding negative Vigor/Strength/Dexterity when playing this is a rare edge.
-    public override Task ResolveGiveAndTake(
-        PlayerChoiceContext ctx, Creature self, IReadOnlyList<Creature> enemies, int swapCap, int invertMax) =>
-        Invert(ctx, self, invertMax);
+    // enemies. Flipping the negative to positive (V -> V + 2*converted) is a single signed apply with no
+    // cross-cancellation, so it's staged directly in the apply phase.
+    public override void CaptureGiveAndInvert(
+        SceneStealing.SwapPlan plan, Creature self, IReadOnlyList<Creature> enemies, int swapCap, int invertMax)
+    {
+        var (converted, _) = EmotionalExpression.ComputeSignFlip(self.GetPowerAmount<TPower>(), invertMax);
+        if (converted > 0) plan.Applies.Add(new SceneStealing.PowerMove(ModelDb.Power<TPower>(), self, 2 * converted));
+    }
 
     public override int OpposingStock(Creature c, PowerModel gainedSide) => 0;
     public override Task DecrementOpposing(Creature c, PowerModel gainedSide, int count) => Task.CompletedTask;

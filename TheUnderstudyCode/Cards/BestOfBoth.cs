@@ -37,19 +37,21 @@ public class BestOfBoth : UnderstudyCard
         await ResolveFor(context, cardPlay.Card.Owner.Creature,
             (int)DynamicVars["Swap"].BaseValue, (int)DynamicVars["Invert"].BaseValue);
 
-    // The full Best of Both resolution for one creature — shared with Duet, which runs the exact same
-    // thing for a targeted teammate. For each of the creature's debuffs, Swap's give and Invert's flip read
-    // the same snapshot (InvertiblePair.ResolveGiveAndTake strips it once), then Swap's TAKE half steals
-    // each enemy's swappable buff onto the creature.
+    // The full Best of Both resolution for one creature — shared with Duet, which runs the exact same thing
+    // for a targeted teammate. Interleaved Swap + Invert on the SAME capture -> remove -> apply pipeline as
+    // regular Swap (SceneStealing): capture each debuff's give+invert and each enemy's buff to take from the
+    // current state, then remove from both sides, then apply to both sides — so interacting powers (an
+    // enemy's Artifact, a Weak/Unweak pair) swap instead of cancelling before they're moved.
     public static async Task ResolveFor(
         PlayerChoiceContext context, Creature creature, int swapRepeats, int invertMax)
     {
         var enemies = creature.CombatState!.HittableEnemies.ToList();
         int swapCap = SceneStealing.SwapCap * swapRepeats;
 
+        var plan = new SceneStealing.SwapPlan();
         foreach (var pair in InvertiblePairs.All)
-            await pair.ResolveGiveAndTake(context, creature, enemies, swapCap, invertMax);
-
-        await SceneStealing.TakeFromEnemies(context, creature, swapRepeats);
+            pair.CaptureGiveAndInvert(plan, creature, enemies, swapCap, invertMax);
+        SceneStealing.CaptureTake(plan, creature, enemies, swapCap);
+        await SceneStealing.ExecutePlan(context, creature, plan);
     }
 }

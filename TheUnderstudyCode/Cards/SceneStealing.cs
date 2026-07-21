@@ -116,70 +116,65 @@ public static class SceneStealing
         if (repeats <= 0) return;
         var enemies = self.CombatState!.HittableEnemies.ToList();
         for (int r = 0; r < repeats; r++)
-            await SwapOnce(ctx, self, enemies);
+        {
+            var plan = new SwapPlan();
+            CaptureGiveMostRecent(plan, self, enemies);
+            CaptureTake(plan, self, enemies, SwapCap);
+            await ExecutePlan(ctx, self, plan);
+        }
     }
 
-    // One Swap application, two-phase. Both the debuff to give and each enemy's buff to take are chosen from
-    // the CURRENT state first; then everything is REMOVED from both sides (your debuff, each enemy's buff);
-    // then everything is APPLIED to both sides (your debuff onto the enemies, the stolen buffs onto you).
-    // Removing before applying means interacting powers get out of the way instead of cancelling pre-swap:
-    // an enemy's Artifact is gone before the debuff lands (so it isn't eaten), and a Weak/Unweak or other
-    // buff/debuff pair is cleared on both sides before its opposite arrives — so they genuinely swap.
-    private static async Task SwapOnce(PlayerChoiceContext ctx, Creature self, IReadOnlyList<Creature> enemies)
-    {
-        // SELECT (read state before any transfer).
-        var chosen = SelectDebuff(self);
-        int move = chosen.HasValue ? ComputeTransfer(chosen.Value.magnitude) : 0;
-        bool giving = move > 0;
+    // ── The shared capture -> remove -> apply pipeline ─────────────────────────────────────────────────
+    // Both Swap and Best of Both move powers between you and the enemies, and both must clear BOTH sides
+    // before applying anything, so interacting powers swap instead of cancelling (an enemy's Artifact that
+    // would eat an incoming debuff; a Weak/Unweak or other buff/debuff pair). So each CAPTUREs its moves
+    // from the current state into a SwapPlan, then ExecutePlan REMOVES from both sides and only then APPLIES
+    // to both sides. Best of Both adds Invert moves via InvertiblePair.CaptureGiveAndInvert; the take half
+    // (CaptureTake) is identical for both.
 
-        var takes = new List<(Creature enemy, PowerModel buff, int amount)>();
+    // One planned power change: at execute time, apply Delta of Power to Target (Delta < 0 = removal).
+    public readonly record struct PowerMove(PowerModel Power, Creature Target, int Delta);
+
+    public sealed class SwapPlan
+    {
+        public readonly List<PowerMove> Removes = new();
+        public readonly List<PowerMove> Applies = new();
+    }
+
+    public static async Task ExecutePlan(PlayerChoiceContext ctx, Creature self, SwapPlan plan)
+    {
+        foreach (var m in plan.Removes) await PowerCmd.Apply(ctx, Fresh(m.Power), m.Target, m.Delta, self, null);
+        foreach (var m in plan.Applies) await PowerCmd.Apply(ctx, Fresh(m.Power), m.Target, m.Delta, self, null);
+    }
+
+    // GIVE (regular Swap): your most recently modified swappable debuff, transferred to every enemy. A
+    // sign-flip Vigor counts as a debuff while negative — nudged toward 0 on you, piled negative on enemies.
+    private static void CaptureGiveMostRecent(SwapPlan plan, Creature self, IReadOnlyList<Creature> enemies)
+    {
+        var chosen = SelectDebuff(self);
+        if (chosen == null) return;
+        var (power, magnitude, signFlip) = chosen.Value;
+        int move = ComputeTransfer(magnitude);
+        if (move <= 0) return;
+
+        plan.Removes.Add(new PowerMove(power, self, signFlip ? move : -move));   // toward 0 (sign-flip) / remove
+        foreach (var enemy in enemies)
+            plan.Applies.Add(new PowerMove(power, enemy, signFlip ? -move : move)); // pile negative / add
+    }
+
+    // TAKE (shared by Swap and Best of Both): from each enemy, steal that enemy's most recently modified
+    // swappable buff (up to `cap`), removed from the enemy and gained by you.
+    public static void CaptureTake(SwapPlan plan, Creature self, IReadOnlyList<Creature> enemies, int cap)
+    {
         foreach (var enemy in enemies)
         {
             var buff = SelectBuff(enemy);
             if (buff == null) continue;
-            int take = ComputeTransfer(enemy.GetPower(buff.Id)?.Amount ?? 0);
-            if (take > 0) takes.Add((enemy, buff, take));
+            int take = Math.Min(enemy.GetPower(buff.Id)?.Amount ?? 0, cap);
+            if (take <= 0) continue;
+            plan.Removes.Add(new PowerMove(buff, enemy, -take));
+            plan.Applies.Add(new PowerMove(buff, self, take));
         }
-
-        // PHASE 1 — remove from both sides. Sign-flip Vigor moves toward 0 on you; a normal debuff is removed.
-        if (giving)
-            await PowerCmd.Apply(ctx, Fresh(chosen!.Value.power), self, chosen.Value.signFlip ? move : -move, self, null);
-        foreach (var (enemy, buff, take) in takes)
-            await PowerCmd.Apply(ctx, Fresh(buff), enemy, -take, self, null);
-
-        // PHASE 2 — apply to both sides. Sign-flip piles the negative onto enemies; a normal debuff is added.
-        if (giving)
-            foreach (var enemy in enemies)
-                await PowerCmd.Apply(ctx, Fresh(chosen!.Value.power), enemy, chosen.Value.signFlip ? -move : move, self, null);
-        foreach (var (enemy, buff, take) in takes)
-            await PowerCmd.Apply(ctx, Fresh(buff), self, take, self, null);
-    }
-
-    // The TAKE half of Swap on its own: from each enemy, steal that enemy's most recently modified swappable
-    // buff (up to SwapCap), `repeats` times. Best of Both handles the give+invert per-debuff itself but still
-    // wants Swap's "take the enemy's buff" side (so you also gain e.g. an enemy's Vigor).
-    public static async Task TakeFromEnemies(PlayerChoiceContext ctx, Creature self, int repeats)
-    {
-        if (repeats <= 0) return;
-        var enemies = self.CombatState!.HittableEnemies.ToList();
-        for (int r = 0; r < repeats; r++)
-            foreach (var enemy in enemies)
-                await TakeLastBuff(ctx, self, enemy);
-    }
-
-    // TAKE half: from a single enemy, steal up to SwapCap of that enemy's own most recently modified
-    // swappable buff (positive portion only), removed from the enemy and gained by the player.
-    private static async Task TakeLastBuff(PlayerChoiceContext ctx, Creature self, Creature enemy)
-    {
-        var buff = SelectBuff(enemy);
-        if (buff == null) return;
-
-        int amt = enemy.GetPower(buff.Id)?.Amount ?? 0;
-        int take = ComputeTransfer(amt);
-        if (take <= 0) return;
-
-        await PowerCmd.Apply(ctx, Fresh(buff), enemy, -take, self, null);
-        await PowerCmd.Apply(ctx, Fresh(buff), self, take, self, null);
     }
 
     // The player's most recently modified swappable debuff currently in stock: a normal swappable debuff
