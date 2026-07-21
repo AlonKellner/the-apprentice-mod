@@ -13,11 +13,11 @@ namespace TheUnderstudy.TheUnderstudyCode.Cards;
 // enemy — then the debuff is stripped once. So from 1 Weak you become Unweak AND every enemy gains Weak,
 // instead of Swap consuming the Weak before Invert could flip it. Swap's TAKE half also runs, stealing each
 // enemy's buff — so you keep the good side of your debuffs and grab theirs too. (Swap = Audience, Invert = Self.)
-public class GiveAndTake : UnderstudyCard
+public class BestOfBoth : UnderstudyCard
 {
-    public const string CardId = "TheUnderstudy:GiveAndTake";
+    public const string CardId = "TheUnderstudy:BestOfBoth";
 
-    public GiveAndTake() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.None)
+    public BestOfBoth() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.None)
     {
         WithVars(new IntVar("Swap", 1), new IntVar("Invert", 1));
         WithTip(UnderstudyKeywords.Swap);

@@ -22,7 +22,7 @@ public class CardRarityMechanicCoverageTests
     // Lists are kept reasonably complete so the guardrail survives future single-card re-rarities
     // without false alarms. damage/block/draw only need enough representatives to cover Common.
     // NOTE (redesign, in progress): lists updated to the surviving/renamed cards; new cards (Upstage,
-    // GiveAndTake, StagePresence, Composure, SilverLining, Muffle, DeadWeight, SingAlong, NervousEnergy,
+    // BestOfBoth, StagePresence, Composure, SilverLining, Muffle, DeadWeight, SingAlong, NervousEnergy,
     // TakeNotes, Cram, GoForBroke, BurnOut, ...) are added as they are created in the new-card phase.
     // "Tension" is dropped (no card applies it post-redesign; TensionPower stays latent like
     // Shaken/Jaded/Limited).
@@ -32,7 +32,7 @@ public class CardRarityMechanicCoverageTests
         {
             typeof(Joke), typeof(BrightSide), typeof(Apathy),
             typeof(HeldNote), typeof(MyOwnLesson), typeof(OwnIt), typeof(LivingTheDream),
-            typeof(StrikeAPose), typeof(SilverLining), typeof(GiveAndTake), typeof(TurnItAround),
+            typeof(StrikeAPose), typeof(SilverLining), typeof(BestOfBoth), typeof(TurnItAround),
         },
         ["Planned"] = new[]
         {
@@ -63,7 +63,7 @@ public class CardRarityMechanicCoverageTests
         ["Swap"] = new[]
         {
             typeof(RoleReversal), typeof(BodyDouble),
-            typeof(Upstage), typeof(GiveAndTake), typeof(StagePresence),
+            typeof(Upstage), typeof(BestOfBoth), typeof(StagePresence),
         },
         ["remove-Unplayable"] = new[]
         {

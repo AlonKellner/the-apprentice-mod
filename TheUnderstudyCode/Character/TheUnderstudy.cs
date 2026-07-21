@@ -39,7 +39,7 @@ public class TheUnderstudy : PlaceholderCharacterModel
 
     public override IReadOnlyList<RelicModel> StartingRelics =>
     [
-        ModelDb.Relic<ConstantStruggle>()
+        ModelDb.Relic<ShamefulGift>()
     ];
 
     public override CardPoolModel CardPool => ModelDb.CardPool<TheUnderstudyCardPool>();

@@ -12,7 +12,7 @@ namespace TheUnderstudy.Tests.Relics;
 
 // Shape tests for the five non-rest-site relics (Rosin, Lozenge, Safety Net, Cue Light, Greasepaint).
 // Their hook bodies need a live combat and are verified in-game; here we assert the bare-instantiable
-// surface (rarity, pool wiring, non-empty inline loc), same convention as ConstantGrowthTests.
+// surface (rarity, pool wiring, non-empty inline loc), same convention as HardEarnedFeatTests.
 public class NewRelicTests
 {
     public static IEnumerable<object[]> Relics => new List<object[]>

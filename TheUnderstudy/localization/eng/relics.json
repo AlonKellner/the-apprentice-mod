@@ -1,11 +1,11 @@
 {
-  "THEUNDERSTUDY-CONSTANT_STRUGGLE.title": "Shameful Gift",
-  "THEUNDERSTUDY-CONSTANT_STRUGGLE.description": "Start each combat [gold]Weak[/gold].\nSelect the first card of your initial hand.",
-  "THEUNDERSTUDY-CONSTANT_STRUGGLE.selectionPrompt": "Select a card to add to your hand.",
-  "THEUNDERSTUDY-CONSTANT_STRUGGLE.flavor": "The cost of knowing exactly what you need.",
+  "THEUNDERSTUDY-SHAMEFUL_GIFT.title": "Shameful Gift",
+  "THEUNDERSTUDY-SHAMEFUL_GIFT.description": "Start each combat [gold]Weak[/gold].\nSelect the first card of your initial hand.",
+  "THEUNDERSTUDY-SHAMEFUL_GIFT.selectionPrompt": "Select a card to add to your hand.",
+  "THEUNDERSTUDY-SHAMEFUL_GIFT.flavor": "The cost of knowing exactly what you need.",
 
-  "THEUNDERSTUDY-CONSTANT_GROWTH.title": "Hard Earned Feat",
-  "THEUNDERSTUDY-CONSTANT_GROWTH.description": "Start each combat with 2 [gold]Unweak[/gold].\nSelect the first 2 cards of your initial hand.",
-  "THEUNDERSTUDY-CONSTANT_GROWTH.selectionPrompt": "Select 2 cards to add to your hand.",
-  "THEUNDERSTUDY-CONSTANT_GROWTH.flavor": "What once weighed you down now lifts you up."
+  "THEUNDERSTUDY-HARD_EARNED_FEAT.title": "Hard Earned Feat",
+  "THEUNDERSTUDY-HARD_EARNED_FEAT.description": "Start each combat with 2 [gold]Unweak[/gold].\nSelect the first 2 cards of your initial hand.",
+  "THEUNDERSTUDY-HARD_EARNED_FEAT.selectionPrompt": "Select 2 cards to add to your hand.",
+  "THEUNDERSTUDY-HARD_EARNED_FEAT.flavor": "What once weighed you down now lifts you up."
 }

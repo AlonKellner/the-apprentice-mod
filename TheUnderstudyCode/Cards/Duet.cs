@@ -7,7 +7,7 @@ namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
 // Multiplayer "ultimate" Best of Both: step in for a castmate — run the whole Best of Both resolution FOR
 // them (their debuffs simultaneously flip into buffs on them and land on the enemies, and each enemy's buff
-// is stolen onto them). Shares GiveAndTake.ResolveFor so it stays identical. Cost 1; multiplayer cards run
+// is stolen onto them). Shares BestOfBoth.ResolveFor so it stays identical. Cost 1; multiplayer cards run
 // hot. (Swap = Audience / Interaction, Invert = Self / Positive / Fun.)
 public class Duet : UnderstudyCard
 {
@@ -35,7 +35,7 @@ public class Duet : UnderstudyCard
         // The chosen teammate's creature — the whole Best of Both resolution runs relative to them, exactly
         // as it does for Best of Both's own owner (shared code, so the two never drift).
         if (cardPlay.Target is not { } target) return;
-        await GiveAndTake.ResolveFor(context, target,
+        await BestOfBoth.ResolveFor(context, target,
             (int)DynamicVars["Swap"].BaseValue, (int)DynamicVars["Invert"].BaseValue);
     }
 }
