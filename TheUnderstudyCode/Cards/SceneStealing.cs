@@ -124,6 +124,18 @@ public static class SceneStealing
         }
     }
 
+    // The TAKE half of Swap on its own: from each enemy, steal that enemy's most recently modified swappable
+    // buff (up to SwapCap), `repeats` times. Best of Both handles the give+invert per-debuff itself but still
+    // wants Swap's "take the enemy's buff" side (so you also gain e.g. an enemy's Vigor).
+    public static async Task TakeFromEnemies(PlayerChoiceContext ctx, Creature self, int repeats)
+    {
+        if (repeats <= 0) return;
+        var enemies = self.CombatState!.HittableEnemies.ToList();
+        for (int r = 0; r < repeats; r++)
+            foreach (var enemy in enemies)
+                await TakeLastBuff(ctx, self, enemy);
+    }
+
     // GIVE half: transfer up to SwapCap of the player's most recently modified swappable debuff to every
     // enemy. A sign-flip Vigor counts as a debuff while negative — nudged toward 0 on you and piled as
     // more-negative onto each enemy (the same shape the old "give negative" half used).

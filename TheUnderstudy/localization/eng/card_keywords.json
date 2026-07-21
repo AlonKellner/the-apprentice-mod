@@ -6,11 +6,11 @@
   "THEUNDERSTUDY-STABLE.title": "Stable",
   "THEUNDERSTUDY-STABLE.description": "May not be modified or turned [gold]Unplayable[/gold] during combat.",
   "THEUNDERSTUDY-INVERT.title": "Invert",
-  "THEUNDERSTUDY-INVERT.description": "Convert this many of each invertible debuff into buffs. Not all debuffs are invertible.",
+  "THEUNDERSTUDY-INVERT.description": "Convert this many of each [gold]invertible[/gold] debuff into buffs.",
   "THEUNDERSTUDY-INVERTIBLE.title": "Invertible",
   "THEUNDERSTUDY-INVERTIBLE.description": "A debuff that can be converted into a buff. Not all debuffs are invertible.",
   "THEUNDERSTUDY-SWAP.title": "Swap",
-  "THEUNDERSTUDY-SWAP.description": "Trade a debuff of yours with a buff from each enemy. Up to [blue]10[/blue] of each.",
+  "THEUNDERSTUDY-SWAP.description": "Trade a [gold]swappable[/gold] debuff of yours with a [gold]swappable[/gold] buff from each enemy. Up to [blue]10[/blue] of each.",
   "THEUNDERSTUDY-SWAPPABLE.title": "Swappable",
   "THEUNDERSTUDY-SWAPPABLE.description": "A universal buff or debuff that Swap can move between you and enemies. Not all buffs and debuffs are swappable."
 }
