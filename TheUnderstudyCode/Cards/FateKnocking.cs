@@ -1,16 +1,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using BaseLib.Abstracts;
-using BaseLib.Extensions;
 using BaseLib.Utils;
 using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
-using MegaCrit.Sts2.Core.Logging;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.ValueProps;
-using TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
@@ -73,33 +70,22 @@ public class FateKnocking : UnderstudyCard
         var card = cardPlay.Card;
         int prior = PriorSumThisCombat(card);
 
-        // ── DIAGNOSTIC (temporary) — captures the shown preview vs every actual number so we can pinpoint
-        //    where the finisher preview drifts (esp. with Tuned/Planned now that this card isn't Stable). ──
-        decimal perStrikePreview = card.DynamicVars.Damage.PreviewValue;
-        decimal finisherBaseRaw = ComputeFinisherBase(prior, Strikes, perStrikePreview);
-        decimal shownCalcDamage = card.DynamicVars.ContainsKey("CalculatedDamage")
-            ? card.DynamicVars["CalculatedDamage"].PreviewValue : -1m;
-        string tuned = card.TryGetModifier<TunedModifier>(out var t) ? $"stacks={t!.Stacks},bonus={t.Bonus}" : "none";
-        Log.Info($"FateKnocking DIAG pre-play: prior={prior} perStrikePreview={perStrikePreview} " +
-                 $"finisherBaseRaw={finisherBaseRaw} shownCalcDamage={shownCalcDamage} tuned=[{tuned}] upgraded={IsUpgraded}");
-
-        // The base strikes — capture the ACTUAL damage they deal (after all modifiers and block).
-        var strikes = await CommonActions.CardAttack(card, cardPlay, Strikes).Execute(context);
-        var strikeHits = strikes.Results.SelectMany(r => r).Select(dr => dr.TotalDamage).ToList();
-        int strikeDamage = strikeHits.Sum();
+        // The base strikes — capture the ACTUAL damage they deal (after all modifiers and block). We pass the
+        // Damage var EXPLICITLY: CommonActions.CardAttack(card, cardPlay, hitCount) auto-prefers a card's
+        // CalculatedDamage var over its Damage var, and ours is only the display-only finisher preview — so
+        // the plain multi-hit form would (wrongly) make each strike deal the whole finisher total. This
+        // mirrors what BaseLib itself does for a card with just a Damage var.
+        var strikes = await CommonActions.CardAttack(
+            card, cardPlay, cardPlay.Target,
+            ((DynamicVar)card.DynamicVars.Damage).BaseValue, card.DynamicVars.Damage.Props, Strikes).Execute(context);
+        int strikeDamage = strikes.Results.SelectMany(r => r).Sum(dr => dr.TotalDamage);
 
         int total = prior + strikeDamage;
         _damageDealt[this] = total;
-        Log.Info($"FateKnocking DIAG strikes: hits=[{string.Join(",", strikeHits)}] sum={strikeDamage} total(prior+sum)={total}");
 
         // Finisher: deal that running sum as a single hit. Its own damage is not summed back in, so
         // it doesn't compound play-to-play.
         if (total > 0)
-        {
-            var fin = await CommonActions.CardAttack(card, cardPlay.Target, (decimal)total).Execute(context);
-            int finisherDamage = fin.Results.SelectMany(r => r).Sum(dr => dr.TotalDamage);
-            Log.Info($"FateKnocking DIAG finisher: requested(total)={total} actualDealt={finisherDamage} " +
-                     $"| shownCalcDamage(preview) was {shownCalcDamage}");
-        }
+            await CommonActions.CardAttack(card, cardPlay.Target, (decimal)total).Execute(context);
     }
 }
