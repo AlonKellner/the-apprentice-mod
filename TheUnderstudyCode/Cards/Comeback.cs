@@ -26,8 +26,10 @@ public class Comeback : UnderstudyCard
         DynamicVars.Damage.UpgradeValueBy(1m);
     }
 
+    // Glow only when there's an Unplayable ATTACK or SKILL to free (same predicate as OnPlay), so Unplayable
+    // statuses/curses like Infection don't make it glow when it can't touch them.
     protected override bool ShouldGlowGoldInternal =>
-        CardExtensions.AnyUnplayable(PileType.Hand.GetPile(Owner).Cards.Where(c => c != this));
+        UnplayableModifier.AnyIn(PileType.Hand.GetPile(Owner).Cards.Where(c => c != this));
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
