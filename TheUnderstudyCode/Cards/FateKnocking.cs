@@ -1,13 +1,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using BaseLib.Abstracts;
+using BaseLib.Extensions;
 using BaseLib.Utils;
 using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
+using MegaCrit.Sts2.Core.Logging;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.ValueProps;
+using TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
@@ -67,18 +70,36 @@ public class FateKnocking : UnderstudyCard
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
-        int prior = PriorSumThisCombat(cardPlay.Card);
+        var card = cardPlay.Card;
+        int prior = PriorSumThisCombat(card);
+
+        // ── DIAGNOSTIC (temporary) — captures the shown preview vs every actual number so we can pinpoint
+        //    where the finisher preview drifts (esp. with Tuned/Planned now that this card isn't Stable). ──
+        decimal perStrikePreview = card.DynamicVars.Damage.PreviewValue;
+        decimal finisherBaseRaw = ComputeFinisherBase(prior, Strikes, perStrikePreview);
+        decimal shownCalcDamage = card.DynamicVars.ContainsKey("CalculatedDamage")
+            ? card.DynamicVars["CalculatedDamage"].PreviewValue : -1m;
+        string tuned = card.TryGetModifier<TunedModifier>(out var t) ? $"stacks={t!.Stacks},bonus={t.Bonus}" : "none";
+        Log.Info($"FateKnocking DIAG pre-play: prior={prior} perStrikePreview={perStrikePreview} " +
+                 $"finisherBaseRaw={finisherBaseRaw} shownCalcDamage={shownCalcDamage} tuned=[{tuned}] upgraded={IsUpgraded}");
 
         // The base strikes — capture the ACTUAL damage they deal (after all modifiers and block).
-        var strikes = await CommonActions.CardAttack(cardPlay.Card, cardPlay, Strikes).Execute(context);
-        int strikeDamage = strikes.Results.SelectMany(r => r).Sum(dr => dr.TotalDamage);
+        var strikes = await CommonActions.CardAttack(card, cardPlay, Strikes).Execute(context);
+        var strikeHits = strikes.Results.SelectMany(r => r).Select(dr => dr.TotalDamage).ToList();
+        int strikeDamage = strikeHits.Sum();
 
         int total = prior + strikeDamage;
         _damageDealt[this] = total;
+        Log.Info($"FateKnocking DIAG strikes: hits=[{string.Join(",", strikeHits)}] sum={strikeDamage} total(prior+sum)={total}");
 
         // Finisher: deal that running sum as a single hit. Its own damage is not summed back in, so
         // it doesn't compound play-to-play.
         if (total > 0)
-            await CommonActions.CardAttack(cardPlay.Card, cardPlay.Target, (decimal)total).Execute(context);
+        {
+            var fin = await CommonActions.CardAttack(card, cardPlay.Target, (decimal)total).Execute(context);
+            int finisherDamage = fin.Results.SelectMany(r => r).Sum(dr => dr.TotalDamage);
+            Log.Info($"FateKnocking DIAG finisher: requested(total)={total} actualDealt={finisherDamage} " +
+                     $"| shownCalcDamage(preview) was {shownCalcDamage}");
+        }
     }
 }
