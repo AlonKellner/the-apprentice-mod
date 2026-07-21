@@ -5,9 +5,10 @@ using MegaCrit.Sts2.Core.Localization.DynamicVars;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
-// Multiplayer "ultimate" Give and Take: step in for a castmate — run their whole Swap + Invert turn
-// FOR them (push their debuffs onto the enemies, flip what's left into buffs). Cost 1 like Give and
-// Take; multiplayer cards run hot. (Swap = Audience / Interaction, Invert = Self / Positive / Fun.)
+// Multiplayer "ultimate" Best of Both: step in for a castmate — run the whole Best of Both resolution FOR
+// them (their debuffs simultaneously flip into buffs on them and land on the enemies, and each enemy's buff
+// is stolen onto them). Shares GiveAndTake.ResolveFor so it stays identical. Cost 1; multiplayer cards run
+// hot. (Swap = Audience / Interaction, Invert = Self / Positive / Fun.)
 public class Duet : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:Duet";
@@ -31,10 +32,10 @@ public class Duet : UnderstudyCard
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
-        // The chosen teammate's creature — Swap/Invert operate relative to them (their debuffs go to
-        // the enemies, their remaining debuffs flip), exactly like Give and Take does for its owner.
+        // The chosen teammate's creature — the whole Best of Both resolution runs relative to them, exactly
+        // as it does for Best of Both's own owner (shared code, so the two never drift).
         if (cardPlay.Target is not { } target) return;
-        await SceneStealing.Swap(context, target, (int)DynamicVars["Swap"].BaseValue);
-        await EmotionalExpression.InvertEach(context, target, (int)DynamicVars["Invert"].BaseValue);
+        await GiveAndTake.ResolveFor(context, target,
+            (int)DynamicVars["Swap"].BaseValue, (int)DynamicVars["Invert"].BaseValue);
     }
 }

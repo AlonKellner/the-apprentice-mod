@@ -2,6 +2,7 @@ using System.Linq;
 using BaseLib.Abstracts;
 using BaseLib.Utils;
 using MegaCrit.Sts2.Core.Entities.Cards;
+using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 
@@ -32,20 +33,23 @@ public class GiveAndTake : UnderstudyCard
 
     protected override bool ShouldGlowGoldInternal => EmotionalExpression.HasAnyInvertibleDebuffPresent(Owner.Creature);
 
-    protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
+    protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay) =>
+        await ResolveFor(context, cardPlay.Card.Owner.Creature,
+            (int)DynamicVars["Swap"].BaseValue, (int)DynamicVars["Invert"].BaseValue);
+
+    // The full Best of Both resolution for one creature — shared with Duet, which runs the exact same
+    // thing for a targeted teammate. For each of the creature's debuffs, Swap's give and Invert's flip read
+    // the same snapshot (InvertiblePair.ResolveGiveAndTake strips it once), then Swap's TAKE half steals
+    // each enemy's swappable buff onto the creature.
+    public static async Task ResolveFor(
+        PlayerChoiceContext context, Creature creature, int swapRepeats, int invertMax)
     {
-        var self = cardPlay.Card.Owner.Creature;
-        var enemies = self.CombatState!.HittableEnemies.ToList();
-        int repeats = (int)DynamicVars["Swap"].BaseValue;
-        int swapCap = SceneStealing.SwapCap * repeats;
-        int invertMax = (int)DynamicVars["Invert"].BaseValue;
+        var enemies = creature.CombatState!.HittableEnemies.ToList();
+        int swapCap = SceneStealing.SwapCap * swapRepeats;
 
-        // Each pair resolves Swap's give + Invert's flip on the same snapshot of its debuff (see
-        // InvertiblePair.ResolveGiveAndTake), so the two effects never consume each other's input.
         foreach (var pair in InvertiblePairs.All)
-            await pair.ResolveGiveAndTake(context, self, enemies, swapCap, invertMax);
+            await pair.ResolveGiveAndTake(context, creature, enemies, swapCap, invertMax);
 
-        // Swap's TAKE half: also steal each enemy's swappable buff.
-        await SceneStealing.TakeFromEnemies(context, self, repeats);
+        await SceneStealing.TakeFromEnemies(context, creature, swapRepeats);
     }
 }
