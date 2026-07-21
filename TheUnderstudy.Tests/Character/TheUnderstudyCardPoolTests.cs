@@ -50,9 +50,9 @@ public class TheUnderstudyCardPoolTests
     [Fact]
     public void UnderstudyCard_IsPrePlannedOverriddenOnlyByPromptAndTableRead()
     {
-        // The pre-planned mechanic (starting a combat already Planned, originally from the
-        // Apprentice's Signature/Prelude cards) is deliberately reused by exactly this B card
-        // (Playlist, the other user, was retired). Verify no other B card type overrides IsPrePlanned.
+        // The pre-planned mechanic (starting a combat already Planned) is deliberately reused by exactly
+        // these B cards. Verify no other B card type overrides IsPrePlanned. (Experience dropped its
+        // upgrade-only pre-Planned when it moved to cost 3 / upgrade cost 2.)
         var bCardTypes = typeof(UnderstudyCard).Assembly.GetTypes()
             .Where(t => t.IsSubclassOf(typeof(UnderstudyCard)) && !t.IsAbstract)
             .Where(t =>
@@ -64,7 +64,7 @@ public class TheUnderstudyCardPoolTests
             .OrderBy(n => n)
             .ToList();
 
-        Assert.Equal(new[] { "Experience", "Playlist", "Signature" }, bCardTypes);
+        Assert.Equal(new[] { "Playlist", "Signature" }, bCardTypes);
     }
 
     [Fact]
