@@ -44,7 +44,20 @@ public abstract class BalancedPowerBase : UnderstudyPower
         $"Whenever a card becomes [gold]Unplayable[/gold], remove [gold]Unplayable[/gold] from 1 {SelectionFragment} in hand.",
         $"Whenever a card becomes [gold]Unplayable[/gold], remove [gold]Unplayable[/gold] from {{Amount}} {SelectionFragment} in hand.");
 
-    private readonly List<CardModel> _pending = new();
+    // Behind InitInternalData rather than an ordinary field: a power reaches combat through
+    // ToMutable() -> MutableClone(), a MemberwiseClone that copies reference fields BY REFERENCE, so
+    // a plain List would stay shared with the canonical model — and therefore between every creature
+    // carrying this power, which in multiplayer means two players queueing into one list. Only
+    // PowerModel.DeepCloneFields re-isolates state, and the only thing it re-creates is _internalData
+    // (base-game OrbitPower is the reference implementation).
+    private sealed class Data
+    {
+        public readonly List<CardModel> Pending = new();
+    }
+
+    protected override object InitInternalData() => new Data();
+
+    private List<CardModel> Pending => GetInternalData<Data>().Pending;
 
     // Defensive reset, called every time a Standing By card is played (see Balanced.OnPlay).
     // PowerCmd.Apply reuses an existing same-type Power instance for stacking rather than always
@@ -52,7 +65,7 @@ public abstract class BalancedPowerBase : UnderstudyPower
     // on stale queued state in the new attempt. This power is not Instanced, so unlike
     // SecondLessonPower it really can be handed back a reused instance; clearing only its own queue
     // (no board-visible state) is safe to redo on every play.
-    public void ResetTracking() => _pending.Clear();
+    public void ResetTracking() => Pending.Clear();
 
     // AfterApplied fires on EVERY application — including each stack onto this same reused instance
     // (PowerCmd reuses a same-type instance for stacking, see ResetTracking). Subscribe idempotently
@@ -77,7 +90,7 @@ public abstract class BalancedPowerBase : UnderstudyPower
 
     private void OnUnplayableApplied(CardModel card)
     {
-        if (card.Owner?.Creature == Owner) _pending.Add(card);
+        if (card.Owner?.Creature == Owner) Pending.Add(card);
     }
 
     // "The rest of the deck" — every other combat pile. This power only ever removes Unplayable from
@@ -99,9 +112,9 @@ public abstract class BalancedPowerBase : UnderstudyPower
     // including the just-played card's own — has already queued via OnUnplayableApplied above.
     public override async Task AfterCardPlayedLate(PlayerChoiceContext context, CardPlay cardPlay)
     {
-        if (_pending.Count == 0 || Owner?.Player == null) return;
-        var triggers = _pending.ToList();
-        _pending.Clear();
+        if (Pending.Count == 0 || Owner?.Player == null) return;
+        var triggers = Pending.ToList();
+        Pending.Clear();
 
         var player = Owner.Player;
         int restBefore = CountUnplayableOutsideHand(player);

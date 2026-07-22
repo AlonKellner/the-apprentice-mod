@@ -22,7 +22,7 @@ namespace TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 //
 // Orders are assigned post-draw, in AfterPlayerTurnStartLate (after energy refill and draw have
 // already happened — deliberately, so a fresh Reward/Punish debuff/buff never bites the turn it's
-// granted, only the next one), from the cards actually drawn this turn (_drawnThisTurn, tracked via
+// granted, only the next one), from the cards actually drawn this turn (DrawnThisTurn, tracked via
 // AfterCardDrawn). This used to be done pre-draw instead (peeking the draw pile in
 // BeforeHandDrawLate before the turn's hand draw), to avoid the overlay popping in a frame late —
 // but CardPileCmd.Draw can reshuffle the discard pile into the draw pile mid-draw, strictly after
@@ -45,7 +45,7 @@ public class SecondLessonPower : UnderstudyPower
     public override PowerStackType StackType => PowerStackType.Single;
 
     // Two plays of The Second Lesson are two separate Lessons, not one louder one: each instance
-    // keeps its own _drawnThisTurn/_activeOrders and hands out its own pair of Orders every turn.
+    // keeps its own DrawnThisTurn/ActiveOrders and hands out its own pair of Orders every turn.
     // PowerCmd.FindExistingInstanceForStacking returns null for Instanced, so every application
     // constructs a fresh instance instead of stacking Amount onto the existing one (same mechanism
     // the base game's TheBombPower uses to keep each bomb ticking down separately).
@@ -56,29 +56,57 @@ public class SecondLessonPower : UnderstudyPower
         "Each turn, some cards will have an [red][sine]Order[/sine][/red]. Obeying grants [gold]Rewarded[/gold]; disobeying grants [gold]Punished[/gold].",
         "Each turn, some cards will have an [red][sine]Order[/sine][/red]. Obeying grants [gold]Rewarded[/gold]; disobeying grants [gold]Punished[/gold].");
 
-    private readonly List<CardModel> _drawnThisTurn = new();
+    // ── Per-instance state ───────────────────────────────────────────────────────────────────
+    // This MUST live behind InitInternalData/GetInternalData rather than in ordinary fields, and the
+    // reason is not stylistic. A power reaches combat via ToMutable() -> MutableClone(), which is a
+    // MemberwiseClone: reference-type fields are copied BY REFERENCE, so every clone would go on
+    // sharing one List with the canonical model and with each other. PowerModel.DeepCloneFields is
+    // the only thing that re-isolates state, and all it re-creates is _dynamicVars and _internalData
+    // ("isolated to this instance of the power... reset on clones of this power").
+    //
+    // Sharing is exactly what went wrong before: two Lessons appended to a single DrawnThisTurn, so
+    // a 10-card hand recorded 20 draws with every card listed twice, one card was handed both Orders,
+    // whichever Lesson ran first cleared the list out from under the other, and clearing the shared
+    // ActiveOrders stripped Orders the "other" Lesson had live on the board.
+    //
+    // Base-game OrbitPower is the reference implementation of this pattern.
+    private sealed class Data
+    {
+        // Cards drawn this turn, the pool Orders are assigned from.
+        public readonly List<CardModel> DrawnThisTurn = new();
 
-    // Cards this power currently has an active Order attached to, tracked by direct reference —
-    // a played card leaves the Hand pile before BeforeSideTurnEnd fires, but the modifier/
-    // affliction stay attached to the CardModel object regardless of which pile it's in.
-    private readonly List<CardModel> _activeOrders = new();
+        // Cards this power currently has an active Order attached to, tracked by direct reference —
+        // a played card leaves the Hand pile before BeforeSideTurnEnd fires, but the modifier/
+        // affliction stay attached to the CardModel object regardless of which pile it's in.
+        public readonly List<CardModel> ActiveOrders = new();
 
-    // Shared Rewarded+Punished total observed at the previous turn start, so the per-turn growth can
-    // be bounds-checked. Null until this instance has seen one turn start: a Lesson played on turn 5
-    // into an already-accumulated total must baseline against what it finds rather than against zero,
-    // or its very first reading would look like one huge illegal jump.
-    private int? _lastResolvedTotal;
+        // Shared Rewarded+Punished total observed at the previous turn start, so the per-turn growth
+        // can be bounds-checked. Null until this instance has seen one turn start: a Lesson played on
+        // turn 5 into an already-accumulated total must baseline against what it finds rather than
+        // against zero, or its very first reading would look like one huge illegal jump.
+        public int? LastResolvedTotal;
+    }
+
+    protected override object InitInternalData() => new Data();
+
+    private List<CardModel> DrawnThisTurn => GetInternalData<Data>().DrawnThisTurn;
+    private List<CardModel> ActiveOrders => GetInternalData<Data>().ActiveOrders;
+
+    private int? LastResolvedTotal
+    {
+        get => GetInternalData<Data>().LastResolvedTotal;
+        set => GetInternalData<Data>().LastResolvedTotal = value;
+    }
 
     // ── Diagnostics ──────────────────────────────────────────────────────────────────────────
-    // Identity of this specific power object. Two hook firings in one turn reporting the same id
-    // would mean a single object is listed twice on the creature rather than two Lessons being live:
-    // Creature.ApplyPowerInternal appends without an identity check and only rejects duplicates for
-    // non-Instanced powers, so nothing structurally prevents it. That shape would also explain a
-    // doubled _drawnThisTurn, since the object would receive every hook once per listing.
+    // Identity of this specific power object, carried so the per-instance isolation above stays
+    // observable rather than assumed. Each live Lesson should report a distinct id AND its own
+    // drawn/active counts; two ids moving in lockstep would mean state is being shared again.
     private int InstanceId => RuntimeHelpers.GetHashCode(this);
 
-    // Every SecondLessonPower currently on the creature, by identity. A repeated id here IS the
-    // duplicate-listing case, stated directly rather than inferred.
+    // Every SecondLessonPower currently on the creature, by identity. A repeated id would mean one
+    // object listed twice — Creature.ApplyPowerInternal appends without an identity check and only
+    // rejects duplicates for non-Instanced powers, so nothing structurally forbids it.
     private string InstanceRoster() =>
         string.Join(",", Owner.GetPowerInstances<SecondLessonPower>().Select(RuntimeHelpers.GetHashCode));
 
@@ -88,24 +116,24 @@ public class SecondLessonPower : UnderstudyPower
     {
         if (fromHandDraw && card.Owner == Owner.Player)
         {
-            // Logged only when it actually repeats, so this stays quiet in the normal case. The same
-            // CardModel arriving twice means either the card genuinely was drawn twice before the
-            // list was last cleared (legitimate, and what the reference-distinct selection now
-            // tolerates) or this object is being handed the hook more than once per draw. The two are
-            // told apart by whether the count of drawn records is a clean multiple of the hand size.
-            int alreadyTracked = _drawnThisTurn.Count(c => ReferenceEquals(c, card));
+            // Logged only when it actually repeats, so this stays quiet in the normal case. A card
+            // genuinely can be drawn twice before the list is next cleared, which is legitimate and
+            // what the reference-distinct selection tolerates. What this is really watching for is the
+            // pathological version: every card in the hand recorded twice, which is what shared state
+            // between Lessons looked like before the internal-data isolation above.
+            int alreadyTracked = DrawnThisTurn.Count(c => ReferenceEquals(c, card));
             if (alreadyTracked > 0)
                 Log.Info($"SecondLessonPower[turn {Turn}]: duplicate draw record id={InstanceId}, " +
                           $"card={card.Id} already tracked {alreadyTracked}x, " +
-                          $"drawnThisTurn={_drawnThisTurn.Count}, lessons=[{InstanceRoster()}]");
-            _drawnThisTurn.Add(card);
+                          $"drawnThisTurn={DrawnThisTurn.Count}, lessons=[{InstanceRoster()}]");
+            DrawnThisTurn.Add(card);
         }
         return Task.CompletedTask;
     }
 
     // There is deliberately no reset-on-play here. It used to exist because PowerCmd.Apply<T> reused
     // an existing same-type instance for stacking, so a combat retried after Orders had been assigned
-    // could hand back an instance whose _activeOrders still referenced the abandoned attempt's cards.
+    // could hand back an instance whose ActiveOrders still referenced the abandoned attempt's cards.
     // Instanced removes that entirely: FindExistingInstanceForStacking returns null, so every play
     // gets a ToMutable() clone that has never tracked anything. Reinstating a reset would be actively
     // wrong — it would strip the Orders a Lesson already has live on the board this turn.
@@ -148,13 +176,13 @@ public class SecondLessonPower : UnderstudyPower
         // throughout means two genuine Lessons and any doubling came from somewhere else.
         // distinctDrawn vs drawnThisTurn separates "the same cards recorded repeatedly" from "simply
         // a lot of cards drawn", which is the difference between a dispatch problem and a busy turn.
-        int distinctDrawn = _drawnThisTurn.Distinct(ReferenceEqualityComparer.Instance).Count();
+        int distinctDrawn = DrawnThisTurn.Distinct(ReferenceEqualityComparer.Instance).Count();
         Log.Info($"SecondLessonPower[turn {turn}]: AfterPlayerTurnStartLate firing; " +
                   $"id={InstanceId}, lessons=[{InstanceRoster()}], " +
                   $"Rewarded={rewarded}, Punished={punished}, " +
-                  $"drawnThisTurn={_drawnThisTurn.Count} ({distinctDrawn} distinct), " +
-                  $"activeOrders={_activeOrders.Count}");
-        Invariants.CheckEqual(_activeOrders.Count, _activeOrders.Count(c => c.TryGetModifier<OrderModifier>(out _)),
+                  $"drawnThisTurn={DrawnThisTurn.Count} ({distinctDrawn} distinct), " +
+                  $"activeOrders={ActiveOrders.Count}");
+        Invariants.CheckEqual(ActiveOrders.Count, ActiveOrders.Count(c => c.TryGetModifier<OrderModifier>(out _)),
             nameof(SecondLessonPower) + "." + nameof(AfterPlayerTurnStartLate),
             "tracked active-Order cards vs. cards still actually carrying OrderModifier");
         // Each assigned Order grants exactly one Reward or Punish stack when it resolves (FlavorOnly
@@ -164,7 +192,7 @@ public class SecondLessonPower : UnderstudyPower
         // non-Stable Attack/Skill) ones. So between turn starts the shared total can only grow, by
         // between 0 and two per live Lesson.
         int resolvedTotal = rewarded + punished;
-        if (_lastResolvedTotal is int previous)
+        if (LastResolvedTotal is int previous)
         {
             int grew = resolvedTotal - previous;
             int maxGrowth = 2 * Math.Max(1, lessons);
@@ -174,16 +202,16 @@ public class SecondLessonPower : UnderstudyPower
                 $"{lessons} live) and never shrink — grew by {grew} (from {previous} to " +
                 $"{resolvedTotal}); Rewarded={rewarded}, Punished={punished}");
         }
-        _lastResolvedTotal = resolvedTotal;
+        LastResolvedTotal = resolvedTotal;
 
         await AssignOrders(context, player, turn);
 
-        _drawnThisTurn.Clear();
+        DrawnThisTurn.Clear();
     }
 
     private async Task AssignOrders(PlayerChoiceContext ctx, Player player, int turn)
     {
-        var (playThis, dontPlayThis, remaining) = SelectFirstTwoEligible(_drawnThisTurn);
+        var (playThis, dontPlayThis, remaining) = SelectFirstTwoEligible(DrawnThisTurn);
 
         if (playThis != null) await AttachOrder(playThis, OrderModifier.Kind.PlayThis, null, turn);
         if (dontPlayThis != null) await AttachOrder(dontPlayThis, OrderModifier.Kind.DontPlayThis, null, turn);
@@ -221,7 +249,7 @@ public class SecondLessonPower : UnderstudyPower
         // holding an Order with no affliction and so no overlay — invisible to the player, and
         // invisible to any check keyed off the affliction. Worth a line when it happens.
         var affliction = await CardCmd.Afflict<Order>(card, 1);
-        _activeOrders.Add(card);
+        ActiveOrders.Add(card);
         Log.Info($"SecondLessonPower[turn {turn}]: attached Order({kind}) to {card.Id} " +
                   $"id={InstanceId}{(affliction == null ? " [WARN: affliction refused, no overlay]" : "")}");
     }
@@ -231,10 +259,10 @@ public class SecondLessonPower : UnderstudyPower
         if (side != CombatSide.Player) return;
 
         int turn = Owner.Player?.PlayerCombatState?.TurnNumber ?? -1;
-        Invariants.CheckEqual(_activeOrders.Count, _activeOrders.Count(c => c.TryGetModifier<OrderModifier>(out _)),
+        Invariants.CheckEqual(ActiveOrders.Count, ActiveOrders.Count(c => c.TryGetModifier<OrderModifier>(out _)),
             nameof(SecondLessonPower) + "." + nameof(BeforeSideTurnEnd),
             "tracked active-Order cards vs. cards still actually carrying OrderModifier");
-        foreach (var card in _activeOrders)
+        foreach (var card in ActiveOrders)
         {
             if (card.TryGetModifier<OrderModifier>(out var mod) && !mod!.Resolved)
             {
@@ -252,6 +280,6 @@ public class SecondLessonPower : UnderstudyPower
                 CardCmd.ClearAffliction(card);
         }
 
-        _activeOrders.Clear();
+        ActiveOrders.Clear();
     }
 }
