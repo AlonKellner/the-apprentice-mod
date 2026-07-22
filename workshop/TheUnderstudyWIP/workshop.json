@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.11.68: Architect dialogue now names the pieces The Understudy wrote - a Requiem, his Lullabies, and one that is finally his own.",
+  "changeNote": "v1.11.69: the first meeting with the Architect no longer repeats on later visits, and the Requiem now comes before the piece he wrote for himself.",
   "tags": [],
   "dependencies": [
     3737335127

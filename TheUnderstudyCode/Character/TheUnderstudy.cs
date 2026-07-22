@@ -13,6 +13,25 @@ using PerformanceCard = TheUnderstudy.TheUnderstudyCode.Cards.Workshop;
 
 namespace TheUnderstudy.TheUnderstudyCode.Character;
 
+// A note on the Architect dialogue in localization/eng/ancients.json, because its layout looks like
+// a mistake and is not:
+//
+// For THE_ARCHITECT specifically, BaseLib derives each dialogue's VisitIndex from its index number
+// (every other ancient gets a spaced 0, 1, 4, 7... pattern), so dialogue N plays on the Nth meeting.
+// The trailing "r" in a key like "1-0r.ancient" sets IsRepeating, which adds that dialogue to the
+// pool eligible to be picked at random once the numbered ones run out. The suffix must be on every
+// line of a dialogue or on none of them — AncientDialogue.PopulateLines throws on a mix.
+//
+// The first meeting must NOT repeat: the Architect cannot greet him with "I killed you once already"
+// a second time. That needs a dialogue with no "r" — but the STS001 analyzer hardcodes
+// "THE_ARCHITECT.talk.SYMBOLID.0-0r.char" and friends as required keys, so slot 0 has to exist in the
+// repeating form. So slot 0 keeps those keys to satisfy the analyzer and is then neutralised with
+// "0-visit": "99": GetValidDialogues only takes an exact VisitIndex == visit count match, and
+// AddRepeatingDialogues only pools a dialogue once visits >= its VisitIndex, so slot 0 is unreachable
+// on both paths. The real first meeting lives in slot 5 with no "r" and "5-visit": "0".
+//
+// Net effect: visit 0 plays slot 5 and never recurs; visits 1-4 play slots 1-4; visit 5 onward picks
+// at random among slots 1-4. Renumbering the slots or deleting slot 0 will break one half of this.
 public class TheUnderstudy : PlaceholderCharacterModel
 {
     public const string CharacterId = "TheUnderstudy";
