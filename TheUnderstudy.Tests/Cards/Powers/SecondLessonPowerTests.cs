@@ -18,6 +18,39 @@ public class SecondLessonPowerTests
     }
 
     [Fact]
+    public void SelectFirstTwoEligible_SameCardDrawnTwice_DoesNotGetBothOrders()
+    {
+        // A card can land in drawnThisTurn more than once (drawn, leaves hand, drawn again before
+        // the list is cleared). Taking eligible[0] and eligible[1] by position then handed the same
+        // card both "Play this card" and "Don't play this card" at once.
+        var drawnTwice = new UnderstudyStrike();
+        var other = new UnderstudyDefend();
+
+        var (playThis, dontPlayThis, remaining) = SecondLessonPower.SelectFirstTwoEligible(
+            new List<CardModel> { drawnTwice, drawnTwice, other });
+
+        Assert.Same(drawnTwice, playThis);
+        Assert.Same(other, dontPlayThis);
+        Assert.NotSame(playThis, dontPlayThis);
+        Assert.Empty(remaining);
+    }
+
+    [Fact]
+    public void SelectFirstTwoEligible_DistinctCopiesOfSameCard_BothStayEligible()
+    {
+        // Reference equality, not card identity: two separate copies of Strike are two real cards
+        // and must each be able to carry their own Order.
+        var copyOne = new UnderstudyStrike();
+        var copyTwo = new UnderstudyStrike();
+
+        var (playThis, dontPlayThis, _) = SecondLessonPower.SelectFirstTwoEligible(
+            new List<CardModel> { copyOne, copyTwo });
+
+        Assert.Same(copyOne, playThis);
+        Assert.Same(copyTwo, dontPlayThis);
+    }
+
+    [Fact]
     public void SelectFirstTwoEligible_SkipsCardsAnotherLessonAlreadyOrdered()
     {
         // A second Lesson selecting after the first has already taken its two picks: the afflicted

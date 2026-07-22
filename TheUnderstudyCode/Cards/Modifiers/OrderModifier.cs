@@ -1,4 +1,5 @@
 using BaseLib.Abstracts;
+using BaseLib.Extensions;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
@@ -72,10 +73,16 @@ public class OrderModifier : CardModifier
     // AfflictionModel.CanAfflict refuses an already-afflicted card, and CardCmd.Afflict signals that
     // by silently returning null, which would otherwise leave the card holding an OrderModifier with
     // no Order affliction (and so no overlay) for the rest of the turn.
+    // The OrderModifier clause is not redundant with the affliction one: CardCmd.Afflict reports
+    // refusal by returning null, so a card can end up carrying an Order with no affliction to show
+    // for it (an Unplayable card, for one — AfflictionModel.CanAfflict rejects those). Keying only
+    // off the affliction would let such a card take a second Order and display two contradictory
+    // commands at once.
     public static bool CanApplyTo(CardModel card) =>
         (card.Type == CardType.Attack || card.Type == CardType.Skill)
         && !card.IsStable()
-        && card.Affliction == null;
+        && card.Affliction == null
+        && !card.TryGetModifier<OrderModifier>(out _);
 
     // Resolution the instant the order-carrying card is played this turn: "Play this card" is
     // obeyed (Reward); "Don't play this card" is disobeyed (Punish); flavor-only never resolves.

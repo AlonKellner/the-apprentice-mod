@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using BaseLib.Abstracts;
 using BaseLib.Extensions;
@@ -33,8 +34,9 @@ namespace TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 // Rewarded+Punished can move per turn instead of demanding a fixed step.
 //
 // The power is Instanced: two plays mean two Lessons side by side, each with its own drawn-card
-// tracking and its own pair of Orders per turn (Orders never overlap, since OrderModifier.CanApplyTo
-// skips already-afflicted cards). The Rewarded/Punished counters they feed are singletons that
+// tracking and its own pair of Orders per turn (Orders never overlap: OrderModifier.CanApplyTo skips
+// any card already carrying an Order or affliction, and SelectFirstTwoEligible picks two cards that
+// are distinct by reference). The Rewarded/Punished counters they feed are singletons that
 // apply themselves on their own turn-start hook, so their once-per-turn application needs no
 // coordination between Lessons no matter how many are live.
 public class SecondLessonPower : UnderstudyPower
@@ -86,7 +88,17 @@ public class SecondLessonPower : UnderstudyPower
     public static (CardModel? playThis, CardModel? dontPlayThis, IReadOnlyList<CardModel> remainingEligible)
         SelectFirstTwoEligible(IReadOnlyList<CardModel> drawnThisTurn)
     {
-        var eligible = drawnThisTurn.Where(OrderModifier.CanApplyTo).ToList();
+        // Distinct by reference, because the same card really can appear in drawnThisTurn more than
+        // once — it is drawn, leaves the hand, and is drawn again before the list is next cleared.
+        // Picking eligible[0] and eligible[1] off a list holding a card twice handed BOTH Orders to
+        // that one card, which is why "Play this card" and "Don't play this card" were seen together
+        // on a single card. Reference equality specifically: two separate copies of the same card are
+        // different cards and must each stay individually eligible.
+        var eligible = new List<CardModel>();
+        foreach (var card in drawnThisTurn)
+            if (OrderModifier.CanApplyTo(card) && !eligible.Any(seen => ReferenceEquals(seen, card)))
+                eligible.Add(card);
+
         CardModel? playThis = eligible.Count > 0 ? eligible[0] : null;
         CardModel? dontPlayThis = eligible.Count > 1 ? eligible[1] : null;
         var remaining = eligible.Count > 2 ? eligible.Skip(2).ToList() : new List<CardModel>();
@@ -103,7 +115,13 @@ public class SecondLessonPower : UnderstudyPower
         // Rewarded/Punished are singletons that every Lesson feeds and that apply themselves (see
         // RewardedPower/PunishedPower) — all this power does with them is bounds-check their growth.
         int lessons = Owner.GetPowerInstances<SecondLessonPower>().Count();
+        // id is the instance's identity hash: two firings in one turn reporting the SAME id would mean
+        // one power object is listed twice on the creature rather than two Lessons being live
+        // (Creature.ApplyPowerInternal only guards against that for non-Instanced powers), which would
+        // also double every AfterCardDrawn record. Cheap to carry and the fastest way to tell the two
+        // situations apart from a log.
         Log.Info($"SecondLessonPower[turn {turn}]: AfterPlayerTurnStartLate firing; " +
+                  $"id={RuntimeHelpers.GetHashCode(this)}, " +
                   $"Rewarded={rewarded}, Punished={punished}, " +
                   $"drawnThisTurn={_drawnThisTurn.Count}, activeOrders={_activeOrders.Count}, " +
                   $"lessons={lessons}");
