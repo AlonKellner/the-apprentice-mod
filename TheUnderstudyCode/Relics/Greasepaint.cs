@@ -8,6 +8,7 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Powers;
+using TheUnderstudy.TheUnderstudyCode.Cards;
 
 namespace TheUnderstudy.TheUnderstudyCode.Relics;
 
@@ -32,10 +33,9 @@ public class Greasepaint : UnderstudyCounterRelic
     public override async Task AfterPowerAmountChanged(
         PlayerChoiceContext choiceContext, PowerModel power, decimal amount, Creature? applier, CardModel? cardSource)
     {
-        if (amount <= 0m) return;
         if (!power.IsMutable) return;
         if (power.Owner != Owner.Creature) return;
-        if (power.Type != PowerType.Debuff) return;
+        if (!EmotionalExpression.IsDebuffApplication(power, amount)) return;
 
         int fires = Bump();
         for (int i = 0; i < fires; i++)

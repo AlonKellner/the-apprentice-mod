@@ -5,6 +5,7 @@ using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
+using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Powers;
@@ -17,6 +18,20 @@ public static class EmotionalExpression
 {
     public static int CountUniqueDebuffTypes(int weakAmt, int vulAmt) =>
         (weakAmt > 0 ? 1 : 0) + (vulAmt > 0 ? 1 : 0);
+
+    // Whether an AfterPowerAmountChanged event is "a debuff being applied to you". A real Debuff counts
+    // when it gains a positive amount. A Buff counts when it is driven further into NEGATIVE territory —
+    // the mod treats a negative-valued buff (negative Vigor / Strength / Dexterity) as a debuff, so
+    // spending Vigor below 0 (or piling on more negative) is a self-debuff. A buff merely spent down but
+    // still >= 0 (e.g. Vigor 10 -> 7) is not.
+    public static bool IsDebuffApplication(PowerModel power, decimal amount) =>
+        IsDebuffApplication(power.Type, amount, power.Amount);
+
+    // Pure form (unit-testable): `amount` is the change delta, `newAmount` the resulting total.
+    public static bool IsDebuffApplication(PowerType type, decimal amount, decimal newAmount) =>
+        type == PowerType.Debuff
+            ? amount > 0m
+            : amount < 0m && newAmount < 0m;
 
     // The one shared cancellation primitive every Un-X power's bidirectional
     // TryModifyPowerAmountReceived leans on, in both directions, for all 6 pairs: reduce an

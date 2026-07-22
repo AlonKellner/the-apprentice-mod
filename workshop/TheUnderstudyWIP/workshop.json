@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.11.48: fix Harmony class-level discovery so the epoch debug-label hide + diagnostics actually run.",
+  "changeNote": "v1.11.49: remove epoch debug diagnostics (locked-title-on-hover is base-game behavior; no change needed).",
   "tags": [],
   "dependencies": [
     3737335127

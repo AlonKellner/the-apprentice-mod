@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.Models.Powers;
 using TheUnderstudy.TheUnderstudyCode.Cards;
 using TheUnderstudy.TheUnderstudyCode.Cards.Powers;
@@ -24,6 +25,25 @@ public class EmotionalExpressionTests
     [Fact]
     public void CountUniqueDebuffTypes_BothPresent_Returns2() =>
         Assert.Equal(2, EmotionalExpression.CountUniqueDebuffTypes(2, 4));
+
+    // IsDebuffApplication — negative-valued buffs count as debuffs (negative Vigor/Strength/Dexterity).
+
+    [Theory]
+    // Real debuff: counts only when gained (positive delta), not when it decays.
+    [InlineData(PowerType.Debuff, 3, 3, true)]
+    [InlineData(PowerType.Debuff, -1, 2, false)]
+    // Buff spent but still >= 0 (e.g. Vigor 10 -> 7, or spent to exactly 0): NOT a debuff.
+    [InlineData(PowerType.Buff, -3, 7, false)]
+    [InlineData(PowerType.Buff, -3, 0, false)]
+    // Buff driven into / further into negative territory: IS a debuff application.
+    [InlineData(PowerType.Buff, -3, -3, true)]  // Muffle: Vigor 0 -> -3
+    [InlineData(PowerType.Buff, -3, -1, true)]  // Vigor 2 -> -1 (crosses zero)
+    [InlineData(PowerType.Buff, -3, -4, true)]  // Vigor -1 -> -4 (more negative)
+    // Buff improving (positive delta) is never a debuff application, even while still negative.
+    [InlineData(PowerType.Buff, 3, -1, false)]  // Vigor -4 -> -1
+    [InlineData(PowerType.Buff, 2, 5, false)]   // ordinary buff gain
+    public void IsDebuffApplication_ClassifiesBySign(PowerType type, int amount, int newAmount, bool expected) =>
+        Assert.Equal(expected, EmotionalExpression.IsDebuffApplication(type, amount, newAmount));
 
     // ComputeWeakCancellation — the shared cancellation primitive InvertTrackerPower leans on for every
     // same-shape pair, both directions.
