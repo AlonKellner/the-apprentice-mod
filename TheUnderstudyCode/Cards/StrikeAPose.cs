@@ -16,7 +16,7 @@ public class StrikeAPose : UnderstudyCard
 
     public StrikeAPose() : base(1, CardType.Attack, CardRarity.Common, TargetType.RandomEnemy)
     {
-        WithDamage(4);
+        WithDamage(3);
         WithVars(new IntVar("Invert", 1));
         WithTip(UnderstudyKeywords.Invert);
     }
