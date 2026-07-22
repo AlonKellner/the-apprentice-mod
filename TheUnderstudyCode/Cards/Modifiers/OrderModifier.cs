@@ -47,15 +47,18 @@ public class OrderModifier : CardModifier
         "Tone it down.",
         "Be quiet.",
         "Listen to me.",
-        "Answer my question.",
         "Kill it.",
+        "Again.",
         "Stop crying.",
         "Calm down.",
         "Don't be scared.",
         "Look at me.",
         "Stand still.",
-        "Give up.",
-        "Never come back.",
+        "Wake up.",
+        "Can you kill me?",
+        "Answer my question.",
+        "Replace me.",
+        "End my story.",
         "Die."
     };
 

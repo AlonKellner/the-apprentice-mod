@@ -94,7 +94,7 @@ public class OrderModifierTests
     }
 
     [Fact]
-    public void FlavorLines_HasExpectedCount() => Assert.Equal(14, OrderModifier.FlavorLines.Length);
+    public void FlavorLines_HasExpectedCount() => Assert.Equal(17, OrderModifier.FlavorLines.Length);
 
     [Fact]
     public void WasPlayed_DefaultsToFalse() => Assert.False(new OrderModifier().WasPlayed);
