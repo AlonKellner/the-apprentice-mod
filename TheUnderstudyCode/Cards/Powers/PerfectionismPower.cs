@@ -33,8 +33,7 @@ public class PerfectionismPower : UnderstudyPower
             TunedModifier.CanApplyTo,
             this);
         if (selected == null) return;
-        var allCards = player.Piles.SelectMany(p => p.Cards);
         foreach (var card in selected)
-            TunedModifier.Apply(card, Owner.CombatState!, allCards);
+            TunedModifier.Apply(card);
     }
 }

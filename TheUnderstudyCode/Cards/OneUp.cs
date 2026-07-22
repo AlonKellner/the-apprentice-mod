@@ -37,11 +37,9 @@ public class OneUp : UnderstudyCard
             $"Repeat resolved to {hitCount} hits — must be positive before attacking and applying Tuned");
         await CommonActions.CardAttack(cardPlay.Card, cardPlay, hitCount).Execute(context);
 
-        var player = cardPlay.Card.Owner;
-        var allCards = player.Piles.SelectMany(p => p.Cards);
         // Granted after the attack above, so this play's damage didn't benefit from it — pass
         // cardPlay so a first-ever application doesn't lock this card up for THIS play (see
         // TunedModifier.Apply's grantedAfterOwnCheck doc).
-        TunedModifier.Apply(this, CombatState!, allCards, cardPlay);
+        TunedModifier.Apply(this, cardPlay);
     }
 }

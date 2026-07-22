@@ -39,8 +39,7 @@ public class RunThrough : UnderstudyCard
             this);
 
         if (selected == null) return;
-        var allCards = player.Piles.SelectMany(p => p.Cards);
         foreach (var card in selected)
-            TunedModifier.Apply(card, CombatState!, allCards);
+            TunedModifier.Apply(card);
     }
 }

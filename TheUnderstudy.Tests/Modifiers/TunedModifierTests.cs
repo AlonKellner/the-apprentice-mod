@@ -198,9 +198,15 @@ public class TunedModifierTests
     private static void SetStacks(TunedModifier mod, int stacks) =>
         typeof(TunedModifier).GetProperty(nameof(TunedModifier.Stacks))!.SetValue(mod, stacks);
 
-    private static void SetTunedCreated(int count) =>
-        typeof(TunedModifier).GetField("_tunedCreated", BindingFlags.NonPublic | BindingFlags.Static)!
-            .SetValue(null, count);
+    // TunedCardCount reads the owning player's live combat piles, which the bare test host cannot
+    // stand up. This stand-in supplies the count directly. Subclassing is safe: BaseLib's
+    // GetModifier<T> matches with OfType<T>, so this is still found as a TunedModifier.
+    private sealed class TunedWithCardCount : TunedModifier
+    {
+        private readonly int _count;
+        public TunedWithCardCount(int count) => _count = count;
+        protected override int TunedCardCount() => _count;
+    }
 
     [Fact]
     public void ModifyBaseDamageAdditive_IsOverride()
@@ -219,20 +225,28 @@ public class TunedModifierTests
     }
 
     [Fact]
-    public void Bonus_IsStacksTimesTunedCreated()
+    public void Bonus_IsStacksTimesTunedCardCount()
     {
+        var mod = new TunedWithCardCount(3);
+        SetStacks(mod, 2);
+        Assert.Equal(6, mod.Bonus);
+    }
+
+    [Fact]
+    public void Bonus_UnattachedModifier_IsZero()
+    {
+        // No owning card means no piles to count, so a modifier that isn't on a card in combat
+        // contributes nothing rather than throwing (CardModel.Owner asserts mutability).
         var mod = new TunedModifier();
         SetStacks(mod, 2);
-        SetTunedCreated(3);
-        Assert.Equal(6, mod.Bonus);
+        Assert.Equal(0, mod.Bonus);
     }
 
     [Fact]
     public void ModifyBaseDamageAdditive_PoweredAttack_ReturnsStacksScaledBonus()
     {
-        var mod = new TunedModifier();
-        SetStacks(mod, 2);
-        SetTunedCreated(3); // bonus = Stacks * _tunedCreated = 6
+        var mod = new TunedWithCardCount(3);
+        SetStacks(mod, 2); // bonus = Stacks * Tuned card count = 6
         // ValueProp.Move (no Unpowered) is a powered attack.
         Assert.Equal(6m, mod.ModifyBaseDamageAdditive(10m, ValueProp.Move));
     }
@@ -240,9 +254,8 @@ public class TunedModifierTests
     [Fact]
     public void ModifyBaseDamageAdditive_UnpoweredProps_ReturnsZero()
     {
-        var mod = new TunedModifier();
+        var mod = new TunedWithCardCount(3);
         SetStacks(mod, 2);
-        SetTunedCreated(3);
         // Move but Unpowered (e.g. relic/power/potion damage) gets no Tuned bonus.
         Assert.Equal(0m, mod.ModifyBaseDamageAdditive(10m, ValueProp.Move | ValueProp.Unpowered));
     }
@@ -250,9 +263,8 @@ public class TunedModifierTests
     [Fact]
     public void ModifyBaseBlockAdditive_ReturnsStacksScaledBonus()
     {
-        var mod = new TunedModifier();
-        SetStacks(mod, 2);
-        SetTunedCreated(3); // bonus = 6
+        var mod = new TunedWithCardCount(3);
+        SetStacks(mod, 2); // bonus = 6
         Assert.Equal(6m, mod.ModifyBaseBlockAdditive(5m));
     }
 

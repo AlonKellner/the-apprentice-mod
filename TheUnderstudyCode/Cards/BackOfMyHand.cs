@@ -32,8 +32,7 @@ public class BackOfMyHand : UnderstudyCard
 
         var player = cardPlay.Card.Owner;
         var hand = PileType.Hand.GetPile(player);
-        var allCards = player.Piles.SelectMany(p => p.Cards);
         foreach (var card in hand.Cards.Where(c => c != this && TunedModifier.CanApplyTo(c)).ToList())
-            TunedModifier.Apply(card, CombatState!, allCards);
+            TunedModifier.Apply(card);
     }
 }

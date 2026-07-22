@@ -29,9 +29,8 @@ public class TunedPotion : UnderstudyPotion
         var selected = await CardSelectCmd.FromHand(choiceContext, player, prefs, TunedModifier.CanApplyTo, this);
         if (selected == null) return;
 
-        var allCards = player.Piles.SelectMany(p => p.Cards);
         var combat = Owner.Creature.CombatState!;
         foreach (var card in selected)
-            TunedModifier.Apply(card, combat, allCards);
+            TunedModifier.Apply(card);
     }
 }

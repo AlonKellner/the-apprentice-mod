@@ -50,6 +50,6 @@ public class Rosin : CustomRelicModel
         var combat = Owner.Creature.CombatState;
         if (combat == null) return;
         Flash();
-        TunedModifier.Apply(card, combat, Owner.Piles.SelectMany(p => p.Cards));
+        TunedModifier.Apply(card);
     }
 }

@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using BaseLib.Abstracts;
 using BaseLib.Extensions;
-using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Models;
@@ -41,26 +40,33 @@ public class TunedModifier : CardModifier
         && cardPlay.Card.TryGetModifier<TunedModifier>(out var mod)
         && !ReferenceEquals(mod!._grantedAfterOwnCheckDuringPlay, cardPlay);
 
-    // ── Combat-scoped counter ────────────────────────────────────────────────────────────────
-    // Counts distinct cards that have received at least one Tuned application this combat.
-    // Applying Tuned 3× to the same card still counts as 1 distinct card.
-    // Bonus per card = Stacks × _tunedCreated (read at damage/block calculation time).
-    private static ICombatState? _lastCombat;
-    private static int _tunedCreated;
+    // ── Tuned card count ─────────────────────────────────────────────────────────────────────
+    // This card's full Tuned damage/block bonus: its stack count times the number of cards carrying
+    // Tuned (Strength/Dexterity-style flat additive). Single source of truth, reused by both
+    // ModifyBase*Additive below and the card-preview patch (which shows the bonus on cards viewed in
+    // the draw/discard pile, where the game doesn't run the damage/block hooks).
+    public int Bonus => Stacks * TunedCardCount();
 
-    // This card's full Tuned damage/block bonus: its stack count times the number of distinct Tuned
-    // cards this combat (Strength/Dexterity-style flat additive). Single source of truth, reused by
-    // both ModifyBase*Additive below and the card-preview patch (which shows the bonus on cards viewed
-    // in the draw/discard pile, where the game doesn't run the damage/block hooks).
-    public int Bonus => Stacks * _tunedCreated;
-
-    private static void MaybeResetForCombat(ICombatState combat)
+    // A live count, exactly as the keyword text promises ("for each card with Tuned") — deliberately
+    // not a tally of Apply calls. A card can come to carry Tuned without ever passing through Apply:
+    // the base game's Music Box clones a played card wholesale, modifiers and all, so cloning a
+    // pre-Tuned card (Practice) mints a second Tuned carrier behind Apply's back. Counting live means
+    // such a card contributes, and there is no counter left that can drift out of step with reality.
+    //
+    // Scoped to the combat piles — Draw/Hand/Discard/Exhaust/Play, so an exhausted Tuned card still
+    // counts — and deliberately not the Deck pile, whose cards are the out-of-combat master copies
+    // that combat modifications never reach.
+    //
+    // virtual so tests can supply a count directly: the bare test host cannot stand up a combat, and
+    // an unattached modifier legitimately counts zero.
+    protected virtual int TunedCardCount()
     {
-        if (!ReferenceEquals(combat, _lastCombat))
-        {
-            _lastCombat = combat;
-            _tunedCreated = 0;
-        }
+        // CardModel.Owner asserts mutability, so a canonical/bare card must not be asked for it.
+        if (Owner is not { IsMutable: true } card) return 0;
+        var player = card.Owner;
+        if (player == null) return 0;
+        return player.Piles.Where(p => p.Type.IsCombatPile()).SelectMany(p => p.Cards)
+            .Count(c => c.TryGetModifier<TunedModifier>(out _));
     }
 
     // Any non-Stable Attack/Skill is eligible — matches PlannedModifier/UnplayableModifier's own
@@ -81,17 +87,13 @@ public class TunedModifier : CardModifier
     // the only card that does this). Leave null for the normal case of applying Tuned to a
     // different card (Innovation/Rehearse/Practice), where timing-within-this-play is
     // irrelevant since that other card isn't the one currently resolving.
-    public static void Apply(CardModel card, ICombatState combat, IEnumerable<CardModel> allCards, CardPlay? grantedAfterOwnCheck = null)
+    public static void Apply(CardModel card, CardPlay? grantedAfterOwnCheck = null)
     {
-        MaybeResetForCombat(combat);
-
         bool firstApplication = !card.TryGetModifier<TunedModifier>(out var mod);
         if (firstApplication)
         {
-            // First application to this card: count it as a new Tuned card.
             CardModifier.AddModifier<TunedModifier>(card);
             card.TryGetModifier<TunedModifier>(out mod);
-            _tunedCreated++;
             Applied?.Invoke(card);
         }
 
@@ -100,16 +102,14 @@ public class TunedModifier : CardModifier
             mod._grantedAfterOwnCheckDuringPlay = grantedAfterOwnCheck;
         // No explicit BaseValue update needed — ModifyDamageAdditive / ModifyBlockAdditive
         // inject the bonus at calculation time (same mechanism as Strength / Dexterity).
-
-        Invariants.CheckEqual(_tunedCreated, allCards.Count(c => c.TryGetModifier<TunedModifier>(out _)),
-            nameof(TunedModifier) + "." + nameof(Apply),
-            "distinct cards carrying TunedModifier this combat vs. _tunedCreated");
+        // Nothing to keep in step either: TunedCardCount reads the live carriers each time.
     }
 
     // Doubles an already-Tuned card's Stacks in place (Cut the Tension: Tuned 1 -> 2, Tuned
-    // 3 -> 6). No-op on a card with no TunedModifier. _tunedCreated is untouched — it counts
-    // distinct cards, not stacks. Stacks keeps its private setter; mutated only through this
-    // class's own static API, matching Apply's existing convention.
+    // 3 -> 6). No-op on a card with no TunedModifier, and it adds no new Tuned carrier, so the
+    // card count is unaffected — this scales one card's own stacks, not how many cards are Tuned.
+    // Stacks keeps its private setter; mutated only through this class's own static API, matching
+    // Apply's existing convention.
     public static void DoubleStacks(CardModel card)
     {
         if (card.TryGetModifier<TunedModifier>(out var mod))

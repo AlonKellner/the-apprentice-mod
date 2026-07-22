@@ -151,7 +151,7 @@ public abstract class UnderstudyCard(
         if (this.TryGetModifier<TunedModifier>(out _)) return;
 
         _preTunedThisCombat = true;
-        TunedModifier.Apply(this, CombatState!, Owner!.Piles.SelectMany(p => p.Cards));
+        TunedModifier.Apply(this);
     }
 
     public override Task BeforeCombatStart()

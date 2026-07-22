@@ -61,6 +61,6 @@ public static class PrePlannedSetup
         // enchantment's own hooks) so it works for any card type, including colorless cards.
         foreach (var card in PlannedModifier.RelevantCards(player).ToList())
             if (card.Enchantment is PreTuned && !card.TryGetModifier<TunedModifier>(out _))
-                TunedModifier.Apply(card, combat, player.Piles.SelectMany(p => p.Cards));
+                TunedModifier.Apply(card);
     }
 }

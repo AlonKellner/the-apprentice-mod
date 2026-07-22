@@ -42,11 +42,10 @@ public class WriteItDown : UnderstudyCard
             this);
         if (selected == null) return;
 
-        var tunedAllCards = player.Piles.SelectMany(p => p.Cards);
         foreach (var card in PlannedSelectionState.OrderFor(selected))
         {
             PlannedModifier.Apply(card, CombatState!);
-            TunedModifier.Apply(card, CombatState!, tunedAllCards);
+            TunedModifier.Apply(card);
         }
     }
 }

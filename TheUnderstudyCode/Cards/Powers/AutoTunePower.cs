@@ -29,7 +29,7 @@ public class AutoTunePower : UnderstudyPower
         var allCards = player.Piles.SelectMany(p => p.Cards).ToList();
         foreach (var card in allCards.Where(c => c.TryGetModifier<TunedModifier>(out _)).ToList())
             for (int i = 0; i < (int)Amount; i++)
-                TunedModifier.Apply(card, Owner.CombatState!, allCards);
+                TunedModifier.Apply(card);
         return Task.CompletedTask;
     }
 }
