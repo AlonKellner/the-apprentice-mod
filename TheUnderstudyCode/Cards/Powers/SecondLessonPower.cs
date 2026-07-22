@@ -52,6 +52,11 @@ public class SecondLessonPower : UnderstudyPower
     // affliction stay attached to the CardModel object regardless of which pile it's in.
     private readonly List<CardModel> _activeOrders = new();
 
+    // Rewarded+Punished total observed at the previous turn start, so the per-turn growth can be
+    // bounds-checked. Re-baselined in ResetTracking so a combat reload/replay (fresh powers at 0, or
+    // a same-combat second play with powers already accumulated) never reads as a spurious jump.
+    private int _lastResolvedTotal;
+
     public override Task AfterCardDrawn(PlayerChoiceContext choiceContext, CardModel card, bool fromHandDraw)
     {
         if (fromHandDraw && card.Owner == Owner.Player) _drawnThisTurn.Add(card);
@@ -78,6 +83,10 @@ public class SecondLessonPower : UnderstudyPower
         }
         _activeOrders.Clear();
         _drawnThisTurn.Clear();
+        // Re-baseline the growth check to whatever the powers currently read (0 in a fresh combat, or
+        // the already-accumulated total if the card is replayed mid-combat) so the next turn's delta
+        // is measured from a truthful starting point rather than a stale one.
+        _lastResolvedTotal = Owner.GetPowerAmount<RewardedPower>() + Owner.GetPowerAmount<PunishedPower>();
     }
 
     // Pure: given the ordered list of cards drawn this turn, which gets "Play this card" (the
@@ -106,12 +115,18 @@ public class SecondLessonPower : UnderstudyPower
         Invariants.CheckEqual(_activeOrders.Count, _activeOrders.Count(c => c.TryGetModifier<OrderModifier>(out _)),
             nameof(SecondLessonPower) + "." + nameof(AfterPlayerTurnStartLate),
             "tracked active-Order cards vs. cards still actually carrying OrderModifier");
-        // Every assigned Order (PlayThis/DontPlayThis; FlavorOnly always resolves to
-        // Resolution.None) always grants exactly one Reward or Punish stack, and exactly two of
-        // those roles are assigned per active turn — so the sum can only ever grow by 2 at a time.
-        Invariants.Check((rewarded + punished) % 2 == 0,
+        // Each assigned Order grants exactly one Reward or Punish stack when it resolves (FlavorOnly
+        // always resolves to Resolution.None, granting nothing), and Orders are the ONLY source of
+        // those two powers. At most one PlayThis + one DontPlayThis are assigned per turn — and a turn
+        // may assign fewer, or none, when the cards drawn hold under two eligible (non-Stable
+        // Attack/Skill) cards. So between turn starts the total can only grow, by 0, 1, or 2.
+        int resolvedTotal = rewarded + punished;
+        int grew = resolvedTotal - _lastResolvedTotal;
+        Invariants.Check(grew >= 0 && grew <= 2,
             nameof(SecondLessonPower) + "." + nameof(AfterPlayerTurnStartLate),
-            $"Rewarded+Punished must stay even (two Orders resolve per turn) — got Rewarded={rewarded}, Punished={punished}");
+            $"Rewarded+Punished may grow by 0-2 per turn (≤2 Orders resolve) and never shrink — " +
+            $"grew by {grew} (from {_lastResolvedTotal} to {resolvedTotal}); Rewarded={rewarded}, Punished={punished}");
+        _lastResolvedTotal = resolvedTotal;
 
         await ResolveRewardTurn(context, turn);
         await ResolvePunishTurn(context, turn);
