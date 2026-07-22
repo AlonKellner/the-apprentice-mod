@@ -49,7 +49,9 @@ public abstract class BalancedPowerBase : UnderstudyPower
     // Defensive reset, called every time a Standing By card is played (see Balanced.OnPlay).
     // PowerCmd.Apply reuses an existing same-type Power instance for stacking rather than always
     // constructing fresh, so a leftover instance from a retried/reloaded combat could otherwise act
-    // on stale queued state in the new attempt (same fix as SecondLessonPower.ResetTracking).
+    // on stale queued state in the new attempt. This power is not Instanced, so unlike
+    // SecondLessonPower it really can be handed back a reused instance; clearing only its own queue
+    // (no board-visible state) is safe to redo on every play.
     public void ResetTracking() => _pending.Clear();
 
     // AfterApplied fires on EVERY application — including each stack onto this same reused instance

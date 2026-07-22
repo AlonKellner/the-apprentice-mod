@@ -64,8 +64,7 @@ public class SecondLessonPower : UnderstudyPower
     // Shared Rewarded+Punished total observed at the previous turn start, so the per-turn growth can
     // be bounds-checked. Null until this instance has seen one turn start: a Lesson played on turn 5
     // into an already-accumulated total must baseline against what it finds rather than against zero,
-    // or its very first reading would look like one huge illegal jump. Nulled by ResetTracking for
-    // the same reason after a combat reload/replay.
+    // or its very first reading would look like one huge illegal jump.
     private int? _lastResolvedTotal;
 
     public override Task AfterCardDrawn(PlayerChoiceContext choiceContext, CardModel card, bool fromHandDraw)
@@ -74,30 +73,12 @@ public class SecondLessonPower : UnderstudyPower
         return Task.CompletedTask;
     }
 
-    // Defensive reset, called every time TheSecondLesson is played (see TheSecondLesson.OnPlay).
-    // PowerCmd.Apply<T> reuses an existing same-type Power instance for stacking
-    // (FindExistingInstanceForStacking) rather than always constructing fresh — observed in-game: a
-    // combat retried/reloaded after Orders had already been assigned in an abandoned prior attempt
-    // left a leftover SecondLessonPower instance whose _activeOrders still referenced that attempt's
-    // cards; playing the card again in the new attempt reused that same instance, and those stale
-    // Orders immediately "resolved as unresolved" at the very next turn end. Clearing both tracking
-    // lists AND stripping the OrderModifier/Order affliction they reference keeps a card from being
-    // stuck showing an Order overlay that nothing would otherwise ever resolve or remove.
-    public void ResetTracking()
-    {
-        foreach (var card in _activeOrders)
-        {
-            if (card.TryGetModifier<OrderModifier>(out var mod))
-                CardModifier.DirectModifiers(card).Remove(mod!);
-            if (card.Affliction is Order)
-                CardCmd.ClearAffliction(card);
-        }
-        _activeOrders.Clear();
-        _drawnThisTurn.Clear();
-        // Drop the growth baseline so the next turn start re-takes it from whatever the shared powers
-        // actually read then, rather than measuring against a total from before the reload.
-        _lastResolvedTotal = null;
-    }
+    // There is deliberately no reset-on-play here. It used to exist because PowerCmd.Apply<T> reused
+    // an existing same-type instance for stacking, so a combat retried after Orders had been assigned
+    // could hand back an instance whose _activeOrders still referenced the abandoned attempt's cards.
+    // Instanced removes that entirely: FindExistingInstanceForStacking returns null, so every play
+    // gets a ToMutable() clone that has never tracked anything. Reinstating a reset would be actively
+    // wrong — it would strip the Orders a Lesson already has live on the board this turn.
 
     // Pure: given the ordered list of cards drawn this turn, which gets "Play this card" (the
     // first eligible one), which gets "Don't play this card" (the second eligible one), and what's

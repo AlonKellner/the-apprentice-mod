@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.11.62: Rewarded and Punished now apply themselves each turn, so multiple Lessons need no coordination.",
+  "changeNote": "v1.11.63: playing a second The Second Lesson no longer wipes the first Lesson's live Orders.",
   "tags": [],
   "dependencies": [
     3737335127

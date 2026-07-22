@@ -24,12 +24,11 @@ public class TheSecondLesson : UnderstudyCard
     {
         int turn = cardPlay.Card.Owner.Creature.Player?.PlayerCombatState?.TurnNumber ?? -1;
         Log.Info($"TheSecondLesson[turn {turn}]: played, granting SecondLessonPower");
-        var power = await CommonActions.Apply<SecondLessonPower>(context, cardPlay.Card.Owner.Creature, this);
-        // SecondLessonPower is Instanced, so a second play stands up a second Lesson with its own
-        // Orders rather than stacking onto the first. ResetTracking is still called because the
-        // instance that comes back is not guaranteed to be freshly built (a combat reload can hand
-        // back one carrying state from an abandoned attempt) — see SecondLessonPower.ResetTracking.
-        power?.ResetTracking();
+        // SecondLessonPower is Instanced, so this stands up a second Lesson with its own Orders
+        // rather than stacking onto the first. Nothing is reset here on purpose: the new instance is
+        // a fresh clone that has never tracked anything, and touching the existing Lesson would strip
+        // the Orders it already has live on the board this turn.
+        await CommonActions.Apply<SecondLessonPower>(context, cardPlay.Card.Owner.Creature, this);
         // Pre-compile the Order overlay shader off-screen now, a full turn before the earliest a
         // card could actually need it (Orders are assigned next turn's AfterPlayerTurnStartLate) —
         // see OrderOverlayPatch.Schedule for why the first-ever render of this shader stalls a frame.
