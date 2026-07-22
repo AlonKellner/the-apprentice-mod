@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.11.56: Consumed unlocks on Ascension 1 or higher, and a shorter Final Lesson description.",
+  "changeNote": "v1.11.57: Consumed now sits after Consequences on the Timeline (its aftermath).",
   "tags": [],
   "dependencies": [
     3737335127
