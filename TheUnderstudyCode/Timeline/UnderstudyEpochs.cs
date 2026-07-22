@@ -89,12 +89,12 @@ public sealed class Understudy4Epoch : UnderstudyEpoch
     public override void QueueUnlocks() => NTimelineScreen.Instance.QueueRelicUnlock(Relics);
 }
 
-// 5 — Taken (before "Underdocks"). Reveals on: Defeat 15 Bosses. Unlocks 3 potions.
+// 5 — Taken (Flourish). Reveals on: Defeat 15 Bosses. Unlocks 3 potions.
 public sealed class Understudy5Epoch : UnderstudyEpoch
 {
     public override string Id => "THEUNDERSTUDY5_EPOCH";
-    public override EpochEra Era => EpochEra.Invitation0;
-    public override int EraPosition => 4;
+    public override EpochEra Era => EpochEra.Flourish2;
+    public override int EraPosition => 2;
 
     public static List<PotionModel> Potions => new()
         { ModelDb.Potion<PlannedPotion>(), ModelDb.Potion<TunedPotion>(), ModelDb.Potion<SwapPotion>() };
@@ -103,12 +103,12 @@ public sealed class Understudy5Epoch : UnderstudyEpoch
     public override void QueueUnlocks() => NTimelineScreen.Instance.QueuePotionUnlock(Potions);
 }
 
-// 6 — Nothing Like Him (the boy's music). Reveals on: Defeat 15 Elites.
+// 6 — Nothing Like Him (before "Underdocks"). Reveals on: Defeat 15 Elites.
 public sealed class Understudy6Epoch : UnderstudyEpoch
 {
     public override string Id => "THEUNDERSTUDY6_EPOCH";
-    public override EpochEra Era => EpochEra.Flourish2;
-    public override int EraPosition => 2;
+    public override EpochEra Era => EpochEra.Invitation0;
+    public override int EraPosition => 4;
 
     public static List<CardModel> Cards => new()
         { ModelDb.Card<Melody>(), ModelDb.Card<Reverb>(), ModelDb.Card<SonicBoom>() };
