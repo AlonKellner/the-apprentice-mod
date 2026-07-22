@@ -138,19 +138,34 @@ public static class UnderstudyEpochPostRunRevealPatch
     {
         try
         {
-            if (serializableRun.GameMode.AreAchievementsAndEpochsLocked()) return;
-            if (serializablePlayer.CharacterId is not { } characterId) return;
-            if (ModelDb.GetById<CharacterModel>(characterId) is not Understudy) return;
+            // TEMPORARY [EpochReveal] diagnostics: confirm this postfix runs (proves v1.11.54+ loaded and
+            // the patch applied), the character resolution, the guard values, and the obtain result.
+            var characterIdNullable = serializablePlayer.CharacterId;
+            bool epochsLocked = serializableRun.GameMode.AreAchievementsAndEpochsLocked();
+            var charModel = characterIdNullable is { } cidForLog ? ModelDb.GetById<CharacterModel>(cidForLog) : null;
+            bool isUnderstudy = charModel is Understudy;
+            MainFile.Logger.Info(
+                $"[EpochReveal] post-run RAN: char={characterIdNullable} model={charModel?.GetType().Name ?? "null"} " +
+                $"isUnderstudy={isUnderstudy} victory={victory} gameMode={serializableRun.GameMode} epochsLocked={epochsLocked}");
+
+            if (epochsLocked) return;
+            if (characterIdNullable is not { } characterId) return;
+            if (!isUnderstudy) return;
 
             var progress = SaveManager.Instance.Progress;
 
+            bool hadPerfectMirror = progress.IsEpochObtained(UnderstudyEpochReveal.PerfectMirror);
             UnderstudyEpochReveal.Obtain(progress, serializablePlayer, UnderstudyEpochReveal.PerfectMirror); // finishing the run at all
+            MainFile.Logger.Info(
+                $"[EpochReveal]   PerfectMirror obtainedBefore={hadPerfectMirror} " +
+                $"nowObtained={progress.IsEpochObtained(UnderstudyEpochReveal.PerfectMirror)}");
+
             if (victory && serializableRun.Ascension == 1)
                 UnderstudyEpochReveal.Obtain(progress, serializablePlayer, UnderstudyEpochReveal.Consumed);
         }
         catch (Exception e)
         {
-            MainFile.Logger.Error("UnderstudyEpoch post-run reveal failed: " + e);
+            MainFile.Logger.Error("[EpochReveal] post-run failed: " + e);
         }
     }
 }
