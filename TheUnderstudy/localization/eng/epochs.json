@@ -1,38 +1,31 @@
 {
-  "STORY_THEUNDERSTUDY": "The Final Lesson",
+  "STORY_THEUNDERSTUDY": "The Understudy",
 
   "THEUNDERSTUDY1_EPOCH.title": "Dreamless",
-  "THEUNDERSTUDY1_EPOCH.description": "The Architect was a creature of pure order, and order cannot conceive of what does not exist. He could not dream. Sleep gave him no rest - only endless, restless nights, staring into a dark that never resolved into anything.",
-  "THEUNDERSTUDY1_EPOCH.unlockInfo": "{IsRevealed:Unlocked|Unlockable} by defeating the Act 3 boss as the Understudy.",
-  "THEUNDERSTUDY1_EPOCH.unlockText": "Some minds were never built to rest.",
+  "THEUNDERSTUDY1_EPOCH.description": "The [red]Architect[/red] was a creature of pure order, and order cannot conceive of what cannot exist. He could not [sine]dream[/sine]. Often he struggled to sleep, staring into a dark that never resolved into anything.",
+  "THEUNDERSTUDY1_EPOCH.unlockInfo": "{IsRevealed:Unlocked|Unlockable} by defeating the Act 1 boss as the Understudy.",
 
-  "THEUNDERSTUDY2_EPOCH.title": "The Ending He Designed",
-  "THEUNDERSTUDY2_EPOCH.description": "One sleepless night, a thought took shape. He saw creation and deconstruction as equal and opposite laws, binding everything that is. If every story requires an ending, then so did his. He resolved to design his own: a final, restful conclusion.",
-  "THEUNDERSTUDY2_EPOCH.unlockInfo": "{IsRevealed:Unlocked|Unlockable} by defeating the Act 1 boss as the Understudy.",
-  "THEUNDERSTUDY2_EPOCH.unlockText": "Even a god can long for a final page.",
+  "THEUNDERSTUDY2_EPOCH.title": "Designing an End",
+  "THEUNDERSTUDY2_EPOCH.description": "One [sine]sleepless[/sine] night, a thought took shape. Creation and deconstruction were equal for him. Life brings death, which brings life, an orderly cycle. If every story requires an ending, then so did his. He resolved to design his own: a final, restful conclusion, and the beginning of a new story in his place.",
+  "THEUNDERSTUDY2_EPOCH.unlockInfo": "{IsRevealed:Unlocked|Unlockable} by defeating the Act 2 boss as the Understudy.",
 
   "THEUNDERSTUDY3_EPOCH.title": "A Perfect Mirror",
-  "THEUNDERSTUDY3_EPOCH.description": "So the Architect created a child, and poured his secrets into it - order, design, the shape of every law he knew. In time the child became flawless. A perfect mirror of its maker, ready to bring his story to its close.",
+  "THEUNDERSTUDY3_EPOCH.description": "The [red]Architect[/red] created a child, and poured his secrets into it - order, design, the shape of every law he knew. In time the child became flawless. A perfect mirror of its maker. A Perfect story.",
   "THEUNDERSTUDY3_EPOCH.unlockInfo": "{IsRevealed:Unlocked|Unlockable} by finishing a run as the Understudy.",
-  "THEUNDERSTUDY3_EPOCH.unlockText": "A reflection is not a son.",
 
   "THEUNDERSTUDY4_EPOCH.title": "Consumed",
-  "THEUNDERSTUDY4_EPOCH.description": "Then the blight came, and took the child in the space of a breath. Lost in his strange, dreamless slumber, the Architect never noticed that his ending had been unmade.",
+  "THEUNDERSTUDY4_EPOCH.description": "The [purple]blight[/purple] took the child in the space of a breath. Lost in his strange, [sine]dreamless slumber[/sine], the [red]Architect[/red] never noticed that his ending had been unmade.",
   "THEUNDERSTUDY4_EPOCH.unlockInfo": "{IsRevealed:Unlocked|Unlockable} by completing Ascension 1 as the Understudy.",
-  "THEUNDERSTUDY4_EPOCH.unlockText": "The blight does not ask permission.",
 
-  "THEUNDERSTUDY5_EPOCH.title": "The Boy in the City",
-  "THEUNDERSTUDY5_EPOCH.description": "When at last he woke, a distant memory surfaced: a child, an ending, the promise of true rest. He could no longer craft a perfect one. So he crept down into the city, into a small bedroom, and carried a sleeping boy to the top of the Spire.",
+  "THEUNDERSTUDY5_EPOCH.title": "Taken",
+  "THEUNDERSTUDY5_EPOCH.description": "A [sine]distant memory[/sine] surfaced: a child, an ending, the promise of true rest. He could no longer craft a perfect one. So he crept down into the city, into a small bedroom, and carried a [sine]sleeping boy[/sine] to the top of the [gold]Spire[/gold].",
   "THEUNDERSTUDY5_EPOCH.unlockInfo": "{IsRevealed:Unlocked|Unlockable} by defeating 15 Bosses as the Understudy.",
-  "THEUNDERSTUDY5_EPOCH.unlockText": "Not made. Taken.",
 
   "THEUNDERSTUDY6_EPOCH.title": "Nothing Like Him",
-  "THEUNDERSTUDY6_EPOCH.description": "The boy was reckless, and loud, and endlessly irritating - nothing like the Architect at all. But there was potential in him. For years he labored to mold the boy into order, and failed at every turn. Where his maker sought design, the boy only wandered off into his dreams.",
+  "THEUNDERSTUDY6_EPOCH.description": "The boy was reckless, and loud, and endlessly irritating - nothing like the [red]Architect[/red] at all. But there was potential in him. For years he labored to mold the boy into order, and failed at every turn. Where his caretaker sought design, the boy only wandered off into his [sine]dreams and music[/sine].",
   "THEUNDERSTUDY6_EPOCH.unlockInfo": "{IsRevealed:Unlocked|Unlockable} by defeating 15 Elites as the Understudy.",
-  "THEUNDERSTUDY6_EPOCH.unlockText": "Potential is not obedience.",
 
-  "THEUNDERSTUDY7_EPOCH.title": "The Final Lesson",
-  "THEUNDERSTUDY7_EPOCH.description": "One sleepless night, the Architect decided the time had come for the Final Lesson - which was also the Final Test. He went down to the small bedroom, and asked the boy for one thing: to put an end to his story.",
-  "THEUNDERSTUDY7_EPOCH.unlockInfo": "{IsRevealed:Unlocked|Unlockable} by defeating the Act 2 boss as the Understudy.",
-  "THEUNDERSTUDY7_EPOCH.unlockText": "Every lesson has a final exam."
+  "THEUNDERSTUDY7_EPOCH.title": "Every Story has a Lesson",
+  "THEUNDERSTUDY7_EPOCH.description": "One [sine]sleepless[/sine] night, the [red]Architect[/red] decided the time had come for the Final Lesson - which was also the Final Test. He went down to the small bedroom, and asked the boy for one thing: to put an end to his story.",
+  "THEUNDERSTUDY7_EPOCH.unlockInfo": "{IsRevealed:Unlocked|Unlockable} by defeating the Act 3 boss as the Understudy."
 }

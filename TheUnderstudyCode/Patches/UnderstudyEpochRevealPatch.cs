@@ -22,9 +22,9 @@ namespace TheUnderstudy.TheUnderstudyCode.Patches;
 // is softly encouraged by the difficulty of each condition. Mapping (condition -> epoch, deliberately
 // non-chronological to land the twists):
 //   Finish a run       -> A Perfect Mirror   (3)
-//   Beat Act 1         -> The Ending He Designed (2)
-//   Beat Act 2         -> The Final Lesson    (7)
-//   Beat Act 3         -> Dreamless           (1)
+//   Beat Act 1         -> Dreamless           (1)
+//   Beat Act 2         -> Designing an End    (2)
+//   Beat Act 3         -> The Final Lesson    (7)
 //   Defeat 15 Bosses   -> The Boy in the City (5)
 //   Defeat 15 Elites   -> Nothing Like Him    (6)
 //   Complete Ascension 1 -> Consumed          (4)
@@ -35,9 +35,9 @@ namespace TheUnderstudy.TheUnderstudyCode.Patches;
 internal static class UnderstudyEpochReveal
 {
     internal const string PerfectMirror   = "THEUNDERSTUDY3_EPOCH"; // finish a run
-    internal const string EndingDesigned  = "THEUNDERSTUDY2_EPOCH"; // beat Act 1
-    internal const string FinalLesson     = "THEUNDERSTUDY7_EPOCH"; // beat Act 2
-    internal const string Dreamless       = "THEUNDERSTUDY1_EPOCH"; // beat Act 3
+    internal const string EndingDesigned  = "THEUNDERSTUDY2_EPOCH"; // beat Act 2
+    internal const string FinalLesson     = "THEUNDERSTUDY7_EPOCH"; // beat Act 3
+    internal const string Dreamless       = "THEUNDERSTUDY1_EPOCH"; // beat Act 1
     internal const string BoyInTheCity    = "THEUNDERSTUDY5_EPOCH"; // 15 Bosses
     internal const string NothingLikeHim  = "THEUNDERSTUDY6_EPOCH"; // 15 Elites
     internal const string Consumed        = "THEUNDERSTUDY4_EPOCH"; // Ascension 1
@@ -105,9 +105,9 @@ public static class UnderstudyEpochMidRunRevealPatch
             {
                 string? actEpoch = room.CombatState.RunState.CurrentActIndex switch
                 {
-                    0 => UnderstudyEpochReveal.EndingDesigned, // beat Act 1
-                    1 => UnderstudyEpochReveal.FinalLesson,    // beat Act 2
-                    2 => UnderstudyEpochReveal.Dreamless,      // beat Act 3
+                    0 => UnderstudyEpochReveal.Dreamless,      // beat Act 1
+                    1 => UnderstudyEpochReveal.EndingDesigned, // beat Act 2
+                    2 => UnderstudyEpochReveal.FinalLesson,    // beat Act 3
                     _ => null,
                 };
                 if (actEpoch != null) UnderstudyEpochReveal.Obtain(progress, localPlayer, actEpoch);
@@ -138,34 +138,19 @@ public static class UnderstudyEpochPostRunRevealPatch
     {
         try
         {
-            // TEMPORARY [EpochReveal] diagnostics: confirm this postfix runs (proves v1.11.54+ loaded and
-            // the patch applied), the character resolution, the guard values, and the obtain result.
-            var characterIdNullable = serializablePlayer.CharacterId;
-            bool epochsLocked = serializableRun.GameMode.AreAchievementsAndEpochsLocked();
-            var charModel = characterIdNullable is { } cidForLog ? ModelDb.GetById<CharacterModel>(cidForLog) : null;
-            bool isUnderstudy = charModel is Understudy;
-            MainFile.Logger.Info(
-                $"[EpochReveal] post-run RAN: char={characterIdNullable} model={charModel?.GetType().Name ?? "null"} " +
-                $"isUnderstudy={isUnderstudy} victory={victory} gameMode={serializableRun.GameMode} epochsLocked={epochsLocked}");
-
-            if (epochsLocked) return;
-            if (characterIdNullable is not { } characterId) return;
-            if (!isUnderstudy) return;
+            if (serializableRun.GameMode.AreAchievementsAndEpochsLocked()) return;
+            if (serializablePlayer.CharacterId is not { } characterId) return;
+            if (ModelDb.GetById<CharacterModel>(characterId) is not Understudy) return;
 
             var progress = SaveManager.Instance.Progress;
 
-            bool hadPerfectMirror = progress.IsEpochObtained(UnderstudyEpochReveal.PerfectMirror);
             UnderstudyEpochReveal.Obtain(progress, serializablePlayer, UnderstudyEpochReveal.PerfectMirror); // finishing the run at all
-            MainFile.Logger.Info(
-                $"[EpochReveal]   PerfectMirror obtainedBefore={hadPerfectMirror} " +
-                $"nowObtained={progress.IsEpochObtained(UnderstudyEpochReveal.PerfectMirror)}");
-
             if (victory && serializableRun.Ascension == 1)
                 UnderstudyEpochReveal.Obtain(progress, serializablePlayer, UnderstudyEpochReveal.Consumed);
         }
         catch (Exception e)
         {
-            MainFile.Logger.Error("[EpochReveal] post-run failed: " + e);
+            MainFile.Logger.Error("UnderstudyEpoch post-run reveal failed: " + e);
         }
     }
 }
