@@ -1,27 +1,93 @@
+using System.Reflection;
+using System.Text;
 using Godot;
 using HarmonyLib;
+using MegaCrit.Sts2.Core.Nodes;
 using MegaCrit.Sts2.Core.Nodes.Screens.Timeline;
 
 namespace TheUnderstudy.TheUnderstudyCode.Patches;
 
-// In non-release builds, NEpochSlot._Ready makes a "%DebugLabel" (the epoch's class name) visible on
-// EVERY slot, including locked ones — a dev affordance gated on !NGame.IsReleaseGame(). A modded game runs
-// as non-release, so those class-name labels appear over all epochs (base and Understudy alike), spoiling
-// locked names.
-//
-// We hook SetState rather than _Ready: Harmony reliably patches ordinary methods, but patching Godot
-// lifecycle callbacks like _Ready is flaky (the engine dispatches them through generated invokers). SetState
-// runs at the end of _Ready and again whenever a slot's state changes, so re-hiding the debug label here is
-// both reliable and self-healing. Scoped to the epoch slots only, so the game's other dev features are left
-// intact.
-[HarmonyPatch(typeof(NEpochSlot), nameof(NEpochSlot.SetState))]
+// Hides (and, right now, DIAGNOSES) the "%DebugLabel" that NEpochSlot shows on every slot — including
+// locked ones — when the game runs non-release (a modded game does). The plain hide via SetState wasn't
+// taking, so this build also logs, tagged "[EpochDiag]", to answer:
+//   - does the SetState postfix run at all? does the _Ready postfix run? (Harmony + Godot lifecycle)
+//   - what does NGame.IsReleaseGame() return in the live modded build?
+//   - can we find the label node (via unique name vs recursive find), and what is its type/visibility?
+//   - the full node tree of a slot, to locate the actual label if it isn't "%DebugLabel".
+// TEMPORARY: strip the logging (keep the SetState hide) once the cause is known.
 public static class EpochSlotDebugLabelPatch
 {
+    private static bool _loggedReleaseFlag;
+    private static bool _loggedReady;
+    private static bool _dumpedTree;
+
+    [HarmonyPatch(typeof(NEpochSlot), "_Ready")]
     [HarmonyPostfix]
-    public static void Postfix(NEpochSlot __instance)
+    public static void ReadyPostfix(NEpochSlot __instance)
     {
-        var label = __instance.GetNodeOrNull<Control>("%DebugLabel")
-                    ?? __instance.FindChild("DebugLabel", recursive: true, owned: false) as Control;
-        if (label != null) label.Visible = false;
+        if (_loggedReady) return;
+        _loggedReady = true;
+        MainFile.Logger.Info("[EpochDiag] _Ready postfix RAN (Harmony patched the Godot lifecycle method).");
+    }
+
+    [HarmonyPatch(typeof(NEpochSlot), nameof(NEpochSlot.SetState))]
+    [HarmonyPostfix]
+    public static void SetStatePostfix(NEpochSlot __instance)
+    {
+        try
+        {
+            if (!_loggedReleaseFlag)
+            {
+                _loggedReleaseFlag = true;
+                MainFile.Logger.Info($"[EpochDiag] NGame.IsReleaseGame() = {NGame.IsReleaseGame()}");
+            }
+
+            var byUnique = __instance.GetNodeOrNull<Control>("%DebugLabel");
+            var byFind = __instance.FindChild("DebugLabel", recursive: true, owned: false) as Control;
+            var label = byUnique ?? byFind;
+
+            MainFile.Logger.Info(
+                $"[EpochDiag] SetState postfix RAN epoch={SafeId(__instance)} " +
+                $"foundByUniqueName={byUnique != null} foundByRecursiveFind={byFind != null} " +
+                $"labelVisible={(label != null ? label.Visible.ToString() : "n/a")}");
+
+            if (label != null) label.Visible = false;
+
+            if (!_dumpedTree)
+            {
+                _dumpedTree = true;
+                var sb = new StringBuilder();
+                DumpTree(__instance, 0, sb);
+                MainFile.Logger.Info("[EpochDiag] Slot node tree (first slot):\n" + sb);
+            }
+        }
+        catch (System.Exception e)
+        {
+            MainFile.Logger.Error("[EpochDiag] SetState postfix threw: " + e);
+        }
+    }
+
+    private static void DumpTree(Node node, int depth, StringBuilder sb)
+    {
+        string indent = new string(' ', depth * 2);
+        string vis = node is CanvasItem ci ? $" visible={ci.Visible}" : "";
+        string text = "";
+        PropertyInfo? textProp = node.GetType().GetProperty("Text");
+        if (textProp != null && textProp.PropertyType == typeof(string))
+        {
+            if (textProp.GetValue(node) is string t && !string.IsNullOrEmpty(t)) text = $" text=\"{t}\"";
+        }
+        sb.AppendLine($"{indent}{node.Name} [{node.GetType().Name}]{vis}{text}");
+        foreach (Node child in node.GetChildren()) DumpTree(child, depth + 1, sb);
+    }
+
+    private static string SafeId(NEpochSlot slot)
+    {
+        try
+        {
+            object? model = AccessTools.Field(typeof(NEpochSlot), "model")?.GetValue(slot);
+            return model?.GetType().GetProperty("Id")?.GetValue(model)?.ToString() ?? "?";
+        }
+        catch { return "?"; }
     }
 }

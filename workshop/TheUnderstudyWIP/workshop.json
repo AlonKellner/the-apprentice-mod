@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.11.45: fix epoch timeline placement (weave beside The Architect/Ancients/Underdocks) and hide debug class-name labels.",
+  "changeNote": "v1.11.46: correct epoch timeline placement (Seeds columns) and use a reliable hook to hide debug class-name labels.",
   "tags": [],
   "dependencies": [
     3737335127
