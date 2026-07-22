@@ -3,6 +3,7 @@ using BaseLib.Utils;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models.Powers;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
@@ -15,6 +16,7 @@ public class Muffle : UnderstudyCard
     public Muffle() : base(0, CardType.Skill, CardRarity.Common, TargetType.None)
     {
         WithBlock(7);
+        WithVars(new IntVar("Vigor", 3));
         WithMarkedTip(typeof(VigorPower));
     }
 
@@ -28,6 +30,6 @@ public class Muffle : UnderstudyCard
     {
         await CommonActions.CardBlock(this, cardPlay);
         var creature = cardPlay.Card.Owner.Creature;
-        await PowerCmd.Apply<VigorPower>(context, creature, -3, creature, this, false);
+        await PowerCmd.Apply<VigorPower>(context, creature, -(int)DynamicVars["Vigor"].BaseValue, creature, this, false);
     }
 }

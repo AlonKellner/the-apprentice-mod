@@ -4,6 +4,7 @@ using BaseLib.Utils;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models.Powers;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
@@ -17,6 +18,7 @@ public class SingAlong : UnderstudyCard
     public SingAlong() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.None)
     {
         WithCostUpgradeBy(-1);
+        WithVars(new IntVar("Vigor", 6));
         WithMarkedTip(typeof(VigorPower));
     }
 
@@ -27,6 +29,6 @@ public class SingAlong : UnderstudyCard
         // every enemy. CombatState.Creatures is _allies.Concat(_enemies) — the full room, mirroring
         // how LegionOfBone reaches every player's creature in co-op.
         var all = creature.CombatState!.Creatures.Where(c => c?.IsAlive ?? false).ToList();
-        await PowerCmd.Apply<VigorPower>(context, all, 6, creature, cardPlay.Card, false);
+        await PowerCmd.Apply<VigorPower>(context, all, (int)DynamicVars["Vigor"].BaseValue, creature, cardPlay.Card, false);
     }
 }
