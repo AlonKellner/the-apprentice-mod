@@ -8,10 +8,13 @@ namespace TheUnderstudy.TheUnderstudyCode.Timeline;
 // EpochRegistrar injects them into EpochModel's private static registries at init, and patches make
 // them reachable from Neow and obtainable on the same progress conditions base characters use.
 //
-// IDs are numbered by narrative chronology (1..7). Timeline PLACEMENT (Era/EraPosition) follows that
-// chronology along the game's era axis; every (Era, EraPosition) cell below was chosen from an audit
-// of base epochs to avoid slot collisions. REVEAL order is deliberately different (driven by which
-// condition each unlocks on) to land the twists — see UnderstudyEpochRevealPatch.
+// IDs are numbered by narrative chronology (1..7). Timeline PLACEMENT (Era/EraPosition) weaves each
+// chapter in next to the base epoch it belongs beside (columns run left-to-right by ascending EpochEra;
+// within a column EraPosition 0 = bottom, higher = up = "after"). Anchors: "The Architect" =
+// Colorless2Epoch @ Prehistoria2 pos0; "Ancients" = Relic2Epoch @ Seeds1 pos1; "Underdocks" @
+// Invitation1 pos4. Every cell below was checked free against a full base-epoch audit. REVEAL order is
+// deliberately different (driven by which condition each unlocks on) to land the twists — see
+// UnderstudyEpochRevealPatch.
 //
 // Pure lore: QueueUnlocks does nothing (BaseLib already unlocks every Understudy card). Title,
 // Description, UnlockInfo, and UnlockText all resolve from the mod's epochs.json by convention.
@@ -25,31 +28,32 @@ public abstract class UnderstudyEpoch : EpochModel
     public override void QueueUnlocks() { }
 }
 
-// 1 — Dreamless (Prehistoria). Reveals on: Beat Act 3.
+// 1 — Dreamless. Immediately after "The Architect" (Prehistoria2 pos0); nearest free cell above the
+// Silent6/"Nemesis" slot at pos1. Reveals on: Beat Act 3.
 public sealed class Understudy1Epoch : UnderstudyEpoch
 {
     public override string Id => "THEUNDERSTUDY1_EPOCH";
-    public override EpochEra Era => EpochEra.Prehistoria0;
-    public override int EraPosition => 1;
-}
-
-// 2 — The Ending He Designed (Prehistoria). Reveals on: Beat Act 1.
-public sealed class Understudy2Epoch : UnderstudyEpoch
-{
-    public override string Id => "THEUNDERSTUDY2_EPOCH";
-    public override EpochEra Era => EpochEra.Prehistoria1;
-    public override int EraPosition => 1;
-}
-
-// 3 — A Perfect Mirror (Prehistoria). Reveals on: Finish a run (the false promise, revealed first).
-public sealed class Understudy3Epoch : UnderstudyEpoch
-{
-    public override string Id => "THEUNDERSTUDY3_EPOCH";
     public override EpochEra Era => EpochEra.Prehistoria2;
     public override int EraPosition => 2;
 }
 
-// 4 — Consumed (Blight). Reveals on: Complete Ascension 1 (the gut-punch, revealed last).
+// 2 — The Ending He Designed. Immediately after "Ancients" (Relic2 @ Seeds1 pos1). Reveals on: Beat Act 1.
+public sealed class Understudy2Epoch : UnderstudyEpoch
+{
+    public override string Id => "THEUNDERSTUDY2_EPOCH";
+    public override EpochEra Era => EpochEra.Seeds1;
+    public override int EraPosition => 2;
+}
+
+// 3 — A Perfect Mirror. Immediately after "The Ending He Designed" (Seeds1 pos2). Reveals on: Finish a run.
+public sealed class Understudy3Epoch : UnderstudyEpoch
+{
+    public override string Id => "THEUNDERSTUDY3_EPOCH";
+    public override EpochEra Era => EpochEra.Seeds1;
+    public override int EraPosition => 3;
+}
+
+// 4 — Consumed (Blight — the child unmade). Reveals on: Complete Ascension 1 (the gut-punch, last).
 public sealed class Understudy4Epoch : UnderstudyEpoch
 {
     public override string Id => "THEUNDERSTUDY4_EPOCH";
@@ -57,15 +61,16 @@ public sealed class Understudy4Epoch : UnderstudyEpoch
     public override int EraPosition => 1;
 }
 
-// 5 — The Boy in the City (Flourish). Reveals on: Defeat 15 Bosses.
+// 5 — The Boy in the City. Just before "Underdocks" (Invitation1 pos4, full) — the column before it.
+// Reveals on: Defeat 15 Bosses.
 public sealed class Understudy5Epoch : UnderstudyEpoch
 {
     public override string Id => "THEUNDERSTUDY5_EPOCH";
-    public override EpochEra Era => EpochEra.Flourish0;
-    public override int EraPosition => 3;
+    public override EpochEra Era => EpochEra.Invitation0;
+    public override int EraPosition => 4;
 }
 
-// 6 — Nothing Like Him (Flourish). Reveals on: Defeat 15 Elites.
+// 6 — Nothing Like Him (Flourish — the molding years). Reveals on: Defeat 15 Elites.
 public sealed class Understudy6Epoch : UnderstudyEpoch
 {
     public override string Id => "THEUNDERSTUDY6_EPOCH";
@@ -73,10 +78,10 @@ public sealed class Understudy6Epoch : UnderstudyEpoch
     public override int EraPosition => 2;
 }
 
-// 7 — The Final Lesson (Invitation — the boy brought to the Spire). Reveals on: Beat Act 2.
+// 7 — The Final Lesson (Invitation — the boy at the Spire). Reveals on: Beat Act 2.
 public sealed class Understudy7Epoch : UnderstudyEpoch
 {
     public override string Id => "THEUNDERSTUDY7_EPOCH";
-    public override EpochEra Era => EpochEra.Invitation0;
-    public override int EraPosition => 4;
+    public override EpochEra Era => EpochEra.Invitation2;
+    public override int EraPosition => 3;
 }
