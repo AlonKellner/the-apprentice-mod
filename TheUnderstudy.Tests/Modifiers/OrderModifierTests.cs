@@ -1,6 +1,8 @@
 using BaseLib.Abstracts;
 using MegaCrit.Sts2.Core.Entities.Cards;
+using MegaCrit.Sts2.Core.Models;
 using TheUnderstudy.TheUnderstudyCode.Cards;
+using TheUnderstudy.TheUnderstudyCode.Cards.Afflictions;
 using TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
 using Xunit;
 
@@ -53,6 +55,23 @@ public class OrderModifierTests
 
     [Fact]
     public void CanApplyTo_StableSkill_ReturnsFalse() => Assert.False(OrderModifier.CanApplyTo(new Practice()));
+
+    [Fact]
+    public void CanApplyTo_AlreadyAfflictedCard_ReturnsFalse()
+    {
+        // Two Lessons may not both order the same card. Whichever assigns first afflicts it with
+        // Order, and that affliction is what takes the card out of the other Lesson's candidate pool.
+        var card = new UnderstudyStrike();
+        GiveAffliction(card, new Order());
+        Assert.False(OrderModifier.CanApplyTo(card));
+    }
+
+    // CardCmd.Afflict and CardModel.AfflictInternal both need a mutable card, and MutableClone()
+    // reaches into ModelDb — neither is available in the bare test host (see the file header). Drive
+    // the private setter directly instead: Affliction is precisely the state CanApplyTo reads.
+    private static void GiveAffliction(CardModel card, AfflictionModel affliction) =>
+        typeof(CardModel).GetProperty(nameof(CardModel.Affliction))!
+            .GetSetMethod(nonPublic: true)!.Invoke(card, new object?[] { affliction });
 
     [Fact]
     public void CanApplyTo_RuntimeStableCard_ReturnsFalse()

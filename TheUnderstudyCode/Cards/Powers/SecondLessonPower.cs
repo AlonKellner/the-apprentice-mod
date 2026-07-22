@@ -25,20 +25,32 @@ namespace TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 // AfterCardDrawn). This used to be done pre-draw instead (peeking the draw pile in
 // BeforeHandDrawLate before the turn's hand draw), to avoid the overlay popping in a frame late —
 // but CardPileCmd.Draw can reshuffle the discard pile into the draw pile mid-draw, strictly after
-// that peek, so it could under-count eligible cards and silently skip an Order for the turn
-// (observed in-game: a turn with only PlayThis assigned, breaking the invariant that
-// Rewarded+Punished always grows by exactly 2 per turn — see the even-sum Invariants.Check below).
+// that peek, so it could under-count eligible cards and silently skip an Order for the turn.
 // Post-draw assignment can't miss this way, since it only ever looks at cards that were actually
 // drawn. The pop-in is instead smoothed over by OrderOverlayPatch fading the overlay in rather than
-// snapping it to full opacity.
+// snapping it to full opacity. Assigning fewer than two Orders is legitimate regardless of that
+// history — a turn simply may not draw two eligible cards — so the growth check below bounds how far
+// Rewarded+Punished can move per turn instead of demanding a fixed step.
 //
 // Also in AfterPlayerTurnStartLate: resolve Reward, then Punish (in that fixed order, both from
 // this one method, so the ordering can't depend on cross-power hook iteration), then assign this
 // turn's new Orders to cards drawn this turn.
+//
+// The power is Instanced: two plays mean two Lessons side by side, each with its own drawn-card
+// tracking and its own pair of Orders per turn (Orders never overlap, since OrderModifier.CanApplyTo
+// skips already-afflicted cards). The Rewarded/Punished counters they feed are shared, and so are
+// resolved once per turn by the first instance rather than once per Lesson.
 public class SecondLessonPower : UnderstudyPower
 {
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Single;
+
+    // Two plays of The Second Lesson are two separate Lessons, not one louder one: each instance
+    // keeps its own _drawnThisTurn/_activeOrders and hands out its own pair of Orders every turn.
+    // PowerCmd.FindExistingInstanceForStacking returns null for Instanced, so every application
+    // constructs a fresh instance instead of stacking Amount onto the existing one (same mechanism
+    // the base game's TheBombPower uses to keep each bomb ticking down separately).
+    public override PowerInstanceType InstanceType => PowerInstanceType.Instanced;
 
     public override List<(string, string)> Localization => new PowerLoc(
         "The Second Lesson",
@@ -52,10 +64,12 @@ public class SecondLessonPower : UnderstudyPower
     // affliction stay attached to the CardModel object regardless of which pile it's in.
     private readonly List<CardModel> _activeOrders = new();
 
-    // Rewarded+Punished total observed at the previous turn start, so the per-turn growth can be
-    // bounds-checked. Re-baselined in ResetTracking so a combat reload/replay (fresh powers at 0, or
-    // a same-combat second play with powers already accumulated) never reads as a spurious jump.
-    private int _lastResolvedTotal;
+    // Shared Rewarded+Punished total observed at the previous turn start, so the per-turn growth can
+    // be bounds-checked. Null until this instance has seen one turn start: a Lesson played on turn 5
+    // into an already-accumulated total must baseline against what it finds rather than against zero,
+    // or its very first reading would look like one huge illegal jump. Nulled by ResetTracking for
+    // the same reason after a combat reload/replay.
+    private int? _lastResolvedTotal;
 
     public override Task AfterCardDrawn(PlayerChoiceContext choiceContext, CardModel card, bool fromHandDraw)
     {
@@ -83,10 +97,9 @@ public class SecondLessonPower : UnderstudyPower
         }
         _activeOrders.Clear();
         _drawnThisTurn.Clear();
-        // Re-baseline the growth check to whatever the powers currently read (0 in a fresh combat, or
-        // the already-accumulated total if the card is replayed mid-combat) so the next turn's delta
-        // is measured from a truthful starting point rather than a stale one.
-        _lastResolvedTotal = Owner.GetPowerAmount<RewardedPower>() + Owner.GetPowerAmount<PunishedPower>();
+        // Drop the growth baseline so the next turn start re-takes it from whatever the shared powers
+        // actually read then, rather than measuring against a total from before the reload.
+        _lastResolvedTotal = null;
     }
 
     // Pure: given the ordered list of cards drawn this turn, which gets "Play this card" (the
@@ -109,27 +122,44 @@ public class SecondLessonPower : UnderstudyPower
         int turn = player.PlayerCombatState?.TurnNumber ?? -1;
         int rewarded = Owner.GetPowerAmount<RewardedPower>();
         int punished = Owner.GetPowerAmount<PunishedPower>();
+        // Rewarded/Punished are plain (non-Instanced) powers, so every Lesson reads and feeds the same
+        // shared pair. Resolving them once per Lesson would apply the same accumulated buff/debuff
+        // twice over, so only the first instance resolves; the rest just hand out their own Orders.
+        var instances = Owner.GetPowerInstances<SecondLessonPower>().ToList();
+        bool isPrimary = instances.Count == 0 || ReferenceEquals(instances[0], this);
         Log.Info($"SecondLessonPower[turn {turn}]: AfterPlayerTurnStartLate firing; " +
                   $"Rewarded={rewarded}, Punished={punished}, " +
-                  $"drawnThisTurn={_drawnThisTurn.Count}, activeOrders={_activeOrders.Count}");
+                  $"drawnThisTurn={_drawnThisTurn.Count}, activeOrders={_activeOrders.Count}, " +
+                  $"instances={instances.Count}, primary={isPrimary}");
         Invariants.CheckEqual(_activeOrders.Count, _activeOrders.Count(c => c.TryGetModifier<OrderModifier>(out _)),
             nameof(SecondLessonPower) + "." + nameof(AfterPlayerTurnStartLate),
             "tracked active-Order cards vs. cards still actually carrying OrderModifier");
         // Each assigned Order grants exactly one Reward or Punish stack when it resolves (FlavorOnly
         // always resolves to Resolution.None, granting nothing), and Orders are the ONLY source of
-        // those two powers. At most one PlayThis + one DontPlayThis are assigned per turn — and a turn
-        // may assign fewer, or none, when the cards drawn hold under two eligible (non-Stable
-        // Attack/Skill) cards. So between turn starts the total can only grow, by 0, 1, or 2.
+        // those two powers. Each Lesson assigns at most one PlayThis + one DontPlayThis per turn — and
+        // may assign fewer, or none, when the cards drawn hold too few eligible (unafflicted,
+        // non-Stable Attack/Skill) ones. So between turn starts the shared total can only grow, by
+        // between 0 and two per live Lesson. Only the primary asserts (one verdict per turn on a
+        // shared total), but every instance keeps its own baseline current so that whichever instance
+        // is primary next turn measures from a truthful starting point.
         int resolvedTotal = rewarded + punished;
-        int grew = resolvedTotal - _lastResolvedTotal;
-        Invariants.Check(grew >= 0 && grew <= 2,
-            nameof(SecondLessonPower) + "." + nameof(AfterPlayerTurnStartLate),
-            $"Rewarded+Punished may grow by 0-2 per turn (≤2 Orders resolve) and never shrink — " +
-            $"grew by {grew} (from {_lastResolvedTotal} to {resolvedTotal}); Rewarded={rewarded}, Punished={punished}");
+        if (isPrimary && _lastResolvedTotal is int previous)
+        {
+            int grew = resolvedTotal - previous;
+            int maxGrowth = 2 * Math.Max(1, instances.Count);
+            Invariants.Check(grew >= 0 && grew <= maxGrowth,
+                nameof(SecondLessonPower) + "." + nameof(AfterPlayerTurnStartLate),
+                $"Rewarded+Punished may grow by 0-{maxGrowth} per turn (≤2 Orders resolve per Lesson, " +
+                $"{instances.Count} live) and never shrink — grew by {grew} (from {previous} to " +
+                $"{resolvedTotal}); Rewarded={rewarded}, Punished={punished}");
+        }
         _lastResolvedTotal = resolvedTotal;
 
-        await ResolveRewardTurn(context, turn);
-        await ResolvePunishTurn(context, turn);
+        if (isPrimary)
+        {
+            await ResolveRewardTurn(context, turn);
+            await ResolvePunishTurn(context, turn);
+        }
         await AssignOrders(context, player, turn);
 
         _drawnThisTurn.Clear();

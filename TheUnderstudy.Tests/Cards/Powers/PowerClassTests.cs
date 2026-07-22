@@ -380,6 +380,14 @@ public class PowerClassTests
     }
 
     [Fact]
+    public void SecondLessonPower_IsInstanced_SoASecondPlayStandsUpASecondLesson()
+    {
+        // Instanced makes PowerCmd.FindExistingInstanceForStacking return null, so a second play
+        // builds a second power with its own Orders instead of stacking onto the first.
+        Assert.Equal(PowerInstanceType.Instanced, new SecondLessonPower().InstanceType);
+    }
+
+    [Fact]
     public void RewardedPower_IsBuff_Counter()
     {
         var p = new RewardedPower();

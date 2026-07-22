@@ -25,9 +25,10 @@ public class TheSecondLesson : UnderstudyCard
         int turn = cardPlay.Card.Owner.Creature.Player?.PlayerCombatState?.TurnNumber ?? -1;
         Log.Info($"TheSecondLesson[turn {turn}]: played, granting SecondLessonPower");
         var power = await CommonActions.Apply<SecondLessonPower>(context, cardPlay.Card.Owner.Creature, this);
-        // PowerCmd.Apply reuses an existing same-type instance for stacking rather than always
-        // constructing fresh — see SecondLessonPower.ResetTracking for why playing this card must
-        // always start its Order-tracking state clean regardless of which instance came back.
+        // SecondLessonPower is Instanced, so a second play stands up a second Lesson with its own
+        // Orders rather than stacking onto the first. ResetTracking is still called because the
+        // instance that comes back is not guaranteed to be freshly built (a combat reload can hand
+        // back one carrying state from an abandoned attempt) — see SecondLessonPower.ResetTracking.
         power?.ResetTracking();
         // Pre-compile the Order overlay shader off-screen now, a full turn before the earliest a
         // card could actually need it (Orders are assigned next turn's AfterPlayerTurnStartLate) —

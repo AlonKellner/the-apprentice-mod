@@ -63,9 +63,19 @@ public class OrderModifier : CardModifier
     };
 
     // Attacks and Skills only, not Stable-tagged (defined fresh here rather than reusing
-    // PlannedModifier.CanApplyTo, so each modifier owns its own eligibility rule).
+    // PlannedModifier.CanApplyTo, so each modifier owns its own eligibility rule), and never a card
+    // that already carries an affliction.
+    //
+    // That last clause is what keeps two SecondLessonPower instances from fighting over the same
+    // card: whichever Lesson assigns first afflicts the card with Order, so the next Lesson's
+    // selection skips it and reaches for a different one. It also mirrors the game's own rule —
+    // AfflictionModel.CanAfflict refuses an already-afflicted card, and CardCmd.Afflict signals that
+    // by silently returning null, which would otherwise leave the card holding an OrderModifier with
+    // no Order affliction (and so no overlay) for the rest of the turn.
     public static bool CanApplyTo(CardModel card) =>
-        (card.Type == CardType.Attack || card.Type == CardType.Skill) && !card.IsStable();
+        (card.Type == CardType.Attack || card.Type == CardType.Skill)
+        && !card.IsStable()
+        && card.Affliction == null;
 
     // Resolution the instant the order-carrying card is played this turn: "Play this card" is
     // obeyed (Reward); "Don't play this card" is disobeyed (Punish); flavor-only never resolves.

@@ -1,5 +1,6 @@
 using MegaCrit.Sts2.Core.Models;
 using TheUnderstudy.TheUnderstudyCode.Cards;
+using TheUnderstudy.TheUnderstudyCode.Cards.Afflictions;
 using TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 using Xunit;
 
@@ -15,6 +16,31 @@ public class SecondLessonPowerTests
         Assert.Null(dontPlayThis);
         Assert.Empty(remaining);
     }
+
+    [Fact]
+    public void SelectFirstTwoEligible_SkipsCardsAnotherLessonAlreadyOrdered()
+    {
+        // A second Lesson selecting after the first has already taken its two picks: the afflicted
+        // cards drop out of the pool, so the Orders land on different cards instead of overlapping.
+        var takenByFirstLesson = new UnderstudyStrike();
+        var alsoTakenByFirstLesson = new UnderstudyDefend();
+        GiveAffliction(takenByFirstLesson, new Order());
+        GiveAffliction(alsoTakenByFirstLesson, new Order());
+        var stillFree = new UnderstudyStrike();
+
+        var (playThis, dontPlayThis, remaining) = SecondLessonPower.SelectFirstTwoEligible(
+            new List<CardModel> { takenByFirstLesson, alsoTakenByFirstLesson, stillFree });
+
+        Assert.Same(stillFree, playThis);
+        Assert.Null(dontPlayThis);
+        Assert.Empty(remaining);
+    }
+
+    // Afflicting for real needs a mutable card, and MutableClone() reaches into ModelDb — neither is
+    // available in the bare test host, so drive the private setter that CanApplyTo reads.
+    private static void GiveAffliction(CardModel card, AfflictionModel affliction) =>
+        typeof(CardModel).GetProperty(nameof(CardModel.Affliction))!
+            .GetSetMethod(nonPublic: true)!.Invoke(card, new object?[] { affliction });
 
     [Fact]
     public void SelectFirstTwoEligible_OneEligibleCard_OnlyGetsPlayThis()
