@@ -142,3 +142,24 @@ self-acceptance (that blindness is the character).
 - **3r (resolved):** *"Still here. Still begging to be heard."* → [Refuse] →
   *"No. Not anymore. I stopped writing this for you - this one's mine."* → [Continue] →
   *"...Then play."* (his one crack — for once he wants to hear it; doubles as the combat cue)
+
+## 9. Timeline Epochs — "The Final Lesson" (implemented)
+
+The Understudy has a 7-chapter Timeline story (`TheUnderstudyCode/Timeline/`, injected by
+`EpochRegistrar` since the game has no mod-epoch API — `EpochModel._allEpochs` is a compile-time
+list). It reveals the Architect's own tragedy: a dreamless creature of order who set out to design
+his own restful ending by making a perfect successor — a first child, lost to the blight — and then
+stole a dreaming boy to try again. That boy is The Understudy.
+
+- **Chapters (narrative order, placed chronologically on the era axis):** 1 Dreamless (Prehistoria),
+  2 The Ending He Designed (Prehistoria), 3 A Perfect Mirror (Prehistoria), 4 Consumed (Blight),
+  5 The Boy in the City (Flourish), 6 Nothing Like Him (Flourish), 7 The Final Lesson (Invitation).
+- **Reveal is soft, not chronological** (all reachable at once via a Neow `GetTimelineExpansion`
+  postfix; each unlocks on its own pure condition). Intended reveal arc: *A Perfect Mirror* (the false
+  promise) → *The Ending He Designed* → *The Final Lesson* → *Dreamless* → *Nothing Like Him* → *The
+  Boy in the City* → *Consumed* (the gut-punch — the first, perfect child, taken by the blight).
+- **Pure conditions** (same as base characters, replicated in `UnderstudyEpochRevealPatch`): finish a
+  run → A Perfect Mirror; Act 1 → The Ending He Designed; Act 2 → The Final Lesson; Act 3 → Dreamless;
+  15 Bosses → The Boy in the City; 15 Elites → Nothing Like Him; Ascension 1 → Consumed.
+- **Art is a placeholder** (`UnderstudyEpochPortraitPatch` points portraits at the character icon);
+  real epoch art is a follow-up. Full design/mechanics in `~/.claude/plans/shimmying-sleeping-swing.md`.

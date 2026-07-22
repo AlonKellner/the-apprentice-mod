@@ -1,6 +1,7 @@
 using Godot;
 using HarmonyLib;
 using MegaCrit.Sts2.Core.Modding;
+using TheUnderstudy.TheUnderstudyCode.Timeline;
 
 namespace TheUnderstudy.TheUnderstudyCode;
 
@@ -15,6 +16,10 @@ public partial class MainFile : Node
 
     public static void Initialize()
     {
+        // Inject the Timeline story/epochs into the game's static registries before patching, so the
+        // reachability + reveal patches can resolve our epoch types (see EpochRegistrar).
+        EpochRegistrar.Register();
+
         Harmony harmony = new(ModId);
         harmony.PatchAll();
     }

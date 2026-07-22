@@ -3,7 +3,7 @@
   "name": "The Understudy",
   "author": "Alon Kellner",
   "description": "A new playable character for Slay the Spire 2.",
-  "version": "v1.11.43",
+  "version": "v1.11.44",
   "min_game_version": "0.107.0",
   "has_pck": true,
   "has_dll": true,
