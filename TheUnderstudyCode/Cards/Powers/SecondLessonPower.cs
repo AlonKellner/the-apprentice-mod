@@ -69,9 +69,37 @@ public class SecondLessonPower : UnderstudyPower
     // or its very first reading would look like one huge illegal jump.
     private int? _lastResolvedTotal;
 
+    // ── Diagnostics ──────────────────────────────────────────────────────────────────────────
+    // Identity of this specific power object. Two hook firings in one turn reporting the same id
+    // would mean a single object is listed twice on the creature rather than two Lessons being live:
+    // Creature.ApplyPowerInternal appends without an identity check and only rejects duplicates for
+    // non-Instanced powers, so nothing structurally prevents it. That shape would also explain a
+    // doubled _drawnThisTurn, since the object would receive every hook once per listing.
+    private int InstanceId => RuntimeHelpers.GetHashCode(this);
+
+    // Every SecondLessonPower currently on the creature, by identity. A repeated id here IS the
+    // duplicate-listing case, stated directly rather than inferred.
+    private string InstanceRoster() =>
+        string.Join(",", Owner.GetPowerInstances<SecondLessonPower>().Select(RuntimeHelpers.GetHashCode));
+
+    private int Turn => Owner.Player?.PlayerCombatState?.TurnNumber ?? -1;
+
     public override Task AfterCardDrawn(PlayerChoiceContext choiceContext, CardModel card, bool fromHandDraw)
     {
-        if (fromHandDraw && card.Owner == Owner.Player) _drawnThisTurn.Add(card);
+        if (fromHandDraw && card.Owner == Owner.Player)
+        {
+            // Logged only when it actually repeats, so this stays quiet in the normal case. The same
+            // CardModel arriving twice means either the card genuinely was drawn twice before the
+            // list was last cleared (legitimate, and what the reference-distinct selection now
+            // tolerates) or this object is being handed the hook more than once per draw. The two are
+            // told apart by whether the count of drawn records is a clean multiple of the hand size.
+            int alreadyTracked = _drawnThisTurn.Count(c => ReferenceEquals(c, card));
+            if (alreadyTracked > 0)
+                Log.Info($"SecondLessonPower[turn {Turn}]: duplicate draw record id={InstanceId}, " +
+                          $"card={card.Id} already tracked {alreadyTracked}x, " +
+                          $"drawnThisTurn={_drawnThisTurn.Count}, lessons=[{InstanceRoster()}]");
+            _drawnThisTurn.Add(card);
+        }
         return Task.CompletedTask;
     }
 
@@ -115,16 +143,17 @@ public class SecondLessonPower : UnderstudyPower
         // Rewarded/Punished are singletons that every Lesson feeds and that apply themselves (see
         // RewardedPower/PunishedPower) — all this power does with them is bounds-check their growth.
         int lessons = Owner.GetPowerInstances<SecondLessonPower>().Count();
-        // id is the instance's identity hash: two firings in one turn reporting the SAME id would mean
-        // one power object is listed twice on the creature rather than two Lessons being live
-        // (Creature.ApplyPowerInternal only guards against that for non-Instanced powers), which would
-        // also double every AfterCardDrawn record. Cheap to carry and the fastest way to tell the two
-        // situations apart from a log.
+        // id / lessons are the identity pair to read together (see InstanceId): two firings this turn
+        // sharing an id, or a roster listing one id twice, is the duplicate-listing case. Distinct ids
+        // throughout means two genuine Lessons and any doubling came from somewhere else.
+        // distinctDrawn vs drawnThisTurn separates "the same cards recorded repeatedly" from "simply
+        // a lot of cards drawn", which is the difference between a dispatch problem and a busy turn.
+        int distinctDrawn = _drawnThisTurn.Distinct(ReferenceEqualityComparer.Instance).Count();
         Log.Info($"SecondLessonPower[turn {turn}]: AfterPlayerTurnStartLate firing; " +
-                  $"id={RuntimeHelpers.GetHashCode(this)}, " +
+                  $"id={InstanceId}, lessons=[{InstanceRoster()}], " +
                   $"Rewarded={rewarded}, Punished={punished}, " +
-                  $"drawnThisTurn={_drawnThisTurn.Count}, activeOrders={_activeOrders.Count}, " +
-                  $"lessons={lessons}");
+                  $"drawnThisTurn={_drawnThisTurn.Count} ({distinctDrawn} distinct), " +
+                  $"activeOrders={_activeOrders.Count}");
         Invariants.CheckEqual(_activeOrders.Count, _activeOrders.Count(c => c.TryGetModifier<OrderModifier>(out _)),
             nameof(SecondLessonPower) + "." + nameof(AfterPlayerTurnStartLate),
             "tracked active-Order cards vs. cards still actually carrying OrderModifier");
@@ -169,15 +198,32 @@ public class SecondLessonPower : UnderstudyPower
 
     private async Task AttachOrder(CardModel card, OrderModifier.Kind kind, string? flavorText, int turn)
     {
+        // A card that already carries an Order must never take a second one — that is what produced a
+        // single card showing both "Play this card" and "Don't play this card". Selection already
+        // excludes such cards; this is the last line of defence, and reaching it means some path
+        // routed around CanApplyTo, which is worth knowing about.
+        if (card.TryGetModifier<OrderModifier>(out var existing))
+        {
+            Log.Warn($"SecondLessonPower[turn {turn}]: refused to attach Order({kind}) to {card.Id} " +
+                      $"id={InstanceId} — it already carries Order({existing!.OrderKind}), " +
+                      $"affliction={(card.Affliction == null ? "none" : card.Affliction.GetType().Name)}, " +
+                      $"lessons=[{InstanceRoster()}]");
+            return;
+        }
+
         CardModifier.AddModifier<OrderModifier>(card);
         if (card.TryGetModifier<OrderModifier>(out var mod))
         {
             mod!.OrderKind = kind;
             mod.FlavorText = flavorText;
         }
-        await CardCmd.Afflict<Order>(card, 1);
+        // Afflict reports refusal by returning null rather than throwing, which would leave the card
+        // holding an Order with no affliction and so no overlay — invisible to the player, and
+        // invisible to any check keyed off the affliction. Worth a line when it happens.
+        var affliction = await CardCmd.Afflict<Order>(card, 1);
         _activeOrders.Add(card);
-        Log.Info($"SecondLessonPower[turn {turn}]: attached Order({kind}) to {card.Id}");
+        Log.Info($"SecondLessonPower[turn {turn}]: attached Order({kind}) to {card.Id} " +
+                  $"id={InstanceId}{(affliction == null ? " [WARN: affliction refused, no overlay]" : "")}");
     }
 
     public override async Task BeforeSideTurnEnd(PlayerChoiceContext context, CombatSide side, IEnumerable<Creature> creatures)

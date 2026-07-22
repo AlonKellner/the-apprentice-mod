@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.11.65: a card can no longer receive both 'Play this card' and 'Don't play this card' at once.",
+  "changeNote": "v1.11.66: added diagnostics tracing how multiple copies of The Second Lesson register and receive hooks.",
   "tags": [],
   "dependencies": [
     3737335127
