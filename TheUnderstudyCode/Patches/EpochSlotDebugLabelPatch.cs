@@ -7,38 +7,44 @@ using MegaCrit.Sts2.Core.Nodes.Screens.Timeline;
 
 namespace TheUnderstudy.TheUnderstudyCode.Patches;
 
-// Hides (and, right now, DIAGNOSES) the "%DebugLabel" that NEpochSlot shows on every slot — including
-// locked ones — when the game runs non-release (a modded game does). The plain hide via SetState wasn't
-// taking, so this build also logs, tagged "[EpochDiag]", to answer:
-//   - does the SetState postfix run at all? does the _Ready postfix run? (Harmony + Godot lifecycle)
-//   - what does NGame.IsReleaseGame() return in the live modded build?
-//   - can we find the label node (via unique name vs recursive find), and what is its type/visibility?
-//   - the full node tree of a slot, to locate the actual label if it isn't "%DebugLabel".
-// TEMPORARY: strip the logging (keep the SetState hide) once the cause is known.
-public static class EpochSlotDebugLabelPatch
-{
-    private static bool _loggedReleaseFlag;
-    private static bool _loggedReady;
-    private static bool _dumpedTree;
+// Hides (and currently DIAGNOSES) the "%DebugLabel" that NEpochSlot shows on every slot — including
+// locked ones — when the game runs non-release (a modded/beta build does). Earlier attempts silently did
+// nothing because the patch class used only METHOD-level [HarmonyPatch] attributes: Harmony's PatchAll
+// only discovers classes annotated with [HarmonyPatch] at the CLASS level, so the whole class was skipped.
+// These are now two separate classes, each with a class-level attribute. TEMPORARY [EpochDiag] logging;
+// strip it (keep the SetState hide) once confirmed. Logs -> SlayTheSpire2/logs/godot.log.
 
-    [HarmonyPatch(typeof(NEpochSlot), "_Ready")]
+// Tests whether Harmony can patch a Godot lifecycle callback at all.
+[HarmonyPatch(typeof(NEpochSlot), "_Ready")]
+public static class EpochSlotReadyDiagPatch
+{
+    private static bool _logged;
+
     [HarmonyPostfix]
-    public static void ReadyPostfix(NEpochSlot __instance)
+    public static void Postfix()
     {
-        if (_loggedReady) return;
-        _loggedReady = true;
+        if (_logged) return;
+        _logged = true;
         MainFile.Logger.Info("[EpochDiag] _Ready postfix RAN (Harmony patched the Godot lifecycle method).");
     }
+}
 
-    [HarmonyPatch(typeof(NEpochSlot), nameof(NEpochSlot.SetState))]
+// The real fix: hide the debug label after every state set. Also logs the live IsReleaseGame() value,
+// whether the label node is findable, and a one-time node-tree dump to locate it if "%DebugLabel" is wrong.
+[HarmonyPatch(typeof(NEpochSlot), nameof(NEpochSlot.SetState))]
+public static class EpochSlotSetStatePatch
+{
+    private static bool _loggedRelease;
+    private static bool _dumpedTree;
+
     [HarmonyPostfix]
-    public static void SetStatePostfix(NEpochSlot __instance)
+    public static void Postfix(NEpochSlot __instance)
     {
         try
         {
-            if (!_loggedReleaseFlag)
+            if (!_loggedRelease)
             {
-                _loggedReleaseFlag = true;
+                _loggedRelease = true;
                 MainFile.Logger.Info($"[EpochDiag] NGame.IsReleaseGame() = {NGame.IsReleaseGame()}");
             }
 
