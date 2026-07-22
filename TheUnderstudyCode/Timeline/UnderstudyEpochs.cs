@@ -74,12 +74,13 @@ public sealed class Understudy3Epoch : UnderstudyEpoch
     public override void QueueUnlocks() => NTimelineScreen.Instance.QueueCardUnlock(Cards);
 }
 
-// 4 — Consumed (Blight — the child unmade). Reveals on: Complete Ascension 1. Unlocks 3 relics.
+// 4 — Consumed. After "Consequences" (Relic4 @ Blight0 pos0, the bottom/last of its column) = top of the
+// next column, Blight1 (pos4) — it's the aftermath of Consequences. Reveals on: Ascension 1+. Unlocks 3 relics.
 public sealed class Understudy4Epoch : UnderstudyEpoch
 {
     public override string Id => "THEUNDERSTUDY4_EPOCH";
-    public override EpochEra Era => EpochEra.Blight0;
-    public override int EraPosition => 1;
+    public override EpochEra Era => EpochEra.Blight1;
+    public override int EraPosition => 4;
 
     public static List<RelicModel> Relics => new()
         { ModelDb.Relic<Greasepaint>(), ModelDb.Relic<Rosin>(), ModelDb.Relic<SafetyNet>() };
