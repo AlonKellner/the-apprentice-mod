@@ -405,21 +405,21 @@ public class PowerClassTests
         Assert.NotEmpty(p.Localization);
     }
 
-    // Plain data-holder Counter powers — proves the per-turn Reward/Punish logic stayed
-    // centralized on SecondLessonPower rather than each power independently reacting to its own
-    // turn-start hook (which would make "Reward resolves first" depend on cross-power hook
-    // iteration order, the same hazard already avoided for My Own Lesson).
+    // Both counters apply themselves on their own turn-start hook. They are singletons fed by any
+    // number of Instanced Lessons, so owning the application is what makes it happen exactly once
+    // per turn — resolving it from SecondLessonPower would apply the accumulated amount once per
+    // live Lesson, and avoiding that would take explicit cross-instance coordination.
     [Fact]
-    public void RewardedPower_HasNoOverriddenHooks() =>
-        Assert.DoesNotContain(
+    public void RewardedPower_AppliesItselfOnTurnStart() =>
+        Assert.Contains(
             typeof(RewardedPower).GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly),
-            m => !m.IsSpecialName);
+            m => m.Name == "AfterPlayerTurnStartLate");
 
     [Fact]
-    public void PunishedPower_HasNoOverriddenHooks() =>
-        Assert.DoesNotContain(
+    public void PunishedPower_AppliesItselfOnTurnStart() =>
+        Assert.Contains(
             typeof(PunishedPower).GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly),
-            m => !m.IsSpecialName);
+            m => m.Name == "AfterPlayerTurnStartLate");
 
     [Fact]
     public void CallSheetPower_IsBuff_Counter()

@@ -32,14 +32,11 @@ namespace TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 // history — a turn simply may not draw two eligible cards — so the growth check below bounds how far
 // Rewarded+Punished can move per turn instead of demanding a fixed step.
 //
-// Also in AfterPlayerTurnStartLate: resolve Reward, then Punish (in that fixed order, both from
-// this one method, so the ordering can't depend on cross-power hook iteration), then assign this
-// turn's new Orders to cards drawn this turn.
-//
 // The power is Instanced: two plays mean two Lessons side by side, each with its own drawn-card
 // tracking and its own pair of Orders per turn (Orders never overlap, since OrderModifier.CanApplyTo
-// skips already-afflicted cards). The Rewarded/Punished counters they feed are shared, and so are
-// resolved once per turn by the first instance rather than once per Lesson.
+// skips already-afflicted cards). The Rewarded/Punished counters they feed are singletons that
+// apply themselves on their own turn-start hook, so their once-per-turn application needs no
+// coordination between Lessons no matter how many are live.
 public class SecondLessonPower : UnderstudyPower
 {
     public override PowerType Type => PowerType.Buff;
@@ -122,15 +119,13 @@ public class SecondLessonPower : UnderstudyPower
         int turn = player.PlayerCombatState?.TurnNumber ?? -1;
         int rewarded = Owner.GetPowerAmount<RewardedPower>();
         int punished = Owner.GetPowerAmount<PunishedPower>();
-        // Rewarded/Punished are plain (non-Instanced) powers, so every Lesson reads and feeds the same
-        // shared pair. Resolving them once per Lesson would apply the same accumulated buff/debuff
-        // twice over, so only the first instance resolves; the rest just hand out their own Orders.
-        var instances = Owner.GetPowerInstances<SecondLessonPower>().ToList();
-        bool isPrimary = instances.Count == 0 || ReferenceEquals(instances[0], this);
+        // Rewarded/Punished are singletons that every Lesson feeds and that apply themselves (see
+        // RewardedPower/PunishedPower) — all this power does with them is bounds-check their growth.
+        int lessons = Owner.GetPowerInstances<SecondLessonPower>().Count();
         Log.Info($"SecondLessonPower[turn {turn}]: AfterPlayerTurnStartLate firing; " +
                   $"Rewarded={rewarded}, Punished={punished}, " +
                   $"drawnThisTurn={_drawnThisTurn.Count}, activeOrders={_activeOrders.Count}, " +
-                  $"instances={instances.Count}, primary={isPrimary}");
+                  $"lessons={lessons}");
         Invariants.CheckEqual(_activeOrders.Count, _activeOrders.Count(c => c.TryGetModifier<OrderModifier>(out _)),
             nameof(SecondLessonPower) + "." + nameof(AfterPlayerTurnStartLate),
             "tracked active-Order cards vs. cards still actually carrying OrderModifier");
@@ -139,56 +134,24 @@ public class SecondLessonPower : UnderstudyPower
         // those two powers. Each Lesson assigns at most one PlayThis + one DontPlayThis per turn — and
         // may assign fewer, or none, when the cards drawn hold too few eligible (unafflicted,
         // non-Stable Attack/Skill) ones. So between turn starts the shared total can only grow, by
-        // between 0 and two per live Lesson. Only the primary asserts (one verdict per turn on a
-        // shared total), but every instance keeps its own baseline current so that whichever instance
-        // is primary next turn measures from a truthful starting point.
+        // between 0 and two per live Lesson.
         int resolvedTotal = rewarded + punished;
-        if (isPrimary && _lastResolvedTotal is int previous)
+        if (_lastResolvedTotal is int previous)
         {
             int grew = resolvedTotal - previous;
-            int maxGrowth = 2 * Math.Max(1, instances.Count);
+            int maxGrowth = 2 * Math.Max(1, lessons);
             Invariants.Check(grew >= 0 && grew <= maxGrowth,
                 nameof(SecondLessonPower) + "." + nameof(AfterPlayerTurnStartLate),
                 $"Rewarded+Punished may grow by 0-{maxGrowth} per turn (≤2 Orders resolve per Lesson, " +
-                $"{instances.Count} live) and never shrink — grew by {grew} (from {previous} to " +
+                $"{lessons} live) and never shrink — grew by {grew} (from {previous} to " +
                 $"{resolvedTotal}); Rewarded={rewarded}, Punished={punished}");
         }
         _lastResolvedTotal = resolvedTotal;
 
-        if (isPrimary)
-        {
-            await ResolveRewardTurn(context, turn);
-            await ResolvePunishTurn(context, turn);
-        }
         await AssignOrders(context, player, turn);
 
         _drawnThisTurn.Clear();
     }
-
-    private async Task ResolveRewardTurn(PlayerChoiceContext ctx, int turn)
-    {
-        var rewarded = Owner.GetPower<RewardedPower>();
-        if (rewarded == null || rewarded.Amount <= 0) return;
-        var categories = EmotionalExpression.BuildCategories(Owner);
-        var pair = EmotionalExpression.PickByPriority(categories, EmotionalExpression.RewardPriority, PickRandom);
-        Log.Info($"SecondLessonPower[turn {turn}]: applying Reward buff {pair.Name} x{rewarded.Amount}");
-        await pair.ApplyBuffSide(ctx, Owner, rewarded.Amount);
-    }
-
-    private async Task ResolvePunishTurn(PlayerChoiceContext ctx, int turn)
-    {
-        var punished = Owner.GetPower<PunishedPower>();
-        if (punished == null || punished.Amount <= 0) return;
-        var categories = EmotionalExpression.BuildCategories(Owner);
-        bool firstLessonActive = Owner.GetPowerAmount<TheFirstLessonPower>() > 0;
-        var filtered = EmotionalExpression.ExcludeForPunishIfFirstLessonActive(categories, firstLessonActive);
-        var pair = EmotionalExpression.PickByPriority(filtered, EmotionalExpression.PunishPriority, PickRandom);
-        Log.Info($"SecondLessonPower[turn {turn}]: applying Punish debuff {pair.Name} x{punished.Amount}");
-        await pair.ApplyDebuffSide(ctx, Owner, punished.Amount);
-    }
-
-    private InvertiblePair PickRandom(IReadOnlyList<InvertiblePair> candidates) =>
-        Owner.Player!.RunState.Rng.CombatCardSelection.NextItem(candidates);
 
     private async Task AssignOrders(PlayerChoiceContext ctx, Player player, int turn)
     {
