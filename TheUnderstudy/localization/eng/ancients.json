@@ -1,11 +1,7 @@
 {
-  "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.0-0r.char": "Master. I climbed all the way back to you.",
+  "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.0-0r.char": "UNUSED SLOT - never rendered. It cannot be deleted: the STS001 analyzer requires these exact keys, and BaseLib's dialogue scan stops at the first missing index, so removing slot 0 would hide every later dialogue. It cannot hold the first meeting either, because the analyzer forces the repeating 'r' form here. '0-visit': '99' disables it on both selection paths. The real first meeting is slot 5. See TheUnderstudyCode/Character/TheUnderstudy.cs.",
   "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.0-0r.next": "Continue",
-  "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.0-1r.ancient": "You return? I killed you once already - and you never even raised your hands.",
-  "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.0-1r.next": "Confess",
-  "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.0-2r.char": "I froze. I couldn't fight you. I'm still not sure I can.",
-  "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.0-2r.next": "Continue",
-  "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.0-3r.ancient": "A student who will not fight his master. You are my student no longer.",
+  "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.0-1r.ancient": "UNUSED SLOT - never rendered. See the line above.",
   "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.0-attack": "Architect",
   "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.0-visit": "99",
 
