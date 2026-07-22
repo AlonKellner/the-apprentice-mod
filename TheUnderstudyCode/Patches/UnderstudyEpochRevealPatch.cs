@@ -40,7 +40,7 @@ internal static class UnderstudyEpochReveal
     internal const string Dreamless       = "THEUNDERSTUDY1_EPOCH"; // beat Act 1
     internal const string BoyInTheCity    = "THEUNDERSTUDY5_EPOCH"; // 15 Bosses
     internal const string NothingLikeHim  = "THEUNDERSTUDY6_EPOCH"; // 15 Elites
-    internal const string Consumed        = "THEUNDERSTUDY4_EPOCH"; // Ascension 1
+    internal const string Consumed        = "THEUNDERSTUDY4_EPOCH"; // Ascension 1+
 
     internal static void Obtain(ProgressState progress, Player player, string epochId)
     {
@@ -145,7 +145,7 @@ public static class UnderstudyEpochPostRunRevealPatch
             var progress = SaveManager.Instance.Progress;
 
             UnderstudyEpochReveal.Obtain(progress, serializablePlayer, UnderstudyEpochReveal.PerfectMirror); // finishing the run at all
-            if (victory && serializableRun.Ascension == 1)
+            if (victory && serializableRun.Ascension >= 1)
                 UnderstudyEpochReveal.Obtain(progress, serializablePlayer, UnderstudyEpochReveal.Consumed);
         }
         catch (Exception e)
