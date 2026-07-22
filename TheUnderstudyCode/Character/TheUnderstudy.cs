@@ -29,15 +29,15 @@ namespace TheUnderstudy.TheUnderstudyCode.Character;
 // finds dialogues with a loop that stops at the first missing index, so a gap at 0 would hide every
 // later dialogue.
 //
-// Hence the layout: slot 0 is a real repeating exchange shaped to those required keys (char speaks
-// first, the Architect answers — which is why it is the only one that opens on his line), and the
-// first meeting lives in slot 5 with no "r" and "5-visit": "0".
+// Hence the layout: slot 0 is a real repeating exchange shaped to those required keys — which is why
+// it is the only one that opens on the Understudy's line, and why it is two lines rather than three.
+// The first meeting lives in slot 4 with no "r" and "4-visit": "0".
 //
 // Every repeating slot carries "-visit": "1" so they form one random pool from the second meeting
 // onward, rather than each being pinned to its own visit number — a run rarely reaches the Architect
 // often enough for the higher-numbered ones to ever be seen otherwise.
 //
-// Net effect: visit 0 plays slot 5 and never recurs; visit 1 onward picks at random among slots 0-4.
+// Net effect: visit 0 plays slot 4 and never recurs; visit 1 onward picks at random among slots 0-3.
 // Renumbering the slots, deleting slot 0, or dropping a "-visit" key will break part of this.
 public class TheUnderstudy : PlaceholderCharacterModel
 {
