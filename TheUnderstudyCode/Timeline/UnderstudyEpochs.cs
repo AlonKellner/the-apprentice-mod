@@ -9,12 +9,14 @@ namespace TheUnderstudy.TheUnderstudyCode.Timeline;
 // them reachable from Neow and obtainable on the same progress conditions base characters use.
 //
 // IDs are numbered by narrative chronology (1..7). Timeline PLACEMENT (Era/EraPosition) weaves each
-// chapter in next to the base epoch it belongs beside (columns run left-to-right by ascending EpochEra;
-// within a column EraPosition 0 = bottom, higher = up = "after"). Anchors: "The Architect" =
-// Colorless2Epoch @ Prehistoria2 pos0; "Ancients" = Relic2Epoch @ Seeds1 pos1; "Underdocks" @
-// Invitation1 pos4. Every cell below was checked free against a full base-epoch audit. REVEAL order is
-// deliberately different (driven by which condition each unlocks on) to land the twists — see
-// UnderstudyEpochRevealPatch.
+// chapter in next to the base epoch it belongs beside. Reading order: columns left-to-right by ascending
+// EpochEra; within a column the render is TOP-to-bottom, and EraPosition 0 = bottom, higher = top — so a
+// HIGHER position renders EARLIER ("before") and a lower position renders later ("after"). "After" the
+// bottom of a column therefore means the top of the NEXT column. Anchors: "The Architect" =
+// Colorless2Epoch @ Prehistoria2 pos0 (bottom); "Seeds"/"Elsewhere" = Seeds0 pos0/pos1; "Ancients" =
+// Relic2Epoch @ Seeds1 pos1; "Underdocks" @ Invitation1 pos4. Every cell below was checked free against a
+// full base-epoch audit. REVEAL order is deliberately different (driven by which condition each unlocks
+// on) to land the twists — see UnderstudyEpochRevealPatch.
 //
 // Pure lore: QueueUnlocks does nothing (BaseLib already unlocks every Understudy card). Title,
 // Description, UnlockInfo, and UnlockText all resolve from the mod's epochs.json by convention.
@@ -28,29 +30,31 @@ public abstract class UnderstudyEpoch : EpochModel
     public override void QueueUnlocks() { }
 }
 
-// 1 — Dreamless. Immediately after "The Architect" (Prehistoria2 pos0); nearest free cell above the
-// Silent6/"Nemesis" slot at pos1. Reveals on: Beat Act 3.
+// 1 — Dreamless. After "The Architect" (bottom of Prehistoria2) = top of the next column, Seeds0;
+// pos2 renders directly above "Elsewhere" (pos1) / "Seeds" (pos0). Reveals on: Beat Act 3.
 public sealed class Understudy1Epoch : UnderstudyEpoch
 {
     public override string Id => "THEUNDERSTUDY1_EPOCH";
-    public override EpochEra Era => EpochEra.Prehistoria2;
+    public override EpochEra Era => EpochEra.Seeds0;
     public override int EraPosition => 2;
 }
 
-// 2 — The Ending He Designed. Immediately after "Ancients" (Relic2 @ Seeds1 pos1). Reveals on: Beat Act 1.
+// 2 — The Ending He Designed. Immediately after "Ancients" (Relic2 @ Seeds1 pos1) = directly below it
+// at pos0. Reveals on: Beat Act 1.
 public sealed class Understudy2Epoch : UnderstudyEpoch
 {
     public override string Id => "THEUNDERSTUDY2_EPOCH";
     public override EpochEra Era => EpochEra.Seeds1;
-    public override int EraPosition => 2;
+    public override int EraPosition => 0;
 }
 
-// 3 — A Perfect Mirror. Immediately after "The Ending He Designed" (Seeds1 pos2). Reveals on: Finish a run.
+// 3 — A Perfect Mirror. Immediately after "The Ending He Designed" (bottom of Seeds1) = top of the next
+// column, Seeds2 (pos4). Reveals on: Finish a run.
 public sealed class Understudy3Epoch : UnderstudyEpoch
 {
     public override string Id => "THEUNDERSTUDY3_EPOCH";
-    public override EpochEra Era => EpochEra.Seeds1;
-    public override int EraPosition => 3;
+    public override EpochEra Era => EpochEra.Seeds2;
+    public override int EraPosition => 4;
 }
 
 // 4 — Consumed (Blight — the child unmade). Reveals on: Complete Ascension 1 (the gut-punch, last).
