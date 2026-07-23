@@ -85,7 +85,14 @@ public class FateKnocking : UnderstudyCard
 
         // Finisher: deal that running sum as a single hit. Its own damage is not summed back in, so
         // it doesn't compound play-to-play.
+        //
+        // Passes cardPlay explicitly, like the strikes above. The shorter overload that takes only a
+        // target is deprecated ("will be required for the beta branch") and forwarded with a null
+        // CardPlay, so this both clears the warning and stops the finisher being the one attack on
+        // this card with no play context. ValueProp.Move is what that overload supplied by default —
+        // it is the powered-attack flag, which is what lets Tuned's damage bonus apply.
         if (total > 0)
-            await CommonActions.CardAttack(card, cardPlay.Target, (decimal)total).Execute(context);
+            await CommonActions.CardAttack(card, cardPlay, cardPlay.Target, (decimal)total, ValueProp.Move)
+                .Execute(context);
     }
 }
