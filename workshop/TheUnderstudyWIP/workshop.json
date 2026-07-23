@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.12.0: all player-facing text now lives in the localization files, making it editable and translatable in one place.",
+  "changeNote": "v1.12.1: Standing By now costs 2 and upgrades to 1; the freed card is always random.",
   "tags": [],
   "dependencies": [
     3737335127

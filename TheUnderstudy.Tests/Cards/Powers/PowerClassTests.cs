@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Reflection;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.Models;
@@ -138,17 +139,8 @@ public class PowerClassTests
         Assert.Equal(PowerStackType.Counter, p.StackType);
     }
 
-    [Fact]
-    public void StandingByChoicePower_IsBuff_Counter()
-    {
-        var p = new BalancedChoicePower();
-        Assert.Equal(PowerType.Buff, p.Type);
-        Assert.Equal(PowerStackType.Counter, p.StackType);
-    }
-
-    // Random (base) and choice (upgraded) are two independent powers that both present as the same
-    // "Balanced" badge — same name and (via the shared base's override) same icon — differing
-    // only in tooltip: "random attack or skill" vs "attack or skill of your choice".
+    // Upgrading Standing By reduces its cost rather than switching how freed cards are chosen, so
+    // there is one power and the selection is always random — no player-choice variant exists.
     [Fact]
     public void StandingByPower_Localization_IsRandom()
     {
@@ -159,26 +151,12 @@ public class PowerClassTests
     }
 
     [Fact]
-    public void StandingByChoicePower_Localization_IsChoice()
+    public void StandingBy_HasNoPlayerChoiceVariant()
     {
-        var p = new BalancedChoicePower();
-        Assert.Equal("Balanced", LocText.Of(p)[0].Item2);
-        Assert.Contains("of your choice", LocText.Of(p)[1].Item2);
-        Assert.Contains("of your choice", LocText.Of(p)[2].Item2);
-    }
-
-    [Fact]
-    public void StandingByPowers_ShareBaseAndIcon()
-    {
-        // Both derive from the shared base...
-        Assert.IsAssignableFrom<BalancedPowerBase>(new BalancedPower());
-        Assert.IsAssignableFrom<BalancedPowerBase>(new BalancedChoicePower());
-        // ...and neither re-declares the icon path, so the base's single override drives both
-        // (guarantees an identical badge icon without invoking Godot's ResourceLoader here).
-        var randomIcon = typeof(BalancedPower).GetProperty("CustomPackedIconPath")!.DeclaringType;
-        var choiceIcon = typeof(BalancedChoicePower).GetProperty("CustomPackedIconPath")!.DeclaringType;
-        Assert.Equal(typeof(BalancedPowerBase), randomIcon);
-        Assert.Equal(typeof(BalancedPowerBase), choiceIcon);
+        var powers = typeof(BalancedPower).Assembly.GetTypes()
+            .Where(t => t.Name.StartsWith("Balanced") && typeof(PowerModel).IsAssignableFrom(t))
+            .Select(t => t.Name).ToList();
+        Assert.Equal(new[] { "BalancedPower" }, powers);
     }
 
     [Fact]

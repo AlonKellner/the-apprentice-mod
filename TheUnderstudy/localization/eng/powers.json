@@ -165,9 +165,5 @@
 
   "THEUNDERSTUDY-BALANCED_POWER.title": "Balanced",
   "THEUNDERSTUDY-BALANCED_POWER.description": "Whenever a card becomes [gold]Unplayable[/gold], remove [gold]Unplayable[/gold] from 1 random attack or skill in hand.",
-  "THEUNDERSTUDY-BALANCED_POWER.smartDescription": "Whenever a card becomes [gold]Unplayable[/gold], remove [gold]Unplayable[/gold] from {Amount} random attack or skill in hand.",
-
-  "THEUNDERSTUDY-BALANCED_CHOICE_POWER.title": "Balanced",
-  "THEUNDERSTUDY-BALANCED_CHOICE_POWER.description": "Whenever a card becomes [gold]Unplayable[/gold], remove [gold]Unplayable[/gold] from 1 attack or skill of your choice in hand.",
-  "THEUNDERSTUDY-BALANCED_CHOICE_POWER.smartDescription": "Whenever a card becomes [gold]Unplayable[/gold], remove [gold]Unplayable[/gold] from {Amount} attack or skill of your choice in hand."
+  "THEUNDERSTUDY-BALANCED_POWER.smartDescription": "Whenever a card becomes [gold]Unplayable[/gold], remove [gold]Unplayable[/gold] from {Amount} random attack or skill in hand."
 }
