@@ -65,7 +65,7 @@ public class TheUnderstudy : PlaceholderCharacterModel
 
     public override IReadOnlyList<RelicModel> StartingRelics =>
     [
-        ModelDb.Relic<ShamefulGift>()
+        ModelDb.Relic<FalseMask>()
     ];
 
     public override CardPoolModel CardPool => ModelDb.CardPool<TheUnderstudyCardPool>();

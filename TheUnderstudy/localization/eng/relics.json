@@ -1,11 +1,11 @@
 {
-  "THEUNDERSTUDY-SHAMEFUL_GIFT.title": "Shameful Gift",
-  "THEUNDERSTUDY-SHAMEFUL_GIFT.description": "Start each combat [gold]Weak[/gold].\nSelect the first card of your initial hand.",
-  "THEUNDERSTUDY-SHAMEFUL_GIFT.selectionPrompt": "Select a card to add to your hand.",
-  "THEUNDERSTUDY-SHAMEFUL_GIFT.flavor": "The cost of knowing exactly what you need.",
+  "THEUNDERSTUDY-FALSE_MASK.title": "False Mask",
+  "THEUNDERSTUDY-FALSE_MASK.description": "Start each combat [gold]Weak[/gold].\nSelect the first card of your initial hand.",
+  "THEUNDERSTUDY-FALSE_MASK.selectionPrompt": "Select a card to add to your hand.",
+  "THEUNDERSTUDY-FALSE_MASK.flavor": "The cost of knowing exactly what you need.",
 
-  "THEUNDERSTUDY-HARD_EARNED_FEAT.title": "Hard Earned Feat",
-  "THEUNDERSTUDY-HARD_EARNED_FEAT.description": "Start each combat with 2 [gold]Unweak[/gold].\nSelect the first 2 cards of your initial hand.",
-  "THEUNDERSTUDY-HARD_EARNED_FEAT.selectionPrompt": "Select 2 cards to add to your hand.",
-  "THEUNDERSTUDY-HARD_EARNED_FEAT.flavor": "What once weighed you down now lifts you up."
+  "THEUNDERSTUDY-TRUE_MASK.title": "True Mask",
+  "THEUNDERSTUDY-TRUE_MASK.description": "Start each combat with 2 [gold]Unweak[/gold].\nSelect the first 2 cards of your initial hand.",
+  "THEUNDERSTUDY-TRUE_MASK.selectionPrompt": "Select 2 cards to add to your hand.",
+  "THEUNDERSTUDY-TRUE_MASK.flavor": "What once weighed you down now lifts you up."
 }

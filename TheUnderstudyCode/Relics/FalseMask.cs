@@ -10,19 +10,19 @@ using TheUnderstudy.TheUnderstudyCode.Cards;
 
 namespace TheUnderstudy.TheUnderstudyCode.Relics;
 
-public class ShamefulGift : UnderstudyStarterRelic
+public class FalseMask : UnderstudyStarterRelic
 {
     protected override int SelectCount => 1;
 
     protected override LocString SelectionPrompt =>
-        new("relics", "THEUNDERSTUDY-SHAMEFUL_GIFT.selectionPrompt");
+        new("relics", "THEUNDERSTUDY-FALSE_MASK.selectionPrompt");
 
     // Show the Weak keyword tooltip on hover — the relic's [gold]Weak[/gold] description doesn't
-    // auto-expand a power's tip, so add it explicitly (mirrors Hard Earned Feat's Unweak tip).
+    // auto-expand a power's tip, so add it explicitly (mirrors True Mask's Unweak tip).
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
         new[] { HoverTipFactory.FromPower<WeakPower>() };
 
-    public override RelicModel? GetUpgradeReplacement() => ModelDb.Relic<HardEarnedFeat>();
+    public override RelicModel? GetUpgradeReplacement() => ModelDb.Relic<TrueMask>();
 
     protected override async Task ApplyOnTurnOneSetup(PlayerChoiceContext ctx, Creature creature) =>
         await EmotionalExpression.ApplyWeakToSelf(ctx, creature, 1, null);

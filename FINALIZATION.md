@@ -53,7 +53,7 @@ Everything mechanical works; the mod largely *looks* unfinished because most art
 - Same convention: drop `<slug>_power.png` in `images/powers/` and `images/powers/big/`.
 
 ### 1.3 Relic art — all 9 missing
-- No `images/relics/` directory exists. All 9 relics (`ShamefulGift, HardEarnedFeat, CueLight,
+- No `images/relics/` directory exists. All 9 relics (`FalseMask, TrueMask, CueLight,
   FoldableStage, Greasepaint, Lozenge, Rosin, SafetyNet, Score`) render with the default/fallback
   relic sprite.
 - **Needed:** relic sprites + wire up the icon path in the relic base (mirror the `UnderstudyPower`
