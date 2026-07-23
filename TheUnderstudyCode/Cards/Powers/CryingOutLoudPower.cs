@@ -17,10 +17,6 @@ public class CryingOutLoudPower : UnderstudyPower
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Counter;
 
-    public override List<(string, string)> Localization => new PowerLoc(
-        "Crying Out Loud",
-        "Whenever a debuff of yours clears, gain {Amount} Vigor.",
-        "Whenever a debuff of yours clears, gain {Amount} Vigor.");
 
     public override Task AfterApplied(Creature? creature, CardModel? cardSource)
     {

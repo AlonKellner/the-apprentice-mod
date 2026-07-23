@@ -18,10 +18,6 @@ public class EnjoyTheRidePower : UnderstudyPower
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Counter;
 
-    public override List<(string, string)> Localization => new PowerLoc(
-        "Enjoy the Ride",
-        "At the end of your turn, [gold]Invert[/gold] this many.",
-        "At the end of your turn, [gold]Invert[/gold] [blue]{Amount}[/blue].");
 
     public override async Task BeforeSideTurnEnd(PlayerChoiceContext context, CombatSide side, IEnumerable<Creature> creatures)
     {

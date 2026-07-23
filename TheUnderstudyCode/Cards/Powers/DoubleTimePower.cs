@@ -20,10 +20,6 @@ public class DoubleTimePower : UnderstudyPower
     // "description" (shown via GetDumbHoverTip when another card previews this Power, and stays
     // static/singular there) versus "smartDescription" (the live in-combat tooltip, dynamic on
     // Amount via SmartFormat's built-in `plural` formatter — {Amount:plural:time|times}).
-    public override List<(string, string)> Localization => new PowerLoc(
-        "Double Time",
-        "All [gold]invertible[/gold] buff and debuff gains are applied an additional time.",
-        "All [gold]invertible[/gold] buff and debuff gains are applied [blue]{Amount}[/blue] additional {Amount:plural:time|times}.");
 
     // Derived from the single source of truth — every power in any InvertiblePairs.All entry (incl.
     // Doom/Undoom). Drives Double Time's repeat AND BasePowerTooltipSuffixPatch.IsInvertible.

@@ -23,10 +23,6 @@ public class Rosin : CustomRelicModel
 {
     public override RelicRarity Rarity => RelicRarity.Uncommon;
 
-    public override List<(string, string)>? Localization => new RelicLoc(
-        "Rosin",
-        "Whenever you apply [gold]Tuned[/gold] to a card with no [gold]Tuned[/gold], apply an additional [gold]Tuned[/gold].",
-        "A little draws every string tighter.");
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
         new[] { HoverTipFactory.FromKeyword(UnderstudyKeywords.Tuned) };

@@ -18,10 +18,6 @@ public class UnvulnerablePower : UnderstudyPower
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Counter;
 
-    public override List<(string, string)> Localization => new PowerLoc(
-        "Unvulnerable",
-        "Unvulnerable creatures take [blue]25%[/blue] less damage from Attacks. Cancels out with Vulnerable. [gold]Invertible[/gold]. [gold]Swappable[/gold].",
-        "Unvulnerable creatures take [blue]25%[/blue] less damage from Attacks. Cancels out with Vulnerable. [gold]Invertible[/gold]. [gold]Swappable[/gold].");
 
     public override decimal ModifyDamageMultiplicative(Creature? target, decimal amount, ValueProp props, Creature? dealer, CardModel? cardSource, CardPlay? cardPlay)
     {

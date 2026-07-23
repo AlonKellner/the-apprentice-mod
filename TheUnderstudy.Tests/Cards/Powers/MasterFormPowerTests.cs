@@ -20,9 +20,9 @@ public class MasterFormPowerTests
     public void Localization_MentionsReplay_NotUnplayableOrPlannedOrTuned()
     {
         var p = new MasterFormPower();
-        Assert.Contains(p.Localization, entry => entry.Item2.Contains("[gold]Replay[/gold]"));
-        Assert.DoesNotContain(p.Localization, entry => entry.Item2.Contains("Unplayable"));
-        Assert.DoesNotContain(p.Localization, entry => entry.Item2.Contains("Planned"));
-        Assert.DoesNotContain(p.Localization, entry => entry.Item2.Contains("Tuned"));
+        Assert.Contains(LocText.Of(p), entry => entry.Item2.Contains("[gold]Replay[/gold]"));
+        Assert.DoesNotContain(LocText.Of(p), entry => entry.Item2.Contains("Unplayable"));
+        Assert.DoesNotContain(LocText.Of(p), entry => entry.Item2.Contains("Planned"));
+        Assert.DoesNotContain(LocText.Of(p), entry => entry.Item2.Contains("Tuned"));
     }
 }

@@ -38,7 +38,6 @@ public class InvertTrackerPower : UnderstudyPower
 
     protected override bool IsVisibleInternal => false;
 
-    public override List<(string, string)> Localization => new PowerLoc("Invert Tracker", "", "");
 
     // Only one interception can be "in flight" at a time (TryModifyPowerAmountReceived always runs to
     // completion, synchronously, before AfterModifyingPowerAmountReceived is called for that same event),

@@ -17,10 +17,6 @@ public class PunishedPower : UnderstudyPower
     public override PowerType Type => PowerType.Debuff;
     public override PowerStackType StackType => PowerStackType.Counter;
 
-    public override List<(string, string)> Localization => new PowerLoc(
-        "Punished",
-        "Every turn, apply this many of a random [gold]invertible[/gold] debuff to yourself.",
-        "Every turn, apply {Amount} of a random [gold]invertible[/gold] debuff to yourself.");
 
     public override async Task AfterPlayerTurnStartLate(PlayerChoiceContext context, Player player)
     {

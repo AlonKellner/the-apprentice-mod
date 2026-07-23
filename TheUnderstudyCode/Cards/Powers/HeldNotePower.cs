@@ -11,10 +11,6 @@ public class HeldNotePower : UnderstudyPower
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Counter;
 
-    public override List<(string, string)> Localization => new PowerLoc(
-        "Held Note",
-        "Turn-based buffs and debuffs no longer decrease by 1 each turn.",
-        "Turn-based buffs and debuffs no longer decrease by 1 each turn.");
 
     // Two suppression paths cover every turn-based buff/debuff while Held Note is on the owner:
     //   1. Base-game duration powers (Weak, Vulnerable, Frail, Blur, Intangible, Temporary

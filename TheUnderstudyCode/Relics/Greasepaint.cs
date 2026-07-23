@@ -22,10 +22,6 @@ public class Greasepaint : UnderstudyCounterRelic
     public override RelicRarity Rarity => RelicRarity.Uncommon;
     protected override int Threshold => 5;
 
-    public override List<(string, string)>? Localization => new RelicLoc(
-        "Greasepaint",
-        "Every 5 debuffs applied to you, apply 2 [gold]Vulnerable[/gold] to a random enemy.",
-        "Wear the wound as a mask; let them see it and flinch.");
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
         new[] { HoverTipFactory.FromPower<VulnerablePower>() };

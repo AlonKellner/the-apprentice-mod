@@ -34,7 +34,6 @@ public class TunedLockPower : UnderstudyPower
 
     protected override bool IsVisibleInternal => false;
 
-    public override List<(string, string)> Localization => new PowerLoc("Tuned Lock", "", "");
 
     // Pure decision (no combat state, no ModelDb, no Log.*): a card should be locked exactly when this
     // is its final Tuned play and it isn't already locked. The decision is a function of (card, play)

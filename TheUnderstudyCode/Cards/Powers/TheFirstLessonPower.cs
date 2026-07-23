@@ -12,10 +12,6 @@ public class TheFirstLessonPower : UnderstudyPower
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Single;
 
-    public override List<(string, string)> Localization => new PowerLoc(
-        "The First Lesson",
-        "You cannot become [gold]Weak[/gold] or [gold]Vulnerable[/gold].",
-        "You cannot become [gold]Weak[/gold] or [gold]Vulnerable[/gold].");
 
     public override bool TryModifyPowerAmountReceived(
         PowerModel canonicalPower, Creature target, decimal amount, Creature? applier, out decimal modifiedAmount)

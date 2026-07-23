@@ -21,10 +21,6 @@ public class ShakenPower : UnderstudyPower
     public override PowerType Type => PowerType.Debuff;
     public override PowerStackType StackType => PowerStackType.Counter;
 
-    public override List<(string, string)> Localization => new PowerLoc(
-        "Shaken",
-        "At the end of your turn, add [gold]Unplayable[/gold] to all [gold]Attacks[/gold] and [gold]Skills[/gold] in your hand. [gold]Invertible[/gold].",
-        "At the end of your turn, add [gold]Unplayable[/gold] to all [gold]Attacks[/gold] and [gold]Skills[/gold] in your hand. [gold]Invertible[/gold].");
 
     public override async Task BeforeSideTurnEnd(PlayerChoiceContext context, CombatSide side, IEnumerable<Creature> creatures)
     {

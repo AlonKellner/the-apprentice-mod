@@ -7,5 +7,33 @@
   "THEUNDERSTUDY-TRUE_MASK.title": "True Mask",
   "THEUNDERSTUDY-TRUE_MASK.description": "Start each combat with 2 [gold]Unweak[/gold].\nSelect the first 2 cards of your initial hand.",
   "THEUNDERSTUDY-TRUE_MASK.selectionPrompt": "Select 2 cards to add to your hand.",
-  "THEUNDERSTUDY-TRUE_MASK.flavor": "What once weighed you down now lifts you up."
+  "THEUNDERSTUDY-TRUE_MASK.flavor": "What once weighed you down now lifts you up.",
+
+  "THEUNDERSTUDY-CUE_LIGHT.title": "Cue Light",
+  "THEUNDERSTUDY-CUE_LIGHT.description": "Every 5 cards that become [gold]Unplayable[/gold], apply 2 [gold]Weak[/gold] to a random enemy.",
+  "THEUNDERSTUDY-CUE_LIGHT.flavor": "Every missed entrance is the enemy's cue to falter.",
+
+  "THEUNDERSTUDY-FOLDABLE_STAGE.title": "Foldable Stage",
+  "THEUNDERSTUDY-FOLDABLE_STAGE.description": "You may Enchant a card with [gold]Tuned[/gold] at Rest Sites.",
+  "THEUNDERSTUDY-FOLDABLE_STAGE.flavor": "Rehearse anywhere; the boards travel with you.",
+
+  "THEUNDERSTUDY-GREASEPAINT.title": "Greasepaint",
+  "THEUNDERSTUDY-GREASEPAINT.description": "Every 5 debuffs applied to you, apply 2 [gold]Vulnerable[/gold] to a random enemy.",
+  "THEUNDERSTUDY-GREASEPAINT.flavor": "Wear the wound as a mask; let them see it and flinch.",
+
+  "THEUNDERSTUDY-LOZENGE.title": "Lozenge",
+  "THEUNDERSTUDY-LOZENGE.description": "At the start of your turn, gain 2 [gold]Vigor[/gold].",
+  "THEUNDERSTUDY-LOZENGE.flavor": "For the voice that must go on.",
+
+  "THEUNDERSTUDY-ROSIN.title": "Rosin",
+  "THEUNDERSTUDY-ROSIN.description": "Whenever you apply [gold]Tuned[/gold] to a card with no [gold]Tuned[/gold], apply an additional [gold]Tuned[/gold].",
+  "THEUNDERSTUDY-ROSIN.flavor": "A little draws every string tighter.",
+
+  "THEUNDERSTUDY-SAFETY_NET.title": "Safety Net",
+  "THEUNDERSTUDY-SAFETY_NET.description": "Start each combat with 1 [gold]Unvulnerable[/gold] and 1 [gold]Unfrail[/gold].",
+  "THEUNDERSTUDY-SAFETY_NET.flavor": "No fall is too far when someone's rigged the catch.",
+
+  "THEUNDERSTUDY-SCORE.title": "Score",
+  "THEUNDERSTUDY-SCORE.description": "You may Enchant a card with [gold]Planned[/gold] at Rest Sites.",
+  "THEUNDERSTUDY-SCORE.flavor": "Every entrance and exit, written down in advance."
 }

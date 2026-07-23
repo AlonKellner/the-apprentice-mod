@@ -83,37 +83,19 @@ public class OrderModifierTests
         Assert.False(OrderModifier.CanApplyTo(card));
     }
 
-    // ModifyDescriptionPost — prepends (not appends) the Order line as the card's first line.
+    // Decorate — the styling half of ModifyDescriptionPost, prepending (not appending) the Order as
+    // the card's first line. The words now come from the loc table, which the bare test host cannot
+    // load, so the pure formatting seam is what is asserted here; the text itself is checked against
+    // the shipping JSON in LocFileTests.
 
     [Fact]
-    public void ModifyDescriptionPost_PlayThis_PrependsExactLine()
-    {
-        var mod = new OrderModifier { OrderKind = OrderModifier.Kind.PlayThis };
-        var args = new object?[] { null, "base description" };
-        typeof(OrderModifier).GetMethod("ModifyDescriptionPost")!.Invoke(mod, args);
-        Assert.Equal("[red][sine]Play this card.[/sine][/red]\nbase description", (string)args[1]!);
-    }
+    public void Decorate_PrependsOrderAsFirstLine() =>
+        Assert.Equal("[red][sine]Play this card.[/sine][/red]\nbase description",
+            OrderModifier.Decorate("Play this card.", "base description"));
 
     [Fact]
-    public void ModifyDescriptionPost_DontPlayThis_PrependsExactLine()
-    {
-        var mod = new OrderModifier { OrderKind = OrderModifier.Kind.DontPlayThis };
-        var args = new object?[] { null, "base description" };
-        typeof(OrderModifier).GetMethod("ModifyDescriptionPost")!.Invoke(mod, args);
-        Assert.Equal("[red][sine]Don't play this card.[/sine][/red]\nbase description", (string)args[1]!);
-    }
-
-    [Fact]
-    public void ModifyDescriptionPost_FlavorOnly_PrependsFlavorText()
-    {
-        var mod = new OrderModifier { OrderKind = OrderModifier.Kind.FlavorOnly, FlavorText = "Stand still." };
-        var args = new object?[] { null, "base description" };
-        typeof(OrderModifier).GetMethod("ModifyDescriptionPost")!.Invoke(mod, args);
-        Assert.Equal("[red][sine]Stand still.[/sine][/red]\nbase description", (string)args[1]!);
-    }
-
-    [Fact]
-    public void FlavorLines_HasExpectedCount() => Assert.Equal(17, OrderModifier.FlavorLines.Length);
+    public void Decorate_EmptyText_LeavesDescriptionUntouched() =>
+        Assert.Equal("base description", OrderModifier.Decorate("", "base description"));
 
     [Fact]
     public void WasPlayed_DefaultsToFalse() => Assert.False(new OrderModifier().WasPlayed);

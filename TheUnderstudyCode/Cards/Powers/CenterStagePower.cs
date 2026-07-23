@@ -14,10 +14,6 @@ public class CenterStagePower : UnderstudyPower
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Counter;
 
-    public override List<(string, string)> Localization => new PowerLoc(
-        "Center Stage",
-        "At the start of your next turn, [gold]Invert[/gold] this many.",
-        "At the start of your next turn, [gold]Invert[/gold] [blue]{Amount}[/blue].");
 
     // One-shot: fires exactly once on the very next turn start, then removes itself outright
     // rather than decaying — unlike the recurring Un-X powers (UnshakenPower et al.), this isn't

@@ -78,7 +78,7 @@ public class PlannedCounterPowerTests
     public void PlannedCounterPower_Localization_MentionsPlanned()
     {
         var p = new PlannedCounterPower();
-        Assert.Contains(p.Localization, entry => entry.Item2.Contains("Planned"));
+        Assert.Contains(LocText.Of(p), entry => entry.Item2.Contains("Planned"));
     }
 
     [Fact]

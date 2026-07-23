@@ -18,10 +18,6 @@ public class AutoTunePower : UnderstudyPower
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Counter;
 
-    public override List<(string, string)> Localization => new PowerLoc(
-        "Auto Tune",
-        "At the start of your turn, increase all [gold]Tuned[/gold] by {Amount}.",
-        "At the start of your turn, increase all [gold]Tuned[/gold] by {Amount}.");
 
     public override Task AfterPlayerTurnStartLate(PlayerChoiceContext context, Player player)
     {

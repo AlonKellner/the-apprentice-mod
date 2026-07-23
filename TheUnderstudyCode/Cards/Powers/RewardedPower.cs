@@ -21,10 +21,6 @@ public class RewardedPower : UnderstudyPower
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Counter;
 
-    public override List<(string, string)> Localization => new PowerLoc(
-        "Rewarded",
-        "Every turn, apply this many of a random [gold]invertible[/gold] buff to yourself.",
-        "Every turn, apply {Amount} of a random [gold]invertible[/gold] buff to yourself.");
 
     // Same hook SecondLessonPower assigns Orders in (post energy-refill and draw), so the buff still
     // lands at the point in the turn it always has.

@@ -17,10 +17,6 @@ public class MusePower : UnderstudyPower
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Counter;
 
-    public override List<(string, string)> Localization => new PowerLoc(
-        "Muse",
-        "At the start of your turn, apply [gold]Planned[/gold] to this many cards.",
-        "At the start of your turn, apply [gold]Planned[/gold] to [blue]{Amount}[/blue] {Amount:plural:card|cards}.");
 
     public override async Task AfterPlayerTurnStartLate(PlayerChoiceContext context, Player player)
     {

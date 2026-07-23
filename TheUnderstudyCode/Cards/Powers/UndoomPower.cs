@@ -19,10 +19,6 @@ public class UndoomPower : UnderstudyPower
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Counter;
 
-    public override List<(string, string)> Localization => new PowerLoc(
-        "Undoom",
-        "At the end of the opponent's turn, if this creature has less than [blue]this much[/blue] HP, it heals up to that much. [gold]Invertible[/gold]. [gold]Swappable[/gold].",
-        "At the end of the opponent's turn, if this creature has less than [blue]{Amount}[/blue] HP, it heals up to that much. [gold]Invertible[/gold]. [gold]Swappable[/gold].");
 
     public override async Task AfterSideTurnEnd(PlayerChoiceContext context, CombatSide side, IEnumerable<Creature> participants)
     {

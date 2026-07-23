@@ -46,7 +46,7 @@ public class NewRelicTests
     [MemberData(nameof(Relics))]
     public void Relic_HasNonEmptyLocalization(Type type, RelicRarity _)
     {
-        var loc = Create(type).Localization;
+        var loc = LocText.Of(type);
         Assert.NotNull(loc);
         Assert.NotEmpty(loc!);
     }

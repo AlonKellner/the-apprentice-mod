@@ -23,10 +23,6 @@ public class UntaintedPower : UnderstudyPower
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Counter;
 
-    public override List<(string, string)> Localization => new PowerLoc(
-        "Untainted",
-        "This creature takes [blue]this much[/blue] less damage from [gold]Attacks[/gold] this turn. [gold]Invertible[/gold]. [gold]Swappable[/gold].",
-        "This creature takes [blue]this much[/blue] less damage from [gold]Attacks[/gold] this turn. [gold]Invertible[/gold]. [gold]Swappable[/gold].");
 
     public override decimal ModifyDamageAdditive(Creature? target, decimal amount, ValueProp props, Creature? dealer, CardModel? cardSource, CardPlay? cardPlay)
     {

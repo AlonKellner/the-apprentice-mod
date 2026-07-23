@@ -13,10 +13,6 @@ public class StereoPower : UnderstudyPower
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Counter;
 
-    public override List<(string, string)> Localization => new PowerLoc(
-        "Stereo",
-        "Double all gained [gold]Vigor[/gold].",
-        "Double all gained [gold]Vigor[/gold], {Amount:plural:time|times}.");
 
     public static decimal ComputeMultiplier(int stacks) => (decimal)Math.Pow(2, stacks);
 

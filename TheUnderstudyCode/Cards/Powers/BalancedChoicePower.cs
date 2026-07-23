@@ -15,7 +15,6 @@ namespace TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 // independently of BalancedPower (the random variant); both share the "Balanced" badge.
 public class BalancedChoicePower : BalancedPowerBase
 {
-    protected override string SelectionFragment => "attack or skill of your choice";
 
     protected override async Task<IReadOnlyList<CardModel>> SelectCards(
         PlayerChoiceContext context, Player player, IReadOnlyList<CardModel> candidates, int count)

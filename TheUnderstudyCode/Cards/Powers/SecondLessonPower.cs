@@ -51,10 +51,6 @@ public class SecondLessonPower : UnderstudyPower
     // the base game's TheBombPower uses to keep each bomb ticking down separately).
     public override PowerInstanceType InstanceType => PowerInstanceType.Instanced;
 
-    public override List<(string, string)> Localization => new PowerLoc(
-        "The Second Lesson",
-        "Each turn, some cards will have an [red][sine]Order[/sine][/red]. Obeying grants [gold]Rewarded[/gold]; disobeying grants [gold]Punished[/gold].",
-        "Each turn, some cards will have an [red][sine]Order[/sine][/red]. Obeying grants [gold]Rewarded[/gold]; disobeying grants [gold]Punished[/gold].");
 
     // ── Per-instance state ───────────────────────────────────────────────────────────────────
     // This MUST live behind InitInternalData/GetInternalData rather than in ordinary fields, and the

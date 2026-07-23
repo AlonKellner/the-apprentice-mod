@@ -19,10 +19,6 @@ public class UntensionPower : UnderstudyPower
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Counter;
 
-    public override List<(string, string)> Localization => new PowerLoc(
-        "Untension",
-        "At the end of its turn, this creature heals HP equal to its Untension, then it's removed. [gold]Invertible[/gold]. [gold]Swappable[/gold].",
-        "At the end of its turn, this creature heals HP equal to its Untension, then it's removed. [gold]Invertible[/gold]. [gold]Swappable[/gold].");
 
     public override async Task BeforeSideTurnEnd(PlayerChoiceContext context, CombatSide side, IEnumerable<Creature> participants)
     {

@@ -36,13 +36,7 @@ public abstract class BalancedPowerBase : UnderstudyPower
     public override string? CustomPackedIconPath => "standingby.png".PowerImagePath();
     public override string? CustomBigIconPath => "standingby.png".BigPowerImagePath();
 
-    // The tooltip fragment describing HOW a freed card is picked, spliced into the shared text.
-    protected abstract string SelectionFragment { get; }
 
-    public override List<(string, string)> Localization => new PowerLoc(
-        "Balanced",
-        $"Whenever a card becomes [gold]Unplayable[/gold], remove [gold]Unplayable[/gold] from 1 {SelectionFragment} in hand.",
-        $"Whenever a card becomes [gold]Unplayable[/gold], remove [gold]Unplayable[/gold] from {{Amount}} {SelectionFragment} in hand.");
 
     // Behind InitInternalData rather than an ordinary field: a power reaches combat through
     // ToMutable() -> MutableClone(), a MemberwiseClone that copies reference fields BY REFERENCE, so

@@ -19,10 +19,6 @@ public class UnshakenPower : UnderstudyPower
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Counter;
 
-    public override List<(string, string)> Localization => new PowerLoc(
-        "Unshaken",
-        "At the start of your turn, remove [gold]Unplayable[/gold] from all [gold]Attacks[/gold] and [gold]Skills[/gold] in your hand. [gold]Invertible[/gold].",
-        "At the start of your turn, remove [gold]Unplayable[/gold] from all [gold]Attacks[/gold] and [gold]Skills[/gold] in your hand. [gold]Invertible[/gold].");
 
     public override async Task AfterPlayerTurnStart(PlayerChoiceContext context, Player player)
     {

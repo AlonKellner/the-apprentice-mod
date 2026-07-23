@@ -15,10 +15,6 @@ public class ApathyPower : UnderstudyPower
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Counter;
 
-    public override List<(string, string)> Localization => new PowerLoc(
-        "Apathy",
-        "[gold]Invertible[/gold] debuffs applied to you are reduced by 1.",
-        "[gold]Invertible[/gold] debuffs applied to you are reduced by {Amount}.");
 
     // Pure reduction of a single invertible-debuff application toward zero, by reduceBy, clamped so
     // it never overshoots past 0 into the opposite sign. Two shapes:

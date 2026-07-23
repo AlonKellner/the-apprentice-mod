@@ -19,10 +19,6 @@ public class Lozenge : CustomRelicModel
 {
     public override RelicRarity Rarity => RelicRarity.Uncommon;
 
-    public override List<(string, string)>? Localization => new RelicLoc(
-        "Lozenge",
-        "At the start of your turn, gain 2 [gold]Vigor[/gold].",
-        "For the voice that must go on.");
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
         new[] { HoverTipFactory.FromPower<VigorPower>() };

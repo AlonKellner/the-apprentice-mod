@@ -14,10 +14,6 @@ public class StagePresencePower : UnderstudyPower
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Single;
 
-    public override List<(string, string)> Localization => new PowerLoc(
-        "Stage Presence",
-        "At the start of your turn, [gold]Swap[/gold].",
-        "At the start of your turn, [gold]Swap[/gold].");
 
     public override async Task AfterPlayerTurnStart(PlayerChoiceContext context, Player player)
     {

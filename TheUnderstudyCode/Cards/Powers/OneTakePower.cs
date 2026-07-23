@@ -15,10 +15,6 @@ public class OneTakePower : UnderstudyPower
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Counter;
 
-    public override List<(string, string)> Localization => new PowerLoc(
-        "One Take",
-        "Decrease all card costs by 1. Apply [gold]Unplayable[/gold] to every played card.",
-        "Decrease all card costs by {Amount}. Apply [gold]Unplayable[/gold] to every played card.");
 
     public override bool TryModifyEnergyCostInCombat(CardModel card, decimal originalCost, out decimal modifiedCost)
     {

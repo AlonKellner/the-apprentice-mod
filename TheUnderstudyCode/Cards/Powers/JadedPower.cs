@@ -23,10 +23,6 @@ public class JadedPower : UnderstudyPower
     // and EnergyIconsFormatter also accepts a plain string value with the icon count passed as
     // a literal formatter argument — {energyPrefix:energyIcons(1)} — so the count no longer
     // needs to be baked into the string via manual repetition.
-    public override List<(string, string)> Localization => new PowerLoc(
-        "Jaded",
-        "Lose {energyPrefix:energyIcons(1)} at the start of your next turn. [gold]Invertible[/gold].",
-        "Lose {energyPrefix:energyIcons(1)} at the start of your next turn. [gold]Invertible[/gold].");
 
     // The natural per-turn energy refill (PlayerCombatState.ResetEnergy/AddMaxEnergyToCurrent,
     // called directly from CombatManager.SetupPlayerTurn) is a raw field mutation that bypasses

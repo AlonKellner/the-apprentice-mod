@@ -21,10 +21,6 @@ public class ReverbPower : UnderstudyPower
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Counter;
 
-    public override List<(string, string)> Localization => new PowerLoc(
-        "Reverb",
-        "When you use [gold]Vigor[/gold], you keep it.",
-        "When you use [gold]Vigor[/gold], you keep it. Lasts [blue]{Amount}[/blue] more {Amount:plural:turn|turns}.");
 
     // Checked from the sealed-VigorPower Harmony patch (mirrors MuscleMemoryPower/HeldNotePower.IsActive).
     // Presence-only, so it's unaffected by the stacking Amount.

@@ -20,10 +20,6 @@ public class ResourcefulPower : UnderstudyPower
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Counter;
 
-    public override List<(string, string)> Localization => new PowerLoc(
-        "Resourceful",
-        "The first time you have an [gold]Unplayable[/gold] card in hand each turn, draw this many cards.",
-        "The first time you have an [gold]Unplayable[/gold] card in hand each turn, draw {Amount} cards.");
 
     private bool _triggeredThisTurn;
 

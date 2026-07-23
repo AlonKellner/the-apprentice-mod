@@ -13,10 +13,6 @@ public class MasterFormPower : UnderstudyPower
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Counter;
 
-    public override List<(string, string)> Localization => new PowerLoc(
-        "Master Form",
-        "When attacks or skills without [gold]Replay[/gold] are played, they gain [gold]Replay[/gold].",
-        "When attacks or skills without [gold]Replay[/gold] are played, they gain [gold]Replay[/gold] [blue]{Amount}[/blue].");
 
     // Generic (character-agnostic) "X Form": any Attack or Skill the owner plays that doesn't already
     // have Replay gains it, so it replays from then on. Idempotent — once BaseReplayCount is non-zero

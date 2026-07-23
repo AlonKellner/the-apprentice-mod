@@ -1,1 +1,173 @@
-{}
+{
+  "THEUNDERSTUDY-ANOTHER_BRICK_POWER.title": "Another Brick",
+  "THEUNDERSTUDY-ANOTHER_BRICK_POWER.description": "Whenever a debuff is applied to you, gain {Amount} Block.",
+  "THEUNDERSTUDY-ANOTHER_BRICK_POWER.smartDescription": "Whenever a debuff is applied to you, gain {Amount} Block.",
+
+  "THEUNDERSTUDY-APATHY_POWER.title": "Apathy",
+  "THEUNDERSTUDY-APATHY_POWER.description": "[gold]Invertible[/gold] debuffs applied to you are reduced by 1.",
+  "THEUNDERSTUDY-APATHY_POWER.smartDescription": "[gold]Invertible[/gold] debuffs applied to you are reduced by {Amount}.",
+
+  "THEUNDERSTUDY-AUTO_TUNE_POWER.title": "Auto Tune",
+  "THEUNDERSTUDY-AUTO_TUNE_POWER.description": "At the start of your turn, increase all [gold]Tuned[/gold] by {Amount}.",
+  "THEUNDERSTUDY-AUTO_TUNE_POWER.smartDescription": "At the start of your turn, increase all [gold]Tuned[/gold] by {Amount}.",
+
+  "THEUNDERSTUDY-BRIGHT_SIDE_POWER.title": "Bright Side",
+  "THEUNDERSTUDY-BRIGHT_SIDE_POWER.description": "At the start of your turn, [gold]Invert[/gold] this many.",
+  "THEUNDERSTUDY-BRIGHT_SIDE_POWER.smartDescription": "At the start of your turn, [gold]Invert[/gold] {Amount}.",
+
+  "THEUNDERSTUDY-CENTER_STAGE_POWER.title": "Center Stage",
+  "THEUNDERSTUDY-CENTER_STAGE_POWER.description": "At the start of your next turn, [gold]Invert[/gold] this many.",
+  "THEUNDERSTUDY-CENTER_STAGE_POWER.smartDescription": "At the start of your next turn, [gold]Invert[/gold] [blue]{Amount}[/blue].",
+
+  "THEUNDERSTUDY-CRYING_OUT_LOUD_POWER.title": "Crying Out Loud",
+  "THEUNDERSTUDY-CRYING_OUT_LOUD_POWER.description": "Whenever a debuff of yours clears, gain {Amount} Vigor.",
+  "THEUNDERSTUDY-CRYING_OUT_LOUD_POWER.smartDescription": "Whenever a debuff of yours clears, gain {Amount} Vigor.",
+
+  "THEUNDERSTUDY-DOUBLE_TIME_POWER.title": "Double Time",
+  "THEUNDERSTUDY-DOUBLE_TIME_POWER.description": "All [gold]invertible[/gold] buff and debuff gains are applied an additional time.",
+  "THEUNDERSTUDY-DOUBLE_TIME_POWER.smartDescription": "All [gold]invertible[/gold] buff and debuff gains are applied [blue]{Amount}[/blue] additional {Amount:plural:time|times}.",
+
+  "THEUNDERSTUDY-ENJOY_THE_RIDE_POWER.title": "Enjoy the Ride",
+  "THEUNDERSTUDY-ENJOY_THE_RIDE_POWER.description": "At the end of your turn, [gold]Invert[/gold] this many.",
+  "THEUNDERSTUDY-ENJOY_THE_RIDE_POWER.smartDescription": "At the end of your turn, [gold]Invert[/gold] [blue]{Amount}[/blue].",
+
+  "THEUNDERSTUDY-FINAL_LESSON_POWER.title": "The Final Lesson",
+  "THEUNDERSTUDY-FINAL_LESSON_POWER.description": "You cannot lose HP. At the end of your turn, if this is your 3rd turn since gaining this, you die.",
+  "THEUNDERSTUDY-FINAL_LESSON_POWER.smartDescription": "You cannot lose HP. {Amount} turn(s) remaining before you die.",
+
+  "THEUNDERSTUDY-HELD_NOTE_POWER.title": "Held Note",
+  "THEUNDERSTUDY-HELD_NOTE_POWER.description": "Turn-based buffs and debuffs no longer decrease by 1 each turn.",
+  "THEUNDERSTUDY-HELD_NOTE_POWER.smartDescription": "Turn-based buffs and debuffs no longer decrease by 1 each turn.",
+
+  "THEUNDERSTUDY-INTERMISSION_POWER.title": "Intermission",
+  "THEUNDERSTUDY-INTERMISSION_POWER.description": "When you end your turn without playing any card, play all [gold]Planned[/gold] cards.",
+  "THEUNDERSTUDY-INTERMISSION_POWER.smartDescription": "When you end your turn without playing any card, play all [gold]Planned[/gold] cards.",
+
+  "THEUNDERSTUDY-INVERT_TRACKER_POWER.title": "Invert Tracker",
+  "THEUNDERSTUDY-INVERT_TRACKER_POWER.description": "",
+  "THEUNDERSTUDY-INVERT_TRACKER_POWER.smartDescription": "",
+
+  "THEUNDERSTUDY-JADED_POWER.title": "Jaded",
+  "THEUNDERSTUDY-JADED_POWER.description": "Lose {energyPrefix:energyIcons(1)} at the start of your next turn. [gold]Invertible[/gold].",
+  "THEUNDERSTUDY-JADED_POWER.smartDescription": "Lose {energyPrefix:energyIcons(1)} at the start of your next turn. [gold]Invertible[/gold].",
+
+  "THEUNDERSTUDY-LIMITED_POWER.title": "Limited",
+  "THEUNDERSTUDY-LIMITED_POWER.description": "Draw 1 fewer card at the start of your next turn. [gold]Invertible[/gold].",
+  "THEUNDERSTUDY-LIMITED_POWER.smartDescription": "Draw 1 fewer card at the start of your next turn. [gold]Invertible[/gold].",
+
+  "THEUNDERSTUDY-MASTER_FORM_POWER.title": "Master Form",
+  "THEUNDERSTUDY-MASTER_FORM_POWER.description": "When attacks or skills without [gold]Replay[/gold] are played, they gain [gold]Replay[/gold].",
+  "THEUNDERSTUDY-MASTER_FORM_POWER.smartDescription": "When attacks or skills without [gold]Replay[/gold] are played, they gain [gold]Replay[/gold] [blue]{Amount}[/blue].",
+
+  "THEUNDERSTUDY-MUSCLE_MEMORY_POWER.title": "Muscle Memory",
+  "THEUNDERSTUDY-MUSCLE_MEMORY_POWER.description": "[gold]Tuned[/gold] cards will not become [gold]Unplayable[/gold].",
+  "THEUNDERSTUDY-MUSCLE_MEMORY_POWER.smartDescription": "[gold]Tuned[/gold] cards will not become [gold]Unplayable[/gold].",
+
+  "THEUNDERSTUDY-MUSE_POWER.title": "Muse",
+  "THEUNDERSTUDY-MUSE_POWER.description": "At the start of your turn, apply [gold]Planned[/gold] to this many cards.",
+  "THEUNDERSTUDY-MUSE_POWER.smartDescription": "At the start of your turn, apply [gold]Planned[/gold] to [blue]{Amount}[/blue] {Amount:plural:card|cards}.",
+
+  "THEUNDERSTUDY-MY_OWN_LESSON_POWER.title": "My Own Lesson",
+  "THEUNDERSTUDY-MY_OWN_LESSON_POWER.description": "Whenever you gain an [gold]Invertible[/gold] debuff, gain a buff instead. Whenever you gain an [gold]Invertible[/gold] buff, gain nothing instead.",
+  "THEUNDERSTUDY-MY_OWN_LESSON_POWER.smartDescription": "Whenever you gain an [gold]Invertible[/gold] debuff, gain a buff instead. Whenever you gain an [gold]Invertible[/gold] buff, gain nothing instead.",
+
+  "THEUNDERSTUDY-ONE_TAKE_POWER.title": "One Take",
+  "THEUNDERSTUDY-ONE_TAKE_POWER.description": "Decrease all card costs by 1. Apply [gold]Unplayable[/gold] to every played card.",
+  "THEUNDERSTUDY-ONE_TAKE_POWER.smartDescription": "Decrease all card costs by {Amount}. Apply [gold]Unplayable[/gold] to every played card.",
+
+  "THEUNDERSTUDY-PERFECTIONISM_POWER.title": "Perfectionism",
+  "THEUNDERSTUDY-PERFECTIONISM_POWER.description": "At the start of your turn, apply [gold]Tuned[/gold] to this many cards.",
+  "THEUNDERSTUDY-PERFECTIONISM_POWER.smartDescription": "At the start of your turn, apply [gold]Tuned[/gold] to [blue]{Amount}[/blue] {Amount:plural:card|cards}.",
+
+  "THEUNDERSTUDY-PUNISHED_POWER.title": "Punished",
+  "THEUNDERSTUDY-PUNISHED_POWER.description": "Every turn, apply this many of a random [gold]invertible[/gold] debuff to yourself.",
+  "THEUNDERSTUDY-PUNISHED_POWER.smartDescription": "Every turn, apply {Amount} of a random [gold]invertible[/gold] debuff to yourself.",
+
+  "THEUNDERSTUDY-RESOURCEFUL_POWER.title": "Resourceful",
+  "THEUNDERSTUDY-RESOURCEFUL_POWER.description": "The first time you have an [gold]Unplayable[/gold] card in hand each turn, draw this many cards.",
+  "THEUNDERSTUDY-RESOURCEFUL_POWER.smartDescription": "The first time you have an [gold]Unplayable[/gold] card in hand each turn, draw {Amount} cards.",
+
+  "THEUNDERSTUDY-REVERB_POWER.title": "Reverb",
+  "THEUNDERSTUDY-REVERB_POWER.description": "When you use [gold]Vigor[/gold], you keep it.",
+  "THEUNDERSTUDY-REVERB_POWER.smartDescription": "When you use [gold]Vigor[/gold], you keep it. Lasts [blue]{Amount}[/blue] more {Amount:plural:turn|turns}.",
+
+  "THEUNDERSTUDY-REWARDED_POWER.title": "Rewarded",
+  "THEUNDERSTUDY-REWARDED_POWER.description": "Every turn, apply this many of a random [gold]invertible[/gold] buff to yourself.",
+  "THEUNDERSTUDY-REWARDED_POWER.smartDescription": "Every turn, apply {Amount} of a random [gold]invertible[/gold] buff to yourself.",
+
+  "THEUNDERSTUDY-SECOND_LESSON_POWER.title": "The Second Lesson",
+  "THEUNDERSTUDY-SECOND_LESSON_POWER.description": "Each turn, some cards will have an [red][sine]Order[/sine][/red]. Obeying grants [gold]Rewarded[/gold]; disobeying grants [gold]Punished[/gold].",
+  "THEUNDERSTUDY-SECOND_LESSON_POWER.smartDescription": "Each turn, some cards will have an [red][sine]Order[/sine][/red]. Obeying grants [gold]Rewarded[/gold]; disobeying grants [gold]Punished[/gold].",
+
+  "THEUNDERSTUDY-SHAKEN_POWER.title": "Shaken",
+  "THEUNDERSTUDY-SHAKEN_POWER.description": "At the end of your turn, add [gold]Unplayable[/gold] to all [gold]Attacks[/gold] and [gold]Skills[/gold] in your hand. [gold]Invertible[/gold].",
+  "THEUNDERSTUDY-SHAKEN_POWER.smartDescription": "At the end of your turn, add [gold]Unplayable[/gold] to all [gold]Attacks[/gold] and [gold]Skills[/gold] in your hand. [gold]Invertible[/gold].",
+
+  "THEUNDERSTUDY-STAGE_PRESENCE_POWER.title": "Stage Presence",
+  "THEUNDERSTUDY-STAGE_PRESENCE_POWER.description": "At the start of your turn, [gold]Swap[/gold].",
+  "THEUNDERSTUDY-STAGE_PRESENCE_POWER.smartDescription": "At the start of your turn, [gold]Swap[/gold].",
+
+  "THEUNDERSTUDY-STEREO_POWER.title": "Stereo",
+  "THEUNDERSTUDY-STEREO_POWER.description": "Double all gained [gold]Vigor[/gold].",
+  "THEUNDERSTUDY-STEREO_POWER.smartDescription": "Double all gained [gold]Vigor[/gold], {Amount:plural:time|times}.",
+
+  "THEUNDERSTUDY-TENSION_POWER.title": "Tension",
+  "THEUNDERSTUDY-TENSION_POWER.description": "At the end of its turn, this creature takes damage equal to its Tension, then it's removed. [gold]Invertible[/gold]. [gold]Swappable[/gold].",
+  "THEUNDERSTUDY-TENSION_POWER.smartDescription": "At the end of its turn, this creature takes damage equal to its Tension, then it's removed. [gold]Invertible[/gold]. [gold]Swappable[/gold].",
+
+  "THEUNDERSTUDY-THE_FIRST_LESSON_POWER.title": "The First Lesson",
+  "THEUNDERSTUDY-THE_FIRST_LESSON_POWER.description": "You cannot become [gold]Weak[/gold] or [gold]Vulnerable[/gold].",
+  "THEUNDERSTUDY-THE_FIRST_LESSON_POWER.smartDescription": "You cannot become [gold]Weak[/gold] or [gold]Vulnerable[/gold].",
+
+  "THEUNDERSTUDY-TUNED_LOCK_POWER.title": "Tuned Lock",
+  "THEUNDERSTUDY-TUNED_LOCK_POWER.description": "",
+  "THEUNDERSTUDY-TUNED_LOCK_POWER.smartDescription": "",
+
+  "THEUNDERSTUDY-UNDOOM_POWER.title": "Undoom",
+  "THEUNDERSTUDY-UNDOOM_POWER.description": "At the end of the opponent's turn, if this creature has less than [blue]this much[/blue] HP, it heals up to that much. [gold]Invertible[/gold]. [gold]Swappable[/gold].",
+  "THEUNDERSTUDY-UNDOOM_POWER.smartDescription": "At the end of the opponent's turn, if this creature has less than [blue]{Amount}[/blue] HP, it heals up to that much. [gold]Invertible[/gold]. [gold]Swappable[/gold].",
+
+  "THEUNDERSTUDY-UNFRAIL_POWER.title": "Unfrail",
+  "THEUNDERSTUDY-UNFRAIL_POWER.description": "Unfrail creatures gain [blue]25%[/blue] more Block. Cancels out with Frail. [gold]Invertible[/gold]. [gold]Swappable[/gold].",
+  "THEUNDERSTUDY-UNFRAIL_POWER.smartDescription": "Unfrail creatures gain [blue]25%[/blue] more Block. Cancels out with Frail. [gold]Invertible[/gold]. [gold]Swappable[/gold].",
+
+  "THEUNDERSTUDY-UNJADED_POWER.title": "Unjaded",
+  "THEUNDERSTUDY-UNJADED_POWER.description": "Gain {energyPrefix:energyIcons(3)} at the start of your next turn. [gold]Invertible[/gold].",
+  "THEUNDERSTUDY-UNJADED_POWER.smartDescription": "Gain {energyPrefix:energyIcons(3)} at the start of your next turn. [gold]Invertible[/gold].",
+
+  "THEUNDERSTUDY-UNLIMITED_POWER.title": "Unlimited",
+  "THEUNDERSTUDY-UNLIMITED_POWER.description": "At the start of your next turn, draw until your hand is full. [gold]Invertible[/gold].",
+  "THEUNDERSTUDY-UNLIMITED_POWER.smartDescription": "At the start of your next turn, draw until your hand is full. [gold]Invertible[/gold].",
+
+  "THEUNDERSTUDY-UNSHAKEN_POWER.title": "Unshaken",
+  "THEUNDERSTUDY-UNSHAKEN_POWER.description": "At the start of your turn, remove [gold]Unplayable[/gold] from all [gold]Attacks[/gold] and [gold]Skills[/gold] in your hand. [gold]Invertible[/gold].",
+  "THEUNDERSTUDY-UNSHAKEN_POWER.smartDescription": "At the start of your turn, remove [gold]Unplayable[/gold] from all [gold]Attacks[/gold] and [gold]Skills[/gold] in your hand. [gold]Invertible[/gold].",
+
+  "THEUNDERSTUDY-UNTAINTED_POWER.title": "Untainted",
+  "THEUNDERSTUDY-UNTAINTED_POWER.description": "This creature takes [blue]this much[/blue] less damage from [gold]Attacks[/gold] this turn. [gold]Invertible[/gold]. [gold]Swappable[/gold].",
+  "THEUNDERSTUDY-UNTAINTED_POWER.smartDescription": "This creature takes [blue]this much[/blue] less damage from [gold]Attacks[/gold] this turn. [gold]Invertible[/gold]. [gold]Swappable[/gold].",
+
+  "THEUNDERSTUDY-UNTENSION_POWER.title": "Untension",
+  "THEUNDERSTUDY-UNTENSION_POWER.description": "At the end of its turn, this creature heals HP equal to its Untension, then it's removed. [gold]Invertible[/gold]. [gold]Swappable[/gold].",
+  "THEUNDERSTUDY-UNTENSION_POWER.smartDescription": "At the end of its turn, this creature heals HP equal to its Untension, then it's removed. [gold]Invertible[/gold]. [gold]Swappable[/gold].",
+
+  "THEUNDERSTUDY-UNVULNERABLE_POWER.title": "Unvulnerable",
+  "THEUNDERSTUDY-UNVULNERABLE_POWER.description": "Unvulnerable creatures take [blue]25%[/blue] less damage from Attacks. Cancels out with Vulnerable. [gold]Invertible[/gold]. [gold]Swappable[/gold].",
+  "THEUNDERSTUDY-UNVULNERABLE_POWER.smartDescription": "Unvulnerable creatures take [blue]25%[/blue] less damage from Attacks. Cancels out with Vulnerable. [gold]Invertible[/gold]. [gold]Swappable[/gold].",
+
+  "THEUNDERSTUDY-UNWEAK_POWER.title": "Unweak",
+  "THEUNDERSTUDY-UNWEAK_POWER.description": "Unweakened creatures deal [blue]25%[/blue] more damage with Attacks. Cancels out with Weak. [gold]Invertible[/gold]. [gold]Swappable[/gold].",
+  "THEUNDERSTUDY-UNWEAK_POWER.smartDescription": "Unweakened creatures deal [blue]25%[/blue] more damage with Attacks. Cancels out with Weak. [gold]Invertible[/gold]. [gold]Swappable[/gold].",
+
+  "THEUNDERSTUDY-PLANNED_COUNTER_POWER.title": "Planned",
+  "THEUNDERSTUDY-PLANNED_COUNTER_POWER.description": "{Header}{CardList}",
+  "THEUNDERSTUDY-PLANNED_COUNTER_POWER.smartDescription": "{Header}{CardList}",
+
+  "THEUNDERSTUDY-BALANCED_POWER.title": "Balanced",
+  "THEUNDERSTUDY-BALANCED_POWER.description": "Whenever a card becomes [gold]Unplayable[/gold], remove [gold]Unplayable[/gold] from 1 random attack or skill in hand.",
+  "THEUNDERSTUDY-BALANCED_POWER.smartDescription": "Whenever a card becomes [gold]Unplayable[/gold], remove [gold]Unplayable[/gold] from {Amount} random attack or skill in hand.",
+
+  "THEUNDERSTUDY-BALANCED_CHOICE_POWER.title": "Balanced",
+  "THEUNDERSTUDY-BALANCED_CHOICE_POWER.description": "Whenever a card becomes [gold]Unplayable[/gold], remove [gold]Unplayable[/gold] from 1 attack or skill of your choice in hand.",
+  "THEUNDERSTUDY-BALANCED_CHOICE_POWER.smartDescription": "Whenever a card becomes [gold]Unplayable[/gold], remove [gold]Unplayable[/gold] from {Amount} attack or skill of your choice in hand."
+}

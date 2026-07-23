@@ -62,7 +62,7 @@ public class PowerClassTests
     public void LimitedPower_Localization_MentionsDrawFewer()
     {
         var p = new LimitedPower();
-        var descriptions = p.Localization.Where(e => e.Item1 == "description").Select(e => e.Item2);
+        var descriptions = LocText.Of(p).Where(e => e.Item1 == "description").Select(e => e.Item2);
         Assert.All(descriptions, d => Assert.Contains("fewer", d, StringComparison.OrdinalIgnoreCase));
     }
 
@@ -70,7 +70,7 @@ public class PowerClassTests
     public void UnlimitedPower_Localization_MentionsHandFull()
     {
         var p = new UnlimitedPower();
-        var descriptions = p.Localization.Where(e => e.Item1 == "description").Select(e => e.Item2);
+        var descriptions = LocText.Of(p).Where(e => e.Item1 == "description").Select(e => e.Item2);
         Assert.All(descriptions, d => Assert.Contains("full", d, StringComparison.OrdinalIgnoreCase));
     }
 
@@ -91,11 +91,11 @@ public class PowerClassTests
     [Fact]
     public void AllPowers_Localization_IsNonEmpty()
     {
-        Assert.NotEmpty(new PlannedCounterPower().Localization);
-        Assert.NotEmpty(new UnweakPower().Localization);
-        Assert.NotEmpty(new UnvulnerablePower().Localization);
-        Assert.NotEmpty(new LimitedPower().Localization);
-        Assert.NotEmpty(new UnlimitedPower().Localization);
+        Assert.NotEmpty(LocText.Of(new PlannedCounterPower()));
+        Assert.NotEmpty(LocText.Of(new UnweakPower()));
+        Assert.NotEmpty(LocText.Of(new UnvulnerablePower()));
+        Assert.NotEmpty(LocText.Of(new LimitedPower()));
+        Assert.NotEmpty(LocText.Of(new UnlimitedPower()));
     }
 
     [Fact]
@@ -153,18 +153,18 @@ public class PowerClassTests
     public void StandingByPower_Localization_IsRandom()
     {
         var p = new BalancedPower();
-        Assert.Equal("Balanced", p.Localization[0].Item2);
-        Assert.Contains("random", p.Localization[1].Item2);
-        Assert.Contains("random", p.Localization[2].Item2);
+        Assert.Equal("Balanced", LocText.Of(p)[0].Item2);
+        Assert.Contains("random", LocText.Of(p)[1].Item2);
+        Assert.Contains("random", LocText.Of(p)[2].Item2);
     }
 
     [Fact]
     public void StandingByChoicePower_Localization_IsChoice()
     {
         var p = new BalancedChoicePower();
-        Assert.Equal("Balanced", p.Localization[0].Item2);
-        Assert.Contains("of your choice", p.Localization[1].Item2);
-        Assert.Contains("of your choice", p.Localization[2].Item2);
+        Assert.Equal("Balanced", LocText.Of(p)[0].Item2);
+        Assert.Contains("of your choice", LocText.Of(p)[1].Item2);
+        Assert.Contains("of your choice", LocText.Of(p)[2].Item2);
     }
 
     [Fact]
@@ -310,18 +310,18 @@ public class PowerClassTests
     [Fact]
     public void NewPowers_Localization_IsNonEmpty()
     {
-        Assert.NotEmpty(new JadedPower().Localization);
-        Assert.NotEmpty(new UnjadedPower().Localization);
-        Assert.NotEmpty(new CryingOutLoudPower().Localization);
-        Assert.NotEmpty(new BalancedPower().Localization);
-        Assert.NotEmpty(new DoubleTimePower().Localization);
-        Assert.NotEmpty(new MasterFormPower().Localization);
-        Assert.NotEmpty(new HeldNotePower().Localization);
-        Assert.NotEmpty(new TheFirstLessonPower().Localization);
-        Assert.NotEmpty(new AnotherBrickPower().Localization);
-        Assert.NotEmpty(new UnfrailPower().Localization);
-        Assert.NotEmpty(new InvertTrackerPower().Localization);
-        Assert.NotEmpty(new UndoomPower().Localization);
+        Assert.NotEmpty(LocText.Of(new JadedPower()));
+        Assert.NotEmpty(LocText.Of(new UnjadedPower()));
+        Assert.NotEmpty(LocText.Of(new CryingOutLoudPower()));
+        Assert.NotEmpty(LocText.Of(new BalancedPower()));
+        Assert.NotEmpty(LocText.Of(new DoubleTimePower()));
+        Assert.NotEmpty(LocText.Of(new MasterFormPower()));
+        Assert.NotEmpty(LocText.Of(new HeldNotePower()));
+        Assert.NotEmpty(LocText.Of(new TheFirstLessonPower()));
+        Assert.NotEmpty(LocText.Of(new AnotherBrickPower()));
+        Assert.NotEmpty(LocText.Of(new UnfrailPower()));
+        Assert.NotEmpty(LocText.Of(new InvertTrackerPower()));
+        Assert.NotEmpty(LocText.Of(new UndoomPower()));
     }
 
     [Fact]
@@ -330,7 +330,7 @@ public class PowerClassTests
         var p = new FinalLessonPower();
         Assert.Equal(PowerType.Buff, p.Type);
         Assert.Equal(PowerStackType.Counter, p.StackType);
-        Assert.NotEmpty(p.Localization);
+        Assert.NotEmpty(LocText.Of(p));
     }
 
     [Fact]
@@ -353,7 +353,7 @@ public class PowerClassTests
         var p = new MyOwnLessonPower();
         Assert.Equal(PowerType.Buff, p.Type);
         Assert.Equal(PowerStackType.Single, p.StackType);
-        Assert.NotEmpty(p.Localization);
+        Assert.NotEmpty(LocText.Of(p));
     }
 
     // Proves the swap logic correctly stayed centralized on InvertTrackerPower rather than
@@ -376,7 +376,7 @@ public class PowerClassTests
         var p = new SecondLessonPower();
         Assert.Equal(PowerType.Buff, p.Type);
         Assert.Equal(PowerStackType.Single, p.StackType);
-        Assert.NotEmpty(p.Localization);
+        Assert.NotEmpty(LocText.Of(p));
     }
 
     [Fact]
@@ -393,7 +393,7 @@ public class PowerClassTests
         var p = new RewardedPower();
         Assert.Equal(PowerType.Buff, p.Type);
         Assert.Equal(PowerStackType.Counter, p.StackType);
-        Assert.NotEmpty(p.Localization);
+        Assert.NotEmpty(LocText.Of(p));
     }
 
     [Fact]
@@ -402,7 +402,7 @@ public class PowerClassTests
         var p = new PunishedPower();
         Assert.Equal(PowerType.Debuff, p.Type);
         Assert.Equal(PowerStackType.Counter, p.StackType);
-        Assert.NotEmpty(p.Localization);
+        Assert.NotEmpty(LocText.Of(p));
     }
 
     // Both counters apply themselves on their own turn-start hook. They are singletons fed by any
@@ -427,7 +427,7 @@ public class PowerClassTests
         var p = new MusePower();
         Assert.Equal(PowerType.Buff, p.Type);
         Assert.Equal(PowerStackType.Counter, p.StackType);
-        Assert.NotEmpty(p.Localization);
+        Assert.NotEmpty(LocText.Of(p));
     }
 
     [Fact]
@@ -441,7 +441,7 @@ public class PowerClassTests
         var p = new PerfectionismPower();
         Assert.Equal(PowerType.Buff, p.Type);
         Assert.Equal(PowerStackType.Counter, p.StackType);
-        Assert.NotEmpty(p.Localization);
+        Assert.NotEmpty(LocText.Of(p));
     }
 
     [Fact]
@@ -455,7 +455,7 @@ public class PowerClassTests
         var p = new MuscleMemoryPower();
         Assert.Equal(PowerType.Buff, p.Type);
         Assert.Equal(PowerStackType.Single, p.StackType);
-        Assert.NotEmpty(p.Localization);
+        Assert.NotEmpty(LocText.Of(p));
     }
 
     [Fact]
@@ -469,7 +469,7 @@ public class PowerClassTests
         Assert.Equal(PowerType.Buff, p.Type);
         // Counter (not Single) so the stacking turn-count is visible.
         Assert.Equal(PowerStackType.Counter, p.StackType);
-        Assert.NotEmpty(p.Localization);
+        Assert.NotEmpty(LocText.Of(p));
     }
 
     [Fact]
@@ -487,7 +487,7 @@ public class PowerClassTests
         var p = new EnjoyTheRidePower();
         Assert.Equal(PowerType.Buff, p.Type);
         Assert.Equal(PowerStackType.Counter, p.StackType);
-        Assert.NotEmpty(p.Localization);
+        Assert.NotEmpty(LocText.Of(p));
     }
 
     // Now a one-shot end-of-turn Invert (like Bright Side's hook but self-removing), no longer
@@ -508,7 +508,7 @@ public class PowerClassTests
     [Fact]
     public void PulledPunchPower_Localization_MentionsInvertible()
     {
-        var descriptions = new ApathyPower().Localization
+        var descriptions = LocText.Of(new ApathyPower())
             .Where(e => e.Item1 == "description" || e.Item1 == "smartDescription")
             .Select(e => e.Item2);
         Assert.All(descriptions, d => Assert.Contains("invertible", d, StringComparison.OrdinalIgnoreCase));
@@ -533,7 +533,7 @@ public class PowerClassTests
     [Fact]
     public void OneTakePower_Localization_MentionsUnplayable()
     {
-        var descriptions = new OneTakePower().Localization
+        var descriptions = LocText.Of(new OneTakePower())
             .Where(e => e.Item1 == "description" || e.Item1 == "smartDescription")
             .Select(e => e.Item2);
         Assert.All(descriptions, d => Assert.Contains("Unplayable", d));
@@ -560,7 +560,7 @@ public class PowerClassTests
     [Fact]
     public void AdLibPower_Localization_MentionsInvert()
     {
-        var descriptions = new BrightSidePower().Localization
+        var descriptions = LocText.Of(new BrightSidePower())
             .Where(e => e.Item1 == "description" || e.Item1 == "smartDescription")
             .Select(e => e.Item2);
         Assert.All(descriptions, d => Assert.Contains("Invert", d, StringComparison.OrdinalIgnoreCase));
@@ -582,7 +582,7 @@ public class PowerClassTests
     [Fact]
     public void StereoPower_Localization_MentionsVigor()
     {
-        var descriptions = new StereoPower().Localization
+        var descriptions = LocText.Of(new StereoPower())
             .Where(e => e.Item1 == "description" || e.Item1 == "smartDescription")
             .Select(e => e.Item2);
         Assert.All(descriptions, d => Assert.Contains("Vigor", d));
@@ -604,7 +604,7 @@ public class PowerClassTests
     [Fact]
     public void StageManagerPower_Localization_MentionsPlanned()
     {
-        var descriptions = new IntermissionPower().Localization
+        var descriptions = LocText.Of(new IntermissionPower())
             .Where(e => e.Item1 == "description" || e.Item1 == "smartDescription")
             .Select(e => e.Item2);
         Assert.All(descriptions, d => Assert.Contains("Planned", d));
@@ -633,7 +633,7 @@ public class PowerClassTests
         var p = new TensionPower();
         Assert.Equal(PowerType.Debuff, p.Type);
         Assert.Equal(PowerStackType.Counter, p.StackType);
-        Assert.NotEmpty(p.Localization);
+        Assert.NotEmpty(LocText.Of(p));
     }
 
     [Fact]
@@ -647,7 +647,7 @@ public class PowerClassTests
         var p = new UntensionPower();
         Assert.Equal(PowerType.Buff, p.Type);
         Assert.Equal(PowerStackType.Counter, p.StackType);
-        Assert.NotEmpty(p.Localization);
+        Assert.NotEmpty(LocText.Of(p));
     }
 
     [Fact]
@@ -661,7 +661,7 @@ public class PowerClassTests
         var p = new UntaintedPower();
         Assert.Equal(PowerType.Buff, p.Type);
         Assert.Equal(PowerStackType.Counter, p.StackType);
-        Assert.NotEmpty(p.Localization);
+        Assert.NotEmpty(LocText.Of(p));
     }
 
     // Untainted reduces incoming Attack damage (mirror of base Tainted) and clears at the opponent's
@@ -684,7 +684,7 @@ public class PowerClassTests
         var p = new UndoomPower();
         Assert.Equal(PowerType.Buff, p.Type);
         Assert.Equal(PowerStackType.Counter, p.StackType);
-        Assert.NotEmpty(p.Localization);
+        Assert.NotEmpty(LocText.Of(p));
     }
 
     [Fact]

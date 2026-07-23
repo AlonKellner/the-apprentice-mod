@@ -18,10 +18,6 @@ public class FoldableStage : CustomRelicModel
 {
     public override RelicRarity Rarity => RelicRarity.Uncommon;
 
-    public override List<(string, string)>? Localization => new RelicLoc(
-        "Foldable Stage",
-        "You may Enchant a card with [gold]Tuned[/gold] at Rest Sites.",
-        "Rehearse anywhere; the boards travel with you.");
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
         new[] { HoverTipFactory.FromKeyword(UnderstudyKeywords.Tuned) };

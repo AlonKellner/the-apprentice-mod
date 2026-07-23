@@ -22,10 +22,6 @@ public class CueLight : UnderstudyCounterRelic
     public override RelicRarity Rarity => RelicRarity.Uncommon;
     protected override int Threshold => 5;
 
-    public override List<(string, string)>? Localization => new RelicLoc(
-        "Cue Light",
-        "Every 5 cards that become [gold]Unplayable[/gold], apply 2 [gold]Weak[/gold] to a random enemy.",
-        "Every missed entrance is the enemy's cue to falter.");
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
         new[] { HoverTipFactory.FromPower<WeakPower>() };

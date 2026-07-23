@@ -21,10 +21,6 @@ public class TensionPower : UnderstudyPower
     public override PowerType Type => PowerType.Debuff;
     public override PowerStackType StackType => PowerStackType.Counter;
 
-    public override List<(string, string)> Localization => new PowerLoc(
-        "Tension",
-        "At the end of its turn, this creature takes damage equal to its Tension, then it's removed. [gold]Invertible[/gold]. [gold]Swappable[/gold].",
-        "At the end of its turn, this creature takes damage equal to its Tension, then it's removed. [gold]Invertible[/gold]. [gold]Swappable[/gold].");
 
     public override async Task BeforeSideTurnEnd(PlayerChoiceContext context, CombatSide side, IEnumerable<Creature> participants)
     {

@@ -4,6 +4,7 @@ using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Logging;
 using MegaCrit.Sts2.Core.Models;
 using TheUnderstudy.TheUnderstudyCode.Cards.Powers;
@@ -17,6 +18,10 @@ namespace TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
 // but this modifier owns everything about *which* Order it is and how it resolves.
 public class OrderModifier : CardModifier
 {
+    // Matches the sibling modifiers' convention (PlannedModifier/TunedModifier) and is the prefix
+    // this modifier's entries use in the card_modifiers loc table.
+    public const string ModifierId = "TheUnderstudy:Order";
+
     public enum Kind
     {
         PlayThis,
@@ -40,28 +45,27 @@ public class OrderModifier : CardModifier
     // resolving it a second time via OnTurnEndIfUnresolved.
     public bool Resolved { get; private set; }
 
-    // Flavor-only Orders never have a mechanical effect — this is the closed, easily-edited list
-    // of narrative lines a flavor Order can be given.
-    public static readonly string[] FlavorLines =
+    // ── Text ─────────────────────────────────────────────────────────────────────────────────
+    // The words themselves live in localization/eng/card_modifiers.json so they can be edited (and
+    // translated) without touching code. Only the formatting stays here.
+    private const string LocTable = "card_modifiers";
+
+    private static string Text(string key) => new LocString(LocTable, ModifierId + "." + key).GetFormattedText();
+
+    // Flavor-only Orders never have a mechanical effect — they are pure narrative. The lines are
+    // numbered from 0 in the loc file and read by scanning upward until an index is missing, the
+    // same contiguous-index convention BaseLib uses for ancient dialogue. Adding a line means
+    // appending the next number; leaving a gap silently truncates the list at the gap.
+    public static IReadOnlyList<string> FlavorLines
     {
-        "Cease this cacophony.",
-        "Tone it down.",
-        "Be quiet.",
-        "Listen to me.",
-        "Kill it.",
-        "Again.",
-        "Stop crying.",
-        "Calm down.",
-        "Don't be scared.",
-        "Look at me.",
-        "Stand still.",
-        "Wake up.",
-        "Can you kill me?",
-        "Answer my question.",
-        "Replace me.",
-        "End my story.",
-        "Die."
-    };
+        get
+        {
+            var lines = new List<string>();
+            for (int i = 0; LocString.Exists(LocTable, $"{ModifierId}.flavor.{i}"); i++)
+                lines.Add(Text($"flavor.{i}"));
+            return lines;
+        }
+    }
 
     // Attacks and Skills only, not Stable-tagged (defined fresh here rather than reusing
     // PlannedModifier.CanApplyTo, so each modifier owns its own eligibility rule), and never a card
@@ -126,16 +130,21 @@ public class OrderModifier : CardModifier
             await PowerCmd.Apply<PunishedPower>(choiceContext, creature, 1, creature, null, false);
     }
 
+    // Pure formatting, kept in code on purpose: the Order's styling is not something a translator
+    // should have to reproduce, and keeping it separate leaves a seam that can be unit-tested
+    // without a loaded loc table.
+    public static string Decorate(string text, string description) =>
+        string.IsNullOrEmpty(text) ? description : $"[red][sine]{text}[/sine][/red]\n" + description;
+
     public override void ModifyDescriptionPost(Creature? creature, ref string description)
     {
         string text = OrderKind switch
         {
-            Kind.PlayThis => "Play this card.",
-            Kind.DontPlayThis => "Don't play this card.",
+            Kind.PlayThis => Text("playThis"),
+            Kind.DontPlayThis => Text("dontPlayThis"),
             Kind.FlavorOnly => FlavorText ?? "",
             _ => ""
         };
-        if (string.IsNullOrEmpty(text)) return;
-        description = $"[red][sine]{text}[/sine][/red]\n" + description;
+        description = Decorate(text, description);
     }
 }

@@ -14,10 +14,6 @@ public class BrightSidePower : UnderstudyPower
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Counter;
 
-    public override List<(string, string)> Localization => new PowerLoc(
-        "Bright Side",
-        "At the start of your turn, [gold]Invert[/gold] this many.",
-        "At the start of your turn, [gold]Invert[/gold] {Amount}.");
 
     public override async Task AfterPlayerTurnStart(PlayerChoiceContext context, Player player)
     {

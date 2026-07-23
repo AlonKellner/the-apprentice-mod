@@ -21,10 +21,6 @@ public class FinalLessonPower : UnderstudyPower
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Counter;
 
-    public override List<(string, string)> Localization => new PowerLoc(
-        "The Final Lesson",
-        "You cannot lose HP. At the end of your turn, if this is your 3rd turn since gaining this, you die.",
-        "You cannot lose HP. {Amount} turn(s) remaining before you die.");
 
     // Late, mirroring BufferPower's own precedent: "other effects may reduce damage taken to 0 too,
     // and it's more player-friendly for them to trigger first." Functionally inert here (the result

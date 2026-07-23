@@ -16,10 +16,6 @@ public class AnotherBrickPower : UnderstudyPower
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Counter;
 
-    public override List<(string, string)> Localization => new PowerLoc(
-        "Another Brick",
-        "Whenever a debuff is applied to you, gain {Amount} Block.",
-        "Whenever a debuff is applied to you, gain {Amount} Block.");
 
     // Broader than the "last modified invertible debuff" tracker in EmotionalExpression — this fires for
     // ANY debuff gain landing on you, self- or enemy-inflicted, invertible or not. Via IsDebuffApplication

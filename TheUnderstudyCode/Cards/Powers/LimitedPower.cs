@@ -18,10 +18,6 @@ public class LimitedPower : UnderstudyPower
     public override PowerType Type => PowerType.Debuff;
     public override PowerStackType StackType => PowerStackType.Counter;
 
-    public override List<(string, string)> Localization => new PowerLoc(
-        "Limited",
-        "Draw 1 fewer card at the start of your next turn. [gold]Invertible[/gold].",
-        "Draw 1 fewer card at the start of your next turn. [gold]Invertible[/gold].");
 
     public override decimal ModifyHandDraw(Player player, decimal count)
     {

@@ -21,10 +21,6 @@ public class SafetyNet : CustomRelicModel
 {
     public override RelicRarity Rarity => RelicRarity.Common;
 
-    public override List<(string, string)>? Localization => new RelicLoc(
-        "Safety Net",
-        "Start each combat with 1 [gold]Unvulnerable[/gold] and 1 [gold]Unfrail[/gold].",
-        "No fall is too far when someone's rigged the catch.");
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips => new[]
     {

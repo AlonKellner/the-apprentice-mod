@@ -29,13 +29,6 @@ public class PlannedCounterPower : UnderstudyPower
         // are Planned.
         new[] { new StringVar("Header", EmptyHeader), new StringVar("CardList") };
 
-    private static readonly string BaseDescription = "{Header}{CardList}";
-
-    public override List<(string, string)> Localization => new PowerLoc(
-        "Planned",
-        BaseDescription,
-        BaseDescription);
-
     public override int DisplayAmount => IsMutable
         ? PlannedModifier.TotalSlotCount(PlannedModifier.RelevantCards(Owner?.Player))
         : 0;

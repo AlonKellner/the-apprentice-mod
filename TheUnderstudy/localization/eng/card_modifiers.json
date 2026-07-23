@@ -1,8 +1,30 @@
 {
   "TheUnderstudy:Planned.name": "Planned",
   "TheUnderstudy:Planned.description": "When a card becomes [gold]Planned[/gold], it also becomes [gold]Unplayable[/gold]. Some cards can play all [gold]Planned[/gold] cards in the order they were planned.",
+
   "TheUnderstudy:Tuned.name": "Tuned",
   "TheUnderstudy:Tuned.description": "Becomes [gold]Unplayable[/gold] when played. Increases damage or [gold]Block[/gold] by 1 for each card with [gold]Tuned[/gold].",
+
   "TheUnderstudy:Unplayable.name": "Unplayable",
-  "TheUnderstudy:Unplayable.description": "Cannot be played."
+  "TheUnderstudy:Unplayable.description": "Cannot be played.",
+
+  "TheUnderstudy:Order.playThis": "Play this card.",
+  "TheUnderstudy:Order.dontPlayThis": "Don't play this card.",
+  "TheUnderstudy:Order.flavor.0": "Cease this cacophony.",
+  "TheUnderstudy:Order.flavor.1": "Tone it down.",
+  "TheUnderstudy:Order.flavor.2": "Be quiet.",
+  "TheUnderstudy:Order.flavor.3": "Listen to me.",
+  "TheUnderstudy:Order.flavor.4": "Kill it.",
+  "TheUnderstudy:Order.flavor.5": "Again.",
+  "TheUnderstudy:Order.flavor.6": "Stop crying.",
+  "TheUnderstudy:Order.flavor.7": "Calm down.",
+  "TheUnderstudy:Order.flavor.8": "Don't be scared.",
+  "TheUnderstudy:Order.flavor.9": "Look at me.",
+  "TheUnderstudy:Order.flavor.10": "Stand still.",
+  "TheUnderstudy:Order.flavor.11": "Wake up.",
+  "TheUnderstudy:Order.flavor.12": "Can you kill me?",
+  "TheUnderstudy:Order.flavor.13": "Answer my question.",
+  "TheUnderstudy:Order.flavor.14": "Replace me.",
+  "TheUnderstudy:Order.flavor.15": "End my story.",
+  "TheUnderstudy:Order.flavor.16": "Die."
 }

@@ -12,7 +12,6 @@ namespace TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 // variant), so a deck can run both and free some at random plus some by choice per trigger.
 public class BalancedPower : BalancedPowerBase
 {
-    protected override string SelectionFragment => "random attack or skill";
 
     protected override Task<IReadOnlyList<CardModel>> SelectCards(
         PlayerChoiceContext context, Player player, IReadOnlyList<CardModel> candidates, int count)

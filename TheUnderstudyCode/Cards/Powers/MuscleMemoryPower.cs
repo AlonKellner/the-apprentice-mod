@@ -13,10 +13,6 @@ public class MuscleMemoryPower : UnderstudyPower
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Single;
 
-    public override List<(string, string)> Localization => new PowerLoc(
-        "Muscle Memory",
-        "[gold]Tuned[/gold] cards will not become [gold]Unplayable[/gold].",
-        "[gold]Tuned[/gold] cards will not become [gold]Unplayable[/gold].");
 
     public static bool IsActive(Creature? creature) => creature?.GetPower<MuscleMemoryPower>() != null;
 }

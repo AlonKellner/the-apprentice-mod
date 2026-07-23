@@ -21,10 +21,6 @@ public class IntermissionPower : UnderstudyPower
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Single;
 
-    public override List<(string, string)> Localization => new PowerLoc(
-        "Intermission",
-        "When you end your turn without playing any card, play all [gold]Planned[/gold] cards.",
-        "When you end your turn without playing any card, play all [gold]Planned[/gold] cards.");
 
     public static bool ShouldAutoPlayPlanned(int cardsPlayedThisTurn) => cardsPlayedThisTurn == 0;
 

@@ -19,10 +19,6 @@ public class Score : CustomRelicModel
 {
     public override RelicRarity Rarity => RelicRarity.Uncommon;
 
-    public override List<(string, string)>? Localization => new RelicLoc(
-        "Score",
-        "You may Enchant a card with [gold]Planned[/gold] at Rest Sites.",
-        "Every entrance and exit, written down in advance.");
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
         new[] { HoverTipFactory.FromKeyword(UnderstudyKeywords.Planned) };
