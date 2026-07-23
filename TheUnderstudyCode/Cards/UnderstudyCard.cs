@@ -202,8 +202,14 @@ public abstract class UnderstudyCard(
     // CanApplyTo guards.
     public override Task AfterCardEnteredCombat(CardModel triggeredBy)
     {
-        EnforceStableNow();
+        // Pre-Tuned BEFORE the snapshot, for the same reason BeforeCombatStart does it in that order:
+        // if the snapshot is taken first it won't contain Tuned, and StableEnforcementPatch will then
+        // strip the pre-Tuned modifier the instant it is added as a foreign type. This path can run
+        // before this card's own BeforeCombatStart — a relic that adds cards during the
+        // BeforeCombatStart pass (Tea of Discourtesy) fires AfterCardEnteredCombat on every card
+        // mid-pass — so it cannot rely on that method having already taken the snapshot WITH Tuned.
         ApplyPreTunedIfNeeded();
+        EnforceStableNow();
         return Task.CompletedTask;
     }
 

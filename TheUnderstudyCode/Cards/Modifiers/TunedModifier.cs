@@ -93,7 +93,12 @@ public class TunedModifier : CardModifier
         if (firstApplication)
         {
             CardModifier.AddModifier<TunedModifier>(card);
-            card.TryGetModifier<TunedModifier>(out mod);
+            // The addition is not guaranteed to stick: a Stable card whose frozen snapshot predates
+            // Tuned has StableEnforcementPatch strip it back off as a foreign type the instant it
+            // lands, leaving nothing to stack onto. Assuming otherwise crashed combat start outright
+            // (NullReferenceException out of Tea of Discourtesy generating cards mid-BeforeCombatStart).
+            // Bail quietly instead — the card simply does not become Tuned.
+            if (!card.TryGetModifier<TunedModifier>(out mod)) return;
             Applied?.Invoke(card);
         }
 
