@@ -8,6 +8,7 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.ValueProps;
+using TheUnderstudy.TheUnderstudyCode.Extensions;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
@@ -70,6 +71,19 @@ public class FateKnocking : UnderstudyCard
         var card = cardPlay.Card;
         int prior = PriorSumThisCombat(card);
 
+        // The running sum is written under `this` further down but read back through `card`. If a play
+        // ever routed a different instance through here (a replay or a Planned-queue resolver handing
+        // over a clone), the sum would silently stop accumulating and every preview would read 0.
+        Invariants.Check(ReferenceEquals(this, card), nameof(FateKnocking) + "." + nameof(OnPlay),
+            "the played card is not this instance, so the accumulated damage would be stored under a " +
+            "different key than it is read from");
+
+        // What the card was showing before it resolved: the finisher's previewed damage, and the
+        // per-strike number the preview extrapolated it from. Captured up front, because the strikes
+        // below change the state both are derived from.
+        decimal previewedFinisher = card.DynamicVars["CalculatedDamage"].PreviewValue;
+        decimal previewedPerStrike = card.DynamicVars.Damage.PreviewValue;
+
         // The base strikes — capture the ACTUAL damage they deal (after all modifiers and block). We pass the
         // Damage var EXPLICITLY: CommonActions.CardAttack(card, cardPlay, hitCount) auto-prefers a card's
         // CalculatedDamage var over its Damage var, and ours is only the display-only finisher preview — so
@@ -92,7 +106,28 @@ public class FateKnocking : UnderstudyCard
         // this card with no play context. ValueProp.Move is what that overload supplied by default —
         // it is the powered-attack flag, which is what lets Tuned's damage bonus apply.
         if (total > 0)
-            await CommonActions.CardAttack(card, cardPlay, cardPlay.Target, (decimal)total, ValueProp.Move)
-                .Execute(context);
+        {
+            var finisher = await CommonActions
+                .CardAttack(card, cardPlay, cardPlay.Target, (decimal)total, ValueProp.Move).Execute(context);
+            int finisherDamage = finisher.Results.SelectMany(r => r).Sum(dr => dr.TotalDamage);
+
+            // The whole point of the CalculatedDamageVar above is that "(Deals N damage)" is the number
+            // the finisher actually hits for. Both run the same Hook.ModifyDamage, so they can only
+            // disagree if the preview's raw base disagrees with the finisher's — which is exactly the
+            // drift that silently broke Tuned's damage bonus once, when a game update unbound a
+            // ModifyDamage override for one path but not the other.
+            //
+            // Only assert it when the preview's premise held. The preview extrapolates Strikes x the
+            // per-strike number, while the finisher sums what the strikes actually dealt; a target that
+            // dies partway, or a modifier that changes mid-sequence, makes those legitimately differ.
+            // TotalDamage is pre-block (BlockedDamage + UnblockedDamage), so a blocking target does not
+            // trip this. A previewed finisher of 0 means the card was never displayed (auto-played from
+            // a Planned queue), so there is no preview to hold it to.
+            bool strikesLandedAsPreviewed = strikeDamage == (int)(Strikes * previewedPerStrike);
+            if (previewedFinisher > 0 && strikesLandedAsPreviewed)
+                Invariants.CheckEqual((int)previewedFinisher, finisherDamage,
+                    nameof(FateKnocking) + "." + nameof(OnPlay),
+                    "previewed finisher damage vs. the damage the finisher actually calculated");
+        }
     }
 }

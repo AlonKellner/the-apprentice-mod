@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.12.2: Fate Knocking's finisher uses the current attack API, keeping the card working on future game builds.",
+  "changeNote": "v1.12.3: Fate Knocking now verifies at runtime that its finisher hits for the damage it previewed.",
   "tags": [],
   "dependencies": [
     3737335127
