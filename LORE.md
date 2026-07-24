@@ -109,6 +109,11 @@ Pronouns: **he/him**. Title/description unchanged.
 - Card/relic/power **flavor lines** should keep the composer-genius voice and let the
   unnamed "he" recur where natural.
 
+> **The other eight ancients** (Darv, Neow, Nonupeipe, Orobas, Pael, Tanx, Tezcatara, Vakuu) have
+> their own Understudy dialogue — where the mask is *up* and he performs, charming and cocky, rather
+> than pleading. Their profiles and his angle for each live in [`ANCIENTS.md`](ANCIENTS.md); the lines
+> are in the same `ancients.json`. The Architect below is the one encounter where the mask comes off.
+
 ## 8. Architect Confrontation (implemented in `ancients.json`)
 
 Four exchanges keyed by visit index — exchange `0` = **first visit**, `1`/`2`/`3` = later

@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.12.3: Fate Knocking now verifies at runtime that its finisher hits for the damage it previewed.",
+  "changeNote": "v1.12.4: The Understudy now has his own dialogue with all eight non-Architect ancients (Darv, Neow, Nonupeipe, Orobas, Pael, Tanx, Tezcatara, Vakuu).",
   "tags": [],
   "dependencies": [
     3737335127
