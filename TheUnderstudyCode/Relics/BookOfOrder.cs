@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using BaseLib.Abstracts;
 using BaseLib.Utils;
 using MegaCrit.Sts2.Core.Entities.Relics;
@@ -26,6 +27,18 @@ namespace TheUnderstudy.TheUnderstudyCode.Relics;
 public class BookOfOrder : CustomRelicModel
 {
     public override RelicRarity Rarity => RelicRarity.Event;
+
+    // When the Chaotic Book transforms into the Book of Order mid-run (RelicCmd.Replace calls this), the
+    // current act's map was already generated without the relic, so the alt bosses aren't on it yet.
+    // Regenerate the current map — deterministic (seeded), so it comes back identical plus the injection —
+    // exactly as Golden Compass does; GenerateMap ends by calling NMapScreen.SetMap, so the map redraws
+    // immediately, and RemoveStaleVisitedMapCoords keeps the player's position/path.
+    public override async Task AfterObtained()
+    {
+        await base.AfterObtained();
+        if (RunManager.Instance != null)
+            await RunManager.Instance.GenerateMap();
+    }
 
     // Inject the flank boss nodes. This runs in ModifyGeneratedMapLate (not ModifyGeneratedMap) because
     // that hook fires on BOTH paths: fresh generation (Hook.ModifyGeneratedMap ends by calling it) AND
