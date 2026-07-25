@@ -18,6 +18,6 @@ public static class AltBossGetAllMapPointsPatch
     public static void Postfix(ActMap __instance, ref IEnumerable<MapPoint> __result)
     {
         var extra = AltBossStore.For(__instance);
-        if (extra.Count > 0) __result = __result.Concat(extra);
+        if (extra.Count > 0) __result = __result.Concat(extra.Select(n => n.Point));
     }
 }

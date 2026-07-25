@@ -8,14 +8,12 @@ using TheUnderstudy.TheUnderstudyCode.Map;
 
 namespace TheUnderstudy.TheUnderstudyCode.Patches;
 
-// Spike B: give an injected alt boss its own encounter instead of the default. RunManager.CreateRoom
-// builds a boss room as `(model as EncounterModel) ?? Act.PullNextEncounter(Boss)`, and its args don't
-// say which node is being entered — but the entry flow calls AddVisitedMapCoord(coord) before
-// CreateRoom, so State.CurrentMapCoord is the node just stepped onto (true for both normal and debug
-// travel). When that node is an alt boss, substitute a different boss from the act's pool as `model`.
-//
-// SPIKE simplification: picks "any boss that isn't the default". Phase 3 assigns left/right encounters
-// deterministically (seeded) with the double-boss derangement; this just proves per-node encounters work.
+// Give an injected alt boss its own boss encounter. RunManager.CreateRoom builds a boss room as
+// `(model as EncounterModel) ?? Act.PullNextEncounter(Boss)`, and its args don't say which node is
+// being entered — but the entry flow calls AddVisitedMapCoord(coord) before CreateRoom, so
+// State.CurrentMapCoord is the node just stepped onto (true for both normal and debug travel). When
+// that node is an alt boss, substitute the specific boss AltBossPlan assigned to it (stored per-coord
+// in AltBossStore), so the far-left and far-right nodes lead to two different bosses.
 [HarmonyPatch(typeof(RunManager), "CreateRoom")]
 public static class AltBossEncounterPatch
 {
@@ -27,14 +25,21 @@ public static class AltBossEncounterPatch
         // State is a private property on RunManager; read it via Traverse.
         var state = Traverse.Create(__instance).Property("State").GetValue<RunState>();
         if (state?.CurrentMapCoord is not { } coord) return;
-        if (!AltBossStore.IsAltBoss(state.Map, coord)) return;
+
+        var encounterId = AltBossStore.EncounterAt(state.Map, coord);
+        if (encounterId == null) return; // not an alt boss — leave the default boss flow alone
 
         var act = state.Act;
-        var alt = act.AllBossEncounters.FirstOrDefault(e => e.Id != act.BossEncounter.Id);
-        if (alt == null) return;
+        var encounter = act.AllBossEncounters.FirstOrDefault(e => e.Id.ToString() == encounterId);
+        if (encounter == null)
+        {
+            Log.Warn($"[BookOfOrder] alt boss ({coord.col},{coord.row}) assigned {encounterId} " +
+                     $"but it is not in the act's boss pool; falling back to default");
+            return;
+        }
 
-        model = alt.ToMutable();
-        Log.Info($"[BookOfOrder] entering alt boss ({coord.col},{coord.row}) -> encounter {alt.Id} " +
+        model = encounter.ToMutable();
+        Log.Info($"[BookOfOrder] entering alt boss ({coord.col},{coord.row}) -> encounter {encounter.Id} " +
                  $"(default boss is {act.BossEncounter.Id})");
     }
 }

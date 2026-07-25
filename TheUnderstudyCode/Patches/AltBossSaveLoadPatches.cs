@@ -24,7 +24,7 @@ public static class AltBossStripOnSavePatch
         var alt = AltBossStore.For(map);
         if (alt.Count == 0) return;
 
-        var altCoords = new HashSet<MapCoord>(alt.Select(p => p.coord));
+        var altCoords = new HashSet<MapCoord>(alt.Select(n => n.Point.coord));
         __result.Points.RemoveAll(p => altCoords.Contains(p.Coord));
         foreach (var p in __result.Points)
             p.ChildCoords?.RemoveAll(c => altCoords.Contains(c));

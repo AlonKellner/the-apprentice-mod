@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using BaseLib.Abstracts;
 using BaseLib.Utils;
@@ -14,43 +15,79 @@ namespace TheUnderstudy.TheUnderstudyCode.Relics;
 
 // Unlocked form of the Architect's book, transformed from the Chaotic Book after three Studies.
 // Its power — "the ending is ever changing... if studied, can be controlled" — is the Alternative
-// Bosses map mechanic: two extra boss nodes flank the default, letting you route to the ending you
-// choose. The mere presence of this relic on a player is the activation flag the map injection reads.
+// Bosses map mechanic: two extra boss nodes flank the default, one reachable from the far-left pre-boss
+// rest and one from the far-right, each leading to a *different* act boss. The default boss keeps its
+// own untouched node, so all three bosses of the act are reachable and choosing your ending becomes
+// routing. The mere presence of this relic on a player is the activation flag the injection reads.
 //
-// Event-obtained (no [Pool] to satisfy the analyzer); TheUnderstudyRelicPool excludes it as event-only,
-// so it only ever exists as a transform target of ChaoticBook, never a reward.
+// Event-obtained; TheUnderstudyRelicPool excludes it as event-only, so it only ever exists as a
+// transform target of ChaoticBook, never a random reward.
 [Pool(typeof(TheUnderstudyRelicPool))]
 public class BookOfOrder : CustomRelicModel
 {
     public override RelicRarity Rarity => RelicRarity.Event;
 
-    // SPIKE (Phase 2): inject ONE alternative boss node at the far-left of the boss row, wired as a
-    // child of the far-left pre-boss rest point. Injection lives in ModifyGeneratedMapLate, not
-    // ModifyGeneratedMap, because that hook fires on BOTH paths: fresh generation (Hook.ModifyGeneratedMap
-    // ends by calling ModifyGeneratedMapLate) AND load (GenerateMap's saved-map branch calls only
-    // ModifyGeneratedMapLate). So the same code re-injects deterministically on load — the base save
-    // format has no slot for alt bosses, so they are re-created rather than serialized. Idempotent via
-    // the store check, so it can't double-inject.
+    // Inject the flank boss nodes. This runs in ModifyGeneratedMapLate (not ModifyGeneratedMap) because
+    // that hook fires on BOTH paths: fresh generation (Hook.ModifyGeneratedMap ends by calling it) AND
+    // load (GenerateMap's saved-map branch calls only it). The base save format has no slot for alt
+    // bosses, so instead of serializing them they are re-derived here from AltBossPlan — a pure function
+    // of the run seed + act index — so the same two nodes, with the same left/right encounter
+    // assignment, reappear identically on load and on every co-op client. Idempotent via the store
+    // check, so it can't double-inject.
     public override ActMap ModifyGeneratedMapLate(IRunState runState, ActMap map, int actIndex)
     {
         if (AltBossStore.For(map).Count > 0) return map; // already injected on this map instance
 
-        var preBossRow = map.GetPointsInRow(map.GetRowCount() - 1).ToList();
-        if (preBossRow.Count == 0)
+        var act = runState.Acts[actIndex];
+        var allBossIds = act.AllBossEncounters.Select(e => e.Id.ToString()).ToList();
+        var defaultId = act.BossEncounter.Id.ToString();
+        ulong seed = AltBossPlan.SeedFor(runState.Rng.Seed, actIndex);
+        var flanks = AltBossPlan.AssignFlanks(allBossIds, defaultId, seed);
+        if (flanks.Count == 0)
         {
-            Log.Warn($"[BookOfOrder] act {actIndex}: no pre-boss row, cannot inject alt boss");
+            Log.Info($"[BookOfOrder] act {actIndex}: only one boss in pool, no alt bosses to inject");
             return map;
         }
 
-        var farLeft = preBossRow.OrderBy(p => p.coord.col).First();
-        int bossRow = map.BossMapPoint.coord.row;
-        var altBoss = new MapPoint(0, bossRow) { PointType = MapPointType.Boss };
-        farLeft.AddChildPoint(altBoss);
-        AltBossStore.Register(map, altBoss);
+        var preBossRow = map.GetPointsInRow(map.GetRowCount() - 1).ToList();
+        if (preBossRow.Count == 0)
+        {
+            Log.Warn($"[BookOfOrder] act {actIndex}: no pre-boss row, cannot inject alt bosses");
+            return map;
+        }
 
-        Log.Info($"[BookOfOrder] act {actIndex}: injected alt boss at ({altBoss.coord.col},{altBoss.coord.row}) " +
-                 $"wired from far-left pre-boss rest ({farLeft.coord.col},{farLeft.coord.row}); " +
-                 $"boss at ({map.BossMapPoint.coord.col},{map.BossMapPoint.coord.row}), " +
+        int bossRow = map.BossMapPoint.coord.row;
+        int cols = map.GetColumnCount();
+        int defaultCol = map.BossMapPoint.coord.col;
+        var farLeftRest = preBossRow.OrderBy(p => p.coord.col).First();
+        var farRightRest = preBossRow.OrderByDescending(p => p.coord.col).First();
+
+        var injected = new List<string>();
+        foreach (var (side, encounterId) in flanks)
+        {
+            // Left node hugs col 0, right node hugs the last column, so they render on either side of the
+            // centre default boss; each wires as a child of the pre-boss rest on its own side.
+            int col = side == FlankSide.Left ? 0 : cols - 1;
+            var rest = side == FlankSide.Left ? farLeftRest : farRightRest;
+
+            if (col == defaultCol)
+            {
+                Invariants.Check(false, "BookOfOrder",
+                    $"alt boss col {col} collides with default boss col on a {cols}-wide map; skipping {side}");
+                continue;
+            }
+
+            var altBoss = new MapPoint(col, bossRow) { PointType = MapPointType.Boss };
+            rest.AddChildPoint(altBoss);
+            AltBossStore.Register(map, new AltBossNode(altBoss, side, encounterId));
+            injected.Add($"{side}=({col},{bossRow})->{encounterId} from rest ({rest.coord.col},{rest.coord.row})");
+        }
+
+        Invariants.Check(AltBossStore.For(map).Count == flanks.Count, "BookOfOrder",
+            $"injected {AltBossStore.For(map).Count} alt bosses but planned {flanks.Count}");
+
+        Log.Info($"[BookOfOrder] act {actIndex}: seed {runState.Rng.Seed}->{seed}, default={defaultId} " +
+                 $"at col {defaultCol}; injected [{string.Join(", ", injected)}]; " +
                  $"GetAllMapPoints now sees {map.GetAllMapPoints().Count()} points");
         return map;
     }

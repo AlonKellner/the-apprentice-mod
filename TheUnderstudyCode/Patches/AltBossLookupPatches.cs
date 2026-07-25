@@ -16,7 +16,8 @@ public static class AltBossGetPointPatch
     public static void Postfix(ActMap __instance, int col, int row, ref MapPoint? __result)
     {
         if (__result != null) return;
-        __result = AltBossStore.For(__instance).FirstOrDefault(p => p.coord.col == col && p.coord.row == row);
+        __result = AltBossStore.For(__instance)
+            .FirstOrDefault(n => n.Point.coord.col == col && n.Point.coord.row == row)?.Point;
     }
 }
 
@@ -27,6 +28,7 @@ public static class AltBossHasPointPatch
     public static void Postfix(ActMap __instance, MapCoord coord, ref bool __result)
     {
         if (!__result)
-            __result = AltBossStore.For(__instance).Any(p => p.coord.col == coord.col && p.coord.row == coord.row);
+            __result = AltBossStore.For(__instance)
+                .Any(n => n.Point.coord.col == coord.col && n.Point.coord.row == coord.row);
     }
 }
