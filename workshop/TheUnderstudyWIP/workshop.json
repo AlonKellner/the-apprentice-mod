@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.12.20: Diagnostic build - logs boss-node visual state to track down why the flank boss art is not rendering.",
+  "changeNote": "v1.12.21: Force-load each flank boss's map-node art before its node renders, so the real animated boss art shows instead of a blank node (the game only preloads the default boss's art). Includes diagnostics.",
   "tags": [],
   "dependencies": [
     3737335127

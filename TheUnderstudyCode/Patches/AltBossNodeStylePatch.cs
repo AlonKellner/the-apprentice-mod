@@ -46,6 +46,12 @@ public static class AltBossNodeStylePatch
                 continue;
             }
 
+            // The game only preloads the default/second boss's node art (ActModel.MapNodeAssetPaths),
+            // never the flanks'. Until that art is loaded, EncounterModel.BossNodeSpineResource's
+            // ResourceLoader.Exists gate returns null and the node renders blank. Force-load the .tres
+            // here so _Ready resolves the spine and draws the real boss.
+            AltBossArtPreload.Ensure(enc);
+
             var pos = old.Position;
             points.RemoveChild(old);
             old.QueueFree();
