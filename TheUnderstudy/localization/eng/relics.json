@@ -43,5 +43,9 @@
 
   "THEUNDERSTUDY-BOOK_OF_ORDER.title": "Book of Order",
   "THEUNDERSTUDY-BOOK_OF_ORDER.description": "At the end of each act, two [gold]alternative bosses[/gold] flank the default - one reached from the far-left Rest Site, one from the far-right.",
-  "THEUNDERSTUDY-BOOK_OF_ORDER.flavor": "You have read his design to its end. Now you decide which ending is written."
+  "THEUNDERSTUDY-BOOK_OF_ORDER.flavor": "You have read his design to its end. Now you decide which ending is written.",
+
+  "THEUNDERSTUDY-ALT_BOSS_DOUBLE_BOSS_DEBUG.title": "Double Boss (Debug)",
+  "THEUNDERSTUDY-ALT_BOSS_DOUBLE_BOSS_DEBUG.description": "Debug: chains a second boss above each Book of Order flank on every act.",
+  "THEUNDERSTUDY-ALT_BOSS_DOUBLE_BOSS_DEBUG.flavor": "For testing the ending that follows the ending."
 }

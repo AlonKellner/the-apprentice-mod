@@ -42,60 +42,59 @@ public static class AltBossNodeStylePatch
                  $"scale={defaultBoss.Scale} artGlobal={ArtGlobalPos(defaultBoss)} " +
                  $"pointsRect={points.GetGlobalRect()}");
 
+        float defaultCentreX = defaultBoss.Position.X + defaultBoss.Size.X * 0.5f;
+        float defaultBottomY = defaultBoss.Position.Y + defaultBoss.Size.Y;
+
+        // Two passes: flanks first (positioned relative to the default boss), then chained second bosses
+        // (positioned relative to their now-placed flank). A second boss reads its parent flank's node.
         int styled = 0;
-        foreach (var alt in alts)
+        foreach (var alt in alts.Where(a => !a.IsSecond))
         {
-            var coord = alt.Point.coord;
-            if (!dict.TryGetValue(coord, out var old)) continue;
-
-            var enc = runState.Act.AllBossEncounters.FirstOrDefault(e => e.Id.ToString() == alt.EncounterId);
-            if (enc == null)
-            {
-                Log.Warn($"[BookOfOrder] cannot style alt boss ({coord.col},{coord.row}): encounter " +
-                         $"{alt.EncounterId} not in pool");
-                continue;
-            }
-
-            // The game only preloads the default/second boss's node art (ActModel.MapNodeAssetPaths),
-            // never the flanks'. Until that art is loaded, the node renders blank. Force-load exactly the
-            // paths the node will request (spine .tres, or the placeholder PNGs) so _Ready resolves them.
-            AltBossArtPreload.Ensure(enc);
-
-            points.RemoveChild(old);
-            old.QueueFree();
-            dict.Remove(coord);
-
-            var bossNode = NBossMapPoint.Create(alt.Point, __instance, runState);
-            // AddChild triggers _Ready (which builds this flank's own boss art in one clean pass) AND a
-            // one-time anchor shift on the boss node. Position AFTER the add so we align to the default
-            // boss's already-shifted coordinates instead of getting shifted a second time.
-            points.AddChildSafely(bossNode);
+            var bossNode = SwapToBossNode(__instance, runState, dict, points, alt);
+            if (bossNode == null) continue;
 
             // Lay the two flanks out symmetrically about the default boss (its art is their midpoint),
-            // scaled down, with their art BOTTOMS on the same line as the default art's bottom and a small
-            // gap between adjacent arts. Scale about the node centre (centre pivot), so the node centre
-            // (Position + Size/2) stays fixed and the visual bottom = centre.Y + Size.Y*scale/2.
-            var size = bossNode.Size;
-            var half = size * 0.5f;
-            float defaultCentreX = defaultBoss.Position.X + defaultBoss.Size.X * 0.5f;
-            float defaultBottomY = defaultBoss.Position.Y + defaultBoss.Size.Y;
+            // scaled down, art BOTTOMS on the default art's bottom line, with a small gap. Scale about the
+            // node centre (centre pivot) so the node centre (Position + Size/2) stays fixed.
+            var half = bossNode.Size * 0.5f;
             float sep = defaultBoss.Size.X * 0.5f + FlankGap + defaultBoss.Size.X * FlankScale * 0.5f;
             int dir = alt.Side == FlankSide.Left ? -1 : 1;
             float centreX = defaultCentreX + dir * sep;
 
-            bossNode.PivotOffset = half;                       // scale about the centre, not the corner
+            bossNode.PivotOffset = half;
             bossNode.Scale = new Vector2(FlankScale, FlankScale);
-            // Position so: node centre X = centreX, and visual bottom = defaultBottomY.
-            bossNode.Position = new Vector2(centreX - half.X, defaultBottomY - half.Y - size.Y * FlankScale * 0.5f);
-            dict[coord] = bossNode;
+            bossNode.Position = new Vector2(centreX - half.X,
+                defaultBottomY - half.Y - bossNode.Size.Y * FlankScale * 0.5f);
 
-            // The incoming path was drawn during SetMap while this was an NNormalMapPoint (endpoint =
-            // Position, the old grid cell); redraw the rest->flank edge so it meets the boss node's centre
-            // (GetLineEndpoint = Position + Size/2) instead of the old cell.
-            RedrawEdge(__instance, alt.ParentRestCoord, coord);
+            RedrawEdge(__instance, alt.ParentCoord, alt.Point.coord);
             styled++;
-            Log.Info($"[BookOfOrder] placed flank {alt.Side}: centreX={centreX} bottomY={defaultBottomY} " +
-                     $"nodePos={bossNode.Position} nodeSize={size} scale={FlankScale} artGlobal={ArtGlobalPos(bossNode)}");
+            Log.Info($"[BookOfOrder] placed flank {alt.Side}: centreX={centreX} nodePos={bossNode.Position} " +
+                     $"artGlobal={ArtGlobalPos(bossNode)}");
+        }
+
+        foreach (var alt in alts.Where(a => a.IsSecond))
+        {
+            if (!dict.TryGetValue(alt.ParentCoord, out var flankNode)) continue; // parent flank must exist
+            var bossNode = SwapToBossNode(__instance, runState, dict, points, alt);
+            if (bossNode == null) continue;
+
+            // Stack the second boss directly above its flank: same art centre X, its art bottom sitting a
+            // small gap above the flank art's top. The flank uses centre-pivot scaling too, so its visual
+            // centre is flankNode.Position + Size/2 and its art top is that centre minus half the scaled art.
+            var half = bossNode.Size * 0.5f;
+            var flankCentre = flankNode.Position + flankNode.Size * 0.5f;
+            float flankArtHalf = flankNode.Size.Y * FlankScale * 0.5f;
+            float secondArtHalf = bossNode.Size.Y * FlankScale * 0.5f;
+            float secondCentreY = (flankCentre.Y - flankArtHalf) - FlankGap - secondArtHalf;
+
+            bossNode.PivotOffset = half;
+            bossNode.Scale = new Vector2(FlankScale, FlankScale);
+            bossNode.Position = new Vector2(flankCentre.X - half.X, secondCentreY - half.Y);
+
+            RedrawEdge(__instance, alt.ParentCoord, alt.Point.coord);
+            styled++;
+            Log.Info($"[BookOfOrder] placed second {alt.Side}: nodePos={bossNode.Position} " +
+                     $"artGlobal={ArtGlobalPos(bossNode)} above flank at {flankCentre}");
         }
 
         // The old normal nodes' travelable state + visuals were computed during SetMap; recompute so the
@@ -103,6 +102,40 @@ public static class AltBossNodeStylePatch
         Traverse.Create(__instance).Method("RecalculateTravelability").GetValue();
         __instance.RefreshAllPointVisuals();
         Log.Info($"[BookOfOrder] styled {styled} alt boss node(s) as full-art bosses");
+    }
+
+    // Replace an injected alt boss's plain NNormalMapPoint with a real NBossMapPoint (art loaded), added
+    // to the tree so its _Ready builds the assigned boss's art. Returns the new node (caller positions it),
+    // or null if the encounter can't be resolved.
+    private static NBossMapPoint? SwapToBossNode(
+        NMapScreen screen, IRunState runState,
+        Dictionary<MapCoord, NMapPoint> dict, Control points, AltBossNode alt)
+    {
+        var coord = alt.Point.coord;
+        if (!dict.TryGetValue(coord, out var old)) return null;
+
+        var enc = runState.Act.AllBossEncounters.FirstOrDefault(e => e.Id.ToString() == alt.EncounterId);
+        if (enc == null)
+        {
+            Log.Warn($"[BookOfOrder] cannot style alt boss ({coord.col},{coord.row}): encounter " +
+                     $"{alt.EncounterId} not in pool");
+            return null;
+        }
+
+        // The game only preloads the default/second boss's node art; force-load this encounter's art so
+        // _Ready resolves it instead of drawing blank.
+        AltBossArtPreload.Ensure(enc);
+
+        points.RemoveChild(old);
+        old.QueueFree();
+        dict.Remove(coord);
+
+        var bossNode = NBossMapPoint.Create(alt.Point, screen, runState);
+        // Add before positioning: AddChild triggers _Ready (art) plus a one-time anchor shift, so we set
+        // the final position afterwards.
+        points.AddChildSafely(bossNode);
+        dict[coord] = bossNode;
+        return bossNode;
     }
 
     // DIAGNOSTIC: where a boss node's art actually renders (spine sprite or placeholder image), so we can

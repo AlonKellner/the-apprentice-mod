@@ -63,6 +63,7 @@ public class BookOfOrder : CustomRelicModel
         var farRightRest = preBossRow.OrderByDescending(p => p.coord.col).First();
 
         var injected = new List<string>();
+        var flankNodes = new List<(FlankSide side, string enc, MapPoint node)>();
         foreach (var (side, encounterId) in flanks)
         {
             // Left node hugs col 0, right node hugs the last column, so they render on either side of the
@@ -79,15 +80,44 @@ public class BookOfOrder : CustomRelicModel
 
             var altBoss = new MapPoint(col, bossRow) { PointType = MapPointType.Boss };
             rest.AddChildPoint(altBoss);
-            AltBossStore.Register(map, new AltBossNode(altBoss, side, encounterId, rest.coord));
+            AltBossStore.Register(map, new AltBossNode(altBoss, side, encounterId, rest.coord, IsSecond: false));
+            flankNodes.Add((side, encounterId, altBoss));
             injected.Add($"{side}=({col},{bossRow})->{encounterId} from rest ({rest.coord.col},{rest.coord.row})");
         }
 
-        Invariants.Check(AltBossStore.For(map).Count == flanks.Count, "BookOfOrder",
-            $"injected {AltBossStore.For(map).Count} alt bosses but planned {flanks.Count}");
+        // Double boss (Ascension 10 final act, or forced by the debug relic): chain a second boss above
+        // each flank. The seconds are a derangement of the reachable first bosses (default + both flanks),
+        // so every boss chains into a *different* reachable boss — no self-pairing. When the game itself
+        // made a second-boss slot (real Asc10 final act), override the default boss's second to the same
+        // derangement so all three endings cycle cleanly.
+        bool doubleBoss = act.HasSecondBoss || AltBossDoubleBossDebug.IsActive(runState);
+        if (doubleBoss)
+        {
+            var firsts = new List<string> { defaultId };
+            firsts.AddRange(flankNodes.Select(f => f.enc));
+            var derange = AltBossPlan.Derange(firsts, seed);
+
+            if (act.HasSecondBoss && derange.TryGetValue(defaultId, out var dSecondId))
+            {
+                var dSecond = act.AllBossEncounters.FirstOrDefault(e => e.Id.ToString() == dSecondId);
+                if (dSecond != null) act.SetSecondBossEncounter(dSecond);
+            }
+
+            foreach (var f in flankNodes)
+            {
+                if (!derange.TryGetValue(f.enc, out var secondEnc)) continue;
+                var second = new MapPoint(f.node.coord.col, bossRow + 1) { PointType = MapPointType.Boss };
+                f.node.AddChildPoint(second);
+                AltBossStore.Register(map, new AltBossNode(second, f.side, secondEnc, f.node.coord, IsSecond: true));
+                injected.Add($"{f.side}#2=({second.coord.col},{second.coord.row})->{secondEnc} chained from {f.enc}");
+            }
+
+            Invariants.Check(flankNodes.All(f => !derange.TryGetValue(f.enc, out var s) || s != f.enc),
+                "BookOfOrder", "a flank second boss self-pairs (derangement failed)");
+        }
 
         Log.Info($"[BookOfOrder] act {actIndex}: seed {runState.Rng.Seed}->{seed}, default={defaultId} " +
-                 $"at col {defaultCol}; injected [{string.Join(", ", injected)}]; " +
+                 $"at col {defaultCol}; doubleBoss={doubleBoss}; injected [{string.Join(", ", injected)}]; " +
                  $"GetAllMapPoints now sees {map.GetAllMapPoints().Count()} points");
         return map;
     }

@@ -5,12 +5,15 @@ using MegaCrit.Sts2.Core.Map;
 
 namespace TheUnderstudy.TheUnderstudyCode.Map;
 
-// One injected alternative boss: the live MapPoint, which flank it sits on, the coord of the pre-boss
-// rest it hangs from, and the encounter id the player fights when they route there. The encounter is
-// stored here (not on the MapPoint, which has no slot for it) so AltBossEncounterPatch can substitute
-// the right boss per node at room-creation time; the rest coord lets the styling patch place the boss
-// node above its own rest (boss nodes are hand-placed above the grid, not by the grid formula).
-public sealed record AltBossNode(MapPoint Point, FlankSide Side, string EncounterId, MapCoord ParentRestCoord);
+// One injected alternative boss: the live MapPoint, which flank it belongs to, the coord of the node it
+// hangs from (the pre-boss rest for a flank, or the flank boss for its chained second boss), the
+// encounter id the player fights there, and whether it is a chained second boss (Ascension-10 double
+// boss). The encounter is stored here (not on the MapPoint, which has no slot for it) so
+// AltBossEncounterPatch can substitute the right boss per node at room-creation time; the parent coord
+// lets the styling patch place the node relative to what it chains from (boss nodes are hand-placed
+// above the grid, not by the grid formula).
+public sealed record AltBossNode(
+    MapPoint Point, FlankSide Side, string EncounterId, MapCoord ParentCoord, bool IsSecond);
 
 // Per-map registry of the alternative boss nodes the Book of Order injects. They live outside the base
 // ActMap's fixed Boss/SecondBoss slots, so the enumeration/lookup patches (AltBoss*Patch) read them
