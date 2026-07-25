@@ -2,8 +2,10 @@ using System.Collections.Generic;
 using System.Linq;
 using BaseLib.Abstracts;
 using MegaCrit.Sts2.Core.Models;
+using System;
 using MegaCrit.Sts2.Core.Unlocks;
 using TheUnderstudy.TheUnderstudyCode.Extensions;
+using TheUnderstudy.TheUnderstudyCode.Relics;
 using TheUnderstudy.TheUnderstudyCode.Timeline;
 using Godot;
 
@@ -16,10 +18,20 @@ public class TheUnderstudyRelicPool : CustomRelicPoolModel
     public override string BigEnergyIconPath => "charui/big_energy.png".ImagePath();
     public override string TextEnergyIconPath => "charui/text_energy.png".ImagePath();
 
-    // The "Consumed" epoch (ep4) gates 3 relics until it is revealed.
+    // Relics that carry [Pool] only to satisfy the analyzer but are obtained by other means (an event,
+    // or transforming from another relic) and must never appear as a random reward. The Chaotic Book
+    // comes from "The Golden Bedroom"; the Book of Order only ever exists by transforming from it.
+    public static readonly IReadOnlyList<Type> EventOnlyRelics = new[]
+    {
+        typeof(ChaoticBook),
+        typeof(BookOfOrder),
+    };
+
+    // The "Consumed" epoch (ep4) gates 3 relics until it is revealed; event-only relics are always excluded.
     public override IEnumerable<RelicModel> GetUnlockedRelics(UnlockState unlockState)
     {
         var relics = base.GetUnlockedRelics(unlockState).ToList();
+        relics.RemoveAll(r => EventOnlyRelics.Contains(r.GetType()));
         if (!unlockState.IsEpochRevealed<Understudy4Epoch>())
             relics.RemoveAll(r => Understudy4Epoch.Relics.Any(g => g.Id == r.Id));
         return relics;

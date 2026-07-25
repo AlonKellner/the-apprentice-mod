@@ -35,5 +35,13 @@
 
   "THEUNDERSTUDY-SCORE.title": "Score",
   "THEUNDERSTUDY-SCORE.description": "You may Enchant a card with [gold]Planned[/gold] at Rest Sites.",
-  "THEUNDERSTUDY-SCORE.flavor": "Every entrance and exit, written down in advance."
+  "THEUNDERSTUDY-SCORE.flavor": "Every entrance and exit, written down in advance.",
+
+  "THEUNDERSTUDY-CHAOTIC_BOOK.title": "Chaotic Book",
+  "THEUNDERSTUDY-CHAOTIC_BOOK.description": "[gold]Study[/gold] at Rest Sites 3 times to unlock its order.",
+  "THEUNDERSTUDY-CHAOTIC_BOOK.flavor": "The ending shifts every time you look. But the letters follow a logic - and logic can be learned.",
+
+  "THEUNDERSTUDY-BOOK_OF_ORDER.title": "Book of Order",
+  "THEUNDERSTUDY-BOOK_OF_ORDER.description": "At the end of each act, two [gold]alternative bosses[/gold] flank the default - one reached from the far-left Rest Site, one from the far-right.",
+  "THEUNDERSTUDY-BOOK_OF_ORDER.flavor": "You have read his design to its end. Now you decide which ending is written."
 }
