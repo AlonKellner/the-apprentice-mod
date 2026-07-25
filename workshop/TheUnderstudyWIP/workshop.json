@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.12.7: diagnostics for the Study rest-site option showing the wrong title.",
+  "changeNote": "v1.12.8: the Study rest-site option now shows its own icon instead of falling back to the Dig shovel (placeholder art).",
   "tags": [],
   "dependencies": [
     3737335127

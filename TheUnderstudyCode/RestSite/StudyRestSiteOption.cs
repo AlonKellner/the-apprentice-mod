@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using BaseLib.Abstracts;
 using MegaCrit.Sts2.Core.Entities.Players;
+using TheUnderstudy.TheUnderstudyCode.Extensions;
 using TheUnderstudy.TheUnderstudyCode.Relics;
 
 namespace TheUnderstudy.TheUnderstudyCode.RestSite;
@@ -12,6 +13,14 @@ public class StudyRestSiteOption : CustomRestSiteOption
 {
     public const string Id = "THEUNDERSTUDY_STUDY";
     public override string OptionId => Id;
+
+    // Without this, the button's icon path resolves against the BASE GAME's ui/rest_site/ folder
+    // (via ImageHelper.GetImagePath) where option_theunderstudy_study.png can't exist, so the game
+    // falls back to a shovel that reads as "Dig". CustomIconPath points at a mod resource instead.
+    // PLACEHOLDER: the Planned/order glyph until a dedicated book icon is drawn — swap this for
+    // "restsite/study.png".ImagePath() (or similar) once the art exists. Score/Foldable Stage have
+    // the same missing-icon gap and would benefit from the same treatment.
+    public override string? CustomIconPath => "powers/planned_counter_power.png".ImagePath();
 
     private readonly ChaoticBook _book;
 
