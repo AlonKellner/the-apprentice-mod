@@ -25,19 +25,17 @@ namespace TheUnderstudy.TheUnderstudyCode.Events;
 // Acts). Loc in events.json under THEUNDERSTUDY-GOLDEN_BEDROOM. Modelled on the base game's LostWisp.
 public class GoldenBedroom : CustomEventModel
 {
-    private const int GoldAmount = 75;
-    private const int HealAmount = 20;
+    // Gold: base "grab the loot" events sit ~60-100 (LostWisp 60, Field of Man-Sized Holes 75, several
+    // at 100). 90 reads as the "hefty bag" the flavor promises without eclipsing the quest-relic choice.
+    private const int GoldAmount = 90;
 
     // Without this, the event portrait resolves to the base game's images/events/<id>.png (which can't
     // hold a mod texture) and throws AssetLoadException. PLACEHOLDER: the character illustration until
     // dedicated Golden Bedroom art is drawn.
     public override string? CustomInitialPortraitPath => "charui/char_select_the_understudy.png".ImagePath();
 
-    protected override IEnumerable<DynamicVar> CanonicalVars => new DynamicVar[]
-    {
-        new GoldVar(GoldAmount),
-        new HealVar(HealAmount),
-    };
+    protected override IEnumerable<DynamicVar> CanonicalVars =>
+        new DynamicVar[] { new GoldVar(GoldAmount) };
 
     // The Golden Bedroom is the Understudy's story; it must not appear in other characters' runs.
     public override bool IsAllowed(IRunState runState) =>
@@ -59,8 +57,11 @@ public class GoldenBedroom : CustomEventModel
 
     private async Task SleepInTheBed()
     {
-        Log.Info($"[GoldenBedroom] SleepInTheBed -> heal {DynamicVars["Heal"].IntValue}");
-        await CreatureCmd.Heal(Owner!.Creature, DynamicVars["Heal"].IntValue);
+        // Sleeping is resting — so heal exactly as a campfire would (MimicRestSiteHeal), the base
+        // game's own mechanic for rest-flavored event heals (Dense Vegetation). Scales with Max HP,
+        // unlike a flat number, and matches "you wake up feeling refreshed".
+        Log.Info("[GoldenBedroom] SleepInTheBed -> rest-site heal");
+        await PlayerCmd.MimicRestSiteHeal(Owner!);
         SetEventFinished(L10NLookup($"{Id.Entry}.pages.SLEEP_IN_THE_BED.description"));
     }
 

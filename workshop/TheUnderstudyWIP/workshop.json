@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.12.11: fixed a crash opening The Golden Bedroom event (option loc keys needed .title/.description) and its missing portrait image.",
+  "changeNote": "v1.12.12: tuned The Golden Bedroom - 90 gold, and sleeping now heals as a campfire rest (scales with Max HP).",
   "tags": [],
   "dependencies": [
     3737335127
