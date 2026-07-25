@@ -53,8 +53,9 @@ public static class AltBossNodeStylePatch
 
             var bossNode = NBossMapPoint.Create(alt.Point, __instance, runState);
             bossNode.Position = pos;
-            points.AddChildSafely(bossNode);              // triggers _Ready (default boss art)
-            AltBossArt.ApplyEncounterArt(bossNode, enc);  // overwrite with this flank's own boss
+            // AddChild triggers _Ready, which (via AltBossReadyEncounterPatch) builds this flank's own
+            // boss art in one clean pass — no post-hoc mutation, so the shader material stays valid.
+            points.AddChildSafely(bossNode);
             dict[coord] = bossNode;
             styled++;
         }
