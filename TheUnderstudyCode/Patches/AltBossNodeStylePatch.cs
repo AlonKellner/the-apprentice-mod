@@ -52,26 +52,24 @@ public static class AltBossNodeStylePatch
             // paths the node will request (spine .tres, or the placeholder PNGs) so _Ready resolves them.
             AltBossArtPreload.Ensure(enc);
 
-            // Boss nodes are hand-placed above the grid and their art is anchored for the boss slot, so
-            // the injected node's grid-cell position (which the old NNormalMapPoint used) puts the art off
-            // where the clickable node/path sits. Place the flank at its own rest's X and the default
-            // boss's Y, so the three bosses sit left / centre / right across the top with art aligned.
             float x = dict.TryGetValue(alt.ParentRestCoord, out var rest) ? rest.Position.X : old.Position.X;
-            var flankPos = new Vector2(x, defaultBoss.Position.Y);
 
             points.RemoveChild(old);
             old.QueueFree();
             dict.Remove(coord);
 
             var bossNode = NBossMapPoint.Create(alt.Point, __instance, runState);
-            bossNode.Position = flankPos;
-            bossNode.Scale = defaultBoss.Scale;
-            // AddChild triggers _Ready, which (via AltBossReadyEncounterPatch) builds this flank's own
-            // boss art in one clean pass — no post-hoc mutation, so the shader material stays valid.
+            // AddChild triggers _Ready (which builds this flank's own boss art in one clean pass) AND a
+            // one-time anchor shift on the boss node. Position AFTER the add so we align to the default
+            // boss's already-shifted coordinates instead of getting shifted a second time: same Y as the
+            // default boss, at this flank's own rest X, so the three bosses sit left / centre / right.
             points.AddChildSafely(bossNode);
+            bossNode.Position = new Vector2(x, defaultBoss.Position.Y);
+            bossNode.Scale = defaultBoss.Scale;
             dict[coord] = bossNode;
             styled++;
-            Log.Info($"[BookOfOrder] placed flank {alt.Side} at {flankPos} (rest x={x}, boss y={defaultBoss.Position.Y})");
+            Log.Info($"[BookOfOrder] placed flank {alt.Side}: set ({x},{defaultBoss.Position.Y}) " +
+                     $"reads back {bossNode.Position}; default boss at {defaultBoss.Position}");
         }
 
         // The old normal nodes' travelable state + visuals were computed during SetMap; recompute so the
