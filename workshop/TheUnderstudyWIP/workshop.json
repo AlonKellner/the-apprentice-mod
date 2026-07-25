@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.12.29: Removed the debug relic - the flank double-boss chain now activates only where it should, at Ascension 10 in the final act.",
+  "changeNote": "v1.12.30: In the double-boss case the flanks now render at half size (0.5) and align to the shrunk 0.75 default boss correctly (fixed a slight low/wide offset).",
   "tags": [],
   "dependencies": [
     3737335127

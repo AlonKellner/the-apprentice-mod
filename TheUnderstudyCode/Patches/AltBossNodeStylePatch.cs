@@ -23,6 +23,9 @@ public static class AltBossNodeStylePatch
     // Flank bosses render at half size, laid out symmetrically about the default boss with this gap
     // between adjacent art edges (map units) so there is a small space and no overlap.
     private const float FlankScale = 0.75f;
+    // When the act has a double boss the game shrinks the default boss to 0.75, and each flank also
+    // carries a stacked second boss, so the flanks themselves render smaller to stay clear.
+    private const float FlankScaleDoubleBoss = 0.5f;
     private const float FlankGap = 40f;
 
     [HarmonyPostfix]
@@ -42,8 +45,15 @@ public static class AltBossNodeStylePatch
                  $"scale={defaultBoss.Scale} artGlobal={ArtGlobalPos(defaultBoss)} " +
                  $"pointsRect={points.GetGlobalRect()}");
 
+        // Double boss: the flank stacks a second boss and the default is shrunk to 0.75, so flanks render
+        // smaller. Boss nodes scale about their centre, so the default's visual half-width/bottom depend
+        // on its live scale — use it so the flanks align to the real default art, not its unscaled box.
+        bool doubleBoss = alts.Any(a => a.IsSecond);
+        float flankScale = doubleBoss ? FlankScaleDoubleBoss : FlankScale;
+        float defaultScale = defaultBoss.Scale.Y;
         float defaultCentreX = defaultBoss.Position.X + defaultBoss.Size.X * 0.5f;
-        float defaultBottomY = defaultBoss.Position.Y + defaultBoss.Size.Y;
+        float defaultBottomY = defaultBoss.Position.Y + defaultBoss.Size.Y * 0.5f
+                               + defaultBoss.Size.Y * defaultScale * 0.5f;
 
         // Two passes: flanks first (positioned relative to the default boss), then chained second bosses
         // (positioned relative to their now-placed flank). A second boss reads its parent flank's node.
@@ -57,19 +67,19 @@ public static class AltBossNodeStylePatch
             // scaled down, art BOTTOMS on the default art's bottom line, with a small gap. Scale about the
             // node centre (centre pivot) so the node centre (Position + Size/2) stays fixed.
             var half = bossNode.Size * 0.5f;
-            float sep = defaultBoss.Size.X * 0.5f + FlankGap + defaultBoss.Size.X * FlankScale * 0.5f;
+            float sep = defaultBoss.Size.X * defaultScale * 0.5f + FlankGap + defaultBoss.Size.X * flankScale * 0.5f;
             int dir = alt.Side == FlankSide.Left ? -1 : 1;
             float centreX = defaultCentreX + dir * sep;
 
             bossNode.PivotOffset = half;
-            bossNode.Scale = new Vector2(FlankScale, FlankScale);
+            bossNode.Scale = new Vector2(flankScale, flankScale);
             bossNode.Position = new Vector2(centreX - half.X,
-                defaultBottomY - half.Y - bossNode.Size.Y * FlankScale * 0.5f);
+                defaultBottomY - half.Y - bossNode.Size.Y * flankScale * 0.5f);
 
             RedrawEdge(__instance, alt.ParentCoord, alt.Point.coord);
             styled++;
-            Log.Info($"[BookOfOrder] placed flank {alt.Side}: centreX={centreX} nodePos={bossNode.Position} " +
-                     $"artGlobal={ArtGlobalPos(bossNode)}");
+            Log.Info($"[BookOfOrder] placed flank {alt.Side}: centreX={centreX} scale={flankScale} " +
+                     $"nodePos={bossNode.Position} artGlobal={ArtGlobalPos(bossNode)}");
         }
 
         foreach (var alt in alts.Where(a => a.IsSecond))
@@ -83,12 +93,12 @@ public static class AltBossNodeStylePatch
             // centre is flankNode.Position + Size/2 and its art top is that centre minus half the scaled art.
             var half = bossNode.Size * 0.5f;
             var flankCentre = flankNode.Position + flankNode.Size * 0.5f;
-            float flankArtHalf = flankNode.Size.Y * FlankScale * 0.5f;
-            float secondArtHalf = bossNode.Size.Y * FlankScale * 0.5f;
+            float flankArtHalf = flankNode.Size.Y * flankScale * 0.5f;
+            float secondArtHalf = bossNode.Size.Y * flankScale * 0.5f;
             float secondCentreY = (flankCentre.Y - flankArtHalf) - FlankGap - secondArtHalf;
 
             bossNode.PivotOffset = half;
-            bossNode.Scale = new Vector2(FlankScale, FlankScale);
+            bossNode.Scale = new Vector2(flankScale, flankScale);
             bossNode.Position = new Vector2(flankCentre.X - half.X, secondCentreY - half.Y);
 
             RedrawEdge(__instance, alt.ParentCoord, alt.Point.coord);
