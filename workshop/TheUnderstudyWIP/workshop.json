@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.12.26: Flank bosses now render at half size, laid out symmetrically around the default boss (its art is their midpoint) at the same height, with a small gap and no overlap.",
+  "changeNote": "v1.12.27: Flank bosses scaled to 0.75 and aligned by their art bottoms to the default boss (standing on the same line), symmetric with a small gap.",
   "tags": [],
   "dependencies": [
     3737335127

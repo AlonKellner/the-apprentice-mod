@@ -22,7 +22,7 @@ public static class AltBossNodeStylePatch
 {
     // Flank bosses render at half size, laid out symmetrically about the default boss with this gap
     // between adjacent art edges (map units) so there is a small space and no overlap.
-    private const float FlankScale = 0.5f;
+    private const float FlankScale = 0.75f;
     private const float FlankGap = 40f;
 
     [HarmonyPostfix]
@@ -71,28 +71,30 @@ public static class AltBossNodeStylePatch
             // boss's already-shifted coordinates instead of getting shifted a second time.
             points.AddChildSafely(bossNode);
 
-            // Lay the two flanks out symmetrically about the default boss so it is their midpoint, at the
-            // same art height, half-size, with a small gap and no overlap. A boss node's art centres on
-            // the node's centre (Position + Size/2), so: half-size via Scale (centre pivot so scaling
-            // keeps that centre fixed), then place the node so its centre lands `sep` left/right of the
-            // default boss's centre. sep = half the default art + gap + half the (scaled) flank art.
+            // Lay the two flanks out symmetrically about the default boss (its art is their midpoint),
+            // scaled down, with their art BOTTOMS on the same line as the default art's bottom and a small
+            // gap between adjacent arts. Scale about the node centre (centre pivot), so the node centre
+            // (Position + Size/2) stays fixed and the visual bottom = centre.Y + Size.Y*scale/2.
             var size = bossNode.Size;
-            var defaultCentre = defaultBoss.Position + defaultBoss.Size * 0.5f;
+            var half = size * 0.5f;
+            float defaultCentreX = defaultBoss.Position.X + defaultBoss.Size.X * 0.5f;
+            float defaultBottomY = defaultBoss.Position.Y + defaultBoss.Size.Y;
             float sep = defaultBoss.Size.X * 0.5f + FlankGap + defaultBoss.Size.X * FlankScale * 0.5f;
             int dir = alt.Side == FlankSide.Left ? -1 : 1;
-            var artCentre = new Vector2(defaultCentre.X + dir * sep, defaultCentre.Y);
+            float centreX = defaultCentreX + dir * sep;
 
-            bossNode.PivotOffset = size * 0.5f;               // scale about the centre, not the corner
+            bossNode.PivotOffset = half;                       // scale about the centre, not the corner
             bossNode.Scale = new Vector2(FlankScale, FlankScale);
-            bossNode.Position = artCentre - size * 0.5f;      // node centre == artCentre
+            // Position so: node centre X = centreX, and visual bottom = defaultBottomY.
+            bossNode.Position = new Vector2(centreX - half.X, defaultBottomY - half.Y - size.Y * FlankScale * 0.5f);
             dict[coord] = bossNode;
 
             // The incoming path was drawn during SetMap while this was an NNormalMapPoint (endpoint =
             // Position, the old grid cell); redraw the rest->flank edge so it meets the boss node's centre
-            // (GetLineEndpoint = Position + Size/2 = artCentre) instead of the old cell.
+            // (GetLineEndpoint = Position + Size/2) instead of the old cell.
             RedrawEdge(__instance, alt.ParentRestCoord, coord);
             styled++;
-            Log.Info($"[BookOfOrder] placed flank {alt.Side}: sep={sep} artCentre={artCentre} " +
+            Log.Info($"[BookOfOrder] placed flank {alt.Side}: centreX={centreX} bottomY={defaultBottomY} " +
                      $"nodePos={bossNode.Position} nodeSize={size} scale={FlankScale} artGlobal={ArtGlobalPos(bossNode)}");
         }
 
