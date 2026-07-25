@@ -9,6 +9,7 @@ using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Logging;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Runs;
+using TheUnderstudy.TheUnderstudyCode.Extensions;
 using TheUnderstudy.TheUnderstudyCode.Relics;
 using Understudy = TheUnderstudy.TheUnderstudyCode.Character.TheUnderstudy;
 
@@ -26,6 +27,11 @@ public class GoldenBedroom : CustomEventModel
 {
     private const int GoldAmount = 75;
     private const int HealAmount = 20;
+
+    // Without this, the event portrait resolves to the base game's images/events/<id>.png (which can't
+    // hold a mod texture) and throws AssetLoadException. PLACEHOLDER: the character illustration until
+    // dedicated Golden Bedroom art is drawn.
+    public override string? CustomInitialPortraitPath => "charui/char_select_the_understudy.png".ImagePath();
 
     protected override IEnumerable<DynamicVar> CanonicalVars => new DynamicVar[]
     {
