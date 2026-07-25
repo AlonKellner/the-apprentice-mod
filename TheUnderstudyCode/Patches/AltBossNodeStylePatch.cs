@@ -20,6 +20,11 @@ namespace TheUnderstudy.TheUnderstudyCode.Patches;
 [HarmonyPatch(typeof(NMapScreen), nameof(NMapScreen.SetMap))]
 public static class AltBossNodeStylePatch
 {
+    // Flank bosses render at half size, laid out symmetrically about the default boss with this gap
+    // between adjacent art edges (map units) so there is a small space and no overlap.
+    private const float FlankScale = 0.5f;
+    private const float FlankGap = 40f;
+
     [HarmonyPostfix]
     public static void Postfix(NMapScreen __instance, ActMap map)
     {
@@ -56,8 +61,6 @@ public static class AltBossNodeStylePatch
             // paths the node will request (spine .tres, or the placeholder PNGs) so _Ready resolves them.
             AltBossArtPreload.Ensure(enc);
 
-            float restX = dict.TryGetValue(alt.ParentRestCoord, out var rest) ? rest.Position.X : old.Position.X;
-
             points.RemoveChild(old);
             old.QueueFree();
             dict.Remove(coord);
@@ -67,22 +70,30 @@ public static class AltBossNodeStylePatch
             // one-time anchor shift on the boss node. Position AFTER the add so we align to the default
             // boss's already-shifted coordinates instead of getting shifted a second time.
             points.AddChildSafely(bossNode);
-            // Position is the node's top-left and the art spans rightward from it, so setting X = restX put
-            // each art's centre ~half a node-width right of the rest (left flank crowding centre, right
-            // flank off-map). Subtract half the node width so the art centres over its own rest; keep the
-            // default boss's Y (same node size ⇒ same vertical centre).
-            float halfWidth = defaultBoss.Size.X * 0.5f;
-            bossNode.Position = new Vector2(restX - halfWidth, defaultBoss.Position.Y);
-            bossNode.Scale = defaultBoss.Scale;
+
+            // Lay the two flanks out symmetrically about the default boss so it is their midpoint, at the
+            // same art height, half-size, with a small gap and no overlap. A boss node's art centres on
+            // the node's centre (Position + Size/2), so: half-size via Scale (centre pivot so scaling
+            // keeps that centre fixed), then place the node so its centre lands `sep` left/right of the
+            // default boss's centre. sep = half the default art + gap + half the (scaled) flank art.
+            var size = bossNode.Size;
+            var defaultCentre = defaultBoss.Position + defaultBoss.Size * 0.5f;
+            float sep = defaultBoss.Size.X * 0.5f + FlankGap + defaultBoss.Size.X * FlankScale * 0.5f;
+            int dir = alt.Side == FlankSide.Left ? -1 : 1;
+            var artCentre = new Vector2(defaultCentre.X + dir * sep, defaultCentre.Y);
+
+            bossNode.PivotOffset = size * 0.5f;               // scale about the centre, not the corner
+            bossNode.Scale = new Vector2(FlankScale, FlankScale);
+            bossNode.Position = artCentre - size * 0.5f;      // node centre == artCentre
             dict[coord] = bossNode;
 
             // The incoming path was drawn during SetMap while this was an NNormalMapPoint (endpoint =
-            // Position, the old grid cell); now that it's a boss node moved to a new spot, redraw the
-            // rest->flank edge so the path meets the boss node's centre instead of the old cell.
+            // Position, the old grid cell); redraw the rest->flank edge so it meets the boss node's centre
+            // (GetLineEndpoint = Position + Size/2 = artCentre) instead of the old cell.
             RedrawEdge(__instance, alt.ParentRestCoord, coord);
             styled++;
-            Log.Info($"[BookOfOrder] placed flank {alt.Side}: restX={restX} halfWidth={halfWidth} " +
-                     $"nodePos={bossNode.Position} nodeSize={bossNode.Size} artGlobal={ArtGlobalPos(bossNode)}");
+            Log.Info($"[BookOfOrder] placed flank {alt.Side}: sep={sep} artCentre={artCentre} " +
+                     $"nodePos={bossNode.Position} nodeSize={size} scale={FlankScale} artGlobal={ArtGlobalPos(bossNode)}");
         }
 
         // The old normal nodes' travelable state + visuals were computed during SetMap; recompute so the
