@@ -24,13 +24,17 @@ public class BookOfOrder : CustomRelicModel
 {
     public override RelicRarity Rarity => RelicRarity.Event;
 
-    // SPIKE (Phase 2, Spike A): inject ONE alternative boss node into each freshly generated map, at
-    // the far-left of the boss row, wired as a child of the far-left pre-boss rest point. This proves
-    // the fundamental unknowns — does an injected node render and can you travel to it — before the
-    // full two-boss + per-node-encounter mechanic (Phase 3). ModifyGeneratedMap is the engine's own
-    // hook for altering a generated map; running it here means it only fires when this relic is held.
-    public override ActMap ModifyGeneratedMap(IRunState runState, ActMap map, int actIndex)
+    // SPIKE (Phase 2): inject ONE alternative boss node at the far-left of the boss row, wired as a
+    // child of the far-left pre-boss rest point. Injection lives in ModifyGeneratedMapLate, not
+    // ModifyGeneratedMap, because that hook fires on BOTH paths: fresh generation (Hook.ModifyGeneratedMap
+    // ends by calling ModifyGeneratedMapLate) AND load (GenerateMap's saved-map branch calls only
+    // ModifyGeneratedMapLate). So the same code re-injects deterministically on load — the base save
+    // format has no slot for alt bosses, so they are re-created rather than serialized. Idempotent via
+    // the store check, so it can't double-inject.
+    public override ActMap ModifyGeneratedMapLate(IRunState runState, ActMap map, int actIndex)
     {
+        if (AltBossStore.For(map).Count > 0) return map; // already injected on this map instance
+
         var preBossRow = map.GetPointsInRow(map.GetRowCount() - 1).ToList();
         if (preBossRow.Count == 0)
         {
