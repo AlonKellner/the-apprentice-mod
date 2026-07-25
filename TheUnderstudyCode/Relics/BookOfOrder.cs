@@ -79,7 +79,7 @@ public class BookOfOrder : CustomRelicModel
 
             var altBoss = new MapPoint(col, bossRow) { PointType = MapPointType.Boss };
             rest.AddChildPoint(altBoss);
-            AltBossStore.Register(map, new AltBossNode(altBoss, side, encounterId));
+            AltBossStore.Register(map, new AltBossNode(altBoss, side, encounterId, rest.coord));
             injected.Add($"{side}=({col},{bossRow})->{encounterId} from rest ({rest.coord.col},{rest.coord.row})");
         }
 
