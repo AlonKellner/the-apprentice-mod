@@ -4,9 +4,9 @@ using Xunit;
 
 namespace TheUnderstudy.Tests;
 
-// Pure logic for the reworked Swap mechanic. The registries, recency observer, and Swap flow itself
-// need ModelDb/combat (not available in the bare test host — see AssemblyInfo.cs), so only the extracted
-// math is unit-tested here; the full give/take flow is verified in-game.
+// Pure logic for the reworked Swap mechanic. The registries and Swap flow itself need ModelDb/combat
+// (not available in the bare test host — see AssemblyInfo.cs), so only the extracted math is unit-tested
+// here; the full give/take flow is verified in-game.
 public class SceneStealingTests
 {
     // ComputeTransfer — how much of a single holding moves per Swap application: capped at SwapCap (10)
@@ -32,29 +32,30 @@ public class SceneStealingTests
     public void ComputeTransfer_NegativeHolding_NeverNegative() =>
         Assert.Equal(0, SceneStealing.ComputeTransfer(have: -4));
 
-    // SelectByRecency — among candidates given in registry order, pick the most recently modified
-    // (highest recency stamp); with no stamps at all, fall back to the first (registry order).
+    // SelectRightmost — among candidates, pick the one sitting RIGHTMOST (highest index) in the creature's
+    // Powers list. positions[i] is candidate i's index within creature.Powers (-1 if absent). The Powers
+    // list order is checksummed and synced, so this is deterministic on every multiplayer client.
 
     [Fact]
-    public void SelectByRecency_Empty_ReturnsMinusOne() =>
-        Assert.Equal(-1, SceneStealing.SelectByRecency(new List<long>()));
+    public void SelectRightmost_Empty_ReturnsMinusOne() =>
+        Assert.Equal(-1, SceneStealing.SelectRightmost(new List<int>()));
 
     [Fact]
-    public void SelectByRecency_PicksHighestStamp() =>
-        // index 1 has the newest modification
-        Assert.Equal(1, SceneStealing.SelectByRecency(new List<long> { 5, 9, 7 }));
+    public void SelectRightmost_PicksHighestPosition() =>
+        // candidate at index 2 sits last (position 9) in the Powers list
+        Assert.Equal(2, SceneStealing.SelectRightmost(new List<int> { 5, 1, 9 }));
 
     [Fact]
-    public void SelectByRecency_AllUnrecorded_FallsBackToFirst() =>
-        // long.MinValue = "never recorded" for every candidate -> registry order (first)
-        Assert.Equal(0, SceneStealing.SelectByRecency(new List<long> { long.MinValue, long.MinValue }));
+    public void SelectRightmost_SingleCandidate_ReturnsIt() =>
+        Assert.Equal(0, SceneStealing.SelectRightmost(new List<int> { 3 }));
 
     [Fact]
-    public void SelectByRecency_RecordedBeatsUnrecorded() =>
-        // A recorded candidate (index 2) wins over unrecorded ones even if it's later in registry order.
-        Assert.Equal(2, SceneStealing.SelectByRecency(new List<long> { long.MinValue, long.MinValue, 1 }));
+    public void SelectRightmost_Ties_PrefersLaterCandidate() =>
+        // equal positions -> the later candidate wins (>= comparison)
+        Assert.Equal(1, SceneStealing.SelectRightmost(new List<int> { 4, 4 }));
 
     [Fact]
-    public void SelectByRecency_SingleCandidate_ReturnsIt() =>
-        Assert.Equal(0, SceneStealing.SelectByRecency(new List<long> { long.MinValue }));
+    public void SelectRightmost_AbsentCandidatesIgnored() =>
+        // -1 = "not held"; the only real position (index 1) wins over absent ones
+        Assert.Equal(1, SceneStealing.SelectRightmost(new List<int> { -1, 0, -1 }));
 }

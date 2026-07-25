@@ -77,16 +77,15 @@ public static class PlannedGridSelectionPatch
         RenderBadges(__instance, order);
     }
 
-    // Runs before the base method sets the result and closes the screen: publish the final click order
-    // so the applier queues Planned in it, and untag so later postfixes (e.g. UpdatePileContents fired
-    // from the same call) skip.
+    // Runs before the base method sets the result and closes the screen: tear down badges and untag so
+    // later postfixes (e.g. UpdatePileContents fired from the same call) skip. The click order is NOT
+    // published anywhere — Planned slots are assigned in the synced selection-result order, not click
+    // order (see PlannedSelectionState); this order tracking drives the badge visual only.
     [HarmonyPatch(typeof(NCombatPileCardSelectScreen), "CompleteSelection")]
     [HarmonyPrefix]
     public static void CompleteSelectionPrefix(NCombatPileCardSelectScreen __instance)
     {
-        if (!Orders.TryGetValue(__instance, out var order)) return;
-        var selected = SelectedCardsRef(__instance);
-        PlannedSelectionState.PublishGridOrder(order.Where(c => selected.Contains(c)).ToList());
+        if (!Orders.TryGetValue(__instance, out _)) return;
         SelectionIndexBadge.ClearAll();
         Orders.Remove(__instance);
     }

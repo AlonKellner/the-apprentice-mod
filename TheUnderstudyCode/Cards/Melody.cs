@@ -9,6 +9,7 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
+using TheUnderstudy.TheUnderstudyCode.Extensions;
 using TheUnderstudy.TheUnderstudyCode.Patches;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
@@ -36,7 +37,7 @@ public class Melody : UnderstudyCard
         await CommonActions.CardAttack(cardPlay.Card, cardPlay).Execute(context);
 
         var player = cardPlay.Card.Owner;
-        PlannedSelectionState.Arm();
+        if (MultiplayerUtil.IsLocalPlayer(player)) PlannedSelectionState.Arm();
         var selected = await CardSelectCmd.FromCombatPile(
             context,
             PileType.Discard.GetPile(player),
@@ -45,7 +46,7 @@ public class Melody : UnderstudyCard
             c => c != this && PlannedModifier.CanApplyTo(c));
 
         if (selected == null) return;
-        foreach (var card in PlannedSelectionState.OrderFor(selected))
+        foreach (var card in selected)
             PlannedModifier.Apply(card, CombatState!);
     }
 }

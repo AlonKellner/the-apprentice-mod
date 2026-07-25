@@ -4,9 +4,9 @@ using Xunit;
 
 namespace TheUnderstudy.Tests.Cards;
 
-// Pure ordering logic for the pre-Planned combat-start assignment. The live attach (sequencer slots,
-// modifier wiring) needs a ModelDb/combat and is verified in-game; the sequencer itself is covered by
-// PlannedSlotSequencerTests.
+// Pure ordering logic for the pre-Planned combat-start assignment. The live attach (owner-scoped slot
+// derivation, modifier wiring) needs a ModelDb/combat and is verified in-game; the slot arithmetic
+// itself is covered by PlannedSlotAssignmentTests.
 public class PrePlannedSetupTests
 {
     [Fact]

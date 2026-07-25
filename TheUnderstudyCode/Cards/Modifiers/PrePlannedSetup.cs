@@ -13,9 +13,9 @@ namespace TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
 
 // Coordinates the once-per-combat assignment of concrete, deck-ordered Planned slots to every
 // pre-Planned card. Replaces the old per-card sentinel slot -1 (all pre-Planned cards overlapped at
-// -1): now each gets a unique index straight from the normal PlannedSlotSequencer, handed out in
-// PileType.Deck (acquisition) order, so pre-Planned cards keep their position in the deck, take the
-// lowest slots, and always sort before any Planned applied later in the combat.
+// -1): now each gets a unique index straight from PlannedModifier's owner-scoped slot derivation,
+// handed out in PileType.Deck (acquisition) order, so pre-Planned cards keep their position in the
+// deck, take the lowest slots, and always sort before any Planned applied later in the combat.
 public static class PrePlannedSetup
 {
     // Per-player, per-combat guard: AfterPlayerTurnStartLate fires once per card (and per player in

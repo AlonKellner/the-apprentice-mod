@@ -16,15 +16,20 @@ namespace TheUnderstudy.TheUnderstudyCode.Cards;
 // into buffs on yourself, Swap trades fortunes with the enemy team. It has NO numeric magnitude: each
 // application moves a single power per side, capped at SwapCap, and the card number is a REPEAT count
 // ("Swap" / "Swap twice" / "Swap 3 times"):
-//   • GIVE: transfer up to SwapCap of the player's *most recently modified* swappable debuff to ALL enemies.
-//   • TAKE: from EACH enemy, steal up to SwapCap of *that enemy's own* most recently modified swappable buff
+//   • GIVE: transfer up to SwapCap of the player's *rightmost* swappable debuff to ALL enemies.
+//   • TAKE: from EACH enemy, steal up to SwapCap of *that enemy's own* rightmost swappable buff
 //           (removed from the enemy, gained by the player).
-// Each repeat recalculates "most recently modified" from live state — no state is carried between
-// applications (giving your latest debuff empties it, so the next repeat naturally moves to the next one).
+// Each repeat recalculates the target from live state — no state is carried between applications (giving
+// your rightmost debuff empties it, so the next repeat naturally moves to the next one).
 //
-// "Most recently modified" recency is recorded per creature by SwapRecencyPatch (see SwapRecency); when a
-// creature holds a swappable power the observer never saw change (an innate buff), selection falls back to
-// registry order. "Swappable" = membership in the two curated registries below — easy to tune.
+// "Rightmost" = the last matching entry in the creature's Powers list. That list order is part of the
+// game-state checksum (CombatState hashes creature.Powers in order, un-sorted), so it is identical on
+// every multiplayer client — making selection a pure function of synced state. This REPLACED a
+// process-global "most recently modified" recency counter (SwapRecency), which diverged across clients:
+// the counter's increment order depended on how each client interleaved different players' power changes
+// during the parallel play phase, so clients could pick different targets and desync. See project memory
+// "RNG determinism" / the multiplayer-determinism plan. "Swappable" = membership in the two curated
+// registries below.
 public static class SceneStealing
 {
     // Per-application cap: at most this much of a single power moves per Swap. High enough to read as
@@ -75,8 +80,9 @@ public static class SceneStealing
         ModelDb.Power<VigorPower>(),
     };
 
-    // The union of swappable power entries, for SwapRecencyPatch to cheaply filter which amount changes
-    // are worth recording. Lazy so ModelDb is ready.
+    // The union of swappable power entries — an immutable membership cache (safe static: read-only after
+    // lazy init, no cross-client state). Used by InvertiblePairs.CaptureGiveAndInvert to decide which
+    // debuffs are pushed onto enemies vs invert-only.
     private static HashSet<string>? _swappableEntries;
     public static bool IsSwappableEntry(string entry) => (_swappableEntries ??= BuildSwappableEntries()).Contains(entry);
 
@@ -92,16 +98,27 @@ public static class SceneStealing
     // (never negative). Also used for the negative portion of a sign-flip buff by passing its magnitude.
     public static int ComputeTransfer(int have) => Math.Max(0, Math.Min(have, SwapCap));
 
-    // Pure: among candidates given in registry order, the index of the most recently modified one
-    // (highest recency stamp). When none have a stamp (all long.MinValue — e.g. only pre-existing innate
-    // powers), this returns 0, i.e. the first in registry order. -1 for an empty list.
-    public static int SelectByRecency(IReadOnlyList<long> recencyStamps)
+    // Pure: among candidates, the index of the one that sits RIGHTMOST (last) in the creature's Powers
+    // list. positions[i] is candidate i's index within creature.Powers (-1 if absent); the highest wins,
+    // ties broken toward the later candidate. Powers-list order is checksummed and synced, so this is
+    // deterministic on every client. Returns -1 for an empty candidate list.
+    public static int SelectRightmost(IReadOnlyList<int> positions)
     {
-        if (recencyStamps.Count == 0) return -1;
+        if (positions.Count == 0) return -1;
         int best = 0;
-        for (int i = 1; i < recencyStamps.Count; i++)
-            if (recencyStamps[i] > recencyStamps[best]) best = i;
+        for (int i = 1; i < positions.Count; i++)
+            if (positions[i] >= positions[best]) best = i;
         return best;
+    }
+
+    // Index of the power with this id within the creature's Powers list (the synced, checksummed order),
+    // or -1 if the creature doesn't hold it.
+    private static int PowerPosition(Creature creature, ModelId id)
+    {
+        var powers = creature.Powers;
+        for (int i = 0; i < powers.Count; i++)
+            if (powers[i].Id.Equals(id)) return i;
+        return -1;
     }
 
     // The registries hold CANONICAL powers (ModelDb.Power<T>()) — fine for reading Id/amount, but
@@ -177,10 +194,10 @@ public static class SceneStealing
         }
     }
 
-    // The player's most recently modified swappable debuff currently in stock: a normal swappable debuff
-    // with a positive amount, or a sign-flip buff (Vigor) with a negative amount (its magnitude given).
-    // Candidates are built in registry order (debuffs, then sign-flip negatives) so SelectByRecency's
-    // no-stamp fallback lands on the first registry entry you hold. Null when there is nothing to give.
+    // The player's RIGHTMOST swappable debuff currently in stock: a normal swappable debuff with a
+    // positive amount, or a sign-flip buff (Vigor) with a negative amount (its magnitude given). Among
+    // everything held, the one sitting last in the creature's Powers list wins (SelectRightmost). Null
+    // when there is nothing to give.
     private static (PowerModel power, int magnitude, bool signFlip)? SelectDebuff(Creature self)
     {
         var candidates = new List<(PowerModel power, int magnitude, bool signFlip)>();
@@ -196,13 +213,13 @@ public static class SceneStealing
         }
         if (candidates.Count == 0) return null;
 
-        var stamps = candidates.Select(c => SwapRecency.LastModified(self, c.power.Id.Entry)).ToList();
-        return candidates[SelectByRecency(stamps)];
+        var positions = candidates.Select(c => PowerPosition(self, c.power.Id)).ToList();
+        return candidates[SelectRightmost(positions)];
     }
 
-    // An enemy's most recently modified swappable buff currently in stock (positive portion only, which
-    // also handles AllowNegative Vigor). Candidates in registry order; null when the enemy has no swappable
-    // buff to steal.
+    // An enemy's RIGHTMOST swappable buff currently in stock (positive portion only, which also handles
+    // AllowNegative Vigor): the one sitting last in the enemy's Powers list. Null when the enemy has no
+    // swappable buff to steal.
     private static PowerModel? SelectBuff(Creature enemy)
     {
         var candidates = new List<PowerModel>();
@@ -213,7 +230,7 @@ public static class SceneStealing
         }
         if (candidates.Count == 0) return null;
 
-        var stamps = candidates.Select(b => SwapRecency.LastModified(enemy, b.Id.Entry)).ToList();
-        return candidates[SelectByRecency(stamps)];
+        var positions = candidates.Select(b => PowerPosition(enemy, b.Id)).ToList();
+        return candidates[SelectRightmost(positions)];
     }
 }

@@ -117,14 +117,20 @@ public class FateKnocking : UnderstudyCard
             // drift that silently broke Tuned's damage bonus once, when a game update unbound a
             // ModifyDamage override for one path but not the other.
             //
-            // Only assert it when the preview's premise held. The preview extrapolates Strikes x the
-            // per-strike number, while the finisher sums what the strikes actually dealt; a target that
-            // dies partway, or a modifier that changes mid-sequence, makes those legitimately differ.
-            // TotalDamage is pre-block (BlockedDamage + UnblockedDamage), so a blocking target does not
-            // trip this. A previewed finisher of 0 means the card was never displayed (auto-played from
-            // a Planned queue), so there is no preview to hold it to.
+            // Only assert it on a genuine hand-play, where the on-screen preview is the authority. When
+            // the card is auto-played from the Planned queue (Workshop/Da Capo → CardCmd.AutoPlay, which
+            // sets CardPlay.IsAutoPlay), its cached preview is whatever the card last showed in hand —
+            // computed against a DIFFERENT target/state than this resolution — so comparing it to the live
+            // finisher is meaningless and logs a spurious mismatch. (An earlier version gated on
+            // previewedFinisher > 0 as a proxy for "was displayed", but a card shown in hand then Planned
+            // keeps a non-zero stale preview, so that proxy fired here wrongly.)
+            //
+            // Even on a hand-play, only assert when the preview's premise held: the preview extrapolates
+            // Strikes x the per-strike number, while the finisher sums what the strikes actually dealt; a
+            // target that dies partway, or a modifier that changes mid-sequence, makes those legitimately
+            // differ. TotalDamage is pre-block, so a blocking target does not trip this.
             bool strikesLandedAsPreviewed = strikeDamage == (int)(Strikes * previewedPerStrike);
-            if (previewedFinisher > 0 && strikesLandedAsPreviewed)
+            if (!cardPlay.IsAutoPlay && previewedFinisher > 0 && strikesLandedAsPreviewed)
                 Invariants.CheckEqual((int)previewedFinisher, finisherDamage,
                     nameof(FateKnocking) + "." + nameof(OnPlay),
                     "previewed finisher damage vs. the damage the finisher actually calculated");

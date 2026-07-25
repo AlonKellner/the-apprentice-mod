@@ -121,7 +121,7 @@ public class Workshop : PlayAllPlannedCard
 
         // Step 2: Apply Planned to 0-N cards selected from the discard pile (sets up next turn's queue).
         var maxSelect = IsUpgraded ? 3 : 2;
-        PlannedSelectionState.Arm();
+        if (MultiplayerUtil.IsLocalPlayer(player)) PlannedSelectionState.Arm();
         var selectedRaw = await CardSelectCmd.FromCombatPile(
             context,
             PileType.Discard.GetPile(player),
@@ -130,7 +130,7 @@ public class Workshop : PlayAllPlannedCard
             c => c != this && PlannedModifier.CanApplyTo(c));
 
         if (selectedRaw == null) return;
-        foreach (var card in PlannedSelectionState.OrderFor(selectedRaw))
+        foreach (var card in selectedRaw)
             PlannedModifier.Apply(card, combatState);
 
         if (!player.Creature.Powers.Any(p => p is PlannedCounterPower))

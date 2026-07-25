@@ -139,22 +139,35 @@ public class PlannedModifier : CardModifier
         AssignVisualIndices(GetSorted(allCards));
     }
 
-    // Slot numbers are handed out by this pure, engine-independent sequencer (see
-    // PlannedSlotSequencer.cs) rather than by scanning a caller-supplied card snapshot on every
-    // call — a snapshot taken even microseconds before a concurrent/nested Apply call can miss an
-    // already-applied slot, handing out a duplicate number (this replaced exactly that bug: Motif
-    // and Blackout both ending up on slot 3 in the same combat).
-    private static readonly PlannedSlotSequencer _slots = new();
+    // Slot numbers are derived directly from the live model graph on every call: the next slot for
+    // an owner is "highest slot currently held by any of that owner's cards + 1". This is a pure
+    // function of the (checksummed) Planned state, scoped to a single player — so it is identical on
+    // every multiplayer client and independent of other players' cross-interleaved actions. A
+    // process-global counter was tried here and REMOVED: its value depended on how the clients
+    // interleaved different players' Apply calls, which diverges during the parallel play phase.
+    //
+    // The old "scan a caller-supplied snapshot" duplicate bug (Motif/Blackout both slot 3) does not
+    // return: NextSlotFor scans LIVE RelevantCards(owner), and Apply/ApplyPrePlanned write the new
+    // slot into SequenceIndices synchronously before the next call runs, so each scan already sees
+    // every prior slot. Never pass a cached snapshot in.
+    private static int NextSlotFor(Player? owner)
+    {
+        var existing = new List<int>();
+        foreach (var c in RelevantCards(owner))
+            if (c.TryGetModifier<PlannedModifier>(out var mod))
+                existing.AddRange(mod.SequenceIndices);
+        return NextSlotFromExisting(existing);
+    }
 
-    // The sequencer's resync point: highest live slot + 1. Only invoked on a combat-token change
-    // (see PlannedSlotSequencer), so a mid-combat save/reload can't re-hand an already-restored slot.
-    private static int NextResyncStart(Player? owner)
+    // Pure core of NextSlotFor, unit-testable without a live model graph: the next slot is one past
+    // the highest already handed out (0 when none exist). Pins the "always max+1, never reuse" rule
+    // that keeps a mid-combat save/reload from re-handing a restored slot; NextSlotFor itself needs a
+    // live ModelDb/Player graph so it can only be verified in-game.
+    public static int NextSlotFromExisting(IEnumerable<int> existingSlots)
     {
         int max = -1;
-        foreach (var c in RelevantCards(owner))
-            if (c.TryGetModifier<PlannedModifier>(out var existing))
-                foreach (var s in existing.SequenceIndices)
-                    if (s > max) max = s;
+        foreach (var s in existingSlots)
+            if (s > max) max = s;
         return max + 1;
     }
 
@@ -168,7 +181,7 @@ public class PlannedModifier : CardModifier
     {
         if (card.TryGetModifier<PlannedModifier>(out _)) return;
 
-        int newSlot = _slots.Next(combat, () => NextResyncStart(card.Owner));
+        int newSlot = NextSlotFor(card.Owner);
         CardModifier.AddModifier<PlannedModifier>(card);
         card.TryGetModifier<PlannedModifier>(out var mod);
         mod!.ReinitCollections();
@@ -180,9 +193,11 @@ public class PlannedModifier : CardModifier
     }
 
     // Appends a new queue slot to the card. Creates the modifier if the card doesn't have one yet.
+    // `combat` is retained for call-site clarity (Planned is a combat-scoped op) and forward-compat;
+    // slot assignment itself is now derived purely from the owner's live cards (see NextSlotFor).
     public static void Apply(CardModel card, ICombatState combat)
     {
-        int newSlot = _slots.Next(combat, () => NextResyncStart(card.Owner));
+        int newSlot = NextSlotFor(card.Owner);
 
         if (!card.TryGetModifier<PlannedModifier>(out var mod))
         {
@@ -200,12 +215,12 @@ public class PlannedModifier : CardModifier
             nameof(PlannedModifier) + "." + nameof(Apply),
             $"{card.Id} picked up duplicate slot index {newSlot} on itself — SequenceIndices: [{string.Join(",", mod.SequenceIndices)}]");
 
-        // Cross-card diagnostic. PlannedSlotSequencer makes a collision impossible under normal
-        // operation, but this is exactly the invariant that silently broke before (Motif/Blackout
-        // both ending up on slot 3) with nothing logging it at the point of failure — only
-        // reconstructible after the fact from timing. If the sequencer's state ever desyncs from
-        // live card state again (a future caller bypassing Apply, an unanticipated edge case, etc.),
-        // this fires immediately and points at the exact slot and cards involved.
+        // Cross-card diagnostic. Deriving newSlot from the owner's live cards (NextSlotFor) makes a
+        // collision impossible under normal operation, but this is exactly the invariant that silently
+        // broke before (Motif/Blackout both ending up on slot 3) with nothing logging it at the point
+        // of failure — only reconstructible after the fact from timing. If slot derivation ever falls
+        // out of step with live card state again (a future caller mutating SequenceIndices out of
+        // band, an unanticipated edge case, etc.), this fires immediately and points at the exact slot.
         int collisions = RelevantCards(card.Owner).Count(c => c != card
             && c.TryGetModifier<PlannedModifier>(out var other) && other.SequenceIndices.Contains(newSlot));
         Invariants.Check(collisions == 0,
