@@ -34,7 +34,9 @@ public class ScoreRestSiteOption : CustomRestSiteOption
             Cancelable = true,
             RequireManualConfirmation = true,
         };
-        var preview = ModelDb.Enchantment<PrePlanned>().ToMutable();
+        // Canonical, NOT mutable: FromDeckForEnchantment calls enchantment.CanEnchant(...), and a mutable
+        // model throws MutableModelException there (base-game enchant options all pass the canonical).
+        var preview = ModelDb.Enchantment<PrePlanned>();
         var selection = await CardSelectCmd.FromDeckForEnchantment(Owner, preview, 1, prefs);
         if (!selection.Any()) return false;
         foreach (var card in selection)
