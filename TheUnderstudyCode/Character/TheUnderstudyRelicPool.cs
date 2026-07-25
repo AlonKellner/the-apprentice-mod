@@ -25,7 +25,6 @@ public class TheUnderstudyRelicPool : CustomRelicPoolModel
     {
         typeof(ChaoticBook),
         typeof(BookOfOrder),
-        typeof(AltBossDoubleBossDebug),
     };
 
     // The "Consumed" epoch (ep4) gates 3 relics until it is revealed; event-only relics are always excluded.

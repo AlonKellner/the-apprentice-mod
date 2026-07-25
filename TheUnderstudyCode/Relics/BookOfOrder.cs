@@ -85,12 +85,11 @@ public class BookOfOrder : CustomRelicModel
             injected.Add($"{side}=({col},{bossRow})->{encounterId} from rest ({rest.coord.col},{rest.coord.row})");
         }
 
-        // Double boss (Ascension 10 final act, or forced by the debug relic): chain a second boss above
-        // each flank. The seconds are a derangement of the reachable first bosses (default + both flanks),
-        // so every boss chains into a *different* reachable boss — no self-pairing. When the game itself
-        // made a second-boss slot (real Asc10 final act), override the default boss's second to the same
+        // Double boss (Ascension 10 final act): chain a second boss above each flank. The seconds are a
+        // derangement of the reachable first bosses (default + both flanks), so every boss chains into a
+        // *different* reachable boss — no self-pairing. Override the default boss's second to the same
         // derangement so all three endings cycle cleanly.
-        bool doubleBoss = act.HasSecondBoss || AltBossDoubleBossDebug.IsActive(runState);
+        bool doubleBoss = act.HasSecondBoss;
         if (doubleBoss)
         {
             var firsts = new List<string> { defaultId };
