@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.12.6: added the Chaotic Book quest relic - Study it 3 times at Rest Sites to transform it into the Book of Order (WIP; map power lands in a later version).",
+  "changeNote": "v1.12.7: diagnostics for the Study rest-site option showing the wrong title.",
   "tags": [],
   "dependencies": [
     3737335127

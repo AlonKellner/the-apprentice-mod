@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using BaseLib.Abstracts;
 using MegaCrit.Sts2.Core.Commands;
@@ -38,7 +39,14 @@ public class ChaoticBook : CustomRelicModel
     public override bool TryModifyRestSiteOptions(Player player, ICollection<RestSiteOption> options)
     {
         if (player != Owner) return false;
-        options.Add(new StudyRestSiteOption(player, this));
+        var study = new StudyRestSiteOption(player, this);
+        options.Add(study);
+        // Diagnostic (the "Dig instead of Study" report): log the option we add — its OptionId and what
+        // its Title loc actually resolves to at runtime — and the full option list, so a stray DIG or a
+        // failed loc lookup is visible in godot.log. Grep: [Study].
+        Log.Info($"[Study] added OptionId={study.OptionId} title='{study.Title.GetFormattedText()}'");
+        Log.Info("[Study] rest options now: " +
+            string.Join(", ", options.Select(o => $"{o.OptionId}=>'{o.Title.GetFormattedText()}'")));
         return true;
     }
 
