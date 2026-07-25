@@ -17,16 +17,22 @@ public static class AltBossArtDiagnosticPatch
     {
         var t = Traverse.Create(__instance);
         var usesSpine = t.Field("_usesSpine").GetValue<bool>();
-        var spineSprite = t.Field("_spineSprite").GetValue<Godot.Node2D>();
-        var container = t.Field("_spriteContainer").GetValue<Godot.Node2D>();
         var coord = __instance.Point.coord;
+
+        string placeholder = "n/a";
+        if (!usesSpine)
+        {
+            var img = t.Field("_placeholderImage").GetValue<Godot.TextureRect>();
+            var outline = t.Field("_placeholderOutline").GetValue<Godot.TextureRect>();
+            placeholder = img == null
+                ? "img=null"
+                : $"imgVisible={img.Visible} imgTex={(img.Texture != null ? img.Texture.ResourcePath : "null")} " +
+                  $"imgGlobalPos={img.GlobalPosition} imgSize={img.Size} imgModulate={img.SelfModulate} " +
+                  $"outlineTex={(outline?.Texture != null ? "set" : "null")}";
+        }
 
         Log.Info($"[BossArtDiag] node ({coord.col},{coord.row}) type={__instance.Point.PointType} " +
                  $"usesSpine={usesSpine} nodeVisible={__instance.Visible} pos={__instance.Position} " +
-                 $"scale={__instance.Scale} " +
-                 $"spineVisible={(spineSprite != null ? spineSprite.Visible.ToString() : "null")} " +
-                 $"spineGlobalPos={(spineSprite != null ? spineSprite.GlobalPosition.ToString() : "null")} " +
-                 $"containerScale={(container != null ? container.Scale.ToString() : "null")} " +
-                 $"containerPos={(container != null ? container.Position.ToString() : "null")}");
+                 $"scale={__instance.Scale} placeholder[{placeholder}]");
     }
 }
