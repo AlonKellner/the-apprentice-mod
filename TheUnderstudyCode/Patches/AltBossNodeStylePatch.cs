@@ -41,10 +41,6 @@ public static class AltBossNodeStylePatch
         var defaultBoss = t.Field("_bossPointNode").GetValue<NMapPoint>();
         if (runState == null || dict == null || points == null || defaultBoss == null) return;
 
-        Log.Info($"[BookOfOrder] default boss: pos={defaultBoss.Position} size={defaultBoss.Size} " +
-                 $"scale={defaultBoss.Scale} artGlobal={ArtGlobalPos(defaultBoss)} " +
-                 $"pointsRect={points.GetGlobalRect()}");
-
         // Double boss: the flank stacks a second boss and the default is shrunk to 0.75, so flanks render
         // smaller. Boss nodes scale about their centre, so the default's visual half-width/bottom depend
         // on its live scale — use it so the flanks align to the real default art, not its unscaled box.
@@ -78,8 +74,6 @@ public static class AltBossNodeStylePatch
 
             RedrawEdge(__instance, alt.ParentCoord, alt.Point.coord);
             styled++;
-            Log.Info($"[BookOfOrder] placed flank {alt.Side}: centreX={centreX} scale={flankScale} " +
-                     $"nodePos={bossNode.Position} artGlobal={ArtGlobalPos(bossNode)}");
         }
 
         foreach (var alt in alts.Where(a => a.IsSecond))
@@ -103,8 +97,6 @@ public static class AltBossNodeStylePatch
 
             RedrawEdge(__instance, alt.ParentCoord, alt.Point.coord);
             styled++;
-            Log.Info($"[BookOfOrder] placed second {alt.Side}: nodePos={bossNode.Position} " +
-                     $"artGlobal={ArtGlobalPos(bossNode)} above flank at {flankCentre}");
         }
 
         // The old normal nodes' travelable state + visuals were computed during SetMap; recompute so the
@@ -146,20 +138,6 @@ public static class AltBossNodeStylePatch
         points.AddChildSafely(bossNode);
         dict[coord] = bossNode;
         return bossNode;
-    }
-
-    // DIAGNOSTIC: where a boss node's art actually renders (spine sprite or placeholder image), so we can
-    // compare a flank's art position against the default boss and the map bounds.
-    private static Vector2 ArtGlobalPos(NMapPoint node)
-    {
-        var t = Traverse.Create(node);
-        if (t.Field("_usesSpine").GetValue<bool>())
-        {
-            var s = t.Field("_spineSprite").GetValue<Node2D>();
-            return s != null ? s.GlobalPosition : new Vector2(float.NaN, float.NaN);
-        }
-        var img = t.Field("_placeholderImage").GetValue<TextureRect>();
-        return img != null ? img.GlobalPosition : new Vector2(float.NaN, float.NaN);
     }
 
     // Remove and re-draw the parent->child path segments so the line meets the moved boss node. Uses the

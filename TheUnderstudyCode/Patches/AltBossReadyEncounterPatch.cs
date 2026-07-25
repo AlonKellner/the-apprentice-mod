@@ -60,12 +60,7 @@ public static class AltBossReadyEncounterPatch
             if (encId != null)
             {
                 var enc = act.AllBossEncounters.FirstOrDefault(e => e.Id.ToString() == encId);
-                if (enc != null)
-                {
-                    Log.Info($"[BookOfOrder] flank node ({node.Point.coord.col},{node.Point.coord.row}) " +
-                             $"renders art for {enc.Id}");
-                    return enc;
-                }
+                if (enc != null) return enc;
             }
         }
         return act.BossEncounter;

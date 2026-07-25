@@ -99,7 +99,13 @@ public class BookOfOrder : CustomRelicModel
             if (act.HasSecondBoss && derange.TryGetValue(defaultId, out var dSecondId))
             {
                 var dSecond = act.AllBossEncounters.FirstOrDefault(e => e.Id.ToString() == dSecondId);
-                if (dSecond != null) act.SetSecondBossEncounter(dSecond);
+                if (dSecond != null)
+                {
+                    // The game preloaded the ORIGINAL second boss's art; force-load the overridden one so
+                    // the default's second node doesn't render blank (same fix as the flanks).
+                    AltBossArtPreload.Ensure(dSecond);
+                    act.SetSecondBossEncounter(dSecond);
+                }
             }
 
             foreach (var f in flankNodes)

@@ -1,6 +1,5 @@
 using Godot;
 using MegaCrit.Sts2.Core.Assets;
-using MegaCrit.Sts2.Core.Logging;
 using MegaCrit.Sts2.Core.Models;
 
 namespace TheUnderstudy.TheUnderstudyCode.Map;
@@ -18,11 +17,8 @@ public static class AltBossArtPreload
     {
         foreach (var path in enc.MapNodeAssetPaths)
         {
-            bool exists = ResourceLoader.Exists(path);
-            Resource? loaded = null;
-            try { loaded = PreloadManager.Cache.GetAsset<Resource>(path); }
+            try { PreloadManager.Cache.GetAsset<Resource>(path); }
             catch { /* missing/failed asset: node keeps its (blank) placeholder */ }
-            Log.Info($"[BookOfOrder] preload {enc.Id}: {path} exists={exists} loaded={loaded != null}");
         }
     }
 }
