@@ -1,0 +1,12 @@
+{
+  "THEUNDERSTUDY-GOLDEN_BEDROOM.title": "The Golden Bedroom",
+  "THEUNDERSTUDY-GOLDEN_BEDROOM.pages.INITIAL.description": "Through a sequence of strange secret corridors, you reach a child's bedroom made of gold. Suddenly, a golden book zooms out the door, trying to escape your sight. You can see that the book is a powerful artifact, but the golden bed seems inviting...",
+
+  "THEUNDERSTUDY-GOLDEN_BEDROOM.pages.INITIAL.options.TAKE_GOLDEN_TOYS": "Take golden toys. [Gain {Gold} [gold]Gold[/gold]]",
+  "THEUNDERSTUDY-GOLDEN_BEDROOM.pages.INITIAL.options.SLEEP_IN_THE_BED": "Sleep in the bed. [Heal {Heal} HP]",
+  "THEUNDERSTUDY-GOLDEN_BEDROOM.pages.INITIAL.options.CHASE_THE_BOOK": "Chase the book. [Obtain [gold]Chaotic Book[/gold]]",
+
+  "THEUNDERSTUDY-GOLDEN_BEDROOM.pages.TAKE_GOLDEN_TOYS.description": "The golden toys seem to have never been touched. They made you feel uneasy, but you easily trade them for a hefty bag of gold.",
+  "THEUNDERSTUDY-GOLDEN_BEDROOM.pages.SLEEP_IN_THE_BED.description": "You lie on the bed for a few seconds before you fall asleep. After an unknowable amount of time you wake up feeling refreshed, but with one certainty about it - you were not able to have any dreams in this bed.",
+  "THEUNDERSTUDY-GOLDEN_BEDROOM.pages.CHASE_THE_BOOK.description": "After a tiring chase, you manage to snatch the book out of the air. You flip through it, and see that the ending is ever changing. You feel that the shifting letters of the ending follow a complex logic, that if studied - can be controlled."
+}

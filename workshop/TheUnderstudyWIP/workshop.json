@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.12.9: Score and Foldable Stage rest-site options now show their own icons instead of the Dig shovel (placeholder art).",
+  "changeNote": "v1.12.10: added The Golden Bedroom event - take gold, sleep in the dreamless bed, or chase the book to obtain the Chaotic Book.",
   "tags": [],
   "dependencies": [
     3737335127
