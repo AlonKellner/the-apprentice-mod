@@ -49,6 +49,11 @@ public class TheUnderstudy : PlaceholderCharacterModel
     public override CharacterGender Gender => CharacterGender.Neutral;
     public override int StartingHp => 70;
 
+    // Map path color: a warm golden tone matching the Understudy's gold palette (the energy-burst
+    // f0c040), deliberately brighter and more yellow than the Regent's muted brown-orange (935206)
+    // so the two characters' map trails read as clearly distinct.
+    public override Color MapDrawingColor => new("f0c040");
+
     public override IEnumerable<CardModel> StartingDeck =>
     [
         ModelDb.Card<UnderstudyStrike>(),
