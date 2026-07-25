@@ -34,7 +34,9 @@ public static class PlannedGridSelectionPatch
     [HarmonyPostfix]
     public static void CreatePostfix(NCombatPileCardSelectScreen __result)
     {
-        if (!PlannedSelectionState.ConsumeArmed()) return;
+        bool armed = PlannedSelectionState.ConsumeArmed();
+        MegaCrit.Sts2.Core.Logging.Log.Info($"[PlannedBadge] grid select screen created, armed={armed}");
+        if (!armed) return;
         // Clear any badges stranded by a previous selection that closed without completing (cancel).
         SelectionIndexBadge.ClearAll();
         Orders.AddOrUpdate(__result, new List<CardModel>());

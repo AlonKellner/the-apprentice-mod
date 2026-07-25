@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.12.34: New always-visible Tuned counter power (like the Planned one) - lists your Tuned cards by name (no order), with a badge showing the current Tuned bonus each adds to Block/damage.",
+  "changeNote": "v1.12.35: Diagnostic build - logs the Planned selection-badge lifecycle to track down badges lingering on the wrong cards.",
   "tags": [],
   "dependencies": [
     3737335127
