@@ -10,7 +10,7 @@
   "THEUNDERSTUDY-WORKSHOP.selectionPrompt": "Choose cards to make [gold]Planned[/gold].",
 
   "THEUNDERSTUDY-PRACTICE.title": "Practice",
-  "THEUNDERSTUDY-PRACTICE.description": "{InCombat:cond:|[gold]Tuned[/gold] 1.\n}Deal {Damage:diff()} damage.\nApply [gold]Tuned[/gold] to {Select:diff()} attacks and skills.",
+  "THEUNDERSTUDY-PRACTICE.description": "{InCombat:cond:|[gold]Tuned[/gold] 1.\n}Deal {Damage:diff()} damage.\nApply [gold]Tuned[/gold] to {Select:diff()} attacks and skills in your hand.",
   "THEUNDERSTUDY-PRACTICE.selectionPrompt": "Choose cards to make [gold]Tuned[/gold].",
 
   "THEUNDERSTUDY-FREEZE_UP.title": "Freeze Up",

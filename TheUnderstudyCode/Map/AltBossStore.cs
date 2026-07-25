@@ -19,4 +19,13 @@ public static class AltBossStore
 
     public static IReadOnlyList<MapPoint> For(ActMap map) =>
         ByMap.TryGetValue(map, out var list) ? list : Array.Empty<MapPoint>();
+
+    // Whether a coordinate is one of this map's injected alt bosses — used at boss-room creation to
+    // decide whether to substitute the alt encounter.
+    public static bool IsAltBoss(ActMap map, MapCoord coord)
+    {
+        foreach (var p in For(map))
+            if (p.coord.col == coord.col && p.coord.row == coord.row) return true;
+        return false;
+    }
 }

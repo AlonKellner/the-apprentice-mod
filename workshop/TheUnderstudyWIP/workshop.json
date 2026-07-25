@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.12.14: [spike] Book of Order injects one extra boss node on the map, to test rendering and travel.",
+  "changeNote": "v1.12.15: [spike] entering the injected alt boss node now fights a different boss than the default.",
   "tags": [],
   "dependencies": [
     3737335127
