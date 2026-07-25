@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BaseLib.Abstracts;
 using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.Entities.RestSite;
 using MegaCrit.Sts2.Core.Events;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
@@ -35,7 +36,16 @@ public class GoldenBedroom : CustomEventModel
     public override string? CustomInitialPortraitPath => "charui/char_select_the_understudy.png".ImagePath();
 
     protected override IEnumerable<DynamicVar> CanonicalVars =>
-        new DynamicVar[] { new GoldVar(GoldAmount) };
+        new DynamicVar[] { new GoldVar(GoldAmount), new HealVar(0) };
+
+    // Sleeping heals like a campfire rest — 30% of Max HP (via GetHealAmount, which also applies any
+    // rest-heal relics). Compute the concrete number here (Owner is set before CalculateVars) so the
+    // option shows the real value, "Heal {Heal} HP", rather than a vague description.
+    public override void CalculateVars()
+    {
+        base.CalculateVars();
+        DynamicVars["Heal"].BaseValue = HealRestSiteOption.GetHealAmount(Owner!);
+    }
 
     // The Golden Bedroom is the Understudy's story; it must not appear in other characters' runs.
     public override bool IsAllowed(IRunState runState) =>
@@ -57,11 +67,11 @@ public class GoldenBedroom : CustomEventModel
 
     private async Task SleepInTheBed()
     {
-        // Sleeping is resting — so heal exactly as a campfire would (MimicRestSiteHeal), the base
-        // game's own mechanic for rest-flavored event heals (Dense Vegetation). Scales with Max HP,
-        // unlike a flat number, and matches "you wake up feeling refreshed".
-        Log.Info("[GoldenBedroom] SleepInTheBed -> rest-site heal");
-        await PlayerCmd.MimicRestSiteHeal(Owner!);
+        // Heal exactly the value shown in the option (the campfire-rest amount computed in
+        // CalculateVars), via a plain Heal so no rest-site rewards are offered — just the heal.
+        int amount = DynamicVars["Heal"].IntValue;
+        Log.Info($"[GoldenBedroom] SleepInTheBed -> heal {amount}");
+        await CreatureCmd.Heal(Owner!.Creature, amount);
         SetEventFinished(L10NLookup($"{Id.Entry}.pages.SLEEP_IN_THE_BED.description"));
     }
 
