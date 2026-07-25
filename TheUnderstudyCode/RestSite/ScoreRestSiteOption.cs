@@ -7,6 +7,7 @@ using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Models;
 using TheUnderstudy.TheUnderstudyCode.Enchantments;
+using TheUnderstudy.TheUnderstudyCode.Extensions;
 
 namespace TheUnderstudy.TheUnderstudyCode.RestSite;
 
@@ -18,6 +19,11 @@ public class ScoreRestSiteOption : CustomRestSiteOption
 {
     public const string Id = "THEUNDERSTUDY_SCORE";
     public override string OptionId => Id;
+
+    // Without a CustomIconPath the button resolves its icon against the base game's ui/rest_site/
+    // folder (where a mod texture can't exist) and falls back to the Dig shovel. PLACEHOLDER: the
+    // Planned glyph (this option enchants Planned) until dedicated rest-site art is drawn.
+    public override string? CustomIconPath => "powers/planned_counter_power.png".ImagePath();
 
     public ScoreRestSiteOption(Player owner) : base(owner) { }
 
