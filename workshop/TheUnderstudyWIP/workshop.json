@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.12.17: Book of Order now injects BOTH flank bosses (far-left + far-right) with a seeded left/right encounter assignment, so all three of the act's bosses are reachable and you route to the ending you choose. Deterministic across load/co-op.",
+  "changeNote": "v1.12.18: Book of Order flank bosses now render with the FULL animated art of the boss each path leads to (like the second-boss node), and are properly selectable in normal play (previously only the debug-travel path worked). You can now read your ending straight off the map.",
   "tags": [],
   "dependencies": [
     3737335127
