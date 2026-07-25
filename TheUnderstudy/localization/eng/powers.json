@@ -163,6 +163,10 @@
   "THEUNDERSTUDY-PLANNED_COUNTER_POWER.description": "{Header}{CardList}",
   "THEUNDERSTUDY-PLANNED_COUNTER_POWER.smartDescription": "{Header}{CardList}",
 
+  "THEUNDERSTUDY-TUNED_COUNTER_POWER.title": "Tuned",
+  "THEUNDERSTUDY-TUNED_COUNTER_POWER.description": "{Header}{CardList}",
+  "THEUNDERSTUDY-TUNED_COUNTER_POWER.smartDescription": "{Header}{CardList}",
+
   "THEUNDERSTUDY-BALANCED_POWER.title": "Balanced",
   "THEUNDERSTUDY-BALANCED_POWER.description": "Whenever a card becomes [gold]Unplayable[/gold], remove [gold]Unplayable[/gold] from 1 random attack or skill in hand.",
   "THEUNDERSTUDY-BALANCED_POWER.smartDescription": "Whenever a card becomes [gold]Unplayable[/gold], remove [gold]Unplayable[/gold] from {Amount} random attack or skill in hand."

@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.12.33: Fixed the crash when selecting the Score / Foldable Stage rest actions (passed a mutable enchant model where a canonical was required). Renamed the actions to verbs: Score -> Notate, Foldable Stage -> Enact.",
+  "changeNote": "v1.12.34: New always-visible Tuned counter power (like the Planned one) - lists your Tuned cards by name (no order), with a badge showing the current Tuned bonus each adds to Block/damage.",
   "tags": [],
   "dependencies": [
     3737335127

@@ -188,6 +188,8 @@ public abstract class UnderstudyCard(
         PrePlannedSetup.AssignIfNeeded(player, CombatState!);
         if (!player.Creature.Powers.Any(p => p is PlannedCounterPower))
             await PowerCmd.Apply<PlannedCounterPower>(context, player.Creature, 1m, player.Creature, null, false);
+        if (!player.Creature.Powers.Any(p => p is TunedCounterPower))
+            await PowerCmd.Apply<TunedCounterPower>(context, player.Creature, 1m, player.Creature, null, false);
         if (!player.Creature.Powers.Any(p => p is InvertTrackerPower))
             await PowerCmd.Apply<InvertTrackerPower>(context, player.Creature, 1m, player.Creature, null, false);
         // Sole owner of the Tuned->Unplayable lock (see TunedLockPower). Hidden observer of every

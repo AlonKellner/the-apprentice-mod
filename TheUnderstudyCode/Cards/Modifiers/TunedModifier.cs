@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using MegaCrit.Sts2.Core.Entities.Players;
 using BaseLib.Abstracts;
 using BaseLib.Extensions;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -68,6 +69,15 @@ public class TunedModifier : CardModifier
         return player.Piles.Where(p => p.Type.IsCombatPile()).SelectMany(p => p.Cards)
             .Count(c => c.TryGetModifier<TunedModifier>(out _));
     }
+
+    // The live Tuned carriers in this player's combat piles — the same set TunedCardCount() sizes (so its
+    // Count() is the current per-stack Tuned bonus, the +damage/+block each Tuned card adds). Exposed for
+    // the Tuned counter power's card-name list; order is not meaningful.
+    public static IEnumerable<CardModel> TunedCards(Player? player) =>
+        player == null
+            ? Enumerable.Empty<CardModel>()
+            : player.Piles.Where(p => p.Type.IsCombatPile()).SelectMany(p => p.Cards)
+                .Where(c => c.TryGetModifier<TunedModifier>(out _));
 
     // Any non-Stable Attack/Skill is eligible — matches PlannedModifier/UnplayableModifier's own
     // eligibility check. A card with no Damage/Block var (e.g. Workshop-shaped utility Skills)
