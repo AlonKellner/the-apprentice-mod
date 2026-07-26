@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -54,25 +55,9 @@ public abstract class UnderstudyCard(
         $"{Id.Entry.RemovePrefix().ToLowerInvariant()}.png".BigCardImagePath()
             ?? TypePlaceholderPortrait;
 
-    // Call in subclass constructors to register the dynamic Tuned hover tip. The lambda is
-    // evaluated at hover time with the live card, so it reads the current TunedModifier.Stacks —
-    // returns nothing when Tuned hasn't been applied yet (no tip clutter on fresh cards).
-    protected void WithTunedTip()
-    {
-        WithTips(card =>
-        {
-            if (!card.TryGetModifier<TunedModifier>(out var mod) || mod.Stacks <= 0)
-                return Enumerable.Empty<IHoverTip>();
-            int s = mod.Stacks;
-            return new IHoverTip[]
-            {
-                new HoverTip(
-                    new LocString("card_keywords", "THEUNDERSTUDY-TUNED.title"),
-                    $"If this deals damage or grants [gold]Block[/gold], increase it by {s} for each card with [gold]Tuned[/gold]."
-                )
-            };
-        });
-    }
+    // (The per-card WithTunedTip() helper that used to live here is gone: TunedModifier.AddTips now
+    // supplies the same tip from the modifier side, so it reaches every Tuned card — including
+    // colorless and base-game ones — instead of only the two Basic cards that remembered to call it.)
 
     private static readonly PropertyInfo TipDescriptionProperty =
         typeof(HoverTip).GetProperty(nameof(HoverTip.Description))!;
@@ -109,13 +94,31 @@ public abstract class UnderstudyCard(
         });
     }
 
+    private static readonly FieldInfo ConstructedHoverTipsField =
+        typeof(ConstructedCardModel).GetField("_hoverTips", BindingFlags.Instance | BindingFlags.NonPublic)!;
+
     // Same as BaseLib's WithPower<T>, but WITHOUT the auto-added power-description hover tip. Used by
     // Power cards whose own card text already states the effect in plain mechanical language, so the
     // power's tooltip would only duplicate the card description. The PowerVar<T> itself is still added
     // (it's what CommonActions.Apply<T> reads for the amount) — only the redundant tip is dropped.
-    // Lesson cards that use flavour text keep the real WithPower<T> so their tooltip explains it.
-    protected void WithPowerNoTip<T>(int baseVal, int upgrade = 0) where T : PowerModel =>
+    // The Second Lesson and The Final Lesson keep the real WithPower<T>, because their card text is
+    // flavour rather than mechanics and needs the power tooltip to explain itself.
+    //
+    // Dropping the tip takes a removal rather than an omission: adding the var is what creates it.
+    // BaseLib's WithVars (which WithVar forwards to) scans every var's runtime type and calls
+    // WithTip(arg) for each generic type argument assignable to PowerModel — so PowerVar<T> tips
+    // itself, and the earlier "just don't call WithTip" version of this helper silently did nothing.
+    // WithTip appends exactly one TooltipSource per call, so removing the last entry removes precisely
+    // the one this var just added. Guarded on the list actually having grown, so that if a future
+    // BaseLib drops the auto-tip this degrades to a no-op instead of eating a real tip (or throwing on
+    // an empty list). CardHoverTipCountTests fails loudly either way.
+    protected void WithPowerNoTip<T>(int baseVal, int upgrade = 0) where T : PowerModel
+    {
+        var tips = (IList)ConstructedHoverTipsField.GetValue(this)!;
+        int before = tips.Count;
         WithVar(new PowerVar<T>(baseVal).WithUpgrade<PowerVar<T>>(upgrade));
+        if (tips.Count > before) tips.RemoveAt(tips.Count - 1);
+    }
 
     // The frozen configuration captured the first time this card is observed Stable; null means it is
     // not (yet) Stable. Deep (modifier state + local keywords) via StableEnforcer, so restore undoes
@@ -172,8 +175,30 @@ public abstract class UnderstudyCard(
         return t;
     }
 
-    // Auto-attach the shared PlannedCounterPower so the queue UI badge is visible whenever
-    // Workshop queues cards, and the hidden InvertTrackerPower so Invert can react to
+    // The two counter powers are granted lazily, and only once the player actually HAS a Planned /
+    // Tuned card — a fresh deck with neither mechanic in it should not carry two permanently-empty
+    // counters. The gate has to be on the grant rather than on the powers' IsVisible: NPowerContainer
+    // .Add builds a power's icon node only if IsVisible at the instant PowerApplied fires and never
+    // re-checks it, so a power granted while hidden could never appear later. Gating the grant also
+    // latches for free — nothing removes these powers mid-combat, so the counter stays put once shown
+    // rather than blinking out when the last Tuned card is exhausted.
+    //
+    // Called from every hook that can follow a Planned/Tuned application: turn start (pre-Planned /
+    // pre-Tuned setup, Rosin), card play (the bulk of both mechanics, plus AutoTune/Muse/Perfectionism
+    // powers, which run their AfterCardPlayed before ours — powers are iterated before cards), and
+    // potion use (Planned/Tuned Potion).
+    private static async Task GrantCountersIfNeeded(PlayerChoiceContext context, Player player)
+    {
+        if (!player.Creature.Powers.Any(p => p is PlannedCounterPower)
+            && PlannedModifier.AnyIn(PlannedModifier.RelevantCards(player)))
+            await PowerCmd.Apply<PlannedCounterPower>(context, player.Creature, 1m, player.Creature, null, false);
+        if (!player.Creature.Powers.Any(p => p is TunedCounterPower)
+            && TunedModifier.TunedCards(player).Any())
+            await PowerCmd.Apply<TunedCounterPower>(context, player.Creature, 1m, player.Creature, null, false);
+    }
+
+    // Auto-attach the shared counter powers so the queue/Tuned UI badges appear as soon as either
+    // mechanic is in play, and the hidden InvertTrackerPower so Invert can react to
     // enemy-inflicted (not just self-applied) invertible debuffs and perform its bidirectional
     // debuff/buff cancellation for all 6 pairs (see InvertTrackerPower for why that logic lives
     // there rather than on each Un-X power). (Take Notes' "debuff cleared" detection used to need a
@@ -186,10 +211,7 @@ public abstract class UnderstudyCard(
         // Driven here (rather than per-card at BeforeCombatStart) because by turn 1's start every combat
         // card is present in the draw/hand piles, so the ordered pass sees them all.
         PrePlannedSetup.AssignIfNeeded(player, CombatState!);
-        if (!player.Creature.Powers.Any(p => p is PlannedCounterPower))
-            await PowerCmd.Apply<PlannedCounterPower>(context, player.Creature, 1m, player.Creature, null, false);
-        if (!player.Creature.Powers.Any(p => p is TunedCounterPower))
-            await PowerCmd.Apply<TunedCounterPower>(context, player.Creature, 1m, player.Creature, null, false);
+        await GrantCountersIfNeeded(context, player);
         if (!player.Creature.Powers.Any(p => p is InvertTrackerPower))
             await PowerCmd.Apply<InvertTrackerPower>(context, player.Creature, 1m, player.Creature, null, false);
         // Sole owner of the Tuned->Unplayable lock (see TunedLockPower). Hidden observer of every
@@ -215,9 +237,14 @@ public abstract class UnderstudyCard(
         return Task.CompletedTask;
     }
 
-    public override Task AfterCardPlayed(PlayerChoiceContext context, CardPlay cardPlay)
+    public override async Task AfterCardPlayed(PlayerChoiceContext context, CardPlay cardPlay)
     {
         EnforceStableNow();
+
+        // Most Planned/Tuned applications happen during a card play, so this is where the counter
+        // powers usually first appear. Owner-gated so one card does the grant, not every card in hand.
+        if (Owner != null && cardPlay.Card.Owner == Owner)
+            await GrantCountersIfNeeded(context, Owner);
 
         // Planned is only ever removed by an explicit "remove Planned" effect or by a "Play all
         // Planned" resolver (Showtime/DaCapo/Workshop/Remix) consuming the exact slot it's
@@ -228,7 +255,16 @@ public abstract class UnderstudyCard(
         // The Tuned->Unplayable lock used to live here, but only fired for cards deriving from
         // UnderstudyCard (colorless Tuned cards escaped it). It now lives in TunedLockPower, a hidden
         // player power that observes every card play (see AfterPlayerTurnStartLate).
-        return Task.CompletedTask;
+    }
+
+    // The Planned/Tuned Potions apply their modifier outside any card play, so the counter grant needs
+    // its own trigger here or the badge would not show until the next card played. This hook carries no
+    // PlayerChoiceContext; applying a power asks the player nothing, so a ThrowingPlayerChoiceContext is
+    // safe (same pattern as SafetyNet and DebuffClearNotifier).
+    public override async Task AfterPotionUsed(PotionModel potion, Creature? target)
+    {
+        if (Owner == null || CombatState == null) return;
+        await GrantCountersIfNeeded(new ThrowingPlayerChoiceContext(), Owner);
     }
 
     public override Task BeforeSideTurnEnd(PlayerChoiceContext context, CombatSide side, IEnumerable<Creature> creatures)

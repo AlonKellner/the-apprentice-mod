@@ -10,20 +10,28 @@ using TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
+// A full run-through of the show: sweep the whole cast, then tune two cards for the next pass.
+// The mod's only Common AoE attack, and what separates it from Back of my Hand (single target, but
+// tunes the WHOLE hand): wide damage + narrow Tuned, versus narrow damage + wide Tuned.
+//
+// CommonActions.CardAttack dispatches on TargetType internally, so making this AllEnemies needs no
+// change to the attack call itself.
 public class RunThrough : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:RunThrough";
 
-    public RunThrough() : base(2, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
+    private const int MaxTuned = 2;
+
+    public RunThrough() : base(2, CardType.Attack, CardRarity.Common, TargetType.AllEnemies)
     {
-        WithDamage(14);
+        WithDamage(8);
         WithTip(UnderstudyKeywords.Tuned);
     }
 
     protected override void OnUpgrade()
     {
         base.OnUpgrade();
-        DynamicVars.Damage.UpgradeValueBy(4m);
+        DynamicVars.Damage.UpgradeValueBy(3m);
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
@@ -34,7 +42,7 @@ public class RunThrough : UnderstudyCard
         var selected = await CardSelectCmd.FromHand(
             context,
             player,
-            new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-RUN_THROUGH.selectionPrompt"), 0, 1),
+            new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-RUN_THROUGH.selectionPrompt"), 0, MaxTuned),
             c => c != this && TunedModifier.CanApplyTo(c),
             this);
 

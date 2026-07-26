@@ -39,6 +39,14 @@ public class TunedCounterPower : UnderstudyPower
     // Tuned cards (TunedModifier.TunedCards.Count()). Zero on a canonical/bare power.
     public override int DisplayAmount => IsMutable ? TunedModifier.TunedCards(Owner?.Player).Count() : 0;
 
+    // Always visible ONCE GRANTED — and the grant is what's gated. This power is not applied until the
+    // player actually has a Tuned card (see UnderstudyCard.GrantCountersIfNeeded), which also makes it
+    // latch: nothing removes it for the rest of the combat, so the counter does not blink out when the
+    // last Tuned card is exhausted.
+    //
+    // Gating the grant rather than this property is deliberate: NPowerContainer.Add creates a power's
+    // icon node only if IsVisible at the instant PowerApplied fires, and never re-checks. A power
+    // granted while invisible could therefore never appear later, however the flag changed.
     protected override bool IsVisibleInternal => true;
 
     // null (not "") so the first UpdateDisplayIfChanged always runs and sets both vars explicitly.

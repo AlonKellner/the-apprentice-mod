@@ -16,11 +16,11 @@ public class Practice : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:Practice";
 
-    public Practice() : base(0, CardType.Attack, CardRarity.Basic, TargetType.AnyEnemy, false)
+    public Practice() : base(0, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
     {
         WithKeyword(UnderstudyKeywords.Stable, ConstructedCardModel.UpgradeType.None);
         WithDamage(0);
-        WithVars(new CardsVar("Select", 2));
+        WithVars(new CardsVar("Select", 1));
         WithTip(UnderstudyKeywords.Tuned);
     }
 
@@ -38,7 +38,7 @@ public class Practice : UnderstudyCard
     {
         await CommonActions.CardAttack(cardPlay.Card, cardPlay).Execute(context);
         var player = cardPlay.Card.Owner;
-        var maxSelect = IsUpgraded ? 3 : 2;
+        var maxSelect = IsUpgraded ? 2 : 1;
         var selected = await CardSelectCmd.FromHand(
             context,
             player,

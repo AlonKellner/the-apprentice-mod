@@ -33,6 +33,10 @@ public class PlannedCounterPower : UnderstudyPower
         ? PlannedModifier.TotalSlotCount(PlannedModifier.RelevantCards(Owner?.Player))
         : 0;
 
+    // Always visible ONCE GRANTED — and the grant is what's gated. This power is not applied until the
+    // player actually has a Planned card (see UnderstudyCard.GrantCountersIfNeeded), which also makes
+    // it latch: nothing removes it for the rest of the combat, so the counter does not blink out when
+    // the queue empties. See TunedCounterPower for why the gate lives on the grant, not here.
     protected override bool IsVisibleInternal => true;
 
     // null (not "") so the first UpdateDisplayIfChanged always runs and explicitly sets both vars,

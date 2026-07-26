@@ -5,6 +5,8 @@ using BaseLib.Abstracts;
 using BaseLib.Extensions;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
+using MegaCrit.Sts2.Core.HoverTips;
+using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.ValueProps;
 using TheUnderstudy.TheUnderstudyCode.Cards;
@@ -160,6 +162,30 @@ public class TunedModifier : CardModifier
     }
 
     // ── Instance overrides ───────────────────────────────────────────────────────────────────
+
+    // The explanation a Tuned card carries, phrased for its actual stack count. The keyword's own
+    // card_keywords entry hardcodes "by 1 for each card", which understates a multi-stack card
+    // (Experience doubles stacks), so this restates both clauses with the real number.
+    public static string TipDescription(int stacks) =>
+        "Becomes [gold]Unplayable[/gold] when played. Increases damage or [gold]Block[/gold] by "
+        + $"{stacks} for each card with [gold]Tuned[/gold].";
+
+    // Every card that HAS Tuned explains Tuned, whether or not its printed text mentions the keyword.
+    // BaseLib routes CardModel.HoverTips through ExtraTooltips.AddTips, which calls this on each of the
+    // card's modifiers — so this reaches colorless and base-game cards too, which a per-card WithTip in
+    // an UnderstudyCard constructor never could. (TryModifyKeywordsInCombat below deliberately does not
+    // add the keyword, so the game's own keyword->tip loop never fires for Tuned; this is the only
+    // source.) Cards whose text mentions Tuned still declare the static WithTip for
+    // CardTooltipKeywordSyncTests — drop it here so the stack-aware wording wins instead of doubling up.
+    public override void AddTips(List<IHoverTip> tips)
+    {
+        if (Stacks <= 0) return;
+        string keywordTipId = HoverTipFactory.FromKeyword(UnderstudyKeywords.Tuned).Id;
+        tips.RemoveAll(t => t.Id == keywordTipId);
+        tips.Add(new HoverTip(
+            new LocString("card_keywords", "THEUNDERSTUDY-TUNED.title"),
+            TipDescription(Stacks)));
+    }
 
     // UnderstudyKeywords.Tuned is NOT added here — that would create a second un-numbered
     // "Tuned" badge alongside ModifyDescription's "Tuned N." text.

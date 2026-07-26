@@ -6,6 +6,7 @@ using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Players;
+using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Logging;
 using MegaCrit.Sts2.Core.Models;
 using TheUnderstudy.TheUnderstudyCode.Cards;
@@ -294,6 +295,21 @@ public class PlannedModifier : CardModifier
             return true;
         }
         return false;
+    }
+
+    // Every card that IS Planned explains Planned, whether or not its printed text mentions the
+    // keyword. TryModifyKeywordsInCombat above already adds the keyword, and CardModel.HoverTips tips
+    // every keyword it finds — but only where the in-combat keyword set is actually applied, so the
+    // tooltip goes missing on surfaces that read the card outside that path. Adding it from the
+    // modifier is unconditional, and reaches colorless / base-game cards a per-card WithTip cannot.
+    //
+    // No dedup needed: HoverTipFactory.FromKeyword caches one instance per keyword and
+    // CardModel.HoverTips ends in .Distinct(), so this collapses against both the card's own static
+    // WithTip(Planned) and the game's keyword loop.
+    public override void AddTips(List<IHoverTip> tips)
+    {
+        if (SequenceIndices.Count == 0) return;
+        tips.Add(HoverTipFactory.FromKeyword(UnderstudyKeywords.Planned));
     }
 
     public override void ModifyDescriptionPost(Creature? creature, ref string description)

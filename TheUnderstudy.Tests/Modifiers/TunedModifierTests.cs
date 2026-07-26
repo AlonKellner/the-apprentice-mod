@@ -317,4 +317,18 @@ public class TunedModifierTests
         mod.ModifyDescription(null, ref description);
         Assert.Equal("Deal 6 damage.", description);
     }
+
+    // The tooltip AddTips hands to every Tuned card. It exists instead of the plain card_keywords
+    // entry precisely because that entry hardcodes "by 1 for each card", which understates a
+    // multi-stack card (Experience doubles stacks) — so the stack count must reach the text.
+    [Theory]
+    [InlineData(1)]
+    [InlineData(2)]
+    [InlineData(6)]
+    public void TipDescription_StatesTheActualStackCount(int stacks)
+    {
+        string text = TunedModifier.TipDescription(stacks);
+        Assert.Contains($"by {stacks} for each card", text);
+        Assert.Contains("[gold]Unplayable[/gold] when played", text);
+    }
 }

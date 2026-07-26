@@ -9,8 +9,11 @@
   "THEUNDERSTUDY-WORKSHOP.description": "Play all [gold]Planned[/gold] cards.\nApply [gold]Planned[/gold] to {Select:diff()} attacks and skills in your discard pile.",
   "THEUNDERSTUDY-WORKSHOP.selectionPrompt": "Choose cards to make [gold]Planned[/gold].",
 
+  "THEUNDERSTUDY-HARMONY.title": "Harmony",
+  "THEUNDERSTUDY-HARMONY.description": "Deal {Damage:diff()} damage twice.\nGain {Vigor:diff()} [gold]Vigor[/gold].\n[gold]Invert[/gold] {Invert:diff()}.",
+
   "THEUNDERSTUDY-PRACTICE.title": "Practice",
-  "THEUNDERSTUDY-PRACTICE.description": "{InCombat:cond:|[gold]Tuned[/gold] 1.\n}Deal {Damage:diff()} damage.\nApply [gold]Tuned[/gold] to {Select:diff()} attacks and skills in your hand.",
+  "THEUNDERSTUDY-PRACTICE.description": "{InCombat:cond:|[gold]Tuned[/gold] 1.\n}Deal {Damage:diff()} damage.\nApply [gold]Tuned[/gold] to {Select:diff()} {Select:plural:attack or skill|attacks and skills} in your hand.",
   "THEUNDERSTUDY-PRACTICE.selectionPrompt": "Choose cards to make [gold]Tuned[/gold].",
 
   "THEUNDERSTUDY-FREEZE_UP.title": "Freeze Up",
@@ -20,8 +23,8 @@
   "THEUNDERSTUDY-DESPERATE_STRIKE.description": "Deal {Damage:diff()} damage.\nApply {Weak:inverseDiff()} [gold]Weak[/gold] to yourself.",
 
   "THEUNDERSTUDY-RUN_THROUGH.title": "Run Through",
-  "THEUNDERSTUDY-RUN_THROUGH.description": "Deal {Damage:diff()} damage.\nApply [gold]Tuned[/gold] to 1 attack or skill in hand.",
-  "THEUNDERSTUDY-RUN_THROUGH.selectionPrompt": "Choose a card to make [gold]Tuned[/gold].",
+  "THEUNDERSTUDY-RUN_THROUGH.description": "Deal {Damage:diff()} damage to ALL enemies.\nApply [gold]Tuned[/gold] to 2 attacks or skills in hand.",
+  "THEUNDERSTUDY-RUN_THROUGH.selectionPrompt": "Choose cards to make [gold]Tuned[/gold].",
 
   "THEUNDERSTUDY-ORCHESTRATION.title": "Orchestration",
   "THEUNDERSTUDY-ORCHESTRATION.description": "Draw {Cards:diff()} {Cards:plural:card|cards}.\nApply [gold]Planned[/gold] to {Select:diff()} {Select:plural:attack or skill|attacks and skills} in your hand.",

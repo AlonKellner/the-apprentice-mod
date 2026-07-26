@@ -41,8 +41,9 @@ public class MultiplayerStaticStateGuardTests
         "UnderstudyKeywords.cs::Invertible",
         "UnderstudyKeywords.cs::Swap",
         "UnderstudyKeywords.cs::Swappable",
-        // Immutable reflection-metadata cache (readonly PropertyInfo).
+        // Immutable reflection-metadata caches (readonly PropertyInfo / FieldInfo).
         "UnderstudyCard.cs::TipDescriptionProperty",
+        "UnderstudyCard.cs::ConstructedHoverTipsField",
         // Notification callback hook, wired once at init (dispatch point, not stored gameplay state).
         "DebuffClearNotifier.cs::DebuffCleared",
         // Immutable-after-init lazy caches of canonical models / registry entries (read-only once built).

@@ -15,7 +15,11 @@ public class NewDeckCardsTests
     [Theory]
     [InlineData(typeof(FreezeUp), "TheUnderstudy:FreezeUp", CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)]
     [InlineData(typeof(DesperateStrike), "TheUnderstudy:DesperateStrike", CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)]
-    [InlineData(typeof(RunThrough), "TheUnderstudy:RunThrough", CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)]
+    // Run Through is the deck's only Common AoE attack, and what keeps it distinct from the
+    // single-target, hand-wide Back of my Hand.
+    [InlineData(typeof(RunThrough), "TheUnderstudy:RunThrough", CardType.Attack, CardRarity.Common, TargetType.AllEnemies)]
+    [InlineData(typeof(Harmony), "TheUnderstudy:Harmony", CardType.Attack, CardRarity.Basic, TargetType.AnyEnemy)]
+    [InlineData(typeof(Practice), "TheUnderstudy:Practice", CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)]
     [InlineData(typeof(Orchestration), "TheUnderstudy:Orchestration", CardType.Skill, CardRarity.Common, TargetType.None)]
     [InlineData(typeof(WriteItDown), "TheUnderstudy:WriteItDown", CardType.Skill, CardRarity.Common, TargetType.None)]
     [InlineData(typeof(CryingOutLoud), "TheUnderstudy:CryingOutLoud", CardType.Power, CardRarity.Uncommon, TargetType.None)]

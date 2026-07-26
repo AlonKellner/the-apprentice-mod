@@ -13,7 +13,6 @@ public class UnderstudyDefend : UnderstudyCard
     {
         WithBlock(5);
         WithTags(CardTag.Defend);
-        WithTunedTip();
     }
 
     protected override void OnUpgrade() => DynamicVars.Block.UpgradeValueBy(3m);
