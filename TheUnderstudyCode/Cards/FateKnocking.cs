@@ -8,7 +8,6 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
-using MegaCrit.Sts2.Core.Logging;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.ValueProps;
@@ -130,7 +129,6 @@ public class FateKnocking : UnderstudyCard
         // below change the state both are derived from.
         decimal previewedFinisher = card.DynamicVars["CalculatedDamage"].PreviewValue;
         decimal previewedPerStrike = card.DynamicVars.Damage.PreviewValue;
-        decimal vigorBeforeStrikes = VigorConsumedByStrikes(card);
 
         // The base strikes — capture the ACTUAL damage they deal (after all modifiers and block). We pass the
         // Damage var EXPLICITLY: CommonActions.CardAttack(card, cardPlay, hitCount) auto-prefers a card's
@@ -141,11 +139,6 @@ public class FateKnocking : UnderstudyCard
             card, cardPlay, cardPlay.Target,
             ((DynamicVar)card.DynamicVars.Damage).BaseValue, card.DynamicVars.Damage.Props, Strikes).Execute(context);
         int strikeDamage = strikes.Results.SelectMany(r => r).Sum(dr => dr.TotalDamage);
-        // Per-hit breakdown, because the sum alone cannot distinguish "every hit came in low" (a modifier
-        // the preview missed) from "one hit came in low" (per-hit rounding of a fractional per-strike
-        // value, or a target that ran out of HP partway).
-        string strikeBreakdown = string.Join(
-            "+", strikes.Results.SelectMany(r => r).Select(dr => $"{dr.TotalDamage}/{dr.OverkillDamage}"));
 
         int total = prior + strikeDamage;
         _damageDealt[this] = total;
@@ -192,18 +185,6 @@ public class FateKnocking : UnderstudyCard
             // lethal strike — the running sum is clamped to the target's remaining HP, which makes this
             // premise false and skips the assert rather than reporting a mismatch.
             bool strikesLandedAsPreviewed = strikeDamage == (int)ExpectedStrikeTotal(Strikes, previewedPerStrike);
-
-            // Diagnostic: the invariant below stays silent whenever the strikes did not land as previewed,
-            // which is exactly the case where the player still sees a finisher preview they never get (the
-            // preview extrapolates Strikes x per-strike; the finisher sums what actually landed). Log the
-            // whole picture unconditionally so that gap is diagnosable from a normal play session — there is
-            // no combat test harness for this, and the game log records card plays but no damage numbers.
-            Log.Info(
-                $"[FateKnocking] prior={prior} vigor={vigorBeforeStrikes} previewPerStrike={previewedPerStrike} "
-                + $"strikes={strikeBreakdown} (sum {strikeDamage}) previewFinisher={previewedFinisher} "
-                + $"finisherRolled={finisherDamage} autoPlay={cardPlay.IsAutoPlay} "
-                + $"strikesAsPreviewed={strikesLandedAsPreviewed}");
-
             if (!cardPlay.IsAutoPlay && previewedFinisher > 0 && strikesLandedAsPreviewed)
                 Invariants.CheckEqual((int)previewedFinisher, finisherDamage,
                     nameof(FateKnocking) + "." + nameof(OnPlay),
