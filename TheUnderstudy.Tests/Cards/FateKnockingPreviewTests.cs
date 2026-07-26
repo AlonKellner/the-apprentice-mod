@@ -44,6 +44,36 @@ public class FateKnockingPreviewTests
         Assert.Equal(expected, (int)FateKnocking.ComputeFinisherBase(prior, strikes, perStrike, vigor));
     }
 
+    // Damage lands per hit and is truncated to an int on application (Creature.LoseHpInternal), so a
+    // fractional per-strike number is truncated three times over, not once at the end. Extrapolating the
+    // raw fraction previewed damage the card could never collect.
+    [Theory]
+    [InlineData(3, 4.5, 12)]   // 4+4+4, not 13.5
+    [InlineData(3, 3.99, 9)]   // 3+3+3, not 11.97
+    [InlineData(3, 4.0, 12)]   // already whole: unchanged
+    [InlineData(3, 0.5, 0)]    // every hit truncates away to nothing
+    [InlineData(3, -2.5, 0)]   // damage is clamped at 0 on application, never negative
+    public void ExpectedStrikeTotal_TruncatesPerHitNotAtTheEnd(int strikes, decimal perStrike, int expected)
+    {
+        Assert.Equal(expected, (int)FateKnocking.ExpectedStrikeTotal(strikes, perStrike));
+    }
+
+    // The exact play that exposed this: base 1 + Tuned 2 + Vigor 3 = 6 raw, x0.75 Weak = 4.50 per strike.
+    // The strikes dealt 4+4+4 = 12 and the finisher rolled (12 + 2) * 0.75 = 10.5 -> 10, while the preview
+    // read (13.5 - 3 + 2 + 3) * 0.75 = 11.625 -> 11. Truncating first makes the previewed base agree.
+    [Fact]
+    public void ComputeFinisherBase_MatchesTheStrikesThatWillActuallyLand()
+    {
+        // 3 strikes previewing at 4.50 each, minus the Vigor 3 the strikes consume.
+        decimal previewBase = FateKnocking.ComputeFinisherBase(0, 3, 4.5m, 3m);
+
+        // 12 (what the hits really total), not 13.5 (the extrapolation).
+        Assert.Equal(9m, previewBase);
+        // Re-adding Tuned 2 and Vigor 3 the way ModifyDamage does, then Weak: the same 10.5 the finisher
+        // rolled, which truncates to the 10 the player actually saw land.
+        Assert.Equal(10, (int)((previewBase + 2m + 3m) * 0.75m));
+    }
+
     [Fact]
     public void Card_BacksFinisherPreviewWithCalculatedDamageVar()
     {

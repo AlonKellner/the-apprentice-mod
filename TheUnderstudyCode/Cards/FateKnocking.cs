@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using BaseLib.Abstracts;
@@ -68,7 +69,19 @@ public class FateKnocking : UnderstudyCard
     // multipliers rather than only under flat modifiers.
     public static decimal ComputeFinisherBase(
         int priorSum, int strikes, decimal perStrikeDamage, decimal vigorConsumedByStrikes) =>
-        priorSum + strikes * perStrikeDamage - vigorConsumedByStrikes;
+        priorSum + ExpectedStrikeTotal(strikes, perStrikeDamage) - vigorConsumedByStrikes;
+
+    // What the strikes will actually add up to. Damage lands per hit and Creature.LoseHpInternal casts it
+    // to int — a truncating cast — so a fractional per-strike number (any multiplicative modifier will
+    // produce one: Weak, Vulnerable, ...) is truncated three separate times, not once at the end.
+    // Extrapolating 3 x 4.5 = 13.5 when the hits really deal 4+4+4 = 12 overstated the finisher by the
+    // discarded remainder, which is damage the card can never collect.
+    //
+    // Clamped at zero because damage is clamped at zero on application too, so a per-strike number driven
+    // negative (Vigor can go negative under VigorAllowNegativePatch) contributes nothing rather than
+    // subtracting from the running sum.
+    public static decimal ExpectedStrikeTotal(int strikes, decimal perStrikeDamage) =>
+        strikes * Math.Max(0m, decimal.Truncate(perStrikeDamage));
 
     // The Vigor the strikes will have consumed by the time the finisher resolves, so the preview above can
     // cancel ModifyDamage's re-add. VigorPower latches onto the first attack command it sees and zeroes
@@ -178,7 +191,7 @@ public class FateKnocking : UnderstudyCard
             // differ. Block does not trip this (TotalDamage counts blocked damage), and neither does a
             // lethal strike — the running sum is clamped to the target's remaining HP, which makes this
             // premise false and skips the assert rather than reporting a mismatch.
-            bool strikesLandedAsPreviewed = strikeDamage == (int)(Strikes * previewedPerStrike);
+            bool strikesLandedAsPreviewed = strikeDamage == (int)ExpectedStrikeTotal(Strikes, previewedPerStrike);
 
             // Diagnostic: the invariant below stays silent whenever the strikes did not land as previewed,
             // which is exactly the case where the player still sees a finisher preview they never get (the
