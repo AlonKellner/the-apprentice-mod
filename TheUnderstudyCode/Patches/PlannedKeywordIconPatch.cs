@@ -16,22 +16,33 @@ namespace TheUnderstudy.TheUnderstudyCode.Patches;
 // it up. HoverTip is a `record struct` whose Icon setter is private and which BaseLib may rebuild
 // fresh each call, so mutate the boxed instance in-place via reflection (same technique as
 // InvertibleBasePowerTooltipPatch) rather than trying to construct a replacement.
+//
+// Deliberately holds NO cached Texture2D. The game unloads room assets between rooms ("Unloading N
+// missed cache assets"), which disposes the underlying Godot resource — and a `static Texture2D`
+// primed in one combat then hands a disposed object to every later hover, throwing
+// ObjectDisposedException out of NHoverTipSet.Init. Re-resolving is cheap: PowerModel.Icon is itself
+// just ResourceLoader.Load(..., CacheMode.Reuse), so a live texture comes back from the cache and a
+// dead one is reloaded.
+//
+// The staleness also has to be repaired, not merely avoided: HoverTipFactory.FromKeyword memoizes one
+// HoverTip per keyword, and this postfix mutates that cached instance, so a disposed icon baked into it
+// would otherwise be served for the rest of the process. Hence the validity test rather than a plain
+// "already has an icon" early-out.
 [HarmonyPatch(typeof(HoverTipFactory), nameof(HoverTipFactory.FromKeyword))]
 public static class PlannedKeywordIconPatch
 {
     private static readonly PropertyInfo IconProperty =
         typeof(HoverTip).GetProperty(nameof(HoverTip.Icon))!;
 
-    // The canonical PlannedCounterPower's own icon (planned_counter_power.png via its
-    // CustomPackedIconPath). Loaded once; ResourceLoader caching makes repeat access cheap anyway.
-    private static Texture2D? _icon;
-
     [HarmonyPostfix]
     public static void Postfix(CardKeyword keyword, IHoverTip __result)
     {
         if (keyword != UnderstudyKeywords.Planned) return;
-        if (__result is not HoverTip tip || tip.Icon != null) return;
-        _icon ??= ModelDb.Power<PlannedCounterPower>().Icon;
-        IconProperty.SetValue(__result, _icon);
+        if (__result is not HoverTip tip) return;
+        if (tip.Icon != null && GodotObject.IsInstanceValid(tip.Icon)) return;
+
+        // The canonical PlannedCounterPower's own icon (planned_counter_power.png via its
+        // CustomPackedIconPath).
+        IconProperty.SetValue(__result, ModelDb.Power<PlannedCounterPower>().Icon);
     }
 }

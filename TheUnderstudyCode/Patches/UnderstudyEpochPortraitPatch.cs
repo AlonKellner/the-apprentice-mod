@@ -22,11 +22,15 @@ internal static class UnderstudyEpochPortrait
     internal static bool IsUnderstudyEpoch(EpochModel model) =>
         model.Id.StartsWith("THEUNDERSTUDY", StringComparison.Ordinal);
 
+    // Re-loads whenever the cached texture has been disposed, not just when it is null: the game unloads
+    // room assets on room transitions, which disposes the underlying resource while this field keeps
+    // pointing at it — handing out a disposed Texture2D throws ObjectDisposedException from whatever tries
+    // to draw it. ResourceLoader caching keeps the re-check cheap for a texture that is still alive.
     internal static Texture2D? Placeholder
     {
         get
         {
-            if (_placeholder != null) return _placeholder;
+            if (_placeholder != null && GodotObject.IsInstanceValid(_placeholder)) return _placeholder;
             try { _placeholder = ResourceLoader.Load<Texture2D>(PlaceholderPath); }
             catch (Exception e) { MainFile.Logger.Error("Understudy epoch placeholder art failed to load: " + e); }
             return _placeholder;

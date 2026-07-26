@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.12.42: Fate Knocking's finisher preview now matches what the hit lands for when a modifier makes its strikes deal fractional damage (Weak, Vulnerable and friends). Damage truncates on each hit, so three strikes previewing at 4.5 really deal 4+4+4 - the preview was extrapolating the fraction and promising damage the card could not collect.",
+  "changeNote": "v1.12.43: Fixed an error when hovering a card in the second combat after the Planned tooltip icon had been shown - the icon was cached across room transitions, and the game unloads room art between rooms, so the tooltip was left pointing at a freed texture. The Understudy timeline portraits could go the same way and are fixed too.",
   "tags": [],
   "dependencies": [
     3737335127
