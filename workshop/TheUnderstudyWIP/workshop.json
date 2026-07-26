@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.12.38 — new Basic card Harmony replaces Practice (now Rare); Run Through is now a Common AoE; Tuned/Planned tooltips appear on cards that gain them; counters stay hidden until relevant; power cards no longer duplicate their power's tooltip",
+  "changeNote": "v1.12.39: Fixed the Planned selection index badges not appearing at all in single-player - the multiplayer badge-arming guard treated the single-player as a remote player and never armed.",
   "tags": [],
   "dependencies": [
     3737335127

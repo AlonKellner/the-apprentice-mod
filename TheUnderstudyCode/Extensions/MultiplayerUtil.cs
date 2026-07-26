@@ -14,15 +14,21 @@ namespace TheUnderstudy.TheUnderstudyCode.Extensions;
 // every client (that is what keeps the checksummed model graph in sync).
 public static class MultiplayerUtil
 {
-    // True if `owner` is the player on THIS machine. Compares the player's synced NetId to the local
-    // platform id. Defaults to true when locality can't be determined (single-player, headless test host,
-    // or an uninitialised platform layer) so non-multiplayer behaviour is byte-for-byte unchanged — in
-    // single-player the sole player's NetId already equals the local id.
+    // True if `owner` is the player on THIS machine. Defaults to true when locality can't be determined
+    // (headless test host or an uninitialised platform layer) so non-multiplayer behaviour is unchanged.
+    //
+    // Single-player is short-circuited to true: the sole player's NetId does NOT actually equal the
+    // platform's local id (it is unset/zero in single-player while GetLocalPlayerId returns the Steam id),
+    // so comparing them returned false and stranded every presentation gate — that is what silently
+    // killed the Planned selection badges. The NetId comparison only matters in an actual co-op run
+    // (more than one player), where a remote player's play must not trigger local-only UI on my client.
     public static bool IsLocalPlayer(Player? owner)
     {
         if (owner == null) return true;
         try
         {
+            var players = owner.RunState?.Players;
+            if (players == null || players.Count <= 1) return true; // single-player: trivially local
             return IsLocalPlayerId(owner.NetId, PlatformUtil.GetLocalPlayerId(PlatformUtil.PrimaryPlatform));
         }
         catch
