@@ -4,10 +4,13 @@ using BaseLib.Abstracts;
 using BaseLib.Utils;
 using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Entities.Cards;
+using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
+using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.ValueProps;
+using TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 using TheUnderstudy.TheUnderstudyCode.Extensions;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
@@ -32,16 +35,18 @@ public class FateKnocking : UnderstudyCard
         WithDamage(1);
 
         // Display-only, Body-Slam-style preview of the finisher hit. Raw value = CalculationBase(0) +
-        // ExtraDamage(1) * (priorSum + Strikes * modified-strike); CalculatedDamageVar then runs the SAME
-        // Hook.ModifyDamage the real finisher runs, so "(Deals N damage)" equals the finisher's actual
-        // damage — including the double-scale (Strength/Vigor re-apply to the total), Vulnerable, and the
+        // ExtraDamage(1) * (priorSum + Strikes * modified-strike - vigor); CalculatedDamageVar then runs the
+        // SAME Hook.ModifyDamage the real finisher runs, so "(Deals N damage)" equals the finisher's actual
+        // damage — including the double-scale (Strength re-applies to the total), Vulnerable, and the
         // Intangible cap. Registered AFTER WithDamage so the strike Damage var's PreviewValue (the modified
         // per-strike number) is already computed when this multiplier reads it.
         WithVars(
             new CalculationBaseVar(0m),
             new ExtraDamageVar(1m),
             new CalculatedDamageVar(ValueProp.Move).WithMultiplier(static (card, _) =>
-                ComputeFinisherBase(PriorSumThisCombat(card), Strikes, card.DynamicVars.Damage.PreviewValue)));
+                ComputeFinisherBase(
+                    PriorSumThisCombat(card), Strikes,
+                    card.DynamicVars.Damage.PreviewValue, VigorConsumedByStrikes(card))));
     }
 
     protected override void OnUpgrade()
@@ -51,9 +56,37 @@ public class FateKnocking : UnderstudyCard
     }
 
     // Pure: the finisher's raw (pre-ModifyDamage) base = the accumulated prior sum plus the 3 upcoming
-    // strikes at their current modified per-hit damage. CalculatedDamageVar applies ModifyDamage on top.
-    public static decimal ComputeFinisherBase(int priorSum, int strikes, decimal perStrikeDamage) =>
-        priorSum + strikes * perStrikeDamage;
+    // strikes at their current modified per-hit damage, minus the Vigor those strikes will consume.
+    // CalculatedDamageVar applies ModifyDamage on top.
+    //
+    // The Vigor subtraction exists to CANCEL a copy, not to remove one. perStrikeDamage already contains
+    // Vigor, and ModifyDamage will add it to the total a second time — correct for Strength (the finisher
+    // is a real attack and does get +Str) but wrong for Vigor, which the strikes consume before the
+    // finisher's separate attack command ever runs. Subtracting it here makes the two cancel:
+    // ((base - V) + Str + V) * mult == (base + Str) * mult, so this stays exact under Vulnerable/Weak
+    // multipliers rather than only under flat modifiers.
+    public static decimal ComputeFinisherBase(
+        int priorSum, int strikes, decimal perStrikeDamage, decimal vigorConsumedByStrikes) =>
+        priorSum + strikes * perStrikeDamage - vigorConsumedByStrikes;
+
+    // The Vigor the strikes will have consumed by the time the finisher resolves, so the preview above can
+    // cancel ModifyDamage's re-add. VigorPower latches onto the first attack command it sees and zeroes
+    // itself in AfterAttack, so Fate Knocking's strikes take all of it and the finisher — a second, separate
+    // command — gets none.
+    //
+    // Zero while Reverb is up: ReverbVigorRetentionPatch cancels that consumption (and unlatches the power),
+    // so the finisher really does keep its Vigor and there is nothing to cancel.
+    //
+    // Assumes the strikes are what latch the power. That holds because every path out of an attack leaves
+    // VigorPower unlatched for the next card — either it consumed itself to 0 and was removed (a later gain
+    // mints a fresh instance), or Reverb retained it and explicitly nulled commandToModify.
+    private static decimal VigorConsumedByStrikes(CardModel card)
+    {
+        if (!card.IsMutable) return 0m; // canonical card: Owner throws (unlike CombatState)
+        var creature = card.Owner?.Creature;
+        if (creature == null || ReverbPower.IsActive(creature)) return 0m;
+        return creature.GetPowerAmount<VigorPower>();
+    }
 
     // The damage this card's strikes have dealt in the CURRENT combat (0 on a new combat, clearing stale
     // carryover). Combat-aware so the preview is correct before the card's first play this combat, not only
@@ -109,7 +142,14 @@ public class FateKnocking : UnderstudyCard
         {
             var finisher = await CommonActions
                 .CardAttack(card, cardPlay, cardPlay.Target, (decimal)total, ValueProp.Move).Execute(context);
-            int finisherDamage = finisher.Results.SelectMany(r => r).Sum(dr => dr.TotalDamage);
+
+            // Overkill is added back for the COMPARISON below only — never for the running sum, which is
+            // deliberately the damage this card actually dealt, not what it theoretically rolled.
+            // Creature.LoseHpInternal computes UnblockedDamage as (hpBefore - hpAfter) and parks the excess
+            // in OverkillDamage, so TotalDamage is clamped to the target's remaining HP. The preview
+            // predicts the rolled number, so without this every finisher that kills its target would report
+            // a spurious mismatch.
+            int finisherDamage = finisher.Results.SelectMany(r => r).Sum(dr => dr.TotalDamage + dr.OverkillDamage);
 
             // The whole point of the CalculatedDamageVar above is that "(Deals N damage)" is the number
             // the finisher actually hits for. Both run the same Hook.ModifyDamage, so they can only
@@ -128,7 +168,9 @@ public class FateKnocking : UnderstudyCard
             // Even on a hand-play, only assert when the preview's premise held: the preview extrapolates
             // Strikes x the per-strike number, while the finisher sums what the strikes actually dealt; a
             // target that dies partway, or a modifier that changes mid-sequence, makes those legitimately
-            // differ. TotalDamage is pre-block, so a blocking target does not trip this.
+            // differ. Block does not trip this (TotalDamage counts blocked damage), and neither does a
+            // lethal strike — the running sum is clamped to the target's remaining HP, which makes this
+            // premise false and skips the assert rather than reporting a mismatch.
             bool strikesLandedAsPreviewed = strikeDamage == (int)(Strikes * previewedPerStrike);
             if (!cardPlay.IsAutoPlay && previewedFinisher > 0 && strikesLandedAsPreviewed)
                 Invariants.CheckEqual((int)previewedFinisher, finisherDamage,

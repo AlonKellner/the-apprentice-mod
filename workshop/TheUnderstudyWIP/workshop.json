@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.12.39: Fixed the Planned selection index badges not appearing at all in single-player - the multiplayer badge-arming guard treated the single-player as a remote player and never armed.",
+  "changeNote": "v1.12.40: Fate Knocking's finisher preview no longer promises more damage than it can deal - it was counting Vigor twice, even though the three strikes consume it before the finisher lands. Practice now deals 1 base damage like the other pre-Tuned attacks.",
   "tags": [],
   "dependencies": [
     3737335127

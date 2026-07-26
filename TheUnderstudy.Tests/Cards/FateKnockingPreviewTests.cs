@@ -23,7 +23,25 @@ public class FateKnockingPreviewTests
     [InlineData(10, 3, 5, 25)]
     public void ComputeFinisherBase_SumsPriorPlusStrikes(int prior, int strikes, int perStrike, int expected)
     {
-        Assert.Equal(expected, (int)FateKnocking.ComputeFinisherBase(prior, strikes, perStrike));
+        Assert.Equal(expected, (int)FateKnocking.ComputeFinisherBase(prior, strikes, perStrike, 0m));
+    }
+
+    // Vigor is baked into perStrikeDamage AND re-added by ModifyDamage on top of the finisher's total, but
+    // the strikes consume it before the finisher's own attack command runs. Subtracting it from the raw base
+    // is what makes the two cancel — the previewed number was otherwise Vigor too high on every play with
+    // Vigor up (the mismatch the FateKnocking.OnPlay invariant caught: previewed 19 vs. a rolled 15).
+    [Theory]
+    // 3 strikes of (1 base + 4 Vigor) = 15 raw; ModifyDamage re-adds the 4, so the base must hand back 11.
+    [InlineData(0, 3, 5, 4, 11)]
+    [InlineData(10, 3, 5, 4, 21)]
+    // Vigor can be negative (VigorAllowNegativePatch), and the cancellation is symmetric.
+    [InlineData(0, 3, 2, -3, 9)]
+    // No Vigor (or Reverb holding it) leaves the base untouched.
+    [InlineData(10, 3, 5, 0, 25)]
+    public void ComputeFinisherBase_CancelsTheVigorTheStrikesConsume(
+        int prior, int strikes, int perStrike, int vigor, int expected)
+    {
+        Assert.Equal(expected, (int)FateKnocking.ComputeFinisherBase(prior, strikes, perStrike, vigor));
     }
 
     [Fact]
