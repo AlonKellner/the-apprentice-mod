@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.12.46: Reworked what each Timeline chapter unlocks so it matches the story it tells. 'Writing an End' now unlocks The Golden Bedroom - the event where you find the book it describes. The Lesson cards are spread across the chapters they belong to: the First with 'Taken', the Second with 'Nothing Like Him', the Final with 'Every Story has a Lesson'. Potions moved to 'Consumed' and relics to 'Dreamless'. No Common card, relic or potion is locked behind an epoch any more - Foreshadow, Orchestration, Melody and Safety Net are now available from the first run, as is My Own Lesson.",
+  "changeNote": "v1.12.47: Practice, Experience and One-Up now print 0 base damage and read 1, which comes from the Tuned they start each combat with - they were printing 1 and reading 2. The Compendium also previews Tuned cards the same way every other screen does; it used to show the printed number while a card reward showed the number you actually get.",
   "tags": [],
   "dependencies": [
     3737335127

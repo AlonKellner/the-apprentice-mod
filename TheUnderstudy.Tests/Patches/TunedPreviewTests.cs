@@ -1,5 +1,8 @@
+using System.Collections.Generic;
 using System.Reflection;
 using BaseLib.Abstracts;
+using MegaCrit.Sts2.Core.Localization.DynamicVars;
+using MegaCrit.Sts2.Core.ValueProps;
 using TheUnderstudy.TheUnderstudyCode.Cards;
 using TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
 using TheUnderstudy.TheUnderstudyCode.Patches;
@@ -52,5 +55,113 @@ public class TunedPreviewTests
         var (dynamicBasePart, total) = TunedPreview.TunedParts(new Melody());
         Assert.Equal(0, dynamicBasePart);
         Assert.Equal(0, total);
+    }
+
+    // ── Out-of-run preview (the Compendium) ─────────────────────────────────────────────────────────
+    // CardModel.UpdateDynamicVarPreview opens with `if (RunState == null && CombatState == null) return;`
+    // so on every Compendium surface the game runs NO dynamic-var preview at all, and the
+    // DamageVar/BlockVar postfixes above never fire. A pre-Tuned card therefore showed its printed base
+    // there while showing base+1 in a card reward (which is inside a run). These cover the seam the
+    // Harmony postfix calls to close that gap; the postfix attribute itself is runtime-only.
+
+    private static DamageVar Damage(int baseValue) => new(baseValue, ValueProp.Move);
+
+    [Fact]
+    public void ShouldApplyOutOfRun_BareCard_IsTrue() =>
+        // Both RunState and CombatState are `_owner?.…` on CardModel, so they are safe to read on a
+        // canonical card — unlike Owner, which asserts mutability and throws.
+        Assert.True(TunedPreview.ShouldApplyOutOfRun(new Practice()));
+
+    [Fact]
+    public void ApplyOutOfRun_PreTunedCard_PreviewsTheTunedBonus()
+    {
+        var damage = Damage(0);
+
+        TunedPreview.ApplyOutOfRun(new DynamicVar[] { damage }, new Practice());
+
+        Assert.Equal(1, (int)damage.PreviewValue);
+        // Equal to PreviewValue, so ToHighlightedString colours it neutral: the +1 reads as part of the
+        // card (it always has it), not as a buff — matching the card-reward screen.
+        Assert.Equal(1, (int)damage.EnchantedValue);
+    }
+
+    // The trap this seam exists to avoid. NCard.UpdateVisuals calls DynamicVars.ClearPreview() before
+    // the preview, so that path self-cleans — but NCardLibrary's search-text filter calls
+    // UpdateDynamicVarPreview with no reset, once per card per keystroke, and TunedPreview.Add does
+    // `PreviewValue += total`. Without the reset inside ApplyOutOfRun this climbs 1, 2, 3...
+    [Fact]
+    public void ApplyOutOfRun_RepeatedCalls_DoNotAccumulate()
+    {
+        var damage = Damage(0);
+        var card = new Practice();
+
+        TunedPreview.ApplyOutOfRun(new DynamicVar[] { damage }, card);
+        TunedPreview.ApplyOutOfRun(new DynamicVar[] { damage }, card);
+        TunedPreview.ApplyOutOfRun(new DynamicVar[] { damage }, card);
+
+        Assert.Equal(1, (int)damage.PreviewValue);
+    }
+
+    [Fact]
+    public void ApplyOutOfRun_NonPreTunedCard_LeavesDamageAlone()
+    {
+        var damage = Damage(9);
+
+        TunedPreview.ApplyOutOfRun(new DynamicVar[] { damage }, new Melody());
+
+        Assert.Equal(9, (int)damage.PreviewValue);
+        Assert.Equal(9, (int)damage.EnchantedValue);
+    }
+
+    [Fact]
+    public void ApplyOutOfRun_BlockVar_GetsTheSameTreatment()
+    {
+        var block = new BlockVar(0, ValueProp.Move);
+
+        TunedPreview.ApplyOutOfRun(new DynamicVar[] { block }, new Practice());
+
+        Assert.Equal(1, (int)block.PreviewValue);
+    }
+
+    // Only damage and block carry the Tuned bonus; a card's other vars (Practice's own "Select", card
+    // counts, energy...) must not be touched.
+    [Fact]
+    public void ApplyOutOfRun_OtherVarTypes_AreUntouched()
+    {
+        var other = new IntVar("Select", 4);
+
+        TunedPreview.ApplyOutOfRun(new DynamicVar[] { other }, new Practice());
+
+        Assert.Equal(4, (int)other.PreviewValue);
+        Assert.Equal(4, (int)other.EnchantedValue);
+    }
+
+    // ── Pre-Tuned cards whose whole damage IS the Tuned bonus ───────────────────────────────────────
+    // These three print 0 and read 1: a pre-Tuned card starts each combat carrying Tuned 1, and Tuned
+    // adds Stacks per card with Tuned — counting itself. Printing 1 would make them read 2.
+    //
+    // The other pre-Tuned cards (Clean Slate 3, Shower Thought 2, Signature 5, Showstopper 27) print
+    // real numbers on top of that and are deliberately not in this list.
+    public static IEnumerable<object[]> ZeroBasePreTunedCards() => new[]
+    {
+        new object[] { new Practice() },
+        new object[] { new Experience() },
+        new object[] { new OneUp() },
+    };
+
+    [Theory]
+    [MemberData(nameof(ZeroBasePreTunedCards))]
+    public void ZeroBasePreTunedCard_PrintsZero(UnderstudyCard card) =>
+        Assert.Equal(0, (int)card.DynamicVars.Damage.BaseValue);
+
+    // ...and the two halves agree: printed 0 + the pre-Tuned self-bonus reads as 1 on every out-of-run
+    // surface, which is what the card-reward screen has always shown.
+    [Theory]
+    [MemberData(nameof(ZeroBasePreTunedCards))]
+    public void ZeroBasePreTunedCard_PreviewsAsOne(UnderstudyCard card)
+    {
+        TunedPreview.ApplyOutOfRun(card.DynamicVars.Values, card);
+
+        Assert.Equal(1, (int)card.DynamicVars.Damage.PreviewValue);
     }
 }

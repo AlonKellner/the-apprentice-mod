@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using BaseLib.Extensions;
 using HarmonyLib;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
@@ -49,6 +50,40 @@ public static class TunedPreview
         // Displayed value: the active in-hand preview already had the full Tuned bonus applied by the
         // hook; pile & out-of-combat previews (no hooks ran) add it here.
         if (!runGlobalHooks) var.PreviewValue += total;
+    }
+
+    // ── Out-of-run surfaces (the Compendium) ────────────────────────────────────────────────────────
+    // CardModel.UpdateDynamicVarPreview opens with `if (RunState == null && CombatState == null) return;`
+    // so on a card with neither — every Compendium surface — the game runs NO dynamic-var preview and
+    // the DamageVar/BlockVar postfixes above never fire. A pre-Tuned card then showed its printed base
+    // in the Compendium while showing base+1 in a card reward (which is inside a run, so the preview
+    // does run). These two members let TunedCompendiumPreviewPatch close that gap.
+    //
+    // Deliberately NOT done by lifting the game's early return: that would run every DynamicVar's
+    // UpdateCardPreview on a canonical card, and CalculatedVar.Calculate is not gated on runGlobalHooks —
+    // it indexes _vars["CalculationBase"]/["CalculationExtra"]/["ExtraDamage"] and throws
+    // KeyNotFoundException for any card (ours, base-game, or another mod's) that wires a CalculatedVar
+    // loosely. Touching only Damage/Block avoids that entire class of failure.
+
+    // The exact complement of that early return. Safe on a canonical card: RunState and CombatState are
+    // both `_owner?.…`, unlike Owner which asserts mutability and throws.
+    public static bool ShouldApplyOutOfRun(CardModel card) =>
+        card.RunState == null && card.CombatState == null;
+
+    public static void ApplyOutOfRun(IEnumerable<DynamicVar> vars, CardModel card)
+    {
+        foreach (var v in vars)
+        {
+            if (v is not (DamageVar or BlockVar)) continue;
+
+            // The reset DamageVar/BlockVar.UpdateCardPreview would have done before we add on top.
+            // NCard.UpdateVisuals calls DynamicVars.ClearPreview() first, so that path is already
+            // clean — but NCardLibrary's search-text filter calls UpdateDynamicVarPreview with no
+            // reset, once per card per keystroke, and Add does `PreviewValue += total`. Without this
+            // the Compendium's number climbs 1, 2, 3... as you type.
+            v.PreviewValue = v.BaseValue;
+            Add(v, card, runGlobalHooks: false);
+        }
     }
 }
 

@@ -47,14 +47,15 @@ public class TunedModifierTests
     [Fact]
     public void CanApplyTo_Performance_ReturnsFalse()
     {
-        // Workshop has no Damage or Block DynamicVar — Tuned cannot benefit it.
+        // Workshop is printed Stable, and CanApplyTo is (Attack || Skill) && !IsStable().
         Assert.False(TunedModifier.CanApplyTo(new Workshop()));
     }
 
     [Fact]
     public void CanApplyTo_Buildup_ReturnsFalse()
     {
-        // Practice has no Damage or Block DynamicVar — Tuned cannot benefit it.
+        // Practice is printed Stable, and CanApplyTo is (Attack || Skill) && !IsStable(). (It DOES have
+        // a Damage var — it prints 0 and reads 1 off its own pre-Tuned stack.)
         Assert.False(TunedModifier.CanApplyTo(new Practice()));
     }
 

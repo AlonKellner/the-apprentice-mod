@@ -19,7 +19,7 @@ public class Practice : UnderstudyCard
     public Practice() : base(0, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
     {
         WithKeyword(UnderstudyKeywords.Stable, ConstructedCardModel.UpgradeType.None);
-        WithDamage(1);
+        WithDamage(0);
         WithVars(new CardsVar("Select", 1));
         WithTip(UnderstudyKeywords.Tuned);
     }

@@ -13,7 +13,7 @@ public class Experience : UnderstudyCard
     public Experience() : base(3, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
     {
         WithCostUpgradeBy(-1); // upgrade: cost 3 -> 2
-        WithDamage(1);
+        WithDamage(0);
         WithTip(UnderstudyKeywords.Tuned);
     }
 
