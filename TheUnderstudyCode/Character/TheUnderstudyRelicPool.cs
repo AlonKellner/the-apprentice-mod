@@ -25,13 +25,13 @@ public class TheUnderstudyRelicPool : CustomRelicPoolModel
         typeof(BookOfEndings),
     };
 
-    // The "Consumed" epoch (ep4) gates 3 relics until it is revealed; event-only relics are always excluded.
+    // The "Dreamless" epoch (ep1) gates 3 relics until it is revealed; event-only relics are always excluded.
     public override IEnumerable<RelicModel> GetUnlockedRelics(UnlockState unlockState)
     {
         var relics = base.GetUnlockedRelics(unlockState).ToList();
         relics.RemoveAll(r => EventOnlyRelics.Contains(r.GetType()));
-        if (!unlockState.IsEpochRevealed<Understudy4Epoch>())
-            relics.RemoveAll(r => Understudy4Epoch.Relics.Any(g => g.Id == r.Id));
+        if (!unlockState.IsEpochRevealed<Understudy1Epoch>())
+            relics.RemoveAll(r => Understudy1Epoch.Relics.Any(g => g.Id == r.Id));
         return relics;
     }
 }

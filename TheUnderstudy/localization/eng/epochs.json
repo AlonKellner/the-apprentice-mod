@@ -5,9 +5,10 @@
   "THEUNDERSTUDY1_EPOCH.description": "The [red]Architect[/red] was a creature of pure order, and order cannot conceive of what cannot exist. He could not [sine]dream[/sine]. Often he struggled to sleep, restlessly staring into a dark that never resolved into anything.",
   "THEUNDERSTUDY1_EPOCH.unlockInfo": "{IsRevealed:Unlocked|Unlockable} by defeating the Act 1 boss as the Understudy.",
 
-  "THEUNDERSTUDY2_EPOCH.title": "Designing an End",
+  "THEUNDERSTUDY2_EPOCH.title": "Writing an End",
   "THEUNDERSTUDY2_EPOCH.description": "One [sine]sleepless[/sine] night, a thought took shape. Every story requires an ending, such is the natural order of stories, including his own. He resolved to write his story in a book: with a final, restful conclusion, and the beginning of a new story in his place.",
   "THEUNDERSTUDY2_EPOCH.unlockInfo": "{IsRevealed:Unlocked|Unlockable} by defeating the Act 2 boss as the Understudy.",
+  "THEUNDERSTUDY2_EPOCH.unlockText": "Unlocks the [gold]{Event}[/gold] event.",
 
   "THEUNDERSTUDY3_EPOCH.title": "A Perfect Mirror",
   "THEUNDERSTUDY3_EPOCH.description": "The [red]Architect[/red] created a child, and poured his secrets into it - order, design, the shape of every law he knew. In time the child became flawless. A perfect mirror of its maker. A Perfect story.",
@@ -22,7 +23,7 @@
   "THEUNDERSTUDY5_EPOCH.unlockInfo": "{IsRevealed:Unlocked|Unlockable} by defeating 15 Bosses as the Understudy.",
 
   "THEUNDERSTUDY6_EPOCH.title": "Nothing Like Him",
-  "THEUNDERSTUDY6_EPOCH.description": "The boy was reckless, and loud, and endlessly irritating - nothing like the [red]Architect[/red] at all. But there was potential in him. For years he labored to mold the boy into order, and failed at every turn. Where his caretaker sought design, the boy only wandered off into his [sine]dreams and music[/sine].",
+  "THEUNDERSTUDY6_EPOCH.description": "The boy was reckless, and loud, and endlessly irritating - nothing like the [red]Architect[/red] at all. But there was potential in him. For years he labored to mold the boy into order, but the boy was never a perfect fit. Where his caretaker sought design, the boy only wandered off into his [sine]dreams and music[/sine].",
   "THEUNDERSTUDY6_EPOCH.unlockInfo": "{IsRevealed:Unlocked|Unlockable} by defeating 15 Elites as the Understudy.",
 
   "THEUNDERSTUDY7_EPOCH.title": "Every Story has a Lesson",

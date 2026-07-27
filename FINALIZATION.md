@@ -111,7 +111,7 @@ Nice-to-haves for full parity (not blockers):
 - A **bestiary/act-boss** hook is not a character responsibility — nothing to do here.
 - Steam **achievements** (base game has per-character ones) — optional, out of BaseLib scope.
 
-### 3.1 Epochs / the Timeline — intentionally N/A (not a gap)
+### 3.1 Epochs / the Timeline — implemented
 
 **What Epochs are:** STS2's meta-progression system. In the **Timeline** screen you spend end-of-run
 **score** to "reveal Epochs," which (a) progressively **unlock that character's cards & relics**, and
@@ -120,20 +120,26 @@ Nice-to-haves for full parity (not blockers):
 with `.title/.description/.unlock/.unlockInfo/.unlockText` loc. Backed by `Core.Timeline.EpochMetric`
 and `Core.Saves.EpochState`.
 
-**Why it's not on the punch list:** BaseLib exposes **no `CustomEpochModel`** — you cannot author
-Timeline Epochs for a modded character. Instead BaseLib deliberately **bypasses** the epoch gating:
-its `ObtainCharUnlockEpoch` / `SkipCharUnlockEpoch` / `SkipBossEpochCheck` / `SkipEliteEpochCheck`
-hooks grant the character-unlock Epoch automatically and skip the per-card/relic unlock gates. Net
-effect: **The Understudy's entire pool is available immediately and the character is unlocked without
-a Timeline entry** — which is the correct, expected behavior for a Workshop character. The mod does
-not reference Epoch/Timeline anywhere, and shouldn't need to.
+**The Understudy has a full 7-chapter Timeline story** ("The Final Lesson"). BaseLib exposes no
+`CustomEpochModel`, so `TheUnderstudyCode/Timeline/EpochRegistrar.cs` injects the epoch and story types
+straight into `EpochModel`'s private static registries by reflection at init. What ships:
 
-**The one real consequence:** base characters get much of their **backstory told through Epoch
-gallery text**; a modded character has **no Timeline presence**, so that lore-delivery channel is
-closed. The Understudy must therefore carry its story (see `LORE.md`) through the channels it *does*
-control: the character `description`, the **Architect ancient dialogue** (`ancients.json`), card/relic
-**flavor text**, and `unlockText` if an unlock flow is ever added. This is a **narrative** gap to be
-aware of, not a mechanical one.
+- `UnderstudyEpochs.cs` — 7 `EpochModel`s with era placement and unlock lists; `UnderstudyStory.cs`.
+- `UnderstudyEpochRevealPatch.cs` — replicates the base characters' reveal conditions (act bosses,
+  15 Bosses, 15 Elites, finish a run, Ascension 1+).
+- `UnderstudyEpochReachabilityPatch.cs` (all 7 reachable from Neow at once) and
+  `UnderstudyEpochPortraitPatch.cs` (placeholder art).
+- Gating: `TheUnderstudy{Card,Relic,Potion}Pool` prune their epoch's content until revealed, and
+  `GoldenBedroom.IsAllowed` hides the event behind "Writing an End".
+
+Full chapter/condition/unlock table lives in `LORE.md` §9; the code is the source of truth.
+
+**Still true and worth knowing:** BaseLib deliberately **bypasses** base epoch gating for modded
+characters — its `ObtainCharUnlockEpoch` / `SkipCharUnlockEpoch` / `SkipBossEpochCheck` /
+`SkipEliteEpochCheck` hooks grant the character-unlock Epoch automatically and skip the per-card/relic
+unlock gates. That is *why* the mod replicates the reveal conditions itself in
+`UnderstudyEpochRevealPatch` rather than inheriting them, and why the character is playable without a
+Timeline entry.
 
 **Other BaseLib content types available but unused** (optional bonus scope, not required for character
 equivalence): `CustomEventModel`, `CustomEncounterModel`, `CustomMonsterModel`, `CustomAncientModel`,

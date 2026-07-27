@@ -12,6 +12,7 @@ using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Runs;
 using TheUnderstudy.TheUnderstudyCode.Extensions;
 using TheUnderstudy.TheUnderstudyCode.Relics;
+using TheUnderstudy.TheUnderstudyCode.Timeline;
 using Understudy = TheUnderstudy.TheUnderstudyCode.Character.TheUnderstudy;
 
 namespace TheUnderstudy.TheUnderstudyCode.Events;
@@ -47,9 +48,19 @@ public class GoldenBedroom : CustomEventModel
         DynamicVars["Heal"].BaseValue = HealRestSiteOption.GetHealAmount(Owner!);
     }
 
-    // The Golden Bedroom is the Understudy's story; it must not appear in other characters' runs.
+    // The Golden Bedroom is the Understudy's story; it must not appear in other characters' runs. It is
+    // also what the "Writing an End" epoch unlocks — the chapter where the Architect resolves to write his
+    // ending in a book — so it stays hidden until that epoch is revealed. Same shape the base game uses in
+    // ColorfulPhilosophers.IsAllowed.
+    //
+    // NOTE this is a SOFT gate: RoomSet.EnsureNextEventIsValid skips forward past disallowed events but
+    // falls back to "All unique events exhausted, allowing repetition", so a run that burns through every
+    // event could still surface this one while locked. The base game's hard gate filters the event out in
+    // ActModel.GenerateRooms; matching that would need a Harmony patch, which is not worth it for an edge
+    // case this rare.
     public override bool IsAllowed(IRunState runState) =>
-        runState.Players.Any(p => p.Character is Understudy);
+        runState.Players.Any(p => p.Character is Understudy
+                               && p.UnlockState.IsEpochRevealed<Understudy2Epoch>());
 
     protected override IReadOnlyList<EventOption> GenerateInitialOptions() => new[]
     {

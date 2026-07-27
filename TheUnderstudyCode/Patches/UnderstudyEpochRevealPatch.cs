@@ -21,26 +21,27 @@ namespace TheUnderstudy.TheUnderstudyCode.Patches;
 // Reveal order is NOT enforced (all 7 are reachable at once, see UnderstudyEpochReachabilityPatch); it
 // is softly encouraged by the difficulty of each condition. Mapping (condition -> epoch, deliberately
 // non-chronological to land the twists):
-//   Finish a run       -> A Perfect Mirror   (3)
-//   Beat Act 1         -> Dreamless           (1)
-//   Beat Act 2         -> Designing an End    (2)
-//   Beat Act 3         -> The Final Lesson    (7)
-//   Defeat 15 Bosses   -> The Boy in the City (5)
-//   Defeat 15 Elites   -> Nothing Like Him    (6)
-//   Complete Ascension 1 -> Consumed          (4)
+//   Finish a run         -> A Perfect Mirror        (3)
+//   Beat Act 1           -> Dreamless                (1)
+//   Beat Act 2           -> Writing an End           (2)
+//   Beat Act 3           -> Every Story has a Lesson (7)
+//   Defeat 15 Bosses     -> Taken                    (5)
+//   Defeat 15 Elites     -> Nothing Like Him         (6)
+//   Complete Ascension 1 -> Consumed                 (4)
 //
 // NOTE: the two hooks live in SEPARATE classes each with a CLASS-LEVEL [HarmonyPatch]. Harmony's
 // PatchAll only discovers classes annotated at the class level — a single class holding both hooks with
 // only method-level attributes is silently skipped (which had disabled this whole feature until v1.11.53).
 internal static class UnderstudyEpochReveal
 {
-    internal const string PerfectMirror   = "THEUNDERSTUDY3_EPOCH"; // finish a run
-    internal const string EndingDesigned  = "THEUNDERSTUDY2_EPOCH"; // beat Act 2
-    internal const string FinalLesson     = "THEUNDERSTUDY7_EPOCH"; // beat Act 3
-    internal const string Dreamless       = "THEUNDERSTUDY1_EPOCH"; // beat Act 1
-    internal const string BoyInTheCity    = "THEUNDERSTUDY5_EPOCH"; // 15 Bosses
-    internal const string NothingLikeHim  = "THEUNDERSTUDY6_EPOCH"; // 15 Elites
-    internal const string Consumed        = "THEUNDERSTUDY4_EPOCH"; // Ascension 1+
+    // Names match the shipped epochs.json titles — they drifted apart once already.
+    internal const string Dreamless            = "THEUNDERSTUDY1_EPOCH"; // beat Act 1
+    internal const string WritingAnEnd         = "THEUNDERSTUDY2_EPOCH"; // beat Act 2
+    internal const string PerfectMirror        = "THEUNDERSTUDY3_EPOCH"; // finish a run
+    internal const string Consumed             = "THEUNDERSTUDY4_EPOCH"; // Ascension 1+
+    internal const string Taken                = "THEUNDERSTUDY5_EPOCH"; // 15 Bosses
+    internal const string NothingLikeHim       = "THEUNDERSTUDY6_EPOCH"; // 15 Elites
+    internal const string EveryStoryHasALesson = "THEUNDERSTUDY7_EPOCH"; // beat Act 3
 
     internal static void Obtain(ProgressState progress, Player player, string epochId)
     {
@@ -106,14 +107,14 @@ public static class UnderstudyEpochMidRunRevealPatch
                 string? actEpoch = room.CombatState.RunState.CurrentActIndex switch
                 {
                     0 => UnderstudyEpochReveal.Dreamless,      // beat Act 1
-                    1 => UnderstudyEpochReveal.EndingDesigned, // beat Act 2
-                    2 => UnderstudyEpochReveal.FinalLesson,    // beat Act 3
+                    1 => UnderstudyEpochReveal.WritingAnEnd, // beat Act 2
+                    2 => UnderstudyEpochReveal.EveryStoryHasALesson,    // beat Act 3
                     _ => null,
                 };
                 if (actEpoch != null) UnderstudyEpochReveal.Obtain(progress, localPlayer, actEpoch);
 
                 if (UnderstudyEpochReveal.CountWins(progress, charId, UnderstudyEpochReveal.BossEncounterIds) >= 15)
-                    UnderstudyEpochReveal.Obtain(progress, localPlayer, UnderstudyEpochReveal.BoyInTheCity);
+                    UnderstudyEpochReveal.Obtain(progress, localPlayer, UnderstudyEpochReveal.Taken);
             }
             else if (room.RoomType == RoomType.Elite)
             {

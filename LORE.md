@@ -156,15 +156,44 @@ list). It reveals the Architect's own tragedy: a dreamless creature of order who
 his own restful ending by making a perfect successor — a first child, lost to the blight — and then
 stole a dreaming boy to try again. That boy is The Understudy.
 
-- **Chapters (narrative order, placed chronologically on the era axis):** 1 Dreamless (Prehistoria),
-  2 The Ending He Designed (Prehistoria), 3 A Perfect Mirror (Prehistoria), 4 Consumed (Blight),
-  5 The Boy in the City (Flourish), 6 Nothing Like Him (Flourish), 7 The Final Lesson (Invitation).
-- **Reveal is soft, not chronological** (all reachable at once via a Neow `GetTimelineExpansion`
-  postfix; each unlocks on its own pure condition). Intended reveal arc: *A Perfect Mirror* (the false
-  promise) → *The Ending He Designed* → *The Final Lesson* → *Dreamless* → *Nothing Like Him* → *The
-  Boy in the City* → *Consumed* (the gut-punch — the first, perfect child, taken by the blight).
-- **Pure conditions** (same as base characters, replicated in `UnderstudyEpochRevealPatch`): finish a
-  run → A Perfect Mirror; Act 1 → The Ending He Designed; Act 2 → The Final Lesson; Act 3 → Dreamless;
-  15 Bosses → The Boy in the City; 15 Elites → Nothing Like Him; Ascension 1 → Consumed.
+**Source of truth is `TheUnderstudyCode/Timeline/UnderstudyEpochs.cs`** (chapters, placement, unlocks)
+and `UnderstudyEpochRevealPatch.cs` (conditions). This section had drifted badly from both once; keep
+them in step.
+
+- **Reveal is soft, not chronological** — all reachable at once via a Neow `GetTimelineExpansion`
+  postfix, each unlocking on its own pure condition, so the order in which a player meets the chapters
+  is theirs. The twist lands late either way: *Consumed* (the first, perfect child taken by the blight)
+  sits behind Ascension 1.
 - **Art is a placeholder** (`UnderstudyEpochPortraitPatch` points portraits at the character icon);
-  real epoch art is a follow-up. Full design/mechanics in `~/.claude/plans/shimmying-sleeping-swing.md`.
+  real epoch art is a follow-up.
+
+### Chapters, conditions and unlocks
+
+| # | Chapter | Era | Revealed by | Unlocks |
+|---|---|---|---|---|
+| 1 | Dreamless | `Seeds0` | Beat Act 1 | Relics: Greasepaint, Rosin, Lozenge |
+| 2 | Writing an End | `Seeds1` | Beat Act 2 | **The Golden Bedroom event** |
+| 3 | A Perfect Mirror | `Seeds2` | Finish a run | Master Form, Motif, Magnum Opus |
+| 4 | Consumed | `Blight1` | Win on Ascension 1+ | Potions: Planned, Tuned, Swap |
+| 5 | Taken | `Flourish2` | Defeat 15 Bosses | The First Lesson, Held Note, Clean Slate |
+| 6 | Nothing Like Him | `Invitation0` | Defeat 15 Elites | The Second Lesson, Reverb, Sonic Boom |
+| 7 | Every Story has a Lesson | `Invitation2` | Beat Act 3 | The Final Lesson, Fate Knocking, One Take |
+
+Each chapter unlocks **what it is about**: the book he resolves to write is the event where you find it;
+the blight that *consumed* the child gates the things you consume; the boy is *Taken* and started over
+(Clean Slate) with time held still (Held Note); *Nothing Like Him* is the Second Lesson's Orders against
+the music he keeps escaping into; and the Final Test pays the whole combat back in one blow with no
+second chances.
+
+**Two standing rules:**
+
+- **Only Uncommon/Rare content is ever gated.** Commons are a deck's connective tissue and must be
+  available from the first run. *My Own Lesson* is likewise always available — the boy's own conclusion
+  is not something the Architect's story grants.
+- **Card, relic and potion epochs unlock exactly three**; the game's `CreateXUnlockText` helpers index
+  `[0..2]` and throw otherwise. An *event* epoch is a different shape (one event, its own `.unlockText`
+  key, `QueueMiscUnlock`), copied from the base game's `Event1Epoch`.
+
+Both rules are enforced by `TheUnderstudy.Tests/Timeline/EpochUnlockTests.cs`, which also checks that
+each pool gates exactly the epochs owning its content type — the gates live in three different pool
+files and are easy to forget when moving a list.

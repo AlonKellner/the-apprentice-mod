@@ -18,9 +18,8 @@ public class TheUnderstudyCardPool : CustomCardPoolModel
     protected override IEnumerable<CardModel> FilterThroughEpochs(UnlockState unlockState, IEnumerable<CardModel> cards)
     {
         var list = cards.ToList();
-        Prune<Understudy1Epoch>(list, unlockState, Understudy1Epoch.Cards);
-        Prune<Understudy2Epoch>(list, unlockState, Understudy2Epoch.Cards);
         Prune<Understudy3Epoch>(list, unlockState, Understudy3Epoch.Cards);
+        Prune<Understudy5Epoch>(list, unlockState, Understudy5Epoch.Cards);
         Prune<Understudy6Epoch>(list, unlockState, Understudy6Epoch.Cards);
         Prune<Understudy7Epoch>(list, unlockState, Understudy7Epoch.Cards);
         return list;
