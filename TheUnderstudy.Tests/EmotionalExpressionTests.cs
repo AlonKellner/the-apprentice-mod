@@ -90,6 +90,42 @@ public class EmotionalExpressionTests
     public void ComputeSignFlip_Zero_NoOp() =>
         Assert.Equal((0, 0), EmotionalExpression.ComputeSignFlip(0, 5));
 
+    // SplitSignFlipChange — telling an incoming sign-flip DEBUFF apart from the power spending its own
+    // buff stock. Both are negative changes to the same power, and conflating them is what let My Own
+    // Lesson (and Pulled Punch) block VigorPower's AfterAttack self-consumption: Vigor grew instead of
+    // being spent, never decayed to 0, and so kept a stale latched AttackCommand that silently stopped it
+    // modifying damage for the rest of the combat.
+
+    [Fact]
+    public void SplitSignFlipChange_VigorSpendingItselfAfterAttack_IsAllSpendNoDebuff() =>
+        // The reported case: 9 Vigor zeroing itself. Nothing here is a debuff, so nothing is intercepted.
+        Assert.Equal((-9m, 0), EmotionalExpression.SplitSignFlipChange(current: 9, amount: -9m));
+
+    [Fact]
+    public void SplitSignFlipChange_PartialSpend_IsAllSpendNoDebuff() =>
+        Assert.Equal((-4m, 0), EmotionalExpression.SplitSignFlipChange(current: 9, amount: -4m));
+
+    [Fact]
+    public void SplitSignFlipChange_DebuffFromZero_IsAllDebuff() =>
+        Assert.Equal((0m, 3), EmotionalExpression.SplitSignFlipChange(current: 0, amount: -3m));
+
+    [Fact]
+    public void SplitSignFlipChange_DebuffOnTopOfExistingDebuff_IsAllDebuff() =>
+        Assert.Equal((0m, 3), EmotionalExpression.SplitSignFlipChange(current: -4, amount: -3m));
+
+    [Fact]
+    public void SplitSignFlipChange_CrossesZero_SplitsBothWays() =>
+        // 2 Vigor hit for 5: 2 spends the buff you held, the remaining 3 is the debuff.
+        Assert.Equal((-2m, 3), EmotionalExpression.SplitSignFlipChange(current: 2, amount: -5m));
+
+    [Fact]
+    public void SplitSignFlipChange_ExactlyToZero_IsAllSpend() =>
+        Assert.Equal((-2m, 0), EmotionalExpression.SplitSignFlipChange(current: 2, amount: -2m));
+
+    [Fact]
+    public void SplitSignFlipChange_PositiveGain_IsNeither() =>
+        Assert.Equal((4m, 0), EmotionalExpression.SplitSignFlipChange(current: 1, amount: 4m));
+
     // Categorize / CategorizeSigned — Second Lesson's Reward/Punish 3-way pair categorization.
 
     [Fact]

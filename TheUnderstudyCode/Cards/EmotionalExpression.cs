@@ -289,6 +289,24 @@ public static class EmotionalExpression
         return (converted, current + 2 * converted);
     }
 
+    // Split a NEGATIVE change to a sign-flip power into the part that merely spends buff stock (the
+    // portion still above zero) and the part that actually lands as a debuff (the portion below zero).
+    //
+    // A sign-flip pair defines its debuff AS the negative portion (SignFlipPair.HasDebuffPresent is
+    // `amount < 0`), so anything intercepting "incoming debuffs" must act only on the below-zero part.
+    // A negative change to Vigor/Strength/Dexterity is otherwise ambiguous: base-game VigorPower zeroes
+    // ITSELF in AfterAttack with a -Amount change, which is a buff being spent, not a debuff arriving.
+    // Reversing or dampening that spend leaves Vigor stuck holding stock it already paid out — and
+    // because VigorPower only clears its latched AttackCommand when it decays to 0 and is removed, a
+    // Vigor that never reaches 0 keeps a stale latch and silently stops modifying damage for the rest of
+    // the combat. Hence: spends pass through untouched, only debuffPortion is a debuff.
+    public static (decimal buffSpend, int debuffPortion) SplitSignFlipChange(int current, decimal amount)
+    {
+        if (amount >= 0m) return (amount, 0);
+        int debuffPortion = (int)Math.Max(0m, -(current + amount)) - Math.Max(0, -current);
+        return (amount + debuffPortion, debuffPortion);
+    }
+
     public static async Task<int> InvertStrengthSign(PlayerChoiceContext ctx, Creature creature, int max)
     {
         int cur = creature.GetPowerAmount<StrengthPower>();

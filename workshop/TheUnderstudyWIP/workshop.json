@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.12.49: Best of Both now passes negative Vigor to the enemies as well as inverting it, matching regular Swap - previously sign-flip debuffs were inverted on you but never handed over. Stable is also much harder to break: Master Form (and Hidden Gem / Sword Sage) can no longer grant Replay to a Stable card, enemy afflictions like Hexed, Bound and Entangled can no longer stick to one, and in-combat upgrades such as Armaments now skip it (rest-site upgrades still work).",
+  "changeNote": "v1.12.50: Fixed Vigor breaking under My Own Lesson and Pulled Punch. Vigor pays itself out after an attack, and that payment was being mistaken for an incoming debuff - so it was cancelled and handed back, making Vigor climb instead of being spent, and leaving it permanently unable to add damage for the rest of the combat. Only the part of a negative Strength/Dexterity/Vigor change that actually lands below zero counts as a debuff now; genuine debuffs still invert and soften exactly as before.",
   "tags": [],
   "dependencies": [
     3737335127

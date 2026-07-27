@@ -81,16 +81,27 @@ public class InvertTrackerPower : UnderstudyPower
         // My Own Lesson / Pulled Punch there is nothing to intercept.
         if (!pair.IsSameShape)
         {
-            if (myOwnLesson && amount != 0m)
+            // A negative change here is ambiguous — an incoming debuff, or the power SPENDING its own buff
+            // stock. VigorPower zeroes itself in AfterAttack exactly that way, and both branches below used
+            // to treat that spend as a debuff: the spend was cancelled and (under My Own Lesson) handed
+            // straight back, so Vigor climbed instead of being consumed and then — because VigorPower only
+            // drops its latched AttackCommand when it decays to 0 and is removed — quietly stopped adding
+            // damage for the rest of the combat. Only the portion landing below zero is a debuff.
+            int current = Owner.GetPower(canonicalPower.Id)?.Amount ?? 0;
+            var (buffSpend, debuffPortion) = EmotionalExpression.SplitSignFlipChange(current, amount);
+
+            if (myOwnLesson)
             {
-                modifiedAmount = 0m;
-                // Debuff (negative) gain flips to a buff of that magnitude; a buff (positive) gain becomes nothing.
-                if (amount < 0m) _pendingSwap = (pair, -(int)amount);
+                if (amount > 0m) { modifiedAmount = 0m; return true; }  // a buff gain becomes nothing
+                if (debuffPortion <= 0) return false;                   // a pure buff spend is not a gain
+                modifiedAmount = buffSpend;                             // spend passes, the debuff does not
+                _pendingSwap = (pair, debuffPortion);                   // and comes back as a buff instead
                 return true;
             }
-            if (pulledPunch > 0 && amount < 0m)
+            if (pulledPunch > 0 && debuffPortion > 0)
             {
-                modifiedAmount = ApathyPower.Dampen(amount, isSignFlip: true, pulledPunch);
+                // Soften only the debuff portion; any buff stock the same change spends is left alone.
+                modifiedAmount = buffSpend + ApathyPower.Dampen(-debuffPortion, isSignFlip: true, pulledPunch);
                 return true;
             }
             return false;
