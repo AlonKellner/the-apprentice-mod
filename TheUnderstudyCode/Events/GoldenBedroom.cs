@@ -22,7 +22,7 @@ namespace TheUnderstudy.TheUnderstudyCode.Events;
 // story of endings — darts away, and you can chase it.
 //
 // Three options: take the untouched golden toys (gold), sleep in the dreamless bed (heal), or chase
-// the book (the Chaotic Book quest relic). Understudy-only (IsAllowed); shared across all acts (empty
+// the book (the Book of Endings relic). Understudy-only (IsAllowed); shared across all acts (empty
 // Acts). Loc in events.json under THEUNDERSTUDY-GOLDEN_BEDROOM. Modelled on the base game's LostWisp.
 public class GoldenBedroom : CustomEventModel
 {
@@ -55,7 +55,7 @@ public class GoldenBedroom : CustomEventModel
     {
         Option(TakeGoldenToys),
         Option(SleepInTheBed),
-        Option(ChaseTheBook, HoverTipFactory.FromRelic<ChaoticBook>()),
+        Option(ChaseTheBook, HoverTipFactory.FromRelic<BookOfEndings>()),
     };
 
     private async Task TakeGoldenToys()
@@ -77,8 +77,8 @@ public class GoldenBedroom : CustomEventModel
 
     private async Task ChaseTheBook()
     {
-        Log.Info("[GoldenBedroom] ChaseTheBook -> obtain Chaotic Book");
-        await RelicCmd.Obtain<ChaoticBook>(Owner!);
+        Log.Info("[GoldenBedroom] ChaseTheBook -> obtain Book of Endings");
+        await RelicCmd.Obtain<BookOfEndings>(Owner!);
         SetEventFinished(L10NLookup($"{Id.Entry}.pages.CHASE_THE_BOOK.description"));
     }
 }

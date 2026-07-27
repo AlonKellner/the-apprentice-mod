@@ -18,13 +18,11 @@ public class TheUnderstudyRelicPool : CustomRelicPoolModel
     public override string BigEnergyIconPath => "charui/big_energy.png".ImagePath();
     public override string TextEnergyIconPath => "charui/text_energy.png".ImagePath();
 
-    // Relics that carry [Pool] only to satisfy the analyzer but are obtained by other means (an event,
-    // or transforming from another relic) and must never appear as a random reward. The Chaotic Book
-    // comes from "The Golden Bedroom"; the Book of Order only ever exists by transforming from it.
+    // Relics that carry [Pool] only to satisfy the analyzer but are obtained by other means and must
+    // never appear as a random reward. The Book of Endings comes from "The Golden Bedroom".
     public static readonly IReadOnlyList<Type> EventOnlyRelics = new[]
     {
-        typeof(ChaoticBook),
-        typeof(BookOfOrder),
+        typeof(BookOfEndings),
     };
 
     // The "Consumed" epoch (ep4) gates 3 relics until it is revealed; event-only relics are always excluded.

@@ -6,9 +6,9 @@ using TheUnderstudy.TheUnderstudyCode.Relics;
 
 namespace TheUnderstudy.TheUnderstudyCode.RestSite;
 
-// The "Study" rest-site action, offered by the Chaotic Book. Spends the rest action to advance the
-// book's Study count (three studies transforms it into the Book of Order). Mirrors ScoreRestSiteOption
-// in shape; loc in rest_site_ui.json under OPTION_THEUNDERSTUDY_STUDY.
+// The "Study" rest-site action, offered by the Book of Endings. Spends the rest action to reveal one
+// alternative boss on the current act's map. Mirrors ScoreRestSiteOption in shape; loc in
+// rest_site_ui.json under OPTION_THEUNDERSTUDY_STUDY.
 public class StudyRestSiteOption : CustomRestSiteOption
 {
     public const string Id = "THEUNDERSTUDY_STUDY";
@@ -22,9 +22,15 @@ public class StudyRestSiteOption : CustomRestSiteOption
     // the same missing-icon gap and would benefit from the same treatment.
     public override string? CustomIconPath => "powers/planned_counter_power.png".ImagePath();
 
-    private readonly ChaoticBook _book;
+    private readonly BookOfEndings _book;
 
-    public StudyRestSiteOption(Player owner, ChaoticBook book) : base(owner) => _book = book;
+    public StudyRestSiteOption(Player owner, BookOfEndings book) : base(owner) => _book = book;
+
+    // Visible but unusable once this act's alternative bosses are all revealed — the same treatment
+    // Smith gets when every card is already upgraded. IsEnabled greys the button while leaving it
+    // hoverable, so the player can still read what the book does instead of the option vanishing. Read
+    // live, so in co-op it greys out for the other player as soon as the map reaches the act's cap.
+    public override bool IsEnabled => _book.CanStudyNow();
 
     public override async Task<bool> OnSelect()
     {

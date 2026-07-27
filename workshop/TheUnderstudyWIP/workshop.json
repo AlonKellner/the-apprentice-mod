@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.12.44: Removed the temporary Fate Knocking damage logging added in v1.12.41 - the preview issues it was tracking are fixed, and the remaining case turned out to be correct behaviour (Sharp and Strength scale the finisher just as they scale each strike). No gameplay changes.",
+  "changeNote": "v1.12.45: The Chaotic Book and Book of Order are replaced by a single relic, the Book of Endings. Study it at a Rest Site to reveal one alternative Boss on the current act's map, up to 2 per act - no transform to unlock first, and the allowance refreshes every act. The Study option greys out once the act's alternative Bosses are all revealed, and an act's Boss layout is now fixed before anything is revealed, so revealing the second alternative never re-arranges the first.",
   "tags": [],
   "dependencies": [
     3737335127

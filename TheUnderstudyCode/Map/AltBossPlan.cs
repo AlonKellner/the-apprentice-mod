@@ -10,13 +10,13 @@ public enum FlankSide
     Right,
 }
 
-// The pure, deterministic planning behind the Book of Order's Alternative Bosses mechanic, factored out
+// The pure, deterministic planning behind the Book of Endings' Alternative Bosses mechanic, factored out
 // of the map-injection code so it is unit-testable without the game (the injection itself constructs
 // MapPoints, mutates the live ActMap, and calls Log.* — none of which the bare test host can run).
 //
 // Everything here is a pure function of a run seed + act index, so the same plan is produced on fresh
 // generation, on load (re-injection), and on every co-op client — which is exactly what keeps the map
-// in sync without serializing the alt bosses. See BookOfOrder / AltBossStore for the game-side wiring.
+// in sync without serializing the alt bosses. See BookOfEndings / AltBossStore for the game-side wiring.
 public static class AltBossPlan
 {
     // A stable per-act seed derived from the run seed and the act index (splitmix64 finalizer, so
@@ -74,5 +74,27 @@ public static class AltBossPlan
         for (int i = 0; i < n; i++)
             map[distinct[i]] = distinct[(i + step) % n];
         return map;
+    }
+
+    // The second boss each flank chains into on a double-boss act (Ascension 10's final act).
+    //
+    // Deranged over the FULL potential set — the default plus BOTH flanks — not over "the bosses
+    // reachable so far". The Book of Endings reveals its flanks one at a time, so a set that grew with
+    // each reveal would re-chain the flanks already on the map underneath the player. Feeding the whole
+    // set means the answer is identical whether zero, one or two flanks are currently showing, which is
+    // what makes the act's boss layout fixed from the moment its map exists.
+    //
+    // The default boss is deliberately absent from the result. It is in the derangement only so the
+    // flanks have a third element to rotate against; its own second boss is the game's and is never
+    // overridden, keeping this relic purely additive.
+    public static IReadOnlyDictionary<string, string> FlankSeconds(
+        IReadOnlyList<string> allFlankEncounterIds, string defaultBossId, ulong seed)
+    {
+        var firsts = new List<string> { defaultBossId };
+        firsts.AddRange(allFlankEncounterIds);
+        var derange = Derange(firsts, seed);
+        return allFlankEncounterIds
+            .Where(derange.ContainsKey)
+            .ToDictionary(f => f, f => derange[f]);
     }
 }

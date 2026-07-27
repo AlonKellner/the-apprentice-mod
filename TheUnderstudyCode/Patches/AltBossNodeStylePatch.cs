@@ -103,7 +103,7 @@ public static class AltBossNodeStylePatch
         // swapped boss nodes get the right state (our AltBossTravelabilityPatch marks them travelable).
         Traverse.Create(__instance).Method("RecalculateTravelability").GetValue();
         __instance.RefreshAllPointVisuals();
-        Log.Info($"[BookOfOrder] styled {styled} alt boss node(s) as full-art bosses");
+        Log.Info($"[BookOfEndings] styled {styled} alt boss node(s) as full-art bosses");
     }
 
     // Replace an injected alt boss's plain NNormalMapPoint with a real NBossMapPoint (art loaded), added
@@ -119,7 +119,7 @@ public static class AltBossNodeStylePatch
         var enc = runState.Act.AllBossEncounters.FirstOrDefault(e => e.Id.ToString() == alt.EncounterId);
         if (enc == null)
         {
-            Log.Warn($"[BookOfOrder] cannot style alt boss ({coord.col},{coord.row}): encounter " +
+            Log.Warn($"[BookOfEndings] cannot style alt boss ({coord.col},{coord.row}): encounter " +
                      $"{alt.EncounterId} not in pool");
             return null;
         }

@@ -136,4 +136,72 @@ public class AltBossPlanTests
     [Fact]
     public void Derange_SingleBoss_ReturnsEmpty() =>
         Assert.Empty(AltBossPlan.Derange(new[] { "ONLY" }, 0UL));
+
+    // ── FlankSeconds: the act's boss layout must be settled before anything is revealed ──────────────
+    // The Book of Endings reveals its alternative bosses one at a time, so the double-boss chaining
+    // cannot be derived from "the bosses reachable so far" — that set grows as you Study, and every
+    // pairing would shift under the player. FlankSeconds deranges over the FULL potential set instead,
+    // so the answer is the same whether zero, one or two flanks are currently on the map.
+
+    private const string DefaultBoss = "BOSS_A";
+    private static readonly string[] BothFlanks = { "BOSS_B", "BOSS_C" };
+
+    // The regression test for exactly that defect. Shrinking the input set changes the answer for a flank
+    // that is already on the map — which is what the old "derange over the bosses reachable so far" code
+    // did every time a second flank appeared. So the caller MUST pass every flank the act can ever have,
+    // never the revealed subset; this test fails the moment someone "optimises" that back.
+    [Fact]
+    public void FlankSeconds_OverTheRevealedSubset_WouldRechainAnAlreadyShownFlank()
+    {
+        var seed = AltBossPlan.SeedFor(1234UL, 2) & ~1UL; // even: forward rotation, where the two differ
+
+        var fullSet = AltBossPlan.FlankSeconds(BothFlanks, DefaultBoss, seed);
+        var revealedSubsetOnly = AltBossPlan.FlankSeconds(new[] { BothFlanks[0] }, DefaultBoss, seed);
+
+        Assert.NotEqual(fullSet[BothFlanks[0]], revealedSubsetOnly[BothFlanks[0]]);
+    }
+
+    [Theory]
+    [InlineData(0UL)]
+    [InlineData(1UL)]
+    public void FlankSeconds_NeverChainsAFlankIntoItself(ulong seed)
+    {
+        foreach (var kv in AltBossPlan.FlankSeconds(BothFlanks, DefaultBoss, seed))
+            Assert.NotEqual(kv.Key, kv.Value);
+    }
+
+    // The relic is purely additive: it assigns seconds to the flanks it injects and never reassigns the
+    // act's own default boss, which the game already decided.
+    [Theory]
+    [InlineData(0UL)]
+    [InlineData(1UL)]
+    public void FlankSeconds_LeavesTheDefaultBossAlone(ulong seed)
+    {
+        var seconds = AltBossPlan.FlankSeconds(BothFlanks, DefaultBoss, seed);
+
+        Assert.DoesNotContain(DefaultBoss, seconds.Keys);
+        Assert.Equal(new HashSet<string>(BothFlanks), new HashSet<string>(seconds.Keys));
+    }
+
+    [Fact]
+    public void FlankSeconds_IsDeterministic()
+    {
+        var seed = AltBossPlan.SeedFor(4242UL, 2);
+        Assert.Equal(
+            AltBossPlan.FlankSeconds(BothFlanks, DefaultBoss, seed),
+            AltBossPlan.FlankSeconds(BothFlanks, DefaultBoss, seed));
+    }
+
+    // A 2-boss act has a single alternative; there is nothing to derange it against but the default.
+    [Fact]
+    public void FlankSeconds_SingleFlank_ChainsIntoTheDefault()
+    {
+        var seconds = AltBossPlan.FlankSeconds(new[] { "BOSS_B" }, DefaultBoss, 0UL);
+
+        Assert.Equal(DefaultBoss, seconds["BOSS_B"]);
+    }
+
+    [Fact]
+    public void FlankSeconds_NoFlanks_ReturnsEmpty() =>
+        Assert.Empty(AltBossPlan.FlankSeconds(System.Array.Empty<string>(), DefaultBoss, 0UL));
 }

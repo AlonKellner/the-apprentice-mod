@@ -15,7 +15,7 @@ namespace TheUnderstudy.TheUnderstudyCode.Map;
 public sealed record AltBossNode(
     MapPoint Point, FlankSide Side, string EncounterId, MapCoord ParentCoord, bool IsSecond);
 
-// Per-map registry of the alternative boss nodes the Book of Order injects. They live outside the base
+// Per-map registry of the alternative boss nodes the Book of Endings injects. They live outside the base
 // ActMap's fixed Boss/SecondBoss slots, so the enumeration/lookup patches (AltBoss*Patch) read them
 // from here to make the rest of the engine — rendering (SetMap iterates GetAllMapPoints), travel, and
 // save-enumeration — see them. Keyed by the live ActMap via ConditionalWeakTable so entries are

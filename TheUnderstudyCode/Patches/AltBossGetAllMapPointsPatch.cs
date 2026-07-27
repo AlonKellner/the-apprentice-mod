@@ -6,7 +6,7 @@ using TheUnderstudy.TheUnderstudyCode.Map;
 
 namespace TheUnderstudy.TheUnderstudyCode.Patches;
 
-// The base ActMap only knows its fixed Boss/SecondBoss points, so the alt bosses the Book of Order
+// The base ActMap only knows its fixed Boss/SecondBoss points, so the alt bosses the Book of Endings
 // injects (AltBossStore) are invisible to it. SetMap renders the map by iterating GetAllMapPoints and
 // creating a node per point, so appending the store's alt bosses here is what makes them render and be
 // drawn/travelled. Top-level class-level [HarmonyPatch] so PatchAll discovers it (see the mod's other

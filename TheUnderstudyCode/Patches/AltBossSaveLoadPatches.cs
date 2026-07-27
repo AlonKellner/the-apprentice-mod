@@ -10,7 +10,7 @@ namespace TheUnderstudy.TheUnderstudyCode.Patches;
 // The base save format has no slot for injected alt bosses, and SavedActMap places every serialized
 // point into a fixed grid by coord — so an alt boss (row = boss row, outside the grid) crashes the load
 // with IndexOutOfRange. The alt bosses must never reach the save; they are re-injected deterministically
-// on load instead (BookOfOrder.ModifyGeneratedMapLate). These two patches keep the save clean and
+// on load instead (BookOfEndings.ModifyGeneratedMapLate). These two patches keep the save clean and
 // tolerate saves written before this fix.
 
 // On save: FromActMap serializes GetAllMapPoints (which our postfix augments with alt bosses), so strip

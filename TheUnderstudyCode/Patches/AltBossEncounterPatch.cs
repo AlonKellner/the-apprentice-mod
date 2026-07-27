@@ -33,13 +33,13 @@ public static class AltBossEncounterPatch
         var encounter = act.AllBossEncounters.FirstOrDefault(e => e.Id.ToString() == encounterId);
         if (encounter == null)
         {
-            Log.Warn($"[BookOfOrder] alt boss ({coord.col},{coord.row}) assigned {encounterId} " +
+            Log.Warn($"[BookOfEndings] alt boss ({coord.col},{coord.row}) assigned {encounterId} " +
                      $"but it is not in the act's boss pool; falling back to default");
             return;
         }
 
         model = encounter.ToMutable();
-        Log.Info($"[BookOfOrder] entering alt boss ({coord.col},{coord.row}) -> encounter {encounter.Id} " +
+        Log.Info($"[BookOfEndings] entering alt boss ({coord.col},{coord.row}) -> encounter {encounter.Id} " +
                  $"(default boss is {act.BossEncounter.Id})");
     }
 }
