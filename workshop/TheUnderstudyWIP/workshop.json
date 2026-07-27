@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.12.47: Practice, Experience and One-Up now print 0 base damage and read 1, which comes from the Tuned they start each combat with - they were printing 1 and reading 2. The Compendium also previews Tuned cards the same way every other screen does; it used to show the printed number while a card reward showed the number you actually get.",
+  "changeNote": "v1.12.48: Practice is no longer Stable, so like any other Tuned card it becomes Unplayable once played instead of being replayable all combat - and other cards can now make it Tuned, Planned or ordered. To compensate it applies Tuned to 2 cards instead of 1 (3 upgraded).",
   "tags": [],
   "dependencies": [
     3737335127

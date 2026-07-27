@@ -52,11 +52,12 @@ public class TunedModifierTests
     }
 
     [Fact]
-    public void CanApplyTo_Buildup_ReturnsFalse()
+    public void CanApplyTo_Practice_ReturnsTrueNowThatItIsNotStable()
     {
-        // Practice is printed Stable, and CanApplyTo is (Attack || Skill) && !IsStable(). (It DOES have
-        // a Damage var — it prints 0 and reads 1 off its own pre-Tuned stack.)
-        Assert.False(TunedModifier.CanApplyTo(new Practice()));
+        // Practice used to be printed-Stable and therefore ineligible. It no longer is, so it is a legal
+        // Tuned target like any other non-Stable Attack — including from another Practice, and it still
+        // starts each combat pre-Tuned on top of that.
+        Assert.True(TunedModifier.CanApplyTo(new Practice()));
     }
 
     [Fact]

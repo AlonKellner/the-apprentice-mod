@@ -18,14 +18,17 @@ public class Practice : UnderstudyCard
 
     public Practice() : base(0, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
     {
-        WithKeyword(UnderstudyKeywords.Stable, ConstructedCardModel.UpgradeType.None);
         WithDamage(0);
-        WithVars(new CardsVar("Select", 1));
+        WithVars(new CardsVar("Select", 2));
         WithTip(UnderstudyKeywords.Tuned);
     }
 
-    // Stable + pre-Tuned: Practice starts each combat carrying Tuned 1 (so it grows in value as more
-    // Tuned cards are created this combat), but Stable keeps it from ever becoming Unplayable.
+    // Pre-Tuned: Practice starts each combat carrying Tuned 1, so it prints 0 damage and reads 1 (Tuned
+    // counts the card itself), growing as more Tuned cards are created this combat.
+    //
+    // NOT Stable. It used to be, which exempted it from Tuned's own "becomes Unplayable when played"
+    // rule and made it replayable all combat; without that exemption it locks after one play like any
+    // other Tuned card, and is itself a legal target for Tuned/Planned/Order from other cards.
     public override bool IsPreTuned => true;
 
     protected override void OnUpgrade()
@@ -38,7 +41,7 @@ public class Practice : UnderstudyCard
     {
         await CommonActions.CardAttack(cardPlay.Card, cardPlay).Execute(context);
         var player = cardPlay.Card.Owner;
-        var maxSelect = IsUpgraded ? 2 : 1;
+        var maxSelect = IsUpgraded ? 3 : 2;
         var selected = await CardSelectCmd.FromHand(
             context,
             player,

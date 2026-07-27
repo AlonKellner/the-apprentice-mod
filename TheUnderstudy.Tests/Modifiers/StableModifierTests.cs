@@ -36,8 +36,8 @@ public class StableModifierTests
     [Fact]
     public void CanApplyTo_AlreadyStable_ReturnsFalse()
     {
-        // Practice is printed-Stable via WithKeyword in its constructor.
-        Assert.False(StableModifier.CanApplyTo(new Practice()));
+        // Workshop is printed-Stable via WithKeyword in its constructor — the only card that still is.
+        Assert.False(StableModifier.CanApplyTo(new Workshop()));
     }
 
     [Fact]
