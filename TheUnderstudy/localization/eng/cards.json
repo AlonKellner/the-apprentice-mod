@@ -48,6 +48,9 @@
   "THEUNDERSTUDY-MELODY.description": "Deal {Damage:diff()} damage.\nApply [gold]Planned[/gold] to {Select:diff()} {Select:plural:attack or skill|attacks and skills} in your discard pile.",
   "THEUNDERSTUDY-MELODY.selectionPrompt": "Choose cards to make [gold]Planned[/gold].",
 
+  "THEUNDERSTUDY-SPECTACLE.title": "Spectacle",
+  "THEUNDERSTUDY-SPECTACLE.description": "Apply [gold]Planned[/gold] to all [gold]Tuned[/gold] cards, then remove [gold]Tuned[/gold] from all cards.",
+
   "THEUNDERSTUDY-ONE_UP.title": "One-up",
   "THEUNDERSTUDY-ONE_UP.description": "{InCombat:cond:|[gold]Tuned[/gold] 1.\n}Deal {Damage:diff()} damage {Repeat:diff()} times.\nApply [gold]Tuned[/gold] to this card.",
 
