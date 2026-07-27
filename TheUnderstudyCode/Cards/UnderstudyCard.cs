@@ -143,7 +143,7 @@ public abstract class UnderstudyCard(
     // after their first play rather than needing a card-side grant.
     public virtual bool IsPreTuned => false;
 
-    // True once this card has actually been pre-Tensified for the current combat — reset only
+    // True once this card has actually been pre-Tuned for the current combat — reset only
     // at BeforeCombatStart, same reasoning as _prePlannedThisCombat (AfterCardEnteredCombat fires
     // on every pile transition, not just the first).
     private bool _preTunedThisCombat;

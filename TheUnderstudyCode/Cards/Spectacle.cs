@@ -17,6 +17,7 @@ public class Spectacle : UnderstudyCard
 
     public Spectacle() : base(1, CardType.Skill, CardRarity.Rare, TargetType.None)
     {
+        WithKeyword(CardKeyword.Exhaust, ConstructedCardModel.UpgradeType.None);
         WithCostUpgradeBy(-1);
         WithTip(UnderstudyKeywords.Planned);
         WithTip(UnderstudyKeywords.Tuned);

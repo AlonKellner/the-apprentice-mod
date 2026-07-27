@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.12.53: New Rare card Spectacle - Apply Planned to all Tuned cards, then remove Tuned from all cards. Cash out a built-up Tuned board into a big Planned turn.",
+  "changeNote": "v1.12.54: Spectacle now Exhausts (one-time reset). Cleaned up a couple of stale Intense/Tense references (the mechanic is Tuned).",
   "tags": [],
   "dependencies": [
     3737335127

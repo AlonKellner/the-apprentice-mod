@@ -103,7 +103,7 @@ Largely complete — this is the mod's strong suit.
 - **Relics:** 9 (2 starter variants + 7 pool relics). Custom relics are a bonus over the shared pool.
 - **Potions:** 8 custom potions (bonus over the shared pool).
 - **Enchantments:** 2 (`PrePlanned`, `PreTuned`). **Rest-site options:** 2 (`Score`, `FoldableStage`).
-- **Keywords / afflictions:** Planned, Tuned, Swap, Invert, Order, Intense/Stable, Limited/Jaded and
+- **Keywords / afflictions:** Planned, Tuned, Swap, Invert, Order, Stable, Limited/Jaded and
   the full `Un*` inversion family — all implemented with tooltip-sync tests.
 
 Nice-to-haves for full parity (not blockers):
