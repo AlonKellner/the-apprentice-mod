@@ -3,7 +3,6 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using Godot;
 using MegaCrit.Sts2.addons.mega_text;
-using MegaCrit.Sts2.Core.Logging;
 using MegaCrit.Sts2.Core.Nodes.Cards;
 
 namespace TheUnderstudy.TheUnderstudyCode.Patches;
@@ -45,8 +44,6 @@ public static class SelectionIndexBadge
     // present. Safe to call every time the selection changes.
     public static void Render(IReadOnlyList<(NCard card, int number)> items)
     {
-        var desc = string.Join(", ", items.Select(it => "#" + it.number + " " + (it.card?.Model?.Title ?? "?")));
-        Log.Info($"[PlannedBadge] Render {items.Count} badge(s): [{desc}]");
         for (int i = Tracked.Count - 1; i >= 0; i--)
         {
             if (!items.Any(it => it.card == Tracked[i]))
@@ -68,7 +65,6 @@ public static class SelectionIndexBadge
     // returning to hand or on freed grid nodes.
     public static void ClearAll()
     {
-        if (Tracked.Count > 0) Log.Info($"[PlannedBadge] ClearAll: removing {Tracked.Count} badge(s)");
         foreach (var card in Tracked) RemoveFrom(card);
         Tracked.Clear();
     }

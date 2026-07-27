@@ -27,9 +27,7 @@ public static class PlannedHandSelectionPatch
     [HarmonyPrefix]
     public static void SelectCardsPrefix(NPlayerHand __instance)
     {
-        bool armed = PlannedSelectionState.ConsumeArmed();
-        MegaCrit.Sts2.Core.Logging.Log.Info($"[PlannedBadge] hand SelectCards, armed={armed}");
-        if (!armed) return;
+        if (!PlannedSelectionState.ConsumeArmed()) return;
         SelectionIndexBadge.ClearAll();
         Tagged.AddOrUpdate(__instance, Marker);
     }

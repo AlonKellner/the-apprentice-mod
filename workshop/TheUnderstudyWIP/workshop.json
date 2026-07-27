@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.12.51: Fixed Planned index badges lingering on cards after quitting-and-continuing (or otherwise closing a selection) mid-selection - badges now clear when the selection screen closes or a fresh combat starts.",
+  "changeNote": "v1.12.52: Removed the Planned selection-badge diagnostic logging now that the badge fixes are confirmed.",
   "tags": [],
   "dependencies": [
     3737335127
