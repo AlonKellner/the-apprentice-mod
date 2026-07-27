@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.12.50: Fixed Vigor breaking under My Own Lesson and Pulled Punch. Vigor pays itself out after an attack, and that payment was being mistaken for an incoming debuff - so it was cancelled and handed back, making Vigor climb instead of being spent, and leaving it permanently unable to add damage for the rest of the combat. Only the part of a negative Strength/Dexterity/Vigor change that actually lands below zero counts as a debuff now; genuine debuffs still invert and soften exactly as before.",
+  "changeNote": "v1.12.51: Fixed Planned index badges lingering on cards after quitting-and-continuing (or otherwise closing a selection) mid-selection - badges now clear when the selection screen closes or a fresh combat starts.",
   "tags": [],
   "dependencies": [
     3737335127
