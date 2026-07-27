@@ -17,6 +17,10 @@ public class GiveAndTakeComputeTests
     [InlineData(3, 10, 0, 3, 0, 3)]   // not invertible (invertMax 0): swap-only -> give 3, strip 3
     [InlineData(0, 10, 2, 0, 0, 0)]   // no debuff: nothing happens
     [InlineData(2, 1, 1, 1, 1, 2)]    // small cap: swap 1 + invert 1 = strip 2 (the whole stack)
+    // The reported Best of Both case, as a sign-flip holding: 3 negative Vigor. Enemies get all 3 (piled
+    // negative), 1 is flipped to a positive Vigor on you, and the whole negative 3 leaves you — so you end
+    // at +1 while the enemies sit at -3. Better than either order of Swap-then-Invert (0/-3 or 0/-1).
+    [InlineData(3, 10, 1, 3, 1, 3)]
     public void ComputeGiveAndTake_MatchesSnapshotSemantics(
         int amount, int swapCap, int invertMax, int expSwap, int expInvert, int expSelfRemove)
     {

@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Reflection;
 using BaseLib.Abstracts;
 using BaseLib.Extensions;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -112,6 +113,47 @@ public class StableEnforcerTests
         Assert.False(StableEnforcer.Restore(card, snap));
         Assert.True(card.TryGetModifier<PlannedModifier>(out var m));
         Assert.Equal(new[] { 1 }, m!.SequenceIndices);
+    }
+
+    // BaseReplayCount is plain CardModel state — not a modifier and not a keyword — so the modifier/keyword
+    // snapshot above cannot see it. Master Form (and base-game Hidden Gem / Sword Sage) write it directly
+    // mid-combat, which was a hole straight through the freeze. Its setter calls AssertMutable(), so the
+    // tests below drive the backing field, the same trick OrderModifierTests uses for the private
+    // Affliction setter. Restore's write-back needs a mutable card and is verified in-game.
+    private static void ForceReplayCount(CardModel card, int value) =>
+        typeof(CardModel).GetField("_baseReplayCount", BindingFlags.Instance | BindingFlags.NonPublic)!
+            .SetValue(card, value);
+
+    [Fact]
+    public void Capture_RecordsBaseReplayCount()
+    {
+        var card = new UnderstudyStrike();
+        ForceReplayCount(card, 2);
+        Assert.Equal(2, StableEnforcer.Capture(card).BaseReplayCount);
+    }
+
+    // The reported bug: Master Form grants Replay 1 to a Stable card and nothing notices.
+    [Fact]
+    public void Matches_AfterReplayCountGranted_ReturnsFalse()
+    {
+        var card = new UnderstudyStrike();
+        var snap = StableEnforcer.Capture(card);
+
+        ForceReplayCount(card, 1);
+
+        Assert.False(StableEnforcer.Matches(card, snap));
+    }
+
+    // A card that already printed/earned its Replay before becoming Stable keeps it — the snapshot freezes
+    // whatever was there, it doesn't force zero.
+    [Fact]
+    public void Matches_ReplayCountUnchanged_ReturnsTrue()
+    {
+        var card = new UnderstudyStrike();
+        ForceReplayCount(card, 3);
+        var snap = StableEnforcer.Capture(card);
+
+        Assert.True(StableEnforcer.Matches(card, snap));
     }
 
     // The reentrancy guard the Harmony ApplyInternal patch relies on: while enforcing, Restore is inert

@@ -125,9 +125,10 @@ public abstract class UnderstudyCard(
     // in-place mutation (e.g. an emptied Planned slot list), not just add/remove.
     private StableState? _stableSnapshot;
 
-    // Whether we've subscribed to this card's own KeywordsChanged event (for immediate reversion of
-    // base-game keyword edits like Ethereal). Cleared per combat.
-    private bool _stableKeywordWatch;
+    // Whether we've subscribed to this card's own change events — KeywordsChanged (for immediate reversion
+    // of base-game keyword edits like Ethereal) and ReplayCountChanged (for direct BaseReplayCount writes
+    // from Master Form / Hidden Gem / Sword Sage). Both are subscribed and dropped together, per combat.
+    private bool _stableWatch;
 
     // The pre-Planned mechanic (starting a combat already queued) — scoped to the handful of B cards
     // that override this (Signature, upgraded Experience). The actual queuing is no longer per-card:
@@ -276,9 +277,9 @@ public abstract class UnderstudyCard(
 
     // The single Stable-enforcement entry point, called at every significant combat event (combat
     // start, card entered/played, both sides' turn start, side turn end) plus — for immediate reaction
-    // to modifications from any source — this card's own KeywordsChanged event and the ApplyInternal
-    // Harmony patch (StableEnforcementPatch). The first time the card is observed Stable it takes the
-    // deep snapshot (whether printed, or granted mid-combat by e.g. Final Draft on another card's OnPlay)
+    // to modifications from any source — this card's own KeywordsChanged/ReplayCountChanged events and
+    // the ApplyInternal Harmony patch (StableEnforcementPatch). The first time the card is observed
+    // Stable it takes the deep snapshot (whether printed, or granted mid-combat by e.g. Final Draft on another card's OnPlay)
     // and starts watching keyword edits; every call then reconciles the live card back to that frozen
     // config via StableEnforcer.Restore. Deep restore undoes in-place mutation (e.g. an emptied Planned
     // slot list), so a Stable Planned card keeps its Planned through a queue resolution.
@@ -288,19 +289,22 @@ public abstract class UnderstudyCard(
         {
             if (!this.IsStable()) return;
             _stableSnapshot = StableEnforcer.Capture(this);
-            if (!_stableKeywordWatch)
+            if (!_stableWatch)
             {
-                KeywordsChanged += OnStableKeywordsChanged;
-                _stableKeywordWatch = true;
+                KeywordsChanged += OnStableDrift;
+                ReplayCountChanged += OnStableDrift;
+                _stableWatch = true;
             }
         }
         if (StableEnforcer.Restore(this, _stableSnapshot))
             RefreshStablePlannedVisuals();
     }
 
-    // Fires the instant this card's local keywords are edited (e.g. base-game Ethereal from Hex/Music
-    // Box) — revert immediately. Guarded against re-entry from Restore's own AddKeyword/RemoveKeyword.
-    private void OnStableKeywordsChanged()
+    // Fires the instant this card's local keywords are edited (e.g. base-game Ethereal from Hex/Music Box)
+    // or its replay count is written (Master Form's Replay grant) — revert immediately rather than waiting
+    // for the next combat-event hook, which for Replay would be after the extra play already happened.
+    // Guarded against re-entry from Restore's own AddKeyword/RemoveKeyword and BaseReplayCount write.
+    private void OnStableDrift()
     {
         if (_stableSnapshot == null || StableEnforcer.Enforcing) return;
         if (StableEnforcer.Restore(this, _stableSnapshot))
@@ -336,13 +340,14 @@ public abstract class UnderstudyCard(
         return Task.CompletedTask;
     }
 
-    // Stop watching keyword changes and drop the snapshot so nothing leaks into the next combat.
+    // Stop watching for drift and drop the snapshot so nothing leaks into the next combat.
     public override Task AfterCombatEnd(CombatRoom room)
     {
-        if (_stableKeywordWatch)
+        if (_stableWatch)
         {
-            KeywordsChanged -= OnStableKeywordsChanged;
-            _stableKeywordWatch = false;
+            KeywordsChanged -= OnStableDrift;
+            ReplayCountChanged -= OnStableDrift;
+            _stableWatch = false;
         }
         _stableSnapshot = null;
         return Task.CompletedTask;

@@ -80,19 +80,55 @@ public static class SceneStealing
         ModelDb.Power<VigorPower>(),
     };
 
-    // The union of swappable power entries — an immutable membership cache (safe static: read-only after
-    // lazy init, no cross-client state). Used by InvertiblePairs.CaptureGiveAndInvert to decide which
-    // debuffs are pushed onto enemies vs invert-only.
-    private static HashSet<string>? _swappableEntries;
-    public static bool IsSwappableEntry(string entry) => (_swappableEntries ??= BuildSwappableEntries()).Contains(entry);
+    // ── The shared "what Swap can give, and how" vocabulary ────────────────────────────────────────────
+    // Regular Swap and Best of Both both move your debuffs onto enemies. They used to answer "which of my
+    // debuffs can be given, and which direction does the number move?" in two independent places, and they
+    // drifted: Swap knew a negative sign-flip Vigor is a giveable debuff, Best of Both's per-pair capture
+    // did not, so Best of Both silently inverted negative Vigor without ever handing it to the enemies.
+    // Everything below is THE single answer, used by both paths — see GiveableDebuffs / IsGiveable /
+    // RemoveDebuffFromSelf / GiveDebuffToEnemy.
 
-    private static HashSet<string> BuildSwappableEntries()
+    // One giveable debuff you are holding. Magnitude is always POSITIVE (how much debuff there is),
+    // regardless of how the power stores it. SignFlip marks the one-power/signed kind (Vigor), where the
+    // debuff is the negative portion and "removing" it means moving the value toward zero.
+    public readonly record struct DebuffHolding(PowerModel Power, int Magnitude, bool SignFlip);
+
+    // Every debuff holding `creature` currently has that Swap is allowed to give away: normal swappable
+    // debuffs in stock, plus sign-flip buffs sitting negative. THE definition of "a debuff Swap can give".
+    public static List<DebuffHolding> GiveableDebuffs(Creature creature)
     {
-        var set = new HashSet<string>();
-        foreach (var p in SwappableDebuffs) set.Add(p.Id.Entry);
-        foreach (var p in SwappableBuffs) set.Add(p.Id.Entry);
-        return set;
+        var holdings = new List<DebuffHolding>();
+        foreach (var debuff in SwappableDebuffs)
+        {
+            int amt = creature.GetPower(debuff.Id)?.Amount ?? 0;
+            if (amt > 0) holdings.Add(new DebuffHolding(debuff, amt, false));
+        }
+        foreach (var power in SignFlipBuffs)
+        {
+            int amt = creature.GetPower(power.Id)?.Amount ?? 0;
+            if (amt < 0) holdings.Add(new DebuffHolding(power, -amt, true));
+        }
+        return holdings;
     }
+
+    // Whether a holding may be given to enemies at all — the same membership rule GiveableDebuffs applies,
+    // asked about one power. Best of Both uses this to decide give-and-invert vs invert-only (Strength and
+    // Dexterity are invertible but deliberately not swappable).
+    public static bool IsGiveable(DebuffHolding holding) =>
+        (holding.SignFlip ? SignFlipBuffs : SwappableDebuffs).Any(p => p.Id.Equals(holding.Power.Id));
+
+    // The direction a give moves the number, and the ONLY place that knows it. A normal debuff is removed
+    // from you and added to the enemy; a sign-flip power is nudged up toward zero on you and piled further
+    // negative on the enemy. Split out as plain ints so the sign table itself is unit-testable.
+    public static int SelfGiveDelta(bool signFlip, int amount) => signFlip ? amount : -amount;
+    public static int EnemyGiveDelta(bool signFlip, int amount) => signFlip ? -amount : amount;
+
+    // The two staged moves of a give, built from the deltas above.
+    public static PowerMove RemoveDebuffFromSelf(DebuffHolding holding, Creature self, int amount) =>
+        new(holding.Power, self, SelfGiveDelta(holding.SignFlip, amount));
+
+    public static PowerMove GiveDebuffToEnemy(DebuffHolding holding, Creature enemy, int amount) =>
+        new(holding.Power, enemy, EnemyGiveDelta(holding.SignFlip, amount));
 
     // Pure: how much of a holding moves per application — capped at SwapCap and at what you actually have
     // (never negative). Also used for the negative portion of a sign-flip buff by passing its magnitude.
@@ -170,13 +206,11 @@ public static class SceneStealing
     {
         var chosen = SelectDebuff(self);
         if (chosen == null) return;
-        var (power, magnitude, signFlip) = chosen.Value;
-        int move = ComputeTransfer(magnitude);
+        int move = ComputeTransfer(chosen.Value.Magnitude);
         if (move <= 0) return;
 
-        plan.Removes.Add(new PowerMove(power, self, signFlip ? move : -move));   // toward 0 (sign-flip) / remove
-        foreach (var enemy in enemies)
-            plan.Applies.Add(new PowerMove(power, enemy, signFlip ? -move : move)); // pile negative / add
+        plan.Removes.Add(RemoveDebuffFromSelf(chosen.Value, self, move));
+        foreach (var enemy in enemies) plan.Applies.Add(GiveDebuffToEnemy(chosen.Value, enemy, move));
     }
 
     // TAKE (shared by Swap and Best of Both): from each enemy, steal that enemy's most recently modified
@@ -194,26 +228,16 @@ public static class SceneStealing
         }
     }
 
-    // The player's RIGHTMOST swappable debuff currently in stock: a normal swappable debuff with a
-    // positive amount, or a sign-flip buff (Vigor) with a negative amount (its magnitude given). Among
-    // everything held, the one sitting last in the creature's Powers list wins (SelectRightmost). Null
-    // when there is nothing to give.
-    private static (PowerModel power, int magnitude, bool signFlip)? SelectDebuff(Creature self)
+    // The player's RIGHTMOST giveable debuff: among everything GiveableDebuffs reports, the one sitting
+    // last in the creature's Powers list wins (SelectRightmost). Null when there is nothing to give.
+    // Regular Swap moves exactly one holding per application; Best of Both moves them all — but both draw
+    // from the same GiveableDebuffs set, so neither can consider a debuff the other doesn't.
+    private static DebuffHolding? SelectDebuff(Creature self)
     {
-        var candidates = new List<(PowerModel power, int magnitude, bool signFlip)>();
-        foreach (var debuff in SwappableDebuffs)
-        {
-            int amt = self.GetPower(debuff.Id)?.Amount ?? 0;
-            if (amt > 0) candidates.Add((debuff, amt, false));
-        }
-        foreach (var power in SignFlipBuffs)
-        {
-            int amt = self.GetPower(power.Id)?.Amount ?? 0;
-            if (amt < 0) candidates.Add((power, -amt, true));
-        }
+        var candidates = GiveableDebuffs(self);
         if (candidates.Count == 0) return null;
 
-        var positions = candidates.Select(c => PowerPosition(self, c.power.Id)).ToList();
+        var positions = candidates.Select(c => PowerPosition(self, c.Power.Id)).ToList();
         return candidates[SelectRightmost(positions)];
     }
 

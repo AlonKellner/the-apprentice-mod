@@ -7,7 +7,7 @@ using MegaCrit.Sts2.Core.Models;
 namespace TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
 
 // The frozen configuration of a Stable card: each BaseLib modifier captured as its own INSTANCE plus a
-// snapshot of its internal state, and the card's local keywords (Ethereal/Retain/etc.).
+// snapshot of its internal state, the card's local keywords (Ethereal/Retain/etc.), and its replay count.
 //
 // We keep the modifier instance itself — not a Type or a rebuilt copy — because a modifier is a ModelDb
 // model: `new`-ing one (Activator or constructor) in a live combat throws DuplicateModelException. The
@@ -18,12 +18,21 @@ public sealed class StableState
     public IReadOnlyList<(CardModifier modifier, CardModifier.ModifierSave save)> Modifiers { get; }
     public IReadOnlySet<CardKeyword> LocalKeywords { get; }
 
+    // Replay is neither a modifier nor a CardKeyword — it is a plain int on CardModel that effects write
+    // directly ("various effects can permanently set this to a higher value"): our own Master Form, and
+    // base-game Hidden Gem and Sword Sage. Nothing else in this snapshot can see it, so it is captured on
+    // its own. Frozen at whatever the card already had, so a card that earned Replay before becoming
+    // Stable keeps it.
+    public int BaseReplayCount { get; }
+
     public StableState(
         IReadOnlyList<(CardModifier modifier, CardModifier.ModifierSave save)> modifiers,
-        IReadOnlySet<CardKeyword> localKeywords)
+        IReadOnlySet<CardKeyword> localKeywords,
+        int baseReplayCount)
     {
         Modifiers = modifiers;
         LocalKeywords = localKeywords;
+        BaseReplayCount = baseReplayCount;
     }
 }
 
@@ -43,7 +52,7 @@ public static class StableEnforcer
     {
         var mods = CardModifier.DirectModifiers(card).Select(m => (m, SaveOf(m))).ToList();
         var keywords = new HashSet<CardKeyword>(card.GetKeywordsWithSources(KeywordSources.Local));
-        return new StableState(mods, keywords);
+        return new StableState(mods, keywords, card.BaseReplayCount);
     }
 
     // Reconciles `card` back to `snap`. Returns whether anything was changed. No-op (returns false) when
@@ -79,6 +88,12 @@ public static class StableEnforcer
             foreach (var kw in toAdd) card.AddKeyword(kw);
             foreach (var kw in toRemove) card.RemoveKeyword(kw);
 
+            // 4. Revert a directly-written replay count (Master Form / Hidden Gem / Sword Sage). Assigned
+            //    only when it actually drifted: the setter asserts the card is mutable, and the setter also
+            //    re-fires ReplayCountChanged — harmless here because Enforcing is set, but pointless.
+            if (card.BaseReplayCount != snap.BaseReplayCount)
+                card.BaseReplayCount = snap.BaseReplayCount;
+
             return true;
         }
         finally
@@ -98,8 +113,12 @@ public static class StableEnforcer
         return (toAdd, toRemove);
     }
 
-    private static bool Matches(CardModel card, StableState snap)
+    // Whether the card still matches its frozen config. Public so the drift cases that Restore cannot
+    // exercise on a bare card (its write-back needs a mutable card) are still unit-testable.
+    public static bool Matches(CardModel card, StableState snap)
     {
+        if (card.BaseReplayCount != snap.BaseReplayCount) return false;
+
         var live = CardModifier.DirectModifiers(card);
         if (live.Count != snap.Modifiers.Count) return false;
 

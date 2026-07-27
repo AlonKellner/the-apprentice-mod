@@ -19,6 +19,21 @@ public class InvertiblePairsTests
         Assert.Equal(12, InvertiblePairs.All.Count);
     }
 
+    // Best of Both's give half must be the SAME code for every pair. It used to be overridden per pair, and
+    // the sign-flip override silently omitted the give entirely — negative Vigor was inverted but never
+    // handed to the enemies, unlike regular Swap. The give now lives once on the base class (built from
+    // SceneStealing's shared helpers) and subclasses only supply DebuffHoldingOn / StageInvertBuff, so this
+    // pins that it is never overridden again.
+    [Fact]
+    public void CaptureGiveAndInvert_IsSharedByEveryPair_NeverOverridden()
+    {
+        foreach (var pair in InvertiblePairs.All)
+        {
+            var method = pair.GetType().GetMethod(nameof(InvertiblePair.CaptureGiveAndInvert));
+            Assert.Equal(typeof(InvertiblePair), method!.DeclaringType);
+        }
+    }
+
     [Fact]
     public void For_SameShapePairs_MatchBothSides()
     {

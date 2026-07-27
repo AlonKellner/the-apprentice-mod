@@ -32,6 +32,34 @@ public class SceneStealingTests
     public void ComputeTransfer_NegativeHolding_NeverNegative() =>
         Assert.Equal(0, SceneStealing.ComputeTransfer(have: -4));
 
+    // SelfGiveDelta / EnemyGiveDelta — the direction a give moves the number, and the only place that
+    // knows it. Both regular Swap and Best of Both build their give moves from these, which is what stops
+    // the two from disagreeing about sign-flip powers the way they used to.
+
+    [Fact]
+    public void GiveDeltas_NormalDebuff_LeavesYouAndLandsOnEnemy()
+    {
+        // Weak: 3 removed from you, 3 added to each enemy.
+        Assert.Equal(-3, SceneStealing.SelfGiveDelta(signFlip: false, 3));
+        Assert.Equal(3, SceneStealing.EnemyGiveDelta(signFlip: false, 3));
+    }
+
+    [Fact]
+    public void GiveDeltas_SignFlipDebuff_NudgesYouTowardZeroAndPilesNegativeOnEnemy()
+    {
+        // Negative Vigor: the debuff is the negative portion, so giving it moves YOU up toward zero and
+        // pushes the enemy further down. Opposite signs to a normal debuff — the case Best of Both missed.
+        Assert.Equal(3, SceneStealing.SelfGiveDelta(signFlip: true, 3));
+        Assert.Equal(-3, SceneStealing.EnemyGiveDelta(signFlip: true, 3));
+    }
+
+    [Fact]
+    public void GiveDeltas_NothingToGive_MoveNothing()
+    {
+        Assert.Equal(0, SceneStealing.SelfGiveDelta(signFlip: true, 0));
+        Assert.Equal(0, SceneStealing.EnemyGiveDelta(signFlip: false, 0));
+    }
+
     // SelectRightmost — among candidates, pick the one sitting RIGHTMOST (highest index) in the creature's
     // Powers list. positions[i] is candidate i's index within creature.Powers (-1 if absent). The Powers
     // list order is checksummed and synced, so this is deterministic on every multiplayer client.
