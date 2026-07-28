@@ -4,6 +4,7 @@ using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
+using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Powers;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
@@ -11,9 +12,15 @@ namespace TheUnderstudy.TheUnderstudyCode.Cards;
 // The starter's third voice: two small hits, a swell of Vigor for whatever comes next, and one
 // debuff flipped. Teaches the two mechanics a new player must meet immediately — Vigor as the
 // character's damage lever and Invert as its way out of self-inflicted debuffs.
-public class HighNote : UnderstudyCard
+//
+// As the Understudy's transcendable starter, High Note is the Ancient hook: implementing
+// ITranscendenceCard makes BaseLib register it into the base ArchaicTooth (Orobas node) map, so taking
+// that relic transforms this card in the deck into its Ancient form, Standing Ovation.
+public class HighNote : UnderstudyCard, ITranscendenceCard
 {
     public const string CardId = "TheUnderstudy:HighNote";
+
+    public CardModel GetTranscendenceTransformedCard() => ModelDb.Card<StandingOvation>();
 
     private const int Hits = 2;
 

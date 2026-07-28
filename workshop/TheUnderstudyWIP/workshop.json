@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.12.57: Upgraded Repertoire now starts with Tuned 2 (plus its existing +1 damage / +1 Block).",
+  "changeNote": "v1.12.58: Ancient cards. Standing Ovation - the Ancient form of High Note (transcend it at the Orobas node): deal 4/6 damage 3x, gain 6/10 Vigor, Swap 2/3 & Invert 2/3 simultaneously. One Take is now an Ancient power (granted by Darv's Dusty Tome).",
   "tags": [],
   "dependencies": [
     3737335127
