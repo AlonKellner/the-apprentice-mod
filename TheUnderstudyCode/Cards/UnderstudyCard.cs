@@ -143,6 +143,10 @@ public abstract class UnderstudyCard(
     // after their first play rather than needing a card-side grant.
     public virtual bool IsPreTuned => false;
 
+    // How many Tuned stacks a pre-Tuned card starts combat with. Default 1 (every existing pre-Tuned
+    // card); a card can override to start higher (e.g. Repertoire+ starts at Tuned 2).
+    protected virtual int PreTunedStacks => 1;
+
     // True once this card has actually been pre-Tuned for the current combat — reset only
     // at BeforeCombatStart, same reasoning as _prePlannedThisCombat (AfterCardEnteredCombat fires
     // on every pile transition, not just the first).
@@ -155,7 +159,8 @@ public abstract class UnderstudyCard(
         if (this.TryGetModifier<TunedModifier>(out _)) return;
 
         _preTunedThisCombat = true;
-        TunedModifier.Apply(this);
+        for (int i = 0; i < PreTunedStacks; i++)
+            TunedModifier.Apply(this);
     }
 
     public override Task BeforeCombatStart()

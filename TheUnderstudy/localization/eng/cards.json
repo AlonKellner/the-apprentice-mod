@@ -52,7 +52,7 @@
   "THEUNDERSTUDY-SPECTACLE.description": "Apply [gold]Planned[/gold] to all [gold]Tuned[/gold] cards, then remove [gold]Tuned[/gold] from all cards.",
 
   "THEUNDERSTUDY-REPERTOIRE.title": "Repertoire",
-  "THEUNDERSTUDY-REPERTOIRE.description": "{InCombat:cond:|[gold]Tuned[/gold] 1.\n}Deal {Damage:diff()} damage.\nGain {Block:diff()} [gold]Block[/gold].",
+  "THEUNDERSTUDY-REPERTOIRE.description": "{InCombat:cond:|[gold]Tuned[/gold] {Tuned:diff()}.\n}Deal {Damage:diff()} damage.\nGain {Block:diff()} [gold]Block[/gold].",
 
   "THEUNDERSTUDY-ONE_UP.title": "One-up",
   "THEUNDERSTUDY-ONE_UP.description": "{InCombat:cond:|[gold]Tuned[/gold] 1.\n}Deal {Damage:diff()} damage {Repeat:diff()} times.\nApply [gold]Tuned[/gold] to this card.",

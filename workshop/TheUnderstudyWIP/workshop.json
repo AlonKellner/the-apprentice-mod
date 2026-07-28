@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.12.56: New Rare card Repertoire (0-cost Attack): Stable, Tuned 1, deal 1 damage, gain 1 Block. A cheap, replayable Tuned carrier that scales its damage and Block with your Tuned count.",
+  "changeNote": "v1.12.57: Upgraded Repertoire now starts with Tuned 2 (plus its existing +1 damage / +1 Block).",
   "tags": [],
   "dependencies": [
     3737335127

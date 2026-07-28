@@ -3,6 +3,7 @@ using BaseLib.Utils;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.Localization.DynamicVars;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
@@ -19,18 +20,23 @@ public class Repertoire : UnderstudyCard
         WithKeyword(UnderstudyKeywords.Stable, ConstructedCardModel.UpgradeType.None);
         WithDamage(1);
         WithBlock(1);
+        WithVars(new IntVar("Tuned", 1)); // the pre-Tuned stack count; upgrades to 2
         WithTip(UnderstudyKeywords.Tuned);
     }
 
-    // Starts each combat carrying Tuned 1 (prints "Tuned 1"; Tuned counts the card itself and grows as
-    // more Tuned cards appear). Applied before the Stable snapshot so it freezes with the stack.
+    // Starts each combat carrying Tuned (prints "Tuned N"; Tuned counts the card itself and grows as
+    // more Tuned cards appear). Applied before the Stable snapshot so it freezes with the stack. The
+    // stack count is the "Tuned" var, so it and the printed number stay in sync — 1, or 2 upgraded
+    // (the only pre-Tuned-2 card in the deck).
     public override bool IsPreTuned => true;
+    protected override int PreTunedStacks => (int)DynamicVars["Tuned"].BaseValue;
 
     protected override void OnUpgrade()
     {
         base.OnUpgrade();
         DynamicVars.Damage.UpgradeValueBy(1m);
         DynamicVars.Block.UpgradeValueBy(1m);
+        DynamicVars["Tuned"].UpgradeValueBy(1m);
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
