@@ -55,7 +55,7 @@
   "THEUNDERSTUDY-REPERTOIRE.description": "{InCombat:cond:|[gold]Tuned[/gold] {Tuned:diff()}.\n}Deal {Damage:diff()} damage.\nGain {Block:diff()} [gold]Block[/gold].",
 
   "THEUNDERSTUDY-STANDING_OVATION.title": "Standing Ovation",
-  "THEUNDERSTUDY-STANDING_OVATION.description": "Deal {Damage:diff()} damage 3 times.\nGain {Vigor:diff()} [gold]Vigor[/gold].\n[gold]Swap[/gold] {IfUpgraded:show:3 times|twice} & [gold]Invert[/gold] {Invert:diff()} simultaneously.",
+  "THEUNDERSTUDY-STANDING_OVATION.description": "Deal {Damage:diff()} damage 3 times.\nGain {Vigor:diff()} [gold]Vigor[/gold].\n[gold]Swap[/gold] ALL & [gold]Invert[/gold] ALL simultaneously.",
 
   "THEUNDERSTUDY-ONE_UP.title": "One-up",
   "THEUNDERSTUDY-ONE_UP.description": "{InCombat:cond:|[gold]Tuned[/gold] 1.\n}Deal {Damage:diff()} damage {Repeat:diff()} times.\nApply [gold]Tuned[/gold] to this card.",

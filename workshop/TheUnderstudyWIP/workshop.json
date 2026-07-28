@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.12.59: Standing Ovation now reads Swap twice (and Swap 3 times upgraded), matching the other Swap cards.",
+  "changeNote": "v1.12.60: Standing Ovation now Swaps ALL and Inverts ALL simultaneously - uncapped, the only card that does this. An epic, game-breaking Ancient payoff.",
   "tags": [],
   "dependencies": [
     3737335127

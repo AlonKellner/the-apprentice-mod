@@ -22,7 +22,7 @@ public class StandingOvation : UnderstudyCard
     public StandingOvation() : base(1, CardType.Attack, CardRarity.Ancient, TargetType.AnyEnemy)
     {
         WithDamage(4);
-        WithVars(new IntVar("Vigor", 6), new IntVar("Swap", 2), new IntVar("Invert", 2));
+        WithVars(new IntVar("Vigor", 6));
         WithMarkedTip(typeof(VigorPower));
         WithTip(UnderstudyKeywords.Swap);
         WithTip(UnderstudyKeywords.Invert);
@@ -33,8 +33,7 @@ public class StandingOvation : UnderstudyCard
         base.OnUpgrade();
         DynamicVars.Damage.UpgradeValueBy(2m);   // 4 -> 6
         DynamicVars["Vigor"].UpgradeValueBy(4m);  // 6 -> 10
-        DynamicVars["Swap"].UpgradeValueBy(1m);   // 2 -> 3
-        DynamicVars["Invert"].UpgradeValueBy(1m); // 2 -> 3
+        // Swap/Invert are already "ALL" — nothing to scale on upgrade.
     }
 
     protected override bool ShouldGlowGoldInternal =>
@@ -50,7 +49,6 @@ public class StandingOvation : UnderstudyCard
         int vigor = (int)DynamicVars["Vigor"].BaseValue;
         await PowerCmd.Apply<VigorPower>(context, creature, vigor, creature, this, false);
 
-        await BestOfBoth.ResolveFor(context, creature,
-            (int)DynamicVars["Swap"].BaseValue, (int)DynamicVars["Invert"].BaseValue);
+        await BestOfBoth.ResolveAllFor(context, creature);
     }
 }

@@ -42,11 +42,22 @@ public class BestOfBoth : UnderstudyCard
     // regular Swap (SceneStealing): capture each debuff's give+invert and each enemy's buff to take from the
     // current state, then remove from both sides, then apply to both sides — so interacting powers (an
     // enemy's Artifact, a Weak/Unweak pair) swap instead of cancelling before they're moved.
-    public static async Task ResolveFor(
-        PlayerChoiceContext context, Creature creature, int swapRepeats, int invertMax)
+    public static Task ResolveFor(
+        PlayerChoiceContext context, Creature creature, int swapRepeats, int invertMax) =>
+        ResolveWithCaps(context, creature, SceneStealing.SwapCap * swapRepeats, invertMax);
+
+    // "Swap ALL & Invert ALL" — Standing Ovation, the only card that uncaps both halves (int.MaxValue
+    // caps, so ComputeGiveAndTake's Math.Min moves the full magnitude of every debuff/buff). Deliberately
+    // game-breaking; it is an Ancient card.
+    public static Task ResolveAllFor(PlayerChoiceContext context, Creature creature) =>
+        ResolveWithCaps(context, creature, int.MaxValue, int.MaxValue);
+
+    // Shared core: swapCap / invertMax are the per-debuff caps (int.MaxValue = "all"). Caps only feed
+    // Math.Min/Max in ComputeGiveAndTake / CaptureTake, so there is no overflow.
+    private static async Task ResolveWithCaps(
+        PlayerChoiceContext context, Creature creature, int swapCap, int invertMax)
     {
         var enemies = creature.CombatState!.HittableEnemies.ToList();
-        int swapCap = SceneStealing.SwapCap * swapRepeats;
 
         var plan = new SceneStealing.SwapPlan();
         foreach (var pair in InvertiblePairs.All)
