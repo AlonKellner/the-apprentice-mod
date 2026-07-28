@@ -56,12 +56,13 @@ public static class SceneStealing
     // (true buff) portion is stolen here — its negative (debuff) portion is instead GIVEN to enemies, see
     // SignFlipBuffs and the sign-flip branch in GiveLastDebuff. Strength/Dexterity are deliberately NOT
     // swappable (too many enemies scale off them); they remain Invertible via EmotionalExpression.
+    // Artifact is deliberately NOT swappable either — it stays put as a debuff-blocker (the give side still
+    // has to contend with an enemy's own Artifact; see the interleave note below).
     public static IReadOnlyList<PowerModel> SwappableBuffs => _swappableBuffs ??= new PowerModel[]
     {
         ModelDb.Power<VigorPower>(),
         ModelDb.Power<RegenPower>(),
         ModelDb.Power<ThornsPower>(),
-        ModelDb.Power<ArtifactPower>(),
         ModelDb.Power<UnweakPower>(),
         ModelDb.Power<UnvulnerablePower>(),
         ModelDb.Power<UnfrailPower>(),
