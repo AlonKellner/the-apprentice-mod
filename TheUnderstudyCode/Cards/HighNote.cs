@@ -11,18 +11,13 @@ namespace TheUnderstudy.TheUnderstudyCode.Cards;
 // The starter's third voice: two small hits, a swell of Vigor for whatever comes next, and one
 // debuff flipped. Teaches the two mechanics a new player must meet immediately — Vigor as the
 // character's damage lever and Invert as its way out of self-inflicted debuffs.
-//
-// NOTE: this class shares a simple name with HarmonyLib.Harmony. No file currently imports both this
-// namespace and HarmonyLib while using the bare identifier `Harmony` (only MainFile.cs constructs
-// one, and it does not import Cards), so there is no ambiguity today — qualify the patching type if
-// that ever changes.
-public class Harmony : UnderstudyCard
+public class HighNote : UnderstudyCard
 {
-    public const string CardId = "TheUnderstudy:Harmony";
+    public const string CardId = "TheUnderstudy:HighNote";
 
     private const int Hits = 2;
 
-    public Harmony() : base(1, CardType.Attack, CardRarity.Basic, TargetType.AnyEnemy, false)
+    public HighNote() : base(1, CardType.Attack, CardRarity.Basic, TargetType.AnyEnemy, false)
     {
         WithDamage(3);
         WithVars(new IntVar("Vigor", 4), new IntVar("Invert", 1));
@@ -42,7 +37,7 @@ public class Harmony : UnderstudyCard
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
         // Vigor is consumed by the NEXT attack command, so gaining it after this card's own hits is
-        // deliberate: Harmony sets up the following attack rather than pumping itself.
+        // deliberate: High Note sets up the following attack rather than pumping itself.
         await CommonActions.CardAttack(cardPlay.Card, cardPlay, Hits).Execute(context);
 
         var creature = cardPlay.Card.Owner.Creature;

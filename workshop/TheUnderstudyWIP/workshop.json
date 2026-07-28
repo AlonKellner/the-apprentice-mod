@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.12.54: Spectacle now Exhausts (one-time reset). Cleaned up a couple of stale Intense/Tense references (the mechanic is Tuned).",
+  "changeNote": "v1.12.55: Renamed the card Harmony to High Note.",
   "tags": [],
   "dependencies": [
     3737335127

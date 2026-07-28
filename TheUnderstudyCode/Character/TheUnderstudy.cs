@@ -65,7 +65,7 @@ public class TheUnderstudy : PlaceholderCharacterModel
         ModelDb.Card<UnderstudyDefend>(),
         ModelDb.Card<UnderstudyDefend>(),
         ModelDb.Card<PerformanceCard>(),
-        ModelDb.Card<Harmony>(),
+        ModelDb.Card<HighNote>(),
     ];
 
     public override IReadOnlyList<RelicModel> StartingRelics =>

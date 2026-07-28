@@ -9,8 +9,8 @@
   "THEUNDERSTUDY-WORKSHOP.description": "Play all [gold]Planned[/gold] cards.\nApply [gold]Planned[/gold] to {Select:diff()} attacks and skills in your discard pile.",
   "THEUNDERSTUDY-WORKSHOP.selectionPrompt": "Choose cards to make [gold]Planned[/gold].",
 
-  "THEUNDERSTUDY-HARMONY.title": "Harmony",
-  "THEUNDERSTUDY-HARMONY.description": "Deal {Damage:diff()} damage twice.\nGain {Vigor:diff()} [gold]Vigor[/gold].\n[gold]Invert[/gold] {Invert:diff()}.",
+  "THEUNDERSTUDY-HIGH_NOTE.title": "High Note",
+  "THEUNDERSTUDY-HIGH_NOTE.description": "Deal {Damage:diff()} damage twice.\nGain {Vigor:diff()} [gold]Vigor[/gold].\n[gold]Invert[/gold] {Invert:diff()}.",
 
   "THEUNDERSTUDY-PRACTICE.title": "Practice",
   "THEUNDERSTUDY-PRACTICE.description": "{InCombat:cond:|[gold]Tuned[/gold] 1.\n}Deal {Damage:diff()} damage.\nApply [gold]Tuned[/gold] to {Select:diff()} {Select:plural:attack or skill|attacks and skills} in your hand.",
