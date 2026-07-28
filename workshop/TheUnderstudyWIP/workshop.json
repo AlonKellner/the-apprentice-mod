@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.12.62: Standing Ovation - Swap ALL now swaps until nothing swappable remains (all swappable debuffs off you, all swappable buffs off enemies), like Swap twice/3 times but unbounded; Invert ALL flips full stacks.",
+  "changeNote": "v1.12.63: Fixed a crash taking Dusty Tome from Darv - One Take now uses BaseLib ITomeCard so the Tome grants it directly instead of the base scan finding no ancient.",
   "tags": [],
   "dependencies": [
     3737335127
