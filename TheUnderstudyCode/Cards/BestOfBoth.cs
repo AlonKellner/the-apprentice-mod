@@ -46,12 +46,12 @@ public class BestOfBoth : UnderstudyCard
         PlayerChoiceContext context, Creature creature, int swapRepeats, int invertMax) =>
         ResolveWithCaps(context, creature, SceneStealing.SwapCap * swapRepeats, invertMax);
 
-    // "Swap ALL & Invert ALL" — Standing Ovation. Swap is still bounded by SwapCap (the game moves at
-    // most SwapCap=10 of each swappable debuff/buff per swap, so "Swap ALL" = a full single swap across
-    // EVERY debuff/buff), while Invert is uncapped (int.MaxValue) so it flips the FULL stacks of every
-    // self-debuff. Deliberately game-breaking; it is an Ancient card.
+    // "Swap ALL & Invert ALL" — Standing Ovation. Both halves are uncapped (int.MaxValue), which resolves
+    // to: swap until there are no more swappable debuffs on the player or swappable buffs on the enemies
+    // (the full magnitude of each moves at once, the same end state as repeating capped swaps to empty),
+    // and invert the full stacks of every self-debuff. Deliberately game-breaking; it is an Ancient card.
     public static Task ResolveAllFor(PlayerChoiceContext context, Creature creature) =>
-        ResolveWithCaps(context, creature, SceneStealing.SwapCap, int.MaxValue);
+        ResolveWithCaps(context, creature, int.MaxValue, int.MaxValue);
 
     // Shared core: swapCap / invertMax are the per-debuff caps (int.MaxValue = "all"). Caps only feed
     // Math.Min/Max in ComputeGiveAndTake / CaptureTake, so there is no overflow.
