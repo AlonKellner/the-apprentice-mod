@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.12.64: Diagnostic build - logs Dusty Tome ancient-card selection state to pin down the crash.",
+  "changeNote": "v1.12.65: Fixed the Dusty Tome crash - the obtained relic did not carry the ancient-card choice, so it now sets it up on obtain (grants One Take).",
   "tags": [],
   "dependencies": [
     3737335127
