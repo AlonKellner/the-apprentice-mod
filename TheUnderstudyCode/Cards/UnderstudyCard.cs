@@ -144,8 +144,10 @@ public abstract class UnderstudyCard(
     public virtual bool IsPreTuned => false;
 
     // How many Tuned stacks a pre-Tuned card starts combat with. Default 1 (every existing pre-Tuned
-    // card); a card can override to start higher (e.g. Repertoire+ starts at Tuned 2).
-    protected virtual int PreTunedStacks => 1;
+    // card); a card can override to start higher (e.g. Repertoire+ starts at Tuned 2). Public so the
+    // out-of-combat preview (TunedPreview.TunedParts) can show the right starting Tuned amount before
+    // any TunedModifier exists on the card.
+    public virtual int PreTunedStacks => 1;
 
     // True once this card has actually been pre-Tuned for the current combat — reset only
     // at BeforeCombatStart, same reasoning as _prePlannedThisCombat (AfterCardEnteredCombat fires

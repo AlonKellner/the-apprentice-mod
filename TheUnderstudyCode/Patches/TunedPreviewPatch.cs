@@ -23,7 +23,8 @@ namespace TheUnderstudy.TheUnderstudyCode.Patches;
 //     color on top as usual.
 //
 // This is NOT pre-Tuned gated -- it's driven by whatever Tuned the card currently carries. Out of
-// combat a pre-Tuned card has no modifier yet but starts each combat Tuned 1, so it previews (1, 1).
+// combat a pre-Tuned card has no modifier yet but starts each combat with PreTunedStacks Tuned, so it
+// previews (PreTunedStacks, PreTunedStacks) — (1, 1) for the usual pre-Tuned card, (2, 2) for Repertoire+.
 //
 // DamageVar/BlockVar.UpdateCardPreview only runs the damage/block hooks (which inject the full Tuned
 // bonus) when runGlobalHooks == true (the active in-hand card). For pile / out-of-combat previews
@@ -33,7 +34,7 @@ public static class TunedPreview
     // (dynamicBasePart, total) for this card's Tuned state. See the class comment.
     public static (int dynamicBasePart, int total) TunedParts(CardModel card) =>
         card.TryGetModifier<TunedModifier>(out var t) ? (t!.Stacks, t.Bonus)
-        : card is UnderstudyCard { IsPreTuned: true } ? (1, 1)
+        : card is UnderstudyCard { IsPreTuned: true } uc ? (uc.PreTunedStacks, uc.PreTunedStacks)
         : (0, 0);
 
     public static void Add(DynamicVar var, CardModel card, bool runGlobalHooks)
