@@ -9,7 +9,7 @@ public class UnderstudyDefend : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:UnderstudyDefend";
 
-    public UnderstudyDefend() : base(1, CardType.Skill, CardRarity.Basic, TargetType.None, false)
+    public UnderstudyDefend() : base(1, CardType.Skill, CardRarity.Basic, TargetType.None)
     {
         WithBlock(5);
         WithTags(CardTag.Defend);

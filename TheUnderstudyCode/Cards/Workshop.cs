@@ -20,7 +20,7 @@ public class Workshop : PlayAllPlannedCard
 {
     public const string CardId = "TheUnderstudy:Workshop";
 
-    public Workshop() : base(0, CardType.Skill, CardRarity.Basic, TargetType.AnyEnemy, false)
+    public Workshop() : base(0, CardType.Skill, CardRarity.Basic, TargetType.AnyEnemy)
     {
         WithKeyword(UnderstudyKeywords.Stable, ConstructedCardModel.UpgradeType.None);
         WithVars(new CardsVar("Select", 2));

@@ -9,7 +9,7 @@ public class UnderstudyStrike : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:UnderstudyStrike";
 
-    public UnderstudyStrike() : base(1, CardType.Attack, CardRarity.Basic, TargetType.AnyEnemy, false)
+    public UnderstudyStrike() : base(1, CardType.Attack, CardRarity.Basic, TargetType.AnyEnemy)
     {
         WithDamage(6);
         WithTags(CardTag.Strike);

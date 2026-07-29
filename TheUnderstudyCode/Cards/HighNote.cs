@@ -24,7 +24,7 @@ public class HighNote : UnderstudyCard, ITranscendenceCard
 
     private const int Hits = 2;
 
-    public HighNote() : base(1, CardType.Attack, CardRarity.Basic, TargetType.AnyEnemy, false)
+    public HighNote() : base(1, CardType.Attack, CardRarity.Basic, TargetType.AnyEnemy)
     {
         WithDamage(3);
         WithVars(new IntVar("Vigor", 4), new IntVar("Invert", 1));
