@@ -14,7 +14,7 @@ public class TurnItAround : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:TurnItAround";
 
-    public TurnItAround() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.None)
+    public TurnItAround() : base(0, CardType.Skill, CardRarity.Uncommon, TargetType.None)
     {
         WithVars(new IntVar("Invert", 1));
         WithTip(UnderstudyKeywords.Invert);

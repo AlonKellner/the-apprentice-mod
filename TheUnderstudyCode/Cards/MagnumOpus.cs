@@ -19,7 +19,7 @@ public class MagnumOpus : UnderstudyCard
 
     public MagnumOpus() : base(2, CardType.Skill, CardRarity.Rare, TargetType.None)
     {
-        WithVars(new CardsVar("Select", 2));
+        WithVars(new CardsVar("Select", 3));
         WithTip(UnderstudyKeywords.Planned);
     }
 

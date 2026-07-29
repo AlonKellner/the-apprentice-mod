@@ -28,8 +28,8 @@
   "THEUNDERSTUDY-ENSEMBLE_POWER.smartDescription": "Whenever an ally plays a card, gain [blue]{Amount}[/blue] [gold]Vigor[/gold].",
 
   "THEUNDERSTUDY-CONDUCTOR_POWER.title": "Conductor",
-  "THEUNDERSTUDY-CONDUCTOR_POWER.description": "Whenever you gain [gold]Vigor[/gold], all allies gain that much [gold]Vigor[/gold] too.",
-  "THEUNDERSTUDY-CONDUCTOR_POWER.smartDescription": "Whenever you gain [gold]Vigor[/gold], all allies gain that much [gold]Vigor[/gold] too.",
+  "THEUNDERSTUDY-CONDUCTOR_POWER.description": "At the end of your turn, all players gain [gold]Vigor[/gold] equal to your Vigor.",
+  "THEUNDERSTUDY-CONDUCTOR_POWER.smartDescription": "At the end of your turn, all players gain [gold]Vigor[/gold] equal to your Vigor.",
 
   "THEUNDERSTUDY-DOUBLE_TIME_POWER.title": "Double Time",
   "THEUNDERSTUDY-DOUBLE_TIME_POWER.description": "All [gold]invertible[/gold] buff and debuff gains are applied an additional time.",
