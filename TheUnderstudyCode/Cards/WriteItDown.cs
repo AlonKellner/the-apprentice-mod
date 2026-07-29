@@ -28,8 +28,8 @@ public class WriteItDown : UnderstudyCard
     protected override void OnUpgrade()
     {
         base.OnUpgrade();
-        DynamicVars.Cards.UpgradeValueBy(1m);   // draw 1 -> 2
-        DynamicVars["Select"].UpgradeValueBy(1m);
+        DynamicVars.Cards.UpgradeValueBy(1m);   // only the draw upgrades (1 -> 2)
+        // Select stays 1: Planned + Tuned are always applied to a single card.
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
