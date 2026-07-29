@@ -29,19 +29,19 @@ public class CardRarityMechanicCoverageTests
         ["Invert"] = new[]
         {
             typeof(Joke), typeof(BrightSide), typeof(Apathy),
-            typeof(HeldNote), typeof(MyOwnLesson), typeof(OwnIt), typeof(LivingTheDream),
+            typeof(HeldNote), typeof(MyOwnLesson), typeof(OwnIt), typeof(UpsideDown),
             typeof(StrikeAPose), typeof(SilverLining), typeof(BestOfBoth), typeof(TurnItAround),
         },
         ["Planned"] = new[]
         {
-            typeof(Orchestration), typeof(Foreshadow), typeof(WriteItDown),
+            typeof(Orchestration), typeof(Foreshadow), typeof(KeepInMind),
             typeof(Muse), typeof(Showtime), typeof(Remix),
             typeof(Melody), typeof(Intermission),
             typeof(CleanSlate), typeof(DaCapo), typeof(MagnumOpus), typeof(Motif),
         },
         ["Tuned"] = new[]
         {
-            typeof(WriteItDown), typeof(TuningRitual), typeof(RunThrough),
+            typeof(KeepInMind), typeof(TuningRitual), typeof(RunThrough),
             typeof(Memorize), typeof(Perfectionism),
             typeof(CleanSlate), typeof(Experience), typeof(OneUp),
             typeof(MuscleMemory), typeof(BackOfMyHand), typeof(Showstopper), typeof(AutoTune),
@@ -86,7 +86,7 @@ public class CardRarityMechanicCoverageTests
         },
         ["draw"] = new[]
         {
-            typeof(Orchestration), typeof(WriteItDown),
+            typeof(Orchestration), typeof(KeepInMind),
             typeof(TakeNotes), typeof(Cram),
         },
         ["energy"] = new[]

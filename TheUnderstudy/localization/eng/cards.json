@@ -30,9 +30,9 @@
   "THEUNDERSTUDY-ORCHESTRATION.description": "Draw {Cards:diff()} {Cards:plural:card|cards}.\nApply [gold]Planned[/gold] to {Select:diff()} {Select:plural:attack or skill|attacks and skills} in your hand.",
   "THEUNDERSTUDY-ORCHESTRATION.selectionPrompt": "Choose cards to make [gold]Planned[/gold].",
 
-  "THEUNDERSTUDY-WRITE_IT_DOWN.title": "Write it Down",
-  "THEUNDERSTUDY-WRITE_IT_DOWN.description": "Draw {Cards:diff()} {Cards:plural:card|cards}.\nApply [gold]Planned[/gold] and [gold]Tuned[/gold] to {Select:diff()} {Select:plural:attack or skill|attacks and skills} in hand.",
-  "THEUNDERSTUDY-WRITE_IT_DOWN.selectionPrompt": "Choose cards to make [gold]Planned[/gold] and [gold]Tuned[/gold].",
+  "THEUNDERSTUDY-KEEP_IN_MIND.title": "Keep in Mind",
+  "THEUNDERSTUDY-KEEP_IN_MIND.description": "Draw {Cards:diff()} {Cards:plural:card|cards}.\nApply [gold]Planned[/gold] and [gold]Tuned[/gold] to {Select:diff()} {Select:plural:attack or skill|attacks and skills} in hand.",
+  "THEUNDERSTUDY-KEEP_IN_MIND.selectionPrompt": "Choose cards to make [gold]Planned[/gold] and [gold]Tuned[/gold].",
 
   "THEUNDERSTUDY-CRYING_OUT_LOUD.title": "Crying Out Loud",
   "THEUNDERSTUDY-CRYING_OUT_LOUD.description": "Whenever a debuff of yours clears, gain {IfUpgraded:show:4|3} [gold]Vigor[/gold].",
@@ -130,8 +130,8 @@
   "THEUNDERSTUDY-FORTE.title": "Forte",
   "THEUNDERSTUDY-FORTE.description": "Gain {Energy:energyIcons()}.\nGain {Vigor:diff()} [gold]Vigor[/gold].",
 
-  "THEUNDERSTUDY-LIVING_THE_DREAM.title": "Living the Dream",
-  "THEUNDERSTUDY-LIVING_THE_DREAM.description": "[gold]Invert[/gold] {Invert:diff()}.",
+  "THEUNDERSTUDY-UPSIDE_DOWN.title": "Upside Down",
+  "THEUNDERSTUDY-UPSIDE_DOWN.description": "[gold]Invert[/gold] {Invert:diff()}.",
 
   "THEUNDERSTUDY-ROLE_REVERSAL.title": "Role Reversal",
   "THEUNDERSTUDY-ROLE_REVERSAL.description": "[gold]Swap[/gold]{IfUpgraded:show: 3 times| twice}.",

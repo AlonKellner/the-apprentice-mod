@@ -79,6 +79,10 @@
   "THEUNDERSTUDY-MY_OWN_LESSON_POWER.description": "Whenever you gain an [gold]Invertible[/gold] debuff, gain a buff instead. Whenever you gain an [gold]Invertible[/gold] buff, gain nothing instead.",
   "THEUNDERSTUDY-MY_OWN_LESSON_POWER.smartDescription": "Whenever you gain an [gold]Invertible[/gold] debuff, gain a buff instead. Whenever you gain an [gold]Invertible[/gold] buff, gain nothing instead.",
 
+  "THEUNDERSTUDY-LIVING_THE_DREAM_POWER.title": "Living the Dream",
+  "THEUNDERSTUDY-LIVING_THE_DREAM_POWER.description": "Bright Side & Stage Presence will [gold]Swap[/gold] & [gold]Invert[/gold] simultaneously.",
+  "THEUNDERSTUDY-LIVING_THE_DREAM_POWER.smartDescription": "Bright Side & Stage Presence will [gold]Swap[/gold] & [gold]Invert[/gold] simultaneously.",
+
   "THEUNDERSTUDY-ONE_TAKE_POWER.title": "One Take",
   "THEUNDERSTUDY-ONE_TAKE_POWER.description": "Decrease all card costs by 1. Apply [gold]Unplayable[/gold] to every played card.",
   "THEUNDERSTUDY-ONE_TAKE_POWER.smartDescription": "Decrease all card costs by {Amount}. Apply [gold]Unplayable[/gold] to every played card.",
@@ -109,7 +113,7 @@
 
   "THEUNDERSTUDY-STAGE_PRESENCE_POWER.title": "Stage Presence",
   "THEUNDERSTUDY-STAGE_PRESENCE_POWER.description": "At the start of your turn, [gold]Swap[/gold].",
-  "THEUNDERSTUDY-STAGE_PRESENCE_POWER.smartDescription": "At the start of your turn, [gold]Swap[/gold].",
+  "THEUNDERSTUDY-STAGE_PRESENCE_POWER.smartDescription": "At the start of your turn, [gold]Swap[/gold] [blue]{Amount}[/blue] {Amount:plural:time|times}.",
 
   "THEUNDERSTUDY-STEREO_POWER.title": "Stereo",
   "THEUNDERSTUDY-STEREO_POWER.description": "Double all gained [gold]Vigor[/gold].",

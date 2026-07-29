@@ -248,7 +248,7 @@ public static class EmotionalExpression
 
     // Whether Invert would have anything to act on right now — any invertible pair with a debuff present.
     // Derived from the registry. Used by relevance highlighting on StrikeAPose/RunThrough/EnjoyTheRide/
-    // RollWithIt/OwnIt/LivingTheDream.
+    // RollWithIt/OwnIt/UpsideDown.
     public static bool HasAnyInvertibleDebuffPresent(Creature creature) =>
         InvertiblePairs.All.Any(p => p.HasDebuffPresent(creature));
 

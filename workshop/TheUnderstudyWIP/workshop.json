@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.13.9: Desperate Strike and Strike a Pose now carry the Strike tag, so they count for Strike synergies (Hellraiser, Perfected Strike, etc.).",
+  "changeNote": "v1.13.10: Renamed Living the Dream to Upside Down and Write it Down to Keep in Mind. New hidden power Living the Dream: holding both Bright Side and Stage Presence makes them Swap & Invert simultaneously each turn. Stage Presence now stacks (Swap N with N copies).",
   "tags": [],
   "dependencies": [
     3737335127

@@ -7,12 +7,12 @@ using MegaCrit.Sts2.Core.Localization.DynamicVars;
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
 // Pure Invert: nothing but the deck's signature debuff->buff flip. The designated (very rare)
-// Invert 3 card alongside Center Stage.
-public class LivingTheDream : UnderstudyCard
+// Invert 3 card alongside Center Stage. (Was "Living the Dream" — that name is now a hidden power.)
+public class UpsideDown : UnderstudyCard
 {
-    public const string CardId = "TheUnderstudy:LivingTheDream";
+    public const string CardId = "TheUnderstudy:UpsideDown";
 
-    public LivingTheDream() : base(1, CardType.Skill, CardRarity.Common, TargetType.None)
+    public UpsideDown() : base(1, CardType.Skill, CardRarity.Common, TargetType.None)
     {
         WithVars(new IntVar("Invert", 2));
         WithTip(UnderstudyKeywords.Invert);

@@ -13,11 +13,11 @@ using TheUnderstudy.TheUnderstudyCode.Patches;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
-public class WriteItDown : UnderstudyCard
+public class KeepInMind : UnderstudyCard
 {
-    public const string CardId = "TheUnderstudy:WriteItDown";
+    public const string CardId = "TheUnderstudy:KeepInMind";
 
-    public WriteItDown() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.None)
+    public KeepInMind() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.None)
     {
         WithCards(1); // draw 1 (2 upgraded)
         WithVars(new CardsVar("Select", 1));
@@ -42,7 +42,7 @@ public class WriteItDown : UnderstudyCard
         var selected = await CardSelectCmd.FromHand(
             context,
             player,
-            new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-WRITE_IT_DOWN.selectionPrompt"), 0, maxSelect),
+            new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-KEEP_IN_MIND.selectionPrompt"), 0, maxSelect),
             c => c != this && PlannedModifier.CanApplyTo(c) && TunedModifier.CanApplyTo(c),
             this);
         if (selected == null) return;

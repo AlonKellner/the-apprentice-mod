@@ -672,4 +672,65 @@ public class PowerClassTests
 
     [Fact]
     public void UndoomPower_HasNoInterceptionOverrides() => AssertHasNoInterceptionOverrides(typeof(UndoomPower));
+
+    // ── Living the Dream (hidden combo of Bright Side + Stage Presence) ──────────────────────────
+
+    [Fact]
+    public void LivingTheDreamPower_IsBuff_Single_Visible()
+    {
+        var p = new LivingTheDreamPower();
+        Assert.Equal(PowerType.Buff, p.Type);
+        Assert.Equal(PowerStackType.Single, p.StackType);
+        // It MUST be visible (it's the player-facing signal that the combo is active): the base
+        // "always visible" default applies, i.e. no IsVisibleInternal override.
+        Assert.Null(typeof(LivingTheDreamPower).GetProperty(
+            "IsVisibleInternal", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly));
+        var isVisible = typeof(LivingTheDreamPower)
+            .GetProperty("IsVisibleInternal", BindingFlags.NonPublic | BindingFlags.Instance)!
+            .GetValue(p);
+        Assert.Equal(true, isVisible);
+    }
+
+    [Theory]
+    [InlineData(0, 0, false)]
+    [InlineData(2, 0, false)]
+    [InlineData(0, 3, false)]
+    [InlineData(1, 1, true)]
+    [InlineData(4, 3, true)]
+    public void LivingTheDreamPower_ShouldBePresent_RequiresBoth(int brightSide, int stagePresence, bool expected) =>
+        Assert.Equal(expected, LivingTheDreamPower.ShouldBePresent(brightSide, stagePresence));
+
+    [Fact]
+    public void LivingTheDreamPower_Localization_MentionsSwapAndInvert()
+    {
+        var descriptions = LocText.Of(new LivingTheDreamPower())
+            .Where(e => e.Item1 == "description" || e.Item1 == "smartDescription")
+            .Select(e => e.Item2)
+            .ToList();
+        Assert.NotEmpty(descriptions);
+        Assert.All(descriptions, d => Assert.Contains("Swap", d, StringComparison.OrdinalIgnoreCase));
+        Assert.All(descriptions, d => Assert.Contains("Invert", d, StringComparison.OrdinalIgnoreCase));
+    }
+
+    [Fact]
+    public void StagePresencePower_IsBuff_Counter()   // now stackable: N copies => Swap N per turn
+    {
+        var p = new StagePresencePower();
+        Assert.Equal(PowerType.Buff, p.Type);
+        Assert.Equal(PowerStackType.Counter, p.StackType);
+    }
+
+    [Fact]
+    public void StagePresencePower_OverridesTurnStartAndPowerChange()
+    {
+        Assert.NotNull(typeof(StagePresencePower).GetMethod(
+            "AfterPlayerTurnStart", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly));
+        Assert.NotNull(typeof(StagePresencePower).GetMethod(
+            "AfterPowerAmountChanged", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly));
+    }
+
+    [Fact]
+    public void BrightSidePower_OverridesAfterPowerAmountChanged() =>
+        Assert.NotNull(typeof(BrightSidePower).GetMethod(
+            "AfterPowerAmountChanged", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly));
 }
