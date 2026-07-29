@@ -17,7 +17,7 @@ public class BestOfBoth : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:BestOfBoth";
 
-    public BestOfBoth() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.None)
+    public BestOfBoth() : base(1, CardType.Skill, CardRarity.Rare, TargetType.None)
     {
         WithVars(new IntVar("Swap", 1), new IntVar("Invert", 1));
         WithTip(UnderstudyKeywords.Swap);

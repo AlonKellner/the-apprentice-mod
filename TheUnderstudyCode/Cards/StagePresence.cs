@@ -11,7 +11,7 @@ public class StagePresence : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:StagePresence";
 
-    public StagePresence() : base(1, CardType.Power, CardRarity.Rare, TargetType.None)
+    public StagePresence() : base(1, CardType.Power, CardRarity.Uncommon, TargetType.None)
     {
         WithPowerNoTip<StagePresencePower>(1);
         WithTip(UnderstudyKeywords.Swap);
