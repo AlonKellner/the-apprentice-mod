@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.13.8: The Wall and Heart Ache now apply 2 Vulnerable to yourself; Freeze Up applies 2 Weak to yourself. The Wall's upgrade now gives 20 Block.",
+  "changeNote": "v1.13.9: Desperate Strike and Strike a Pose now carry the Strike tag, so they count for Strike synergies (Hellraiser, Perfected Strike, etc.).",
   "tags": [],
   "dependencies": [
     3737335127

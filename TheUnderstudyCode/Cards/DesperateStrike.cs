@@ -16,6 +16,7 @@ public class DesperateStrike : UnderstudyCard
         WithDamage(20);
         WithMarkedTip(typeof(WeakPower));
         WithVar(new SelfDebuffVar("Weak", 2));
+        WithTags(CardTag.Strike);
     }
 
     protected override void OnUpgrade()

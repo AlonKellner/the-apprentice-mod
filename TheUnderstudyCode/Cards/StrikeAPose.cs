@@ -19,6 +19,7 @@ public class StrikeAPose : UnderstudyCard
         WithDamage(3);
         WithVars(new IntVar("Invert", 1));
         WithTip(UnderstudyKeywords.Invert);
+        WithTags(CardTag.Strike);
     }
 
     protected override void OnUpgrade()
