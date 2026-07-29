@@ -14,12 +14,12 @@ public class GoForBroke : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:GoForBroke";
 
-    public GoForBroke() : base(2, CardType.Skill, CardRarity.Uncommon, TargetType.None)
+    public GoForBroke() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.None)
     {
         WithTip(CardKeyword.Unplayable);
         WithMarkedTip(typeof(ShakenPower));
         WithVar(new SelfDebuffVar("Shaken", 2));
-        WithCostUpgradeBy(-1); // upgrade: cost 2 -> 1
+        WithCostUpgradeBy(-1); // upgrade: cost 1 -> 0
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
