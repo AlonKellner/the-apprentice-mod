@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.12.74: Run Through damage reduced to 5 (8 upgraded).",
+  "changeNote": "v1.13.0: Multiplayer expansion — The Understudy now has 5 co-op cards (base-game parity). New Duet (grant an ally Vigor equal to yours), Trading Fours (the old Duet), Antagonist (take all swappable/invertible debuffs from all allies), Ensemble (gain Vigor when an ally plays a card), and Conductor (allies echo your Vigor gains).",
   "tags": [],
   "dependencies": [
     3737335127
