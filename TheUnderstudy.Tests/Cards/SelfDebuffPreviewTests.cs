@@ -20,12 +20,12 @@ public class SelfDebuffPreviewTests
     // card; new self-debuff cards are added here as they are created.
     public static IEnumerable<object[]> SelfDebuffCards() => new List<object[]>
     {
-        new object[] { typeof(FreezeUp), "Weak", 1 },
+        new object[] { typeof(FreezeUp), "Weak", 2 },
         new object[] { typeof(DesperateStrike), "Weak", 2 },
         new object[] { typeof(BreakingVoice), "Weak", 2 },
-        new object[] { typeof(HeartAche), "Vulnerable", 1 },
+        new object[] { typeof(HeartAche), "Vulnerable", 2 },
         new object[] { typeof(Joke), "Vulnerable", 1 },
-        new object[] { typeof(TheWall), "Vulnerable", 1 },
+        new object[] { typeof(TheWall), "Vulnerable", 2 },
     };
 
     [Theory]

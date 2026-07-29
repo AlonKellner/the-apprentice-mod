@@ -16,7 +16,7 @@ public class HeartAche : UnderstudyCard
         WithDamage(10);
         WithBlock(16);
         WithMarkedTip(typeof(VulnerablePower));
-        WithVar(new SelfDebuffVar("Vulnerable", 1));
+        WithVar(new SelfDebuffVar("Vulnerable", 2));
     }
 
     protected override void OnUpgrade()

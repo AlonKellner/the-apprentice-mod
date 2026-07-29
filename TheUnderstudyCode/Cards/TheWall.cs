@@ -15,13 +15,13 @@ public class TheWall : UnderstudyCard
     {
         WithBlock(16);
         WithMarkedTip(typeof(VulnerablePower));
-        WithVar(new SelfDebuffVar("Vulnerable", 1));
+        WithVar(new SelfDebuffVar("Vulnerable", 2));
     }
 
     protected override void OnUpgrade()
     {
         base.OnUpgrade();
-        DynamicVars.Block.UpgradeValueBy(3m);
+        DynamicVars.Block.UpgradeValueBy(4m); // 16 -> 20
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
