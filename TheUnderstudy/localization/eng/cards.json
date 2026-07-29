@@ -31,7 +31,7 @@
   "THEUNDERSTUDY-ORCHESTRATION.selectionPrompt": "Choose cards to make [gold]Planned[/gold].",
 
   "THEUNDERSTUDY-WRITE_IT_DOWN.title": "Write it Down",
-  "THEUNDERSTUDY-WRITE_IT_DOWN.description": "Apply [gold]Planned[/gold] and [gold]Tuned[/gold] to {Select:diff()} {Select:plural:attack or skill|attacks and skills} in hand.",
+  "THEUNDERSTUDY-WRITE_IT_DOWN.description": "Draw {Cards:diff()} {Cards:plural:card|cards}.\nApply [gold]Planned[/gold] and [gold]Tuned[/gold] to {Select:diff()} {Select:plural:attack or skill|attacks and skills} in hand.",
   "THEUNDERSTUDY-WRITE_IT_DOWN.selectionPrompt": "Choose cards to make [gold]Planned[/gold] and [gold]Tuned[/gold].",
 
   "THEUNDERSTUDY-CRYING_OUT_LOUD.title": "Crying Out Loud",

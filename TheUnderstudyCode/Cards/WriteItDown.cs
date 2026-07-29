@@ -17,8 +17,9 @@ public class WriteItDown : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:WriteItDown";
 
-    public WriteItDown() : base(1, CardType.Skill, CardRarity.Common, TargetType.None)
+    public WriteItDown() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.None)
     {
+        WithCards(1); // draw 1 (2 upgraded)
         WithVars(new CardsVar("Select", 1));
         WithTip(UnderstudyKeywords.Planned);
         WithTip(UnderstudyKeywords.Tuned);
@@ -27,11 +28,14 @@ public class WriteItDown : UnderstudyCard
     protected override void OnUpgrade()
     {
         base.OnUpgrade();
+        DynamicVars.Cards.UpgradeValueBy(1m);   // draw 1 -> 2
         DynamicVars["Select"].UpgradeValueBy(1m);
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
+        await CommonActions.Draw(this, context);
+
         var player = cardPlay.Card.Owner;
         int maxSelect = (int)DynamicVars["Select"].BaseValue;
         if (MultiplayerUtil.IsLocalPlayer(player)) PlannedSelectionState.Arm();

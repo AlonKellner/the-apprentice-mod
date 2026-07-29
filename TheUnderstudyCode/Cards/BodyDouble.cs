@@ -11,7 +11,7 @@ public class BodyDouble : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:BodyDouble";
 
-    public BodyDouble() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.None)
+    public BodyDouble() : base(1, CardType.Skill, CardRarity.Common, TargetType.None)
     {
         WithBlock(8);
         WithVars(new IntVar("Swap", 1));

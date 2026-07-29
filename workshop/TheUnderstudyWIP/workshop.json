@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.13.5: Go For Broke now costs 1 (0 upgraded).",
+  "changeNote": "v1.13.6: Body Double is now Common; Write it Down is now Uncommon and also draws 1 card (2 upgraded).",
   "tags": [],
   "dependencies": [
     3737335127

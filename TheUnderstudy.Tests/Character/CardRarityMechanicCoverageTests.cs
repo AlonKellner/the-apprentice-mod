@@ -86,7 +86,7 @@ public class CardRarityMechanicCoverageTests
         },
         ["draw"] = new[]
         {
-            typeof(Orchestration),
+            typeof(Orchestration), typeof(WriteItDown),
             typeof(TakeNotes), typeof(Cram),
         },
         ["energy"] = new[]
@@ -124,8 +124,7 @@ public class CardRarityMechanicCoverageTests
     [InlineData("Uncommon", "Vigor")]
     [InlineData("Uncommon", "damage")]
     [InlineData("Uncommon", "block")]
-    // draw is intentionally NOT required at Uncommon: the trim removed Resourceful (the sole Uncommon
-    // draw card), so draw is now covered at Common only (Orchestration/Take Notes/Cram) + Rare (Improvise).
+    [InlineData("Uncommon", "draw")]
     [InlineData("Uncommon", "energy")]
     // Rare must still represent all three builds + all five debuffs.
     [InlineData("Rare", "Invert")]
