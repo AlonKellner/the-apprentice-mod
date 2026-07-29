@@ -12,7 +12,7 @@ public class OwnIt : UnderstudyCard
 
     protected override bool HasEnergyCostX => true;
 
-    public OwnIt() : base(0, CardType.Skill, CardRarity.Rare, TargetType.None)
+    public OwnIt() : base(0, CardType.Skill, CardRarity.Uncommon, TargetType.None)
     {
         WithTip(UnderstudyKeywords.Invert);
     }

@@ -149,9 +149,11 @@ public sealed class Understudy6Epoch : UnderstudyEpoch
 }
 
 // 7 — Every Story has a Lesson (the confrontation). Reveals on: Beat Act 3. The Final Test: Fate Knocking
-// pays the whole combat back in one blow (its 3 strikes echoing the Lesson's 3-turn countdown), and One
-// Take gives you no second chances. My Own Lesson is deliberately NOT here — the boy's own conclusion is
-// not something the Architect's story grants, so it is always available.
+// pays the whole combat back in one blow (its 3 strikes echoing the Lesson's 3-turn countdown), and
+// Canonical makes one card Stable — a lesson locked into the story for good. (One Take used to sit here,
+// but it is now an Ancient card granted only by Darv's Dusty Tome, so gating/revealing it as a normal
+// unlock does nothing.) My Own Lesson is deliberately NOT here — the boy's own conclusion is not
+// something the Architect's story grants, so it is always available.
 public sealed class Understudy7Epoch : UnderstudyEpoch
 {
     public override string Id => "THEUNDERSTUDY7_EPOCH";
@@ -159,7 +161,7 @@ public sealed class Understudy7Epoch : UnderstudyEpoch
     public override int EraPosition => 3;
 
     public static List<CardModel> Cards => new()
-        { ModelDb.Card<TheFinalLesson>(), ModelDb.Card<FateKnocking>(), ModelDb.Card<OneTake>() };
+        { ModelDb.Card<TheFinalLesson>(), ModelDb.Card<FateKnocking>(), ModelDb.Card<Canonical>() };
 
     public override string UnlockText => CreateCardUnlockText(Cards);
     public override void QueueUnlocks() => NTimelineScreen.Instance.QueueCardUnlock(Cards);

@@ -37,7 +37,7 @@ public class NewDeckCardsTests
     [InlineData(typeof(MasterForm), "TheUnderstudy:MasterForm", CardType.Power, CardRarity.Rare, TargetType.None)]
     [InlineData(typeof(HeldNote), "TheUnderstudy:HeldNote", CardType.Power, CardRarity.Rare, TargetType.None)]
     [InlineData(typeof(Showtime), "TheUnderstudy:Showtime", CardType.Skill, CardRarity.Uncommon, TargetType.AnyEnemy)]
-    [InlineData(typeof(OwnIt), "TheUnderstudy:OwnIt", CardType.Skill, CardRarity.Rare, TargetType.None)]
+    [InlineData(typeof(OwnIt), "TheUnderstudy:OwnIt", CardType.Skill, CardRarity.Uncommon, TargetType.None)]
     [InlineData(typeof(SonicBoom), "TheUnderstudy:SonicBoom", CardType.Skill, CardRarity.Rare, TargetType.None)]
     [InlineData(typeof(TheFirstLesson), "TheUnderstudy:TheFirstLesson", CardType.Power, CardRarity.Rare, TargetType.None)]
     [InlineData(typeof(AnotherBrick), "TheUnderstudy:AnotherBrick", CardType.Power, CardRarity.Uncommon, TargetType.None)]

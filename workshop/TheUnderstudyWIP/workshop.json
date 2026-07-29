@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.12.69: Stage Presence is now Uncommon; Best of Both is now Rare (keeps a Rare Swap card).",
+  "changeNote": "v1.12.70: Epoch 7 now unlocks Canonical instead of One Take (which is Ancient and granted by the Dusty Tome); Own It demoted to Uncommon.",
   "tags": [],
   "dependencies": [
     3737335127
