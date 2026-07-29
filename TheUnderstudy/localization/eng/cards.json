@@ -274,7 +274,7 @@
   "THEUNDERSTUDY-BEST_OF_BOTH.description": "[gold]Swap[/gold]{IfUpgraded:show: twice|} & [gold]Invert[/gold] {Invert:diff()} simultaneously.",
 
   "THEUNDERSTUDY-DUET.title": "Duet",
-  "THEUNDERSTUDY-DUET.description": "Grant an ally [gold]Vigor[/gold] equal to yours.",
+  "THEUNDERSTUDY-DUET.description": "Gain {Vigor:diff()} [gold]Vigor[/gold].\nGrant an ally [gold]Vigor[/gold] equal to yours.",
 
   "THEUNDERSTUDY-TRADING_FOURS.title": "Trading Fours",
   "THEUNDERSTUDY-TRADING_FOURS.description": "[gold]Swap[/gold]{IfUpgraded:show: 3 times| twice} & [gold]Invert[/gold] {Invert:diff()} simultaneously for the target player.",
