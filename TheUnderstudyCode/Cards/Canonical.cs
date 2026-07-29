@@ -12,7 +12,7 @@ public class Canonical : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:Canonical";
 
-    public Canonical() : base(1, CardType.Skill, CardRarity.Rare, TargetType.None)
+    public Canonical() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.None)
     {
         WithKeyword(CardKeyword.Exhaust, ConstructedCardModel.UpgradeType.Remove);
         WithTip(UnderstudyKeywords.Stable);

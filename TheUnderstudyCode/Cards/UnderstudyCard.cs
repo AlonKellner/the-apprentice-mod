@@ -131,7 +131,7 @@ public abstract class UnderstudyCard(
     private bool _stableWatch;
 
     // The pre-Planned mechanic (starting a combat already queued) — scoped to the handful of B cards
-    // that override this (Signature, upgraded Experience). The actual queuing is no longer per-card:
+    // that override this (Playlist). The actual queuing is no longer per-card:
     // PrePlannedSetup runs once per combat and assigns every pre-Planned card a concrete, unique slot
     // via PlannedModifier's owner-scoped slot derivation in deck order (see AfterPlayerTurnStartLate below), so they
     // keep their deck position and take the lowest slots. (Previously each attached a shared sentinel

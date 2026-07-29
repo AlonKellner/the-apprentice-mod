@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.13.1: Duet now starts with Gain 4 Vigor, then grants an ally Vigor equal to your new total.",
+  "changeNote": "v1.13.2: Card pool trim to target totals (20/38/27). Removed Pathos, Nervous Energy, Signature, Resourceful, and Crash; demoted Upstage to Common and Go For Broke, Canonical, and Reverb to Uncommon.",
   "tags": [],
   "dependencies": [
     3737335127

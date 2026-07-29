@@ -130,9 +130,6 @@
   "THEUNDERSTUDY-FORTE.title": "Forte",
   "THEUNDERSTUDY-FORTE.description": "Gain {Energy:energyIcons()}.\nGain {Vigor:diff()} [gold]Vigor[/gold].",
 
-  "THEUNDERSTUDY-CRASH.title": "Crash",
-  "THEUNDERSTUDY-CRASH.description": "Deal {Damage:diff()} damage.\nGain {Vigor:diff()} [gold]Vigor[/gold].",
-
   "THEUNDERSTUDY-LIVING_THE_DREAM.title": "Living the Dream",
   "THEUNDERSTUDY-LIVING_THE_DREAM.description": "[gold]Invert[/gold] {Invert:diff()}.",
 
@@ -178,9 +175,6 @@
   "THEUNDERSTUDY-ONE_TAKE.title": "One Take",
   "THEUNDERSTUDY-ONE_TAKE.description": "Decrease all card costs by 1. Apply [gold]Unplayable[/gold] to every played card.",
 
-  "THEUNDERSTUDY-PATHOS.title": "Pathos",
-  "THEUNDERSTUDY-PATHOS.description": "Deal {Damage:diff()} damage to ALL enemies.\nApply 1 [gold]Vulnerable[/gold] and 1 [gold]Weak[/gold] to yourself and ALL enemies.",
-
   "THEUNDERSTUDY-BRIGHT_SIDE.title": "Bright Side",
   "THEUNDERSTUDY-BRIGHT_SIDE.description": "At the start of your turn, [gold]Invert[/gold] 1.",
 
@@ -196,9 +190,6 @@
   "THEUNDERSTUDY-TUNING_RITUAL.title": "Tuning Ritual",
   "THEUNDERSTUDY-TUNING_RITUAL.description": "Gain {Block:diff()} [gold]Block[/gold].\nApply [gold]Tuned[/gold] to {Select:diff()} attacks and skills in hand.",
   "THEUNDERSTUDY-TUNING_RITUAL.selectionPrompt": "Choose cards to make [gold]Tuned[/gold].",
-
-  "THEUNDERSTUDY-SIGNATURE.title": "Signature",
-  "THEUNDERSTUDY-SIGNATURE.description": "{InCombat:cond:|[gold]Tuned[/gold] 1.\n}Deal {Damage:diff()} damage.\nGain {Energy:energyIcons()}.\nStarts each combat [gold]Planned[/gold].",
 
   "THEUNDERSTUDY-AUTO_TUNE.title": "Auto Tune",
   "THEUNDERSTUDY-AUTO_TUNE.description": "At the start of your turn, apply [gold]Tuned[/gold] to all [gold]Tuned[/gold] cards.",
@@ -267,9 +258,6 @@
   "THEUNDERSTUDY-SILENCE.title": "Silence",
   "THEUNDERSTUDY-SILENCE.description": "Deal {Damage:diff()} damage to ALL enemies.\nYou and ALL enemies lose {Vigor:inverseDiff()} [gold]Vigor[/gold].",
 
-  "THEUNDERSTUDY-NERVOUS_ENERGY.title": "Nervous Energy",
-  "THEUNDERSTUDY-NERVOUS_ENERGY.description": "Deal {Damage:diff()} damage.\nGain {Energy:energyIcons()}.\nApply 2 [gold]Vulnerable[/gold] to yourself.",
-
   "THEUNDERSTUDY-BEST_OF_BOTH.title": "Best of Both",
   "THEUNDERSTUDY-BEST_OF_BOTH.description": "[gold]Swap[/gold]{IfUpgraded:show: twice|} & [gold]Invert[/gold] {Invert:diff()} simultaneously.",
 
@@ -287,9 +275,6 @@
 
   "THEUNDERSTUDY-CONDUCTOR.title": "Conductor",
   "THEUNDERSTUDY-CONDUCTOR.description": "Whenever you gain [gold]Vigor[/gold], all allies gain that much [gold]Vigor[/gold] too.",
-
-  "THEUNDERSTUDY-RESOURCEFUL.title": "Resourceful",
-  "THEUNDERSTUDY-RESOURCEFUL.description": "The first time you have an [gold]Unplayable[/gold] card in hand each turn, draw {ResourcefulPower:diff()} cards.",
 
   "THEUNDERSTUDY-TURN_IT_AROUND.title": "Turn It Around",
   "THEUNDERSTUDY-TURN_IT_AROUND.description": "[gold]Invert[/gold] {Invert:diff()}.\nRemove [gold]Unplayable[/gold] from all attacks and skills in hand.",

@@ -13,7 +13,7 @@ public class Reverb : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:Reverb";
 
-    public Reverb() : base(1, CardType.Skill, CardRarity.Rare, TargetType.None)
+    public Reverb() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.None)
     {
         WithVars(new IntVar("Vigor", 3));
         WithPowerNoTip<ReverbPower>(1);

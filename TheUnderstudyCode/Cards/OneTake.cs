@@ -20,7 +20,7 @@ public class OneTake : UnderstudyCard, ITomeCard
     public CharacterModel TomeCharacter => ModelDb.Character<UnderstudyCharacter>();
 
     // Ancient rarity: One Take is the Understudy's build-defining engine power (global -1 cost with the
-    // Unplayable drawback + its Balanced/Muscle Memory/Resourceful support package). Like base-game
+    // Unplayable drawback + its Balanced/Muscle Memory support package). Like base-game
     // ancient powers it leaves the normal reward pool and is granted only by Darv's Dusty Tome (always
     // upgraded).
     public OneTake() : base(3, CardType.Power, CardRarity.Ancient, TargetType.None)

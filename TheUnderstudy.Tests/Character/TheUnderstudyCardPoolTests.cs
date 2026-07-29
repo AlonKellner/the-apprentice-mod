@@ -64,7 +64,7 @@ public class TheUnderstudyCardPoolTests
             .OrderBy(n => n)
             .ToList();
 
-        Assert.Equal(new[] { "Playlist", "Signature" }, bCardTypes);
+        Assert.Equal(new[] { "Playlist" }, bCardTypes);
     }
 
     [Fact]
@@ -84,7 +84,7 @@ public class TheUnderstudyCardPoolTests
             .OrderBy(n => n)
             .ToList();
 
-        Assert.Equal(new[] { "CleanSlate", "Experience", "OneUp", "Practice", "Repertoire", "ShowerThought", "Showstopper", "Signature" }, bCardTypes);
+        Assert.Equal(new[] { "CleanSlate", "Experience", "OneUp", "Practice", "Repertoire", "ShowerThought", "Showstopper" }, bCardTypes);
     }
 
     [Fact]
@@ -126,9 +126,9 @@ public class TheUnderstudyCardPoolTests
     }
 
     [Fact]
-    public void Signature_BeforeCombatStart_DoesNotAttachPlannedModifier_WhenBare()
+    public void Playlist_BeforeCombatStart_DoesNotAttachPlannedModifier_WhenBare()
     {
-        var card = new Signature();
+        var card = new Playlist();
         card.BeforeCombatStart();
         Assert.False(card.TryGetModifier<PlannedModifier>(out _));
     }

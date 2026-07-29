@@ -91,10 +91,6 @@
   "THEUNDERSTUDY-PUNISHED_POWER.description": "Every turn, apply this many of a random [gold]invertible[/gold] debuff to yourself.",
   "THEUNDERSTUDY-PUNISHED_POWER.smartDescription": "Every turn, apply {Amount} of a random [gold]invertible[/gold] debuff to yourself.",
 
-  "THEUNDERSTUDY-RESOURCEFUL_POWER.title": "Resourceful",
-  "THEUNDERSTUDY-RESOURCEFUL_POWER.description": "The first time you have an [gold]Unplayable[/gold] card in hand each turn, draw this many cards.",
-  "THEUNDERSTUDY-RESOURCEFUL_POWER.smartDescription": "The first time you have an [gold]Unplayable[/gold] card in hand each turn, draw {Amount} cards.",
-
   "THEUNDERSTUDY-REVERB_POWER.title": "Reverb",
   "THEUNDERSTUDY-REVERB_POWER.description": "When you use [gold]Vigor[/gold], you keep it.",
   "THEUNDERSTUDY-REVERB_POWER.smartDescription": "When you use [gold]Vigor[/gold], you keep it. Lasts [blue]{Amount}[/blue] more {Amount:plural:turn|turns}.",

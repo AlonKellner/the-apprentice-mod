@@ -22,7 +22,7 @@ public static class PrePlannedSetup
     // multiplayer), but the ordered pass must run exactly once for each player each combat.
     private static readonly ConditionalWeakTable<Player, object> _assignedFor = new();
 
-    // A card is pre-Planned if its class declares it (Signature, upgraded Experience) or it carries a
+    // A card is pre-Planned if its class declares it (Playlist) or it carries a
     // persistent PrePlanned enchantment applied out of combat by the Score relic.
     public static bool IsPrePlanned(CardModel card) =>
         (card is UnderstudyCard uc && uc.IsPrePlanned) || card.Enchantment is PrePlanned;

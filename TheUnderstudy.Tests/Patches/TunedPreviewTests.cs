@@ -140,7 +140,7 @@ public class TunedPreviewTests
     // These three print 0 and read 1: a pre-Tuned card starts each combat carrying Tuned 1, and Tuned
     // adds Stacks per card with Tuned — counting itself. Printing 1 would make them read 2.
     //
-    // The other pre-Tuned cards (Clean Slate 3, Shower Thought 2, Signature 5, Showstopper 27) print
+    // The other pre-Tuned cards (Clean Slate 3, Shower Thought 2, Showstopper 27) print
     // real numbers on top of that and are deliberately not in this list.
     public static IEnumerable<object[]> ZeroBasePreTunedCards() => new[]
     {

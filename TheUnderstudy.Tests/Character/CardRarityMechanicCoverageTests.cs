@@ -21,11 +21,9 @@ public class CardRarityMechanicCoverageTests
     // mechanic -> the cards that embody it (curated from the card set; rarity-agnostic).
     // Lists are kept reasonably complete so the guardrail survives future single-card re-rarities
     // without false alarms. damage/block/draw only need enough representatives to cover Common.
-    // NOTE (redesign, in progress): lists updated to the surviving/renamed cards; new cards (Upstage,
-    // BestOfBoth, StagePresence, Composure, SilverLining, Muffle, DeadWeight, SingAlong, NervousEnergy,
-    // TakeNotes, Cram, GoForBroke, BurnOut, ...) are added as they are created in the new-card phase.
     // "Tension" is dropped (no card applies it post-redesign; TensionPower stays latent like
-    // Shaken/Jaded/Limited).
+    // Shaken/Jaded/Limited). Cards removed in the rarity trim (Pathos, Nervous Energy, Signature, Crash,
+    // Resourceful) have been dropped from these lists; rarity is read live so demotions self-adjust.
     private static readonly Dictionary<string, Type[]> MechanicCards = new()
     {
         ["Invert"] = new[]
@@ -37,14 +35,14 @@ public class CardRarityMechanicCoverageTests
         ["Planned"] = new[]
         {
             typeof(Orchestration), typeof(Foreshadow), typeof(WriteItDown),
-            typeof(Muse), typeof(Showtime), typeof(Signature), typeof(Remix),
+            typeof(Muse), typeof(Showtime), typeof(Remix),
             typeof(Melody), typeof(Intermission),
             typeof(CleanSlate), typeof(DaCapo), typeof(MagnumOpus), typeof(Motif),
         },
         ["Tuned"] = new[]
         {
             typeof(WriteItDown), typeof(TuningRitual), typeof(RunThrough),
-            typeof(Signature), typeof(Memorize), typeof(Perfectionism),
+            typeof(Memorize), typeof(Perfectionism),
             typeof(CleanSlate), typeof(Experience), typeof(OneUp),
             typeof(MuscleMemory), typeof(BackOfMyHand), typeof(Showstopper), typeof(AutoTune),
             typeof(ShowerThought), typeof(TakeNotes),
@@ -52,13 +50,12 @@ public class CardRarityMechanicCoverageTests
         ["Weak"] = new[]
         {
             typeof(FreezeUp), typeof(DesperateStrike),
-            typeof(Pathos), typeof(FolkSong), typeof(TheFirstLesson), typeof(DeadWeight),
+            typeof(FolkSong), typeof(TheFirstLesson), typeof(DeadWeight),
         },
         ["Vulnerable"] = new[]
         {
             typeof(Joke), typeof(HeartAche), typeof(TheWall),
-            typeof(Pathos), typeof(LoveSong), typeof(TheFirstLesson),
-            typeof(Meltdown), typeof(NervousEnergy),
+            typeof(LoveSong), typeof(TheFirstLesson), typeof(Meltdown),
         },
         ["Swap"] = new[]
         {
@@ -73,14 +70,14 @@ public class CardRarityMechanicCoverageTests
         },
         ["Vigor"] = new[]
         {
-            typeof(Crash), typeof(BreakingVoice), typeof(SonicBoom), typeof(Forte),
+            typeof(BreakingVoice), typeof(SonicBoom), typeof(Forte),
             typeof(Stereo), typeof(CryingOutLoud), typeof(Reverb),
             typeof(Muffle), typeof(Feedback), typeof(SingAlong), typeof(Silence),
         },
         ["damage"] = new[]
         {
-            typeof(Crash), typeof(DesperateStrike), typeof(RunThrough),
-            typeof(FreezeUp), typeof(HeartAche), typeof(Pathos),
+            typeof(DesperateStrike), typeof(RunThrough),
+            typeof(FreezeUp), typeof(HeartAche),
         },
         ["block"] = new[]
         {
@@ -89,12 +86,12 @@ public class CardRarityMechanicCoverageTests
         },
         ["draw"] = new[]
         {
-            typeof(Orchestration), typeof(Signature),
+            typeof(Orchestration),
             typeof(TakeNotes), typeof(Cram),
         },
         ["energy"] = new[]
         {
-            typeof(Forte), typeof(BurnOut), typeof(NervousEnergy),
+            typeof(Forte), typeof(BurnOut),
         },
     };
 
@@ -127,7 +124,8 @@ public class CardRarityMechanicCoverageTests
     [InlineData("Uncommon", "Vigor")]
     [InlineData("Uncommon", "damage")]
     [InlineData("Uncommon", "block")]
-    [InlineData("Uncommon", "draw")]
+    // draw is intentionally NOT required at Uncommon: the trim removed Resourceful (the sole Uncommon
+    // draw card), so draw is now covered at Common only (Orchestration/Take Notes/Cram) + Rare (Improvise).
     [InlineData("Uncommon", "energy")]
     // Rare must still represent all three builds + all five debuffs.
     [InlineData("Rare", "Invert")]

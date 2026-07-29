@@ -11,7 +11,7 @@ public class Upstage : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:Upstage";
 
-    public Upstage() : base(1, CardType.Attack, CardRarity.Uncommon, TargetType.AllEnemies)
+    public Upstage() : base(1, CardType.Attack, CardRarity.Common, TargetType.AllEnemies)
     {
         WithDamage(6);
         WithVars(new IntVar("Swap", 1));

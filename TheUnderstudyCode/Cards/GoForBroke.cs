@@ -14,7 +14,7 @@ public class GoForBroke : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:GoForBroke";
 
-    public GoForBroke() : base(2, CardType.Skill, CardRarity.Rare, TargetType.None)
+    public GoForBroke() : base(2, CardType.Skill, CardRarity.Uncommon, TargetType.None)
     {
         WithTip(CardKeyword.Unplayable);
         WithMarkedTip(typeof(ShakenPower));
