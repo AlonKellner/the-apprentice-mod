@@ -13,7 +13,7 @@ public class Showstopper : UnderstudyCard
     {
         // Starts Tuned 1 — converts from "always replayable" to "one big hit, then needs
         // freeing," so the damage is raised to compensate.
-        WithDamage(27);
+        WithDamage(36);
         WithTip(UnderstudyKeywords.Tuned);
     }
 
@@ -22,7 +22,7 @@ public class Showstopper : UnderstudyCard
     protected override void OnUpgrade()
     {
         base.OnUpgrade();
-        DynamicVars.Damage.UpgradeValueBy(6m);
+        DynamicVars.Damage.UpgradeValueBy(14m); // 36 -> 50
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)

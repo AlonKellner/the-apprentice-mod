@@ -93,8 +93,8 @@ public class NewDeckCardsTests
     public void Showstopper_IsPreTuned() => Assert.True(new Showstopper().IsPreTuned);
 
     [Fact]
-    public void Showstopper_DamageIs27() =>
-        Assert.Equal(27m, new Showstopper().DynamicVars.Damage.BaseValue);
+    public void Showstopper_DamageIs36() =>
+        Assert.Equal(36m, new Showstopper().DynamicVars.Damage.BaseValue);
 
     [Fact]
     public void FinalDraft_HasExhaustKeyword() =>

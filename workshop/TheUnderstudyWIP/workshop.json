@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.12.71: Repertoire's damage and Block now have zero printed base — the value is entirely its Tuned bonus, previewing 1 (base) or 2 (upgraded) when alone and scaling with more Tuned cards.",
+  "changeNote": "v1.12.72: Showstopper damage increased to 36 (50 upgraded).",
   "tags": [],
   "dependencies": [
     3737335127
