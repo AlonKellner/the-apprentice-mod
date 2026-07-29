@@ -133,11 +133,11 @@
   "THEUNDERSTUDY-UPSIDE_DOWN.title": "Upside Down",
   "THEUNDERSTUDY-UPSIDE_DOWN.description": "[gold]Invert[/gold] {Invert:diff()}.",
 
-  "THEUNDERSTUDY-ROLE_REVERSAL.title": "Role Reversal",
-  "THEUNDERSTUDY-ROLE_REVERSAL.description": "[gold]Swap[/gold]{IfUpgraded:show: 3 times| twice}.",
+  "THEUNDERSTUDY-CROWD_WORK.title": "Crowd Work",
+  "THEUNDERSTUDY-CROWD_WORK.description": "[gold]Swap[/gold]{IfUpgraded:show: 3 times| twice}.",
 
-  "THEUNDERSTUDY-BODY_DOUBLE.title": "Body Double",
-  "THEUNDERSTUDY-BODY_DOUBLE.description": "Gain {Block:diff()} [gold]Block[/gold].\n[gold]Swap[/gold].",
+  "THEUNDERSTUDY-WIN_THEM_OVER.title": "Win Them Over",
+  "THEUNDERSTUDY-WIN_THEM_OVER.description": "Gain {Block:diff()} [gold]Block[/gold].\n[gold]Swap[/gold].",
 
   "THEUNDERSTUDY-JOKE.title": "Joke",
   "THEUNDERSTUDY-JOKE.description": "Deal {Damage:diff()} damage.\n[gold]Invert[/gold] {Invert:diff()}.\nApply {Vulnerable:inverseDiff()} [gold]Vulnerable[/gold] to yourself.",
@@ -240,8 +240,8 @@
   "THEUNDERSTUDY-STRIKE_A_POSE.title": "Strike a Pose",
   "THEUNDERSTUDY-STRIKE_A_POSE.description": "Deal {Damage:diff()} damage to a random enemy 3 times.\n[gold]Invert[/gold] {Invert:diff()}.",
 
-  "THEUNDERSTUDY-UPSTAGE.title": "Upstage",
-  "THEUNDERSTUDY-UPSTAGE.description": "Deal {Damage:diff()} damage to ALL enemies.\n[gold]Swap[/gold]{IfUpgraded:show: twice|}.",
+  "THEUNDERSTUDY-ALL_EYES_ON_ME.title": "All Eyes on Me",
+  "THEUNDERSTUDY-ALL_EYES_ON_ME.description": "Deal {Damage:diff()} damage to ALL enemies.\n[gold]Swap[/gold]{IfUpgraded:show: twice|}.",
 
   "THEUNDERSTUDY-MELTDOWN.title": "Meltdown",
   "THEUNDERSTUDY-MELTDOWN.description": "Deal {Damage:diff()} damage to ALL enemies.\nApply 1 [gold]Vulnerable[/gold] to yourself and ALL enemies.",
@@ -264,8 +264,8 @@
   "THEUNDERSTUDY-DUET.title": "Duet",
   "THEUNDERSTUDY-DUET.description": "Gain {Vigor:diff()} [gold]Vigor[/gold].\nGrant an ally [gold]Vigor[/gold] equal to yours.",
 
-  "THEUNDERSTUDY-TRADING_FOURS.title": "Trading Fours",
-  "THEUNDERSTUDY-TRADING_FOURS.description": "[gold]Swap[/gold]{IfUpgraded:show: 3 times| twice} & [gold]Invert[/gold] {Invert:diff()} simultaneously for the target player.",
+  "THEUNDERSTUDY-PASS_THE_MIC.title": "Pass the Mic",
+  "THEUNDERSTUDY-PASS_THE_MIC.description": "[gold]Swap[/gold]{IfUpgraded:show: 3 times| twice} & [gold]Invert[/gold] {Invert:diff()} simultaneously for the target player.",
 
   "THEUNDERSTUDY-ANTAGONIST.title": "Antagonist",
   "THEUNDERSTUDY-ANTAGONIST.description": "Take all debuffs you can [gold]Swap[/gold] or [gold]Invert[/gold] from all allies.",

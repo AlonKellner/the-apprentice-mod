@@ -8,17 +8,17 @@ namespace TheUnderstudy.TheUnderstudyCode.Cards;
 // Multiplayer "ultimate" Best of Both: step in for a castmate — run the whole Best of Both resolution FOR
 // them (their debuffs simultaneously flip into buffs on them and land on the enemies, and each enemy's buff
 // is stolen onto them). Shares BestOfBoth.ResolveFor so it stays identical. Cost 1; multiplayer cards run
-// hot. (Swap = Audience / Interaction, Invert = Self / Positive / Fun.) Named for the jazz "trading fours"
-// call-and-response — you take a turn on your partner's behalf. Was the original Duet.
-public class TradingFours : UnderstudyCard
+// hot. (Swap = Audience / Interaction, Invert = Self / Positive / Fun.) Named for handing the crowd over to
+// your partner — the room's attention becomes theirs for a moment. Was the original Duet.
+public class PassTheMic : UnderstudyCard
 {
-    public const string CardId = "TheUnderstudy:TradingFours";
+    public const string CardId = "TheUnderstudy:PassTheMic";
 
     // Only obtainable/playable in co-op — it targets another player. Mirrors the base game's Intercept.
     public override CardMultiplayerConstraint MultiplayerConstraint => CardMultiplayerConstraint.MultiplayerOnly;
 
     // AnyAlly, not AnyPlayer: "another player" excludes yourself (Best of Both already covers your own creature).
-    public TradingFours() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.AnyAlly)
+    public PassTheMic() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.AnyAlly)
     {
         WithVars(new IntVar("Swap", 2), new IntVar("Invert", 2));
         WithTip(UnderstudyKeywords.Swap);

@@ -10,7 +10,7 @@ namespace TheUnderstudy.TheUnderstudyCode.Cards;
 // A duet: gain Vigor, then lift your partner to your own level. You gain a flat Vigor first (so the card
 // does something even from zero), then grant a teammate Vigor equal to your new total — a Vigor build
 // carries the whole cast, not just its owner. (Vigor = Sounds theme.) The old "Best of Both for a target"
-// Duet is now Trading Fours.
+// Duet is now Pass the Mic.
 public class Duet : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:Duet";

@@ -9,7 +9,7 @@ namespace TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 // Hidden combo, appears when you hold BOTH Bright Side and Stage Presence. While present, their separate
 // start-of-turn Invert and Swap are replaced by ONE simultaneous Best of Both (Swap N & Invert M at once,
 // N = Stage Presence stacks, M = Bright Side stacks) — the same simultaneous engine as Best of Both /
-// Trading Fours / Standing Ovation. No card grants it.
+// Pass the Mic / Standing Ovation. No card grants it.
 //
 // This power is a VISIBLE marker + tooltip only: the actual combined effect lives on StagePresencePower
 // (with BrightSidePower deferring), keyed on the two powers' real amounts — so correctness never depends

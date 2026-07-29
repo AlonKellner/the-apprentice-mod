@@ -37,7 +37,7 @@ public class BestOfBoth : UnderstudyCard
         await ResolveFor(context, cardPlay.Card.Owner.Creature,
             (int)DynamicVars["Swap"].BaseValue, (int)DynamicVars["Invert"].BaseValue);
 
-    // The full Best of Both resolution for one creature — shared with Trading Fours, which runs the exact same thing
+    // The full Best of Both resolution for one creature — shared with Pass the Mic, which runs the exact same thing
     // for a targeted teammate. Interleaved Swap + Invert on the SAME capture -> remove -> apply pipeline as
     // regular Swap (SceneStealing): capture each debuff's give+invert and each enemy's buff to take from the
     // current state, then remove from both sides, then apply to both sides — so interacting powers (an

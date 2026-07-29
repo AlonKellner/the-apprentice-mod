@@ -59,8 +59,8 @@ public class CardRarityMechanicCoverageTests
         },
         ["Swap"] = new[]
         {
-            typeof(RoleReversal), typeof(BodyDouble),
-            typeof(Upstage), typeof(BestOfBoth), typeof(StagePresence),
+            typeof(CrowdWork), typeof(WinThemOver),
+            typeof(AllEyesOnMe), typeof(BestOfBoth), typeof(StagePresence),
         },
         ["remove-Unplayable"] = new[]
         {

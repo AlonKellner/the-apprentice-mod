@@ -6,12 +6,12 @@ using MegaCrit.Sts2.Core.Localization.DynamicVars;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
-// Defensive Swap — gain Block, then trade fortunes with the enemy team.
-public class BodyDouble : UnderstudyCard
+// Defensive Swap — win the crowd's goodwill as Block, then trade fortunes with the enemy team.
+public class WinThemOver : UnderstudyCard
 {
-    public const string CardId = "TheUnderstudy:BodyDouble";
+    public const string CardId = "TheUnderstudy:WinThemOver";
 
-    public BodyDouble() : base(1, CardType.Skill, CardRarity.Common, TargetType.None)
+    public WinThemOver() : base(1, CardType.Skill, CardRarity.Common, TargetType.None)
     {
         WithBlock(8);
         WithVars(new IntVar("Swap", 1));
