@@ -24,7 +24,7 @@ public class RunThrough : UnderstudyCard
 
     public RunThrough() : base(1, CardType.Attack, CardRarity.Common, TargetType.AllEnemies)
     {
-        WithDamage(8);
+        WithDamage(5);
         WithTip(UnderstudyKeywords.Tuned);
     }
 
