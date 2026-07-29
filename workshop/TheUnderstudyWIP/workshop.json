@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.12.72: Showstopper damage increased to 36 (50 upgraded).",
+  "changeNote": "v1.12.73: Run Through, Meltdown and Loosen Up now cost 1; Go For Broke+ now costs 1 (upgrade); Forte+ now gives 6 Vigor.",
   "tags": [],
   "dependencies": [
     3737335127

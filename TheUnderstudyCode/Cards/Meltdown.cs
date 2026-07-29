@@ -14,7 +14,7 @@ public class Meltdown : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:Meltdown";
 
-    public Meltdown() : base(2, CardType.Attack, CardRarity.Uncommon, TargetType.AllEnemies)
+    public Meltdown() : base(1, CardType.Attack, CardRarity.Uncommon, TargetType.AllEnemies)
     {
         WithDamage(10);
         WithMarkedTip(typeof(VulnerablePower));

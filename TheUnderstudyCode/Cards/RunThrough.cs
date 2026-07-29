@@ -22,7 +22,7 @@ public class RunThrough : UnderstudyCard
 
     private const int MaxTuned = 2;
 
-    public RunThrough() : base(2, CardType.Attack, CardRarity.Common, TargetType.AllEnemies)
+    public RunThrough() : base(1, CardType.Attack, CardRarity.Common, TargetType.AllEnemies)
     {
         WithDamage(8);
         WithTip(UnderstudyKeywords.Tuned);

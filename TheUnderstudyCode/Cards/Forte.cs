@@ -22,7 +22,7 @@ public class Forte : UnderstudyCard
     protected override void OnUpgrade()
     {
         base.OnUpgrade();
-        DynamicVars["Vigor"].UpgradeValueBy(1m);
+        DynamicVars["Vigor"].UpgradeValueBy(3m); // 3 -> 6
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)

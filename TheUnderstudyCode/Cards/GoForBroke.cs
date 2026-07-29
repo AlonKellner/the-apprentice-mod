@@ -19,6 +19,7 @@ public class GoForBroke : UnderstudyCard
         WithTip(CardKeyword.Unplayable);
         WithMarkedTip(typeof(ShakenPower));
         WithVar(new SelfDebuffVar("Shaken", 2));
+        WithCostUpgradeBy(-1); // upgrade: cost 2 -> 1
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
