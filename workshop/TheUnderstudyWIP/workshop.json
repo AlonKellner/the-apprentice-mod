@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.13.3: Conductor reworked to 'At the end of your turn, all players gain Vigor equal to your Vigor' (loop-proof). Magnum Opus now applies Planned to 3 cards (4 upgraded). Turn It Around now costs 0.",
+  "changeNote": "v1.13.4: Conductor now gives Vigor to your allies only (not yourself) at end of turn.",
   "tags": [],
   "dependencies": [
     3737335127

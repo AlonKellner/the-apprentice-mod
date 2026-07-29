@@ -10,7 +10,8 @@ using MegaCrit.Sts2.Core.Models.Powers;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 
-// Conductor: at the end of your turn, every player gains Vigor equal to your current Vigor. Reading your
+// Conductor: at the end of your turn, every teammate (other players) gains Vigor equal to your current
+// Vigor — you do not gain from your own Vigor. Reading your
 // Vigor ONCE per turn (instead of reacting to each gain) makes it loop-proof — even if several players
 // carry Conductor, there is no cross-player echo to spiral. Single-stack marker; its Amount is cosmetic.
 public class ConductorPower : UnderstudyPower
@@ -24,9 +25,10 @@ public class ConductorPower : UnderstudyPower
         int vigor = Owner.GetPowerAmount<VigorPower>();
         if (vigor <= 0) return;   // only spread a positive Vigor total
 
-        // Every player (all players include the caster, matching base-game Rally/Energy Surge semantics).
-        var players = CombatState.PlayerCreatures.Where(c => c?.IsAlive ?? false).ToList();
+        // Every OTHER player (teammates only — you don't gain from your own Vigor).
+        var teammates = CombatState.PlayerCreatures.Where(c => (c?.IsAlive ?? false) && c != Owner).ToList();
+        if (teammates.Count == 0) return;
         Flash();
-        await PowerCmd.Apply<VigorPower>(context, players, vigor, Owner, null, false);
+        await PowerCmd.Apply<VigorPower>(context, teammates, vigor, Owner, null, false);
     }
 }

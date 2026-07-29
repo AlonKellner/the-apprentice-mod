@@ -274,7 +274,7 @@
   "THEUNDERSTUDY-ENSEMBLE.description": "Whenever an ally plays a card, gain {EnsemblePower:diff()} [gold]Vigor[/gold].",
 
   "THEUNDERSTUDY-CONDUCTOR.title": "Conductor",
-  "THEUNDERSTUDY-CONDUCTOR.description": "At the end of your turn, all players gain [gold]Vigor[/gold] equal to your Vigor.",
+  "THEUNDERSTUDY-CONDUCTOR.description": "At the end of your turn, all allies gain [gold]Vigor[/gold] equal to your Vigor.",
 
   "THEUNDERSTUDY-TURN_IT_AROUND.title": "Turn It Around",
   "THEUNDERSTUDY-TURN_IT_AROUND.description": "[gold]Invert[/gold] {Invert:diff()}.\nRemove [gold]Unplayable[/gold] from all attacks and skills in hand.",
