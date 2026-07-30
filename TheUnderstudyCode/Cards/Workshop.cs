@@ -130,7 +130,7 @@ public class Workshop : PlayAllPlannedCard
             c => c != this && PlannedModifier.CanApplyTo(c));
 
         if (selectedRaw == null) return;
-        foreach (var card in selectedRaw)
+        foreach (var card in PlannedSelectionState.InClickOrder(selectedRaw.ToList()))
             PlannedModifier.Apply(card, combatState);
 
         if (!player.Creature.Powers.Any(p => p is PlannedCounterPower))

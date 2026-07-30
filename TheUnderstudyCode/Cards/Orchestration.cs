@@ -46,7 +46,7 @@ public class Orchestration : UnderstudyCard
             this);
 
         if (selected == null) return;
-        foreach (var card in selected)
+        foreach (var card in PlannedSelectionState.InClickOrder(selected.ToList()))
             PlannedModifier.Apply(card, CombatState!);
     }
 }

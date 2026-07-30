@@ -45,7 +45,7 @@ public class Foreshadow : UnderstudyCard
             new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-FORESHADOW.selectionPrompt"), 0, maxSelect),
             c => PlannedModifier.CanApplyTo(c));
 
-        foreach (var card in selected)
+        foreach (var card in PlannedSelectionState.InClickOrder(selected.ToList()))
             PlannedModifier.Apply(card, CombatState!);
     }
 }

@@ -102,5 +102,8 @@ public static class PlannedGridSelectionPatch
             if (grid.GetCardNode(order[i]) is { } node)
                 items.Add((node, firstNumber + i));
         SelectionIndexBadge.Render(items);
+
+        // Publish the click order so single-player appliers assign Planned slots in it (no-op in MP).
+        PlannedSelectionState.PublishClickOrder(order, order.Count > 0 ? order[0].Owner : null);
     }
 }

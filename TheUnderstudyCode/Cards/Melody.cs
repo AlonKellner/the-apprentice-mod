@@ -46,7 +46,7 @@ public class Melody : UnderstudyCard
             c => c != this && PlannedModifier.CanApplyTo(c));
 
         if (selected == null) return;
-        foreach (var card in selected)
+        foreach (var card in PlannedSelectionState.InClickOrder(selected.ToList()))
             PlannedModifier.Apply(card, CombatState!);
     }
 }

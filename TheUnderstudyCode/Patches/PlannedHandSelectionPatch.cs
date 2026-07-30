@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using HarmonyLib;
+using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Nodes.Cards;
 using MegaCrit.Sts2.Core.Nodes.Combat;
 using TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
@@ -74,5 +75,10 @@ public static class PlannedHandSelectionPatch
         for (int i = 0; i < nodes.Count; i++)
             items.Add((nodes[i], firstNumber + i));
         SelectionIndexBadge.Render(items);
+
+        // Publish the click order (the lifted-card row is already in click order) so single-player
+        // appliers assign Planned slots in it (no-op in MP).
+        var orderedModels = nodes.Select(n => n.Model).Where(m => m != null).Cast<CardModel>().ToList();
+        PlannedSelectionState.PublishClickOrder(orderedModels, orderedModels.Count > 0 ? orderedModels[0].Owner : null);
     }
 }
