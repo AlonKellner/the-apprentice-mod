@@ -5,6 +5,7 @@ using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.Logging;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Powers;
 using TheUnderstudy.TheUnderstudyCode.Extensions;
@@ -116,6 +117,8 @@ public class InvertTrackerPower : UnderstudyPower
             modifiedAmount = 0m;
             // Debuff-side gain becomes the buff side; buff-side gain becomes nothing.
             if (gainedDebuffSide) _pendingSwap = (pair, (int)amount);
+            Log.Info($"[LessonDiag] InvertTracker.MyOwnLesson: incoming {canonicalPower.Id} x{amount} on {pair.Name} " +
+                     $"(debuffSide={gainedDebuffSide}) -> {(gainedDebuffSide ? $"redirect {(int)amount} to buff side" : "nothing")}");
             return true;
         }
 
@@ -125,7 +128,10 @@ public class InvertTrackerPower : UnderstudyPower
         if (pulledPunch > 0 && gainedDebuffSide)
             amount = ApathyPower.Dampen(amount, isSignFlip: false, pulledPunch);
 
-        var (reduced, consumed) = EmotionalExpression.ComputeWeakCancellation((int)amount, pair.OpposingStock(Owner, canonicalPower));
+        int opposingStock = pair.OpposingStock(Owner, canonicalPower);
+        var (reduced, consumed) = EmotionalExpression.ComputeWeakCancellation((int)amount, opposingStock);
+        Log.Info($"[LessonDiag] InvertTracker.cancel: incoming {canonicalPower.Id} x{(int)amount} on {pair.Name} " +
+                 $"(debuffSide={gainedDebuffSide}) vs opposingStock {opposingStock} -> reduced {reduced}, consume {consumed}");
         if (consumed <= 0)
         {
             // No opposing stock to cancel against, but Pulled Punch may still have softened the hit.
@@ -152,12 +158,14 @@ public class InvertTrackerPower : UnderstudyPower
             {
                 _isSwapping = false;
             }
+            Log.Info($"[LessonDiag] InvertTracker.applyBuff: {pair.Name} applied {buffStacks} buff stacks to owner");
             return;
         }
 
         if (_pending.Consumed <= 0) return;
         var (pending, gainedSide, consumed) = _pending;
         _pending = default;
+        Log.Info($"[LessonDiag] InvertTracker.decrementOpposing: {pending!.Name} consuming {consumed} of the opposing side");
         await pending!.DecrementOpposing(Owner, gainedSide!, consumed);
     }
 }

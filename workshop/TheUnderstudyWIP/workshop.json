@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.13.16: Fixed a pre-Tuned card (e.g. Shower Thought) showing its damage/block in red after its Tuned was removed mid-combat (by Spectacle) — the correct value is now shown in neutral.",
+  "changeNote": "v1.13.17: Diagnostic build for the Punished + My Own Lesson + Unlimited interaction (adds [LessonDiag] logging). No gameplay changes.",
   "tags": [],
   "dependencies": [
     3737335127
