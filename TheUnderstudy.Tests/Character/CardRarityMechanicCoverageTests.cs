@@ -28,7 +28,7 @@ public class CardRarityMechanicCoverageTests
     {
         ["Invert"] = new[]
         {
-            typeof(Joke), typeof(BrightSide), typeof(Apathy),
+            typeof(MaskDrop), typeof(BrightSide), typeof(Apathy),
             typeof(HeldNote), typeof(MyOwnLesson), typeof(OwnIt), typeof(UpsideDown),
             typeof(StrikeAPose), typeof(SilverLining), typeof(BestOfBoth), typeof(TurnItAround),
         },
@@ -36,7 +36,7 @@ public class CardRarityMechanicCoverageTests
         {
             typeof(Orchestration), typeof(Foreshadow), typeof(KeepInMind),
             typeof(Muse), typeof(Showtime), typeof(Remix),
-            typeof(Melody), typeof(Intermission),
+            typeof(Callback), typeof(Intermission),
             typeof(CleanSlate), typeof(DaCapo), typeof(MagnumOpus), typeof(Motif),
         },
         ["Tuned"] = new[]
@@ -50,23 +50,23 @@ public class CardRarityMechanicCoverageTests
         ["Weak"] = new[]
         {
             typeof(FreezeUp), typeof(DesperateStrike),
-            typeof(FolkSong), typeof(TheFirstLesson), typeof(DeadWeight),
+            typeof(FolkSong), typeof(TheFirstLesson), typeof(ComeDown),
         },
         ["Vulnerable"] = new[]
         {
-            typeof(Joke), typeof(HeartAche), typeof(TheWall),
+            typeof(MaskDrop), typeof(HeartAche), typeof(TheWall),
             typeof(LoveSong), typeof(TheFirstLesson), typeof(Meltdown),
         },
         ["Swap"] = new[]
         {
-            typeof(CrowdWork), typeof(WinThemOver),
+            typeof(CaptiveAudience), typeof(WinThemOver),
             typeof(AllEyesOnMe), typeof(BestOfBoth), typeof(StagePresence),
         },
         ["remove-Unplayable"] = new[]
         {
             typeof(Improvise), typeof(LoosenUp), typeof(Balanced),
             typeof(CleanSlate), typeof(SecondNature),
-            typeof(Comeback), typeof(Composure), typeof(TurnItAround), typeof(GoForBroke),
+            typeof(Revisit), typeof(Composure), typeof(TurnItAround), typeof(GoForBroke),
         },
         ["Vigor"] = new[]
         {
@@ -82,7 +82,7 @@ public class CardRarityMechanicCoverageTests
         ["block"] = new[]
         {
             typeof(FreezeUp), typeof(Foreshadow), typeof(TheWall),
-            typeof(Composure), typeof(SilverLining), typeof(Muffle), typeof(DeadWeight),
+            typeof(Composure), typeof(SilverLining), typeof(Muffle), typeof(ComeDown),
         },
         ["draw"] = new[]
         {

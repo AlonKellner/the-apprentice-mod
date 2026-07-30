@@ -9,11 +9,11 @@ using TheUnderstudy.TheUnderstudyCode.Cards.DynamicVars;
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
 // Everyone slows down — you included. Block, and Weak on the whole room. (Weak = Physical theme.)
-public class DeadWeight : UnderstudyCard
+public class ComeDown : UnderstudyCard
 {
-    public const string CardId = "TheUnderstudy:DeadWeight";
+    public const string CardId = "TheUnderstudy:ComeDown";
 
-    public DeadWeight() : base(2, CardType.Skill, CardRarity.Uncommon, TargetType.None)
+    public ComeDown() : base(2, CardType.Skill, CardRarity.Uncommon, TargetType.None)
     {
         WithBlock(12);
         // Only the SELF Weak is a SelfDebuffVar (so it colors/drops under Apathy); enemies get a flat 1.

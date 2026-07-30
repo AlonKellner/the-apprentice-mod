@@ -9,11 +9,11 @@ using TheUnderstudy.TheUnderstudyCode.Cards.DynamicVars;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
-public class Joke : UnderstudyCard
+public class MaskDrop : UnderstudyCard
 {
-    public const string CardId = "TheUnderstudy:Joke";
+    public const string CardId = "TheUnderstudy:MaskDrop";
 
-    public Joke() : base(0, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
+    public MaskDrop() : base(0, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
     {
         WithDamage(6);
         WithVars(new IntVar("Invert", 1));

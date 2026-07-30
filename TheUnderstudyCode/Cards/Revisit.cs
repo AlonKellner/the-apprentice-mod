@@ -10,11 +10,11 @@ namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
 // Bounce back from a jam: two quick hits, then clear every Unplayable in hand. Remove-Unplayable is
 // deliberately uncapped (whole hand).
-public class Comeback : UnderstudyCard
+public class Revisit : UnderstudyCard
 {
-    public const string CardId = "TheUnderstudy:Comeback";
+    public const string CardId = "TheUnderstudy:Revisit";
 
-    public Comeback() : base(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
+    public Revisit() : base(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
     {
         WithDamage(3);
         WithTip(CardKeyword.Unplayable);

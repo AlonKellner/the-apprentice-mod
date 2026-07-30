@@ -44,9 +44,9 @@
   "THEUNDERSTUDY-BALANCED.title": "Balanced",
   "THEUNDERSTUDY-BALANCED.description": "Whenever a card becomes [gold]Unplayable[/gold], remove [gold]Unplayable[/gold] from 1 random attack or skill in hand.",
 
-  "THEUNDERSTUDY-MELODY.title": "Melody",
-  "THEUNDERSTUDY-MELODY.description": "Deal {Damage:diff()} damage.\nApply [gold]Planned[/gold] to {Select:diff()} {Select:plural:attack or skill|attacks and skills} in your discard pile.",
-  "THEUNDERSTUDY-MELODY.selectionPrompt": "Choose cards to make [gold]Planned[/gold].",
+  "THEUNDERSTUDY-CALLBACK.title": "Callback",
+  "THEUNDERSTUDY-CALLBACK.description": "Deal {Damage:diff()} damage.\nApply [gold]Planned[/gold] to {Select:diff()} {Select:plural:attack or skill|attacks and skills} in your discard pile.",
+  "THEUNDERSTUDY-CALLBACK.selectionPrompt": "Choose cards to make [gold]Planned[/gold].",
 
   "THEUNDERSTUDY-SPECTACLE.title": "Spectacle",
   "THEUNDERSTUDY-SPECTACLE.description": "Play all [gold]Tuned[/gold] cards in a random order, at most once per turn.\nRemove [gold]Tuned[/gold] from all cards.",
@@ -57,7 +57,7 @@
   "THEUNDERSTUDY-STANDING_OVATION.title": "Standing Ovation",
   "THEUNDERSTUDY-STANDING_OVATION.description": "Deal {Damage:diff()} damage 3 times.\nGain {Vigor:diff()} [gold]Vigor[/gold].\n[gold]Swap[/gold] ALL & [gold]Invert[/gold] ALL simultaneously.",
 
-  "THEUNDERSTUDY-ONE_UP.title": "One-up",
+  "THEUNDERSTUDY-ONE_UP.title": "One-Up",
   "THEUNDERSTUDY-ONE_UP.description": "{InCombat:cond:|[gold]Tuned[/gold] 1.\n}Deal {Damage:diff()} damage {Repeat:diff()} times.\nApply [gold]Tuned[/gold] to this card.",
 
   "THEUNDERSTUDY-DA_CAPO.title": "Da Capo",
@@ -133,14 +133,14 @@
   "THEUNDERSTUDY-UPSIDE_DOWN.title": "Upside Down",
   "THEUNDERSTUDY-UPSIDE_DOWN.description": "[gold]Invert[/gold] {Invert:diff()}.",
 
-  "THEUNDERSTUDY-CROWD_WORK.title": "Crowd Work",
-  "THEUNDERSTUDY-CROWD_WORK.description": "[gold]Swap[/gold]{IfUpgraded:show: 3 times| twice}.",
+  "THEUNDERSTUDY-CAPTIVE_AUDIENCE.title": "Captive Audience",
+  "THEUNDERSTUDY-CAPTIVE_AUDIENCE.description": "[gold]Swap[/gold]{IfUpgraded:show: 3 times| twice}.",
 
   "THEUNDERSTUDY-WIN_THEM_OVER.title": "Win Them Over",
   "THEUNDERSTUDY-WIN_THEM_OVER.description": "Gain {Block:diff()} [gold]Block[/gold].\n[gold]Swap[/gold].",
 
-  "THEUNDERSTUDY-JOKE.title": "Joke",
-  "THEUNDERSTUDY-JOKE.description": "Deal {Damage:diff()} damage.\n[gold]Invert[/gold] {Invert:diff()}.\nApply {Vulnerable:inverseDiff()} [gold]Vulnerable[/gold] to yourself.",
+  "THEUNDERSTUDY-MASK_DROP.title": "Mask Drop",
+  "THEUNDERSTUDY-MASK_DROP.description": "Deal {Damage:diff()} damage.\n[gold]Invert[/gold] {Invert:diff()}.\nApply {Vulnerable:inverseDiff()} [gold]Vulnerable[/gold] to yourself.",
 
   "THEUNDERSTUDY-MUSE.title": "Muse",
   "THEUNDERSTUDY-MUSE.description": "At the start of your turn, apply [gold]Planned[/gold] to a card.",
@@ -212,8 +212,8 @@
   "THEUNDERSTUDY-PLAYLIST.title": "Playlist",
   "THEUNDERSTUDY-PLAYLIST.description": "Gain 1 [gold]Unweak[/gold], 1 [gold]Unvulnerable[/gold], 1 [gold]Unshaken[/gold], 1 [gold]Unlimited[/gold], and 1 [gold]Unjaded[/gold].{IfUpgraded:show:\nStarts each combat [gold]Planned[/gold].|}",
 
-  "THEUNDERSTUDY-COMEBACK.title": "Comeback",
-  "THEUNDERSTUDY-COMEBACK.description": "Deal {Damage:diff()} damage twice.\nRemove [gold]Unplayable[/gold] from all attacks and skills in hand.",
+  "THEUNDERSTUDY-REVISIT.title": "Revisit",
+  "THEUNDERSTUDY-REVISIT.description": "Deal {Damage:diff()} damage twice.\nRemove [gold]Unplayable[/gold] from all attacks and skills in hand.",
 
   "THEUNDERSTUDY-COMPOSURE.title": "Composure",
   "THEUNDERSTUDY-COMPOSURE.description": "Gain {Block:diff()} [gold]Block[/gold].\nRemove [gold]Unplayable[/gold] from all attacks and skills in hand.",
@@ -249,8 +249,8 @@
   "THEUNDERSTUDY-FEEDBACK.title": "Feedback",
   "THEUNDERSTUDY-FEEDBACK.description": "Deal {Damage:diff()} damage.\nGain {Block:diff()} [gold]Block[/gold].\nLose {Vigor:inverseDiff()} [gold]Vigor[/gold].",
 
-  "THEUNDERSTUDY-DEAD_WEIGHT.title": "Dead Weight",
-  "THEUNDERSTUDY-DEAD_WEIGHT.description": "Gain {Block:diff()} [gold]Block[/gold].\nApply {Weak:inverseDiff()} [gold]Weak[/gold] to yourself and 1 to ALL enemies.",
+  "THEUNDERSTUDY-COME_DOWN.title": "Come-Down",
+  "THEUNDERSTUDY-COME_DOWN.description": "Gain {Block:diff()} [gold]Block[/gold].\nApply {Weak:inverseDiff()} [gold]Weak[/gold] to yourself and 1 to ALL enemies.",
 
   "THEUNDERSTUDY-SING_ALONG.title": "Sing Along",
   "THEUNDERSTUDY-SING_ALONG.description": "All creatures in combat gain {Vigor:diff()} [gold]Vigor[/gold].",

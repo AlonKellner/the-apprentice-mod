@@ -17,7 +17,7 @@ public class SelfDebuffPreviewTests
 {
     // Card type -> (var/debuff name, native amount). One self-debuff each. Post-redesign, Tension is no
     // longer applied by any card; new self-debuff cards are added here as they are created. Cards that also
-    // debuff enemies (Meltdown, Dead Weight) back ONLY the self amount with a SelfDebuffVar and print the
+    // debuff enemies (Meltdown, Come-Down) back ONLY the self amount with a SelfDebuffVar and print the
     // enemy amount as a separate literal, so the self preview still colors under Pulled Punch.
     public static IEnumerable<object[]> SelfDebuffCards() => new List<object[]>
     {
@@ -25,12 +25,12 @@ public class SelfDebuffPreviewTests
         new object[] { typeof(DesperateStrike), "Weak", 2 },
         new object[] { typeof(BreakingVoice), "Weak", 2 },
         new object[] { typeof(HeartAche), "Vulnerable", 2 },
-        new object[] { typeof(Joke), "Vulnerable", 1 },
+        new object[] { typeof(MaskDrop), "Vulnerable", 1 },
         new object[] { typeof(TheWall), "Vulnerable", 2 },
         new object[] { typeof(BurnOut), "Jaded", 2 },
         new object[] { typeof(Cram), "Limited", 2 },
         new object[] { typeof(Meltdown), "Vulnerable", 1 },
-        new object[] { typeof(DeadWeight), "Weak", 1 },
+        new object[] { typeof(ComeDown), "Weak", 1 },
     };
 
     [Theory]

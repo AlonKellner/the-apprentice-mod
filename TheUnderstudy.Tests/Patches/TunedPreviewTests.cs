@@ -29,8 +29,8 @@ public class TunedPreviewTests
     [Fact]
     public void TunedParts_CardCarryingModifier_ReturnsStacksAndTotal()
     {
-        // Melody is a non-pre-Tuned attack; the modifier drives the result regardless of pre-Tuned.
-        var card = new Melody();
+        // Callback is a non-pre-Tuned attack; the modifier drives the result regardless of pre-Tuned.
+        var card = new Callback();
         var mod = new TunedWithCardCount(3);
         CardModifier.AddModifier(card, mod);
         SetStacks(mod, 2); // total = Stacks * Tuned card count = 6
@@ -52,7 +52,7 @@ public class TunedPreviewTests
     [Fact]
     public void TunedParts_BareNonPreTunedCard_ReturnsZeroZero()
     {
-        var (dynamicBasePart, total) = TunedPreview.TunedParts(new Melody());
+        var (dynamicBasePart, total) = TunedPreview.TunedParts(new Callback());
         Assert.Equal(0, dynamicBasePart);
         Assert.Equal(0, total);
     }
@@ -107,7 +107,7 @@ public class TunedPreviewTests
     {
         var damage = Damage(9);
 
-        TunedPreview.ApplyOutOfRun(new DynamicVar[] { damage }, new Melody());
+        TunedPreview.ApplyOutOfRun(new DynamicVar[] { damage }, new Callback());
 
         Assert.Equal(9, (int)damage.PreviewValue);
         Assert.Equal(9, (int)damage.EnchantedValue);

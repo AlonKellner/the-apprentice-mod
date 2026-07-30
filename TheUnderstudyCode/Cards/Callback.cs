@@ -14,11 +14,11 @@ using TheUnderstudy.TheUnderstudyCode.Patches;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
-public class Melody : UnderstudyCard
+public class Callback : UnderstudyCard
 {
-    public const string CardId = "TheUnderstudy:Melody";
+    public const string CardId = "TheUnderstudy:Callback";
 
-    public Melody() : base(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
+    public Callback() : base(1, CardType.Attack, CardRarity.Common, TargetType.AnyEnemy)
     {
         WithDamage(9);
         WithVars(new CardsVar("Select", 1));
@@ -42,7 +42,7 @@ public class Melody : UnderstudyCard
             context,
             PileType.Discard.GetPile(player),
             player,
-            new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-MELODY.selectionPrompt"), 0, (int)DynamicVars["Select"].BaseValue),
+            new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-CALLBACK.selectionPrompt"), 0, (int)DynamicVars["Select"].BaseValue),
             c => c != this && PlannedModifier.CanApplyTo(c));
 
         if (selected == null) return;

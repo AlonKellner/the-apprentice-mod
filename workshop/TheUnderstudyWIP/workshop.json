@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.13.19: Fixed Limited/Unlimited losing a stack for a turn they never took effect. Stacks granted at the start of your turn by Punished land after the cards are drawn, so they were being ticked down for a turn on which they did nothing — Punished 13 now really gives you 13.",
+  "changeNote": "v1.13.20: Card renames — Dead Weight is now Come-Down, Melody is now Callback, Joke is now Mask Drop, Comeback is now Revisit, Crowd Work is now Captive Audience, and One-up is now One-Up. Names only; no effects changed.",
   "tags": [],
   "dependencies": [
     3737335127
