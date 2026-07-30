@@ -13,7 +13,7 @@ public class HeldNote : UnderstudyCard
     public HeldNote() : base(2, CardType.Power, CardRarity.Rare, TargetType.None)
     {
         WithCostUpgradeBy(-1);
-        WithPowerNoTip<HeldNotePower>(1, 1);
+        WithPowerNoTip<HeldNotePower>(1); // flag power (Single); upgrade is the cost drop, not a stack bump
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)

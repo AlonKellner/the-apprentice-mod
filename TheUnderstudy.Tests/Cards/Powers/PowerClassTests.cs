@@ -176,11 +176,11 @@ public class PowerClassTests
     }
 
     [Fact]
-    public void HeldNotePower_IsBuff_Counter()
+    public void HeldNotePower_IsBuff_Single()
     {
         var p = new HeldNotePower();
         Assert.Equal(PowerType.Buff, p.Type);
-        Assert.Equal(PowerStackType.Counter, p.StackType);
+        Assert.Equal(PowerStackType.Single, p.StackType); // flag power — no stack badge
     }
 
     [Fact]

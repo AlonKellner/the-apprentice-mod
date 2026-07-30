@@ -9,7 +9,9 @@ namespace TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 public class HeldNotePower : UnderstudyPower
 {
     public override PowerType Type => PowerType.Buff;
-    public override PowerStackType StackType => PowerStackType.Counter;
+    // Single, not Counter: Held Note is a flag (IsActive only checks presence), so it must not show a
+    // stack number — an upgraded copy previously read "2" on its badge for no reason.
+    public override PowerStackType StackType => PowerStackType.Single;
 
 
     // Two suppression paths cover every turn-based buff/debuff while Held Note is on the owner:

@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.13.13: Fixed Planned play order not matching the selection badges in single-player — Planned cards now resolve in the order you clicked them. (Multiplayer keeps its deterministic synced order.)",
+  "changeNote": "v1.13.14: Held Note no longer shows a stack counter (it's a flag power); upgraded Held Note no longer displays a meaningless 2.",
   "tags": [],
   "dependencies": [
     3737335127
