@@ -1,3 +1,5 @@
+using System;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using MegaCrit.Sts2.Core.Entities.Powers;
@@ -733,4 +735,33 @@ public class PowerClassTests
     public void BrightSidePower_OverridesAfterPowerAmountChanged() =>
         Assert.NotNull(typeof(BrightSidePower).GetMethod(
             "AfterPowerAmountChanged", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly));
+
+    // House rule: a turn-decaying power ticks down immediately after it takes effect, and never on a
+    // turn it did nothing. Powers that do the effect and the decrement in the SAME hook (Jaded in
+    // AfterEnergyReset, Unshaken in AfterPlayerTurnStart, Shaken in BeforeSideTurnEnd) get that for
+    // free. A power whose effect lives in the ModifyHandDraw value-modifier hook cannot — the
+    // decrement has to sit in a separate turn hook — so it must gate that decrement on
+    // UnderstudyPower's ConsumeTookEffectThisTurn marker instead of firing unconditionally.
+    //
+    // Regression guard for the Punished bug: Punished grants at AfterPlayerTurnStartLate, the one
+    // moment that lands after the turn-start draw but before the decay hook, so an ungated Unlimited
+    // lost a stack for a turn it never drew on. Source-scan, no ModelDb needed.
+    [Fact]
+    public void EveryDrawModifyingPower_GatesItsDecrementOnTakingEffect()
+    {
+        var powersDir = Path.GetFullPath(Path.Combine(
+            AppContext.BaseDirectory, "..", "..", "..", "..", "TheUnderstudyCode", "Cards", "Powers"));
+        foreach (var file in Directory.GetFiles(powersDir, "*.cs", SearchOption.TopDirectoryOnly))
+        {
+            var text = File.ReadAllText(file);
+            // Match a real override, not prose — UnderstudyPower.cs names both concepts in the
+            // comment that documents them.
+            if (!text.Contains("override decimal ModifyHandDraw") || !text.Contains("PowerCmd.Decrement")) continue;
+            Assert.True(
+                text.Contains("MarkTookEffectThisTurn") && text.Contains("ConsumeTookEffectThisTurn"),
+                $"{Path.GetFileName(file)} modifies the hand draw and decrements from a separate turn " +
+                "hook, but does not gate that decrement on ConsumeTookEffectThisTurn — it will tick " +
+                "down on a turn it never took effect (e.g. stacks granted by Punished after the draw).");
+        }
+    }
 }

@@ -23,6 +23,11 @@ public class UnlimitedPower : UnderstudyPower
     public override decimal ModifyHandDraw(Player player, decimal count)
     {
         if (player != Owner.Player) return count;
+        // This is the effect site, so it is also what licenses the tick-down below — see
+        // UnderstudyPower's marker. A stack granted after this turn's draw (Punished applies at
+        // AfterPlayerTurnStartLate, which is post-draw) never gets marked and so never decays for a
+        // turn it did nothing on.
+        MarkTookEffectThisTurn();
         // CardPileCmd.Draw already clamps its own draw loop to CardPile.MaxCardsInHand,
         // stopping early once the hand is full — requesting the cap as the draw count is
         // always enough to reach it (or drain the deck trying) without a manual hand-size read.
@@ -37,8 +42,9 @@ public class UnlimitedPower : UnderstudyPower
         Flash();
         int turn = Owner.Player?.PlayerCombatState?.TurnNumber ?? -1;
         bool heldNote = HeldNotePower.IsActive(Owner);
-        Log.Info($"[LessonDiag] UnlimitedPower.AfterSideTurnStart[turn {turn}, side {side}]: Amount={Amount}, heldNote={heldNote} -> {(heldNote ? "no decrement" : "decrement -1")}");
-        if (!heldNote)
+        bool tookEffect = ConsumeTookEffectThisTurn();
+        Log.Info($"[LessonDiag] UnlimitedPower.AfterSideTurnStart[turn {turn}, side {side}]: Amount={Amount}, heldNote={heldNote}, tookEffect={tookEffect} -> {(heldNote ? "no decrement (Held Note)" : tookEffect ? "decrement -1" : "no decrement (did not take effect this turn)")}");
+        if (!heldNote && tookEffect)
         {
             Invariants.Check(Amount > 0, nameof(UnlimitedPower) + "." + nameof(AfterSideTurnStart),
                 "about to decrement a Counter power that is already at 0 or below");
