@@ -229,13 +229,13 @@
   "THEUNDERSTUDY-TAKE_NOTES.selectionPrompt": "Choose cards to make [gold]Tuned[/gold].",
 
   "THEUNDERSTUDY-CRAM.title": "Cram",
-  "THEUNDERSTUDY-CRAM.description": "Draw {Cards:diff()} {Cards:plural:card|cards}.\nApply 2 [gold]Limited[/gold] to yourself.",
+  "THEUNDERSTUDY-CRAM.description": "Draw {Cards:diff()} {Cards:plural:card|cards}.\nApply {Limited:inverseDiff()} [gold]Limited[/gold] to yourself.",
 
   "THEUNDERSTUDY-SHOWER_THOUGHT.title": "Shower Thought",
   "THEUNDERSTUDY-SHOWER_THOUGHT.description": "{InCombat:cond:|[gold]Tuned[/gold] 1.\n}Deal {Damage:diff()} damage.\nDraw {Cards:diff()} {Cards:plural:card|cards}.",
 
   "THEUNDERSTUDY-BURN_OUT.title": "Burn Out",
-  "THEUNDERSTUDY-BURN_OUT.description": "Gain {Energy:energyIcons()}.\nApply 2 [gold]Jaded[/gold] to yourself.",
+  "THEUNDERSTUDY-BURN_OUT.description": "Gain {Energy:energyIcons()}.\nApply {Jaded:inverseDiff()} [gold]Jaded[/gold] to yourself.",
 
   "THEUNDERSTUDY-STRIKE_A_POSE.title": "Strike a Pose",
   "THEUNDERSTUDY-STRIKE_A_POSE.description": "Deal {Damage:diff()} damage to a random enemy 3 times.\n[gold]Invert[/gold] {Invert:diff()}.",
@@ -244,13 +244,13 @@
   "THEUNDERSTUDY-ALL_EYES_ON_ME.description": "Deal {Damage:diff()} damage to ALL enemies.\n[gold]Swap[/gold]{IfUpgraded:show: twice|}.",
 
   "THEUNDERSTUDY-MELTDOWN.title": "Meltdown",
-  "THEUNDERSTUDY-MELTDOWN.description": "Deal {Damage:diff()} damage to ALL enemies.\nApply 1 [gold]Vulnerable[/gold] to yourself and ALL enemies.",
+  "THEUNDERSTUDY-MELTDOWN.description": "Deal {Damage:diff()} damage to ALL enemies.\nApply {Vulnerable:inverseDiff()} [gold]Vulnerable[/gold] to yourself and 1 to ALL enemies.",
 
   "THEUNDERSTUDY-FEEDBACK.title": "Feedback",
   "THEUNDERSTUDY-FEEDBACK.description": "Deal {Damage:diff()} damage.\nGain {Block:diff()} [gold]Block[/gold].\nLose {Vigor:inverseDiff()} [gold]Vigor[/gold].",
 
   "THEUNDERSTUDY-DEAD_WEIGHT.title": "Dead Weight",
-  "THEUNDERSTUDY-DEAD_WEIGHT.description": "Gain {Block:diff()} [gold]Block[/gold].\nApply 1 [gold]Weak[/gold] to yourself and ALL enemies.",
+  "THEUNDERSTUDY-DEAD_WEIGHT.description": "Gain {Block:diff()} [gold]Block[/gold].\nApply {Weak:inverseDiff()} [gold]Weak[/gold] to yourself and 1 to ALL enemies.",
 
   "THEUNDERSTUDY-SING_ALONG.title": "Sing Along",
   "THEUNDERSTUDY-SING_ALONG.description": "All creatures in combat gain {Vigor:diff()} [gold]Vigor[/gold].",

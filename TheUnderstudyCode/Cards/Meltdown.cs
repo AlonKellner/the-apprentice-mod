@@ -5,6 +5,7 @@ using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models.Powers;
+using TheUnderstudy.TheUnderstudyCode.Cards.DynamicVars;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
@@ -17,6 +18,8 @@ public class Meltdown : UnderstudyCard
     public Meltdown() : base(1, CardType.Attack, CardRarity.Uncommon, TargetType.AllEnemies)
     {
         WithDamage(10);
+        // Only the SELF Vulnerable is a SelfDebuffVar (so it colors/drops under Apathy); enemies get a flat 1.
+        WithVar(new SelfDebuffVar("Vulnerable", 1));
         WithMarkedTip(typeof(VulnerablePower));
     }
 
@@ -30,7 +33,7 @@ public class Meltdown : UnderstudyCard
     {
         await CommonActions.CardAttack(cardPlay.Card, cardPlay).Execute(context);
         var creature = cardPlay.Card.Owner.Creature;
-        await EmotionalExpression.ApplyVulnerableToSelf(context, creature, 1, this);
+        await EmotionalExpression.ApplyVulnerableToSelf(context, creature, (int)DynamicVars["Vulnerable"].BaseValue, this);
         var enemies = creature.CombatState!.HittableEnemies;
         await PowerCmd.Apply<VulnerablePower>(context, enemies, 1, creature, cardPlay.Card, false);
     }

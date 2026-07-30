@@ -5,6 +5,7 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
+using TheUnderstudy.TheUnderstudyCode.Cards.DynamicVars;
 using TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
@@ -18,6 +19,7 @@ public class BurnOut : UnderstudyCard
     public BurnOut() : base(0, CardType.Skill, CardRarity.Common, TargetType.None)
     {
         WithVars(new EnergyVar(2));
+        WithVar(new SelfDebuffVar("Jaded", 2)); // SelfDebuffVar so the preview colors/drops under Apathy
         WithTips(_ => new IHoverTip[] { EnergyHoverTip });
         WithTip(typeof(JadedPower));
     }
@@ -32,6 +34,6 @@ public class BurnOut : UnderstudyCard
     {
         var player = cardPlay.Card.Owner;
         await PlayerCmd.GainEnergy(DynamicVars.Energy.BaseValue, player);
-        await EmotionalExpression.ApplyJadedToSelf(context, player.Creature, 2, this);
+        await EmotionalExpression.ApplyJadedToSelf(context, player.Creature, (int)DynamicVars["Jaded"].BaseValue, this);
     }
 }

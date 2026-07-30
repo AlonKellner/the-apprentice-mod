@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.13.11: Renamed four Swap cards to fit the Swap theme of interacting with the audience — Role Reversal is now Crowd Work, Body Double is now Win Them Over, Upstage is now All Eyes on Me, and Trading Fours is now Pass the Mic. Names only; no card effects changed.",
+  "changeNote": "v1.13.12: Burn Out, Cram, Meltdown, and Dead Weight now preview their self-debuff amount reduced by Apathy (it was already reduced in play, just not shown). Meltdown/Dead Weight list the self and enemy amounts separately.",
   "tags": [],
   "dependencies": [
     3737335127

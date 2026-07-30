@@ -2,6 +2,7 @@ using BaseLib.Abstracts;
 using BaseLib.Utils;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using TheUnderstudy.TheUnderstudyCode.Cards.DynamicVars;
 using TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
@@ -14,6 +15,7 @@ public class Cram : UnderstudyCard
     public Cram() : base(1, CardType.Skill, CardRarity.Common, TargetType.None)
     {
         WithCards(3);
+        WithVar(new SelfDebuffVar("Limited", 2)); // SelfDebuffVar so the preview colors/drops under Apathy
         WithTip(typeof(LimitedPower));
     }
 
@@ -27,6 +29,6 @@ public class Cram : UnderstudyCard
     {
         await CommonActions.Draw(this, context);
         var creature = cardPlay.Card.Owner.Creature;
-        await EmotionalExpression.ApplyLimitedToSelf(context, creature, 2, this);
+        await EmotionalExpression.ApplyLimitedToSelf(context, creature, (int)DynamicVars["Limited"].BaseValue, this);
     }
 }

@@ -4,6 +4,7 @@ using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models.Powers;
+using TheUnderstudy.TheUnderstudyCode.Cards.DynamicVars;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
@@ -15,6 +16,8 @@ public class DeadWeight : UnderstudyCard
     public DeadWeight() : base(2, CardType.Skill, CardRarity.Uncommon, TargetType.None)
     {
         WithBlock(12);
+        // Only the SELF Weak is a SelfDebuffVar (so it colors/drops under Apathy); enemies get a flat 1.
+        WithVar(new SelfDebuffVar("Weak", 1));
         WithMarkedTip(typeof(WeakPower));
     }
 
@@ -28,7 +31,7 @@ public class DeadWeight : UnderstudyCard
     {
         await CommonActions.CardBlock(this, cardPlay);
         var creature = cardPlay.Card.Owner.Creature;
-        await EmotionalExpression.ApplyWeakToSelf(context, creature, 1, this);
+        await EmotionalExpression.ApplyWeakToSelf(context, creature, (int)DynamicVars["Weak"].BaseValue, this);
         var enemies = creature.CombatState!.HittableEnemies;
         await PowerCmd.Apply<WeakPower>(context, enemies, 1, creature, cardPlay.Card, false);
     }
