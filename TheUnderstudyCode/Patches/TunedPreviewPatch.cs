@@ -32,9 +32,16 @@ namespace TheUnderstudy.TheUnderstudyCode.Patches;
 public static class TunedPreview
 {
     // (dynamicBasePart, total) for this card's Tuned state. See the class comment.
+    //
+    // The pre-Tuned branch is gated to OUT OF COMBAT (CombatState == null): out of combat a pre-Tuned card
+    // has no TunedModifier yet but will start combat carrying PreTunedStacks, so it previews (N, N). IN
+    // combat the actual TunedModifier is authoritative (first branch) — a pre-Tuned card whose Tuned was
+    // stripped mid-combat (e.g. by Spectacle) correctly reports (0, 0). Without this gate the class-level
+    // IsPreTuned stays true after the strip, so it kept inflating EnchantedValue and coloring the (correct)
+    // base value red.
     public static (int dynamicBasePart, int total) TunedParts(CardModel card) =>
         card.TryGetModifier<TunedModifier>(out var t) ? (t!.Stacks, t.Bonus)
-        : card is UnderstudyCard { IsPreTuned: true } uc ? (uc.PreTunedStacks, uc.PreTunedStacks)
+        : card is UnderstudyCard { IsPreTuned: true } uc && card.CombatState == null ? (uc.PreTunedStacks, uc.PreTunedStacks)
         : (0, 0);
 
     public static void Add(DynamicVar var, CardModel card, bool runGlobalHooks)
