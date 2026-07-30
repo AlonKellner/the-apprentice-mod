@@ -10,7 +10,9 @@ using TheUnderstudy.TheUnderstudyCode.Extensions;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
-// Abstract base for the "Play all Planned" resolver cards (Workshop, Showtime, DaCapo, Remix). Its once-per-turn
+// Abstract base for the "play all X cards" resolver cards — the Planned queue (Workshop, Showtime, DaCapo,
+// Remix) and the Tuned board (Spectacle), which share the identical recursion hazard and so share this
+// guard. Its once-per-turn
 // guard both caps the effect (per card instance) and — because it marks the card resolved BEFORE the queue
 // is played — breaks the infinite recursion that occurs when such a resolver is itself Planned+Stable:
 // playing it AutoPlays its own Planned slot, re-entering OnPlay; the guard makes that nested self-play a
@@ -87,10 +89,15 @@ public abstract class PlayAllPlannedCard(
         return true;
     }
 
+    // What this resolver would actually play if resolved right now — the Planned queue by default.
+    // Overridden by a resolver whose set isn't the Planned queue (Spectacle resolves the Tuned board), so
+    // the once-per-turn glow rule below stays in one place regardless of what's being resolved.
+    protected virtual bool HasQueueToResolve => PlannedModifier.AnyIn(PlannedModifier.RelevantCards(Owner));
+
     // Glow gold while there's a plan to resolve — and, for once-per-turn resolvers, only while this card
     // hasn't spent its resolve yet. A freely-replayable resolver (Workshop) glows whenever a plan exists.
     protected override bool ShouldGlowGoldInternal =>
-        (!IsOncePerTurn || !_resolvedThisTurn) && PlannedModifier.AnyIn(PlannedModifier.RelevantCards(Owner));
+        (!IsOncePerTurn || !_resolvedThisTurn) && HasQueueToResolve;
 
     public override Task BeforeCombatStart()
     {

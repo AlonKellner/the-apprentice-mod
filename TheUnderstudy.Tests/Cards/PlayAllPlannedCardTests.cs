@@ -83,4 +83,24 @@ public class PlayAllPlannedCardTests
                 "when Planned+Stable.");
         }
     }
+
+    // Same rule for the Tuned board (Spectacle): a card that auto-plays every Tuned card is a recursion
+    // vector for exactly the same reason — an Attack/Skill resolver can itself be Tuned, so its play-all
+    // AutoPlays itself and re-enters OnPlay forever. It must extend PlayAllPlannedCard for the guard.
+    [Fact]
+    public void EveryTunedBoardResolvingCard_ExtendsPlayAllPlannedCard()
+    {
+        var cardsDir = Path.GetFullPath(Path.Combine(
+            AppContext.BaseDirectory, "..", "..", "..", "..", "TheUnderstudyCode", "Cards"));
+        foreach (var file in Directory.GetFiles(cardsDir, "*.cs", SearchOption.TopDirectoryOnly))
+        {
+            var text = File.ReadAllText(file);
+            if (!text.Contains("TunedModifier.TunedCards") || !text.Contains("CardCmd.AutoPlay")) continue;
+            Assert.True(
+                text.Contains(": PlayAllPlannedCard"),
+                $"{Path.GetFileName(file)} auto-plays the Tuned board but does not extend " +
+                "PlayAllPlannedCard — it lacks the once-per-turn guard and can recurse infinitely " +
+                "when it is itself Tuned.");
+        }
+    }
 }

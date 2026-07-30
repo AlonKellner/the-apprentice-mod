@@ -49,7 +49,7 @@
   "THEUNDERSTUDY-MELODY.selectionPrompt": "Choose cards to make [gold]Planned[/gold].",
 
   "THEUNDERSTUDY-SPECTACLE.title": "Spectacle",
-  "THEUNDERSTUDY-SPECTACLE.description": "Apply [gold]Planned[/gold] to all [gold]Tuned[/gold] cards, then remove [gold]Tuned[/gold] from all cards.",
+  "THEUNDERSTUDY-SPECTACLE.description": "Play all [gold]Tuned[/gold] cards in a random order, at most once per turn.\nRemove [gold]Tuned[/gold] from all cards.",
 
   "THEUNDERSTUDY-REPERTOIRE.title": "Repertoire",
   "THEUNDERSTUDY-REPERTOIRE.description": "{InCombat:cond:|[gold]Tuned[/gold] {Tuned:diff()}.\n}Deal {Damage:diff()} damage.\nGain {Block:diff()} [gold]Block[/gold].",
