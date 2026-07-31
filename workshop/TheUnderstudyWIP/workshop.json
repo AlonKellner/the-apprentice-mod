@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.13.25: Renamed All Eyes on Me to Dazzle, and the old Dazzle to Outpour.",
+  "changeNote": "v1.13.26: Freeze Up leans more into Block (8/16), Heart Ache more into damage (16/10), to differentiate them from Desperate Strike and The Wall.",
   "tags": [],
   "dependencies": [
     3737335127
