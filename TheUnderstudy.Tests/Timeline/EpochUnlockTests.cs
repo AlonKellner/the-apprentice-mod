@@ -69,18 +69,20 @@ public class EpochUnlockTests
     }
 
     // THE rule: unlocking should feel like gaining a new option, not like the basics were withheld.
-    // Commons are the connective tissue of a deck and must be available from the first run.
+    // Commons are the connective tissue of a deck and must be available from the first run — for CARDS and
+    // RELICS. Potions are exempt: the whole roster is only 3 (one per rarity), so the "Consumed" epoch
+    // gates all of them, Common included, and there is no connective-tissue concern for a 3-potion set.
     [Fact]
-    public void NoCommonContentIsEpochGated()
+    public void NoCommonCardOrRelicIsEpochGated()
     {
         var commons = ParseUnlocks()
-            .Where(u => u.Kind != "Event")
+            .Where(u => u.Kind != "Event" && u.Kind != "Potion")
             .Where(u => RarityOf(u.Kind, u.TypeName) == "Common")
             .Select(u => $"{u.Epoch} gates Common {u.Kind.ToLowerInvariant()} {u.TypeName}")
             .ToList();
 
         Assert.True(commons.Count == 0,
-            "Only Uncommon/Rare content may be epoch-gated:\n  " + string.Join("\n  ", commons));
+            "Only Uncommon/Rare cards & relics may be epoch-gated:\n  " + string.Join("\n  ", commons));
     }
 
     // EpochModel.CreateCardUnlockText / CreateRelicUnlockText / CreatePotionUnlockText all loop

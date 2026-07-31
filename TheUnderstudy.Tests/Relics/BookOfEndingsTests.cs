@@ -46,13 +46,15 @@ public class BookOfEndingsTests
     public void LastActIndex_StartsBeforeAnyAct() =>
         Assert.Equal(-1, new BookOfEndings().LastActIndex);
 
-    // Event-only: it carries [Pool] (so the STS004 analyzer is satisfied) but is listed in the pool's
-    // EventOnlyRelics so GetUnlockedRelics removes it — The Golden Bedroom is the only way to get it.
+    // Never a random reward — but for the right reason: Event rarity is what excludes it (every reward
+    // path rarity-filters to Common/Uncommon/Rare/Shop), NOT a pool exclusion. It keeps [Pool] (so the
+    // STS004 analyzer is satisfied) and stays in the pool's unlocked set, so the compendium can show it as
+    // a hidden "unknown" tile that becomes visible once The Golden Bedroom grants it.
     [Fact]
-    public void IsExcludedFromRewardsButKeepsPoolAttribute()
+    public void IsExcludedFromRewardsByRarityButKeepsPoolAttribute()
     {
         Assert.Contains(typeof(BookOfEndings).GetCustomAttributes(inherit: true),
             a => a.GetType().Name == "PoolAttribute");
-        Assert.Contains(typeof(BookOfEndings), TheUnderstudyRelicPool.EventOnlyRelics);
+        Assert.Equal(RelicRarity.Event, new BookOfEndings().Rarity);
     }
 }

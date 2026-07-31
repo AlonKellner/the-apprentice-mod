@@ -21,7 +21,7 @@ namespace TheUnderstudy.TheUnderstudyCode.Relics;
 [Pool(typeof(TheUnderstudyRelicPool))]
 public class Rosin : CustomRelicModel
 {
-    public override RelicRarity Rarity => RelicRarity.Uncommon;
+    public override RelicRarity Rarity => RelicRarity.Rare;
 
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>

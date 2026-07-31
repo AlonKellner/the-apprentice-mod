@@ -12,12 +12,12 @@ using TheUnderstudy.TheUnderstudyCode.RestSite;
 namespace TheUnderstudy.TheUnderstudyCode.Relics;
 
 // "You may Enchant a card with Planned at Rest Sites." Adds a rest-site option that enchants a chosen
-// deck card with the PrePlanned enchantment (persists across combats). Named for a musical score —
-// the play order written down in advance.
+// deck card with the PrePlanned enchantment (persists across combats). Named for the drafting paper a
+// plan is written out on in advance.
 [Pool(typeof(TheUnderstudyRelicPool))]
-public class Score : CustomRelicModel
+public class DraftingPaper : CustomRelicModel
 {
-    public override RelicRarity Rarity => RelicRarity.Uncommon;
+    public override RelicRarity Rarity => RelicRarity.Rare;
 
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
@@ -26,7 +26,7 @@ public class Score : CustomRelicModel
     public override bool TryModifyRestSiteOptions(Player player, ICollection<RestSiteOption> options)
     {
         if (player != Owner) return false;
-        options.Add(new ScoreRestSiteOption(player));
+        options.Add(new DraftingPaperRestSiteOption(player));
         return true;
     }
 }

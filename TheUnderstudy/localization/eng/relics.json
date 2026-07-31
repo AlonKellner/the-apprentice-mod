@@ -9,9 +9,9 @@
   "THEUNDERSTUDY-TRUE_MASK.selectionPrompt": "Select 2 cards to add to your hand.",
   "THEUNDERSTUDY-TRUE_MASK.flavor": "What once weighed you down now lifts you up.",
 
-  "THEUNDERSTUDY-CUE_LIGHT.title": "Cue Light",
-  "THEUNDERSTUDY-CUE_LIGHT.description": "Every 5 cards that become [gold]Unplayable[/gold], apply 2 [gold]Weak[/gold] to a random enemy.",
-  "THEUNDERSTUDY-CUE_LIGHT.flavor": "Every missed entrance is the enemy's cue to falter.",
+  "THEUNDERSTUDY-LAMPSHADE.title": "Lampshade",
+  "THEUNDERSTUDY-LAMPSHADE.description": "Every 5 cards that become [gold]Unplayable[/gold], apply 2 [gold]Weak[/gold] to a random enemy.",
+  "THEUNDERSTUDY-LAMPSHADE.flavor": "Dim the glare and the room forgets to watch.",
 
   "THEUNDERSTUDY-FOLDABLE_STAGE.title": "Foldable Stage",
   "THEUNDERSTUDY-FOLDABLE_STAGE.description": "You may Enchant a card with [gold]Tuned[/gold] at Rest Sites.",
@@ -22,20 +22,20 @@
   "THEUNDERSTUDY-GREASEPAINT.flavor": "Wear the wound as a mask; let them see it and flinch.",
 
   "THEUNDERSTUDY-LOZENGE.title": "Lozenge",
-  "THEUNDERSTUDY-LOZENGE.description": "At the start of your turn, gain 2 [gold]Vigor[/gold].",
+  "THEUNDERSTUDY-LOZENGE.description": "At the start of your turn, gain 3 [gold]Vigor[/gold].",
   "THEUNDERSTUDY-LOZENGE.flavor": "For the voice that must go on.",
 
   "THEUNDERSTUDY-ROSIN.title": "Rosin",
   "THEUNDERSTUDY-ROSIN.description": "Whenever you apply [gold]Tuned[/gold] to a card with no [gold]Tuned[/gold], apply an additional [gold]Tuned[/gold].",
   "THEUNDERSTUDY-ROSIN.flavor": "A little draws every string tighter.",
 
-  "THEUNDERSTUDY-SAFETY_NET.title": "Safety Net",
-  "THEUNDERSTUDY-SAFETY_NET.description": "Start each combat with 1 [gold]Unvulnerable[/gold] and 1 [gold]Unfrail[/gold].",
-  "THEUNDERSTUDY-SAFETY_NET.flavor": "No fall is too far when someone's rigged the catch.",
+  "THEUNDERSTUDY-GOLDEN_CAPE.title": "Golden Cape",
+  "THEUNDERSTUDY-GOLDEN_CAPE.description": "Start each combat with 1 [gold]Unvulnerable[/gold] and 1 [gold]Unfrail[/gold].",
+  "THEUNDERSTUDY-GOLDEN_CAPE.flavor": "Draped in gold, the boy walks through the worst of it untouched.",
 
-  "THEUNDERSTUDY-SCORE.title": "Score",
-  "THEUNDERSTUDY-SCORE.description": "You may Enchant a card with [gold]Planned[/gold] at Rest Sites.",
-  "THEUNDERSTUDY-SCORE.flavor": "Every entrance and exit, written down in advance.",
+  "THEUNDERSTUDY-DRAFTING_PAPER.title": "Drafting Paper",
+  "THEUNDERSTUDY-DRAFTING_PAPER.description": "You may Enchant a card with [gold]Planned[/gold] at Rest Sites.",
+  "THEUNDERSTUDY-DRAFTING_PAPER.flavor": "Every entrance and exit, drafted out in advance.",
 
   "THEUNDERSTUDY-BOOK_OF_ENDINGS.title": "Book of Endings",
   "THEUNDERSTUDY-BOOK_OF_ENDINGS.description": "You can now [gold]Study[/gold] at Rest Sites to reveal an [gold]alternative Boss[/gold].\nUp to 2 alternative Bosses per act.",

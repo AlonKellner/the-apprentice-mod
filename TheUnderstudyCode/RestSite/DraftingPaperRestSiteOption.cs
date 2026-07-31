@@ -11,13 +11,13 @@ using TheUnderstudy.TheUnderstudyCode.Extensions;
 
 namespace TheUnderstudy.TheUnderstudyCode.RestSite;
 
-// The rest-site action granted by the Score relic: pick a deck card and enchant it with PrePlanned,
-// so it starts each combat Planned (in deck order). Mirrors SmithRestSiteOption's select-then-apply
-// shape (FromDeckForEnchantment previews the enchant; CardCmd.Enchant applies it to the master-deck
-// card, which persists across combats and saves). Loc in rest_site_ui.json (OPTION_<Id>.*).
-public class ScoreRestSiteOption : CustomRestSiteOption
+// The rest-site action granted by the Drafting Paper relic: pick a deck card and enchant it with
+// PrePlanned, so it starts each combat Planned (in deck order). Mirrors SmithRestSiteOption's
+// select-then-apply shape (FromDeckForEnchantment previews the enchant; CardCmd.Enchant applies it to the
+// master-deck card, which persists across combats and saves). Loc in rest_site_ui.json (OPTION_<Id>.*).
+public class DraftingPaperRestSiteOption : CustomRestSiteOption
 {
-    public const string Id = "THEUNDERSTUDY_SCORE";
+    public const string Id = "THEUNDERSTUDY_DRAFTING_PAPER";
     public override string OptionId => Id;
 
     // Without a CustomIconPath the button resolves its icon against the base game's ui/rest_site/
@@ -25,7 +25,7 @@ public class ScoreRestSiteOption : CustomRestSiteOption
     // Planned glyph (this option enchants Planned) until dedicated rest-site art is drawn.
     public override string? CustomIconPath => "powers/planned_counter_power.png".ImagePath();
 
-    public ScoreRestSiteOption(Player owner) : base(owner) { }
+    public DraftingPaperRestSiteOption(Player owner) : base(owner) { }
 
     public override async Task<bool> OnSelect()
     {

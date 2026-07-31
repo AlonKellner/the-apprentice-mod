@@ -17,7 +17,7 @@ namespace TheUnderstudy.TheUnderstudyCode.Relics;
 // (Nunchaku/InkBottle idiom). UnplayableModifier.Applied is a synchronous event, so we count there
 // and defer the actual (async) Weak application to a hook that carries a PlayerChoiceContext, the
 // same queue-then-flush bridge BalancedPowerBase uses.
-public class CueLight : UnderstudyCounterRelic
+public class Lampshade : UnderstudyCounterRelic
 {
     public override RelicRarity Rarity => RelicRarity.Uncommon;
     protected override int Threshold => 5;

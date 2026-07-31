@@ -31,8 +31,10 @@ namespace TheUnderstudy.TheUnderstudyCode.Timeline;
 // unlocks a single EVENT, following the base game's Event1Epoch/Event2Epoch/Event3Epoch shape: its own
 // .unlockText loc key and QueueMiscUnlock, not the 3-item helpers.
 //
-// RULE: only Uncommon/Rare content is ever gated. Commons are a deck's connective tissue and must be
-// available from the first run — withholding them makes early runs feel thin for no thematic gain.
+// RULE: only Uncommon/Rare CARDS and RELICS are ever gated. Commons among those are a deck's connective
+// tissue and must be available from the first run — withholding them makes early runs feel thin for no
+// thematic gain. POTIONS are the exception: the whole roster is only 3 (one per rarity), so the "Consumed"
+// epoch gates all three, Common included — there's no connective-tissue concern for a 3-potion set.
 // Enforced by EpochUnlockTests.
 public abstract class UnderstudyEpoch : EpochModel
 {
@@ -42,7 +44,7 @@ public abstract class UnderstudyEpoch : EpochModel
 }
 
 // 1 — Dreamless (Seeds0, after "The Architect"). Reveals on: Beat Act 1. Unlocks 3 relics — the props
-// of the trade the boy will be pressed into. (SafetyNet is deliberately NOT here: it is Common.)
+// of the trade the boy will be pressed into. (Golden Cape is deliberately NOT here: it is Common.)
 public sealed class Understudy1Epoch : UnderstudyEpoch
 {
     public override string Id => "THEUNDERSTUDY1_EPOCH";
@@ -102,8 +104,9 @@ public sealed class Understudy3Epoch : UnderstudyEpoch
 }
 
 // 4 — Consumed. After "Consequences" (Relic4 @ Blight0 pos0, the bottom/last of its column) = top of the
-// next column, Blight1 (pos4) — it's the aftermath of Consequences. Reveals on: Ascension 1+. Unlocks 3
-// potions: the blight consumed the child, and potions are the things you consume.
+// next column, Blight1 (pos4) — it's the aftermath of Consequences. Reveals on: Ascension 1+. Unlocks the
+// character's 3 potions (the blight consumed the child, and potions are the things you consume). The whole
+// potion roster is only 3, so all of them — the Common included — are gated here.
 public sealed class Understudy4Epoch : UnderstudyEpoch
 {
     public override string Id => "THEUNDERSTUDY4_EPOCH";
@@ -111,7 +114,7 @@ public sealed class Understudy4Epoch : UnderstudyEpoch
     public override int EraPosition => 4;
 
     public static List<PotionModel> Potions => new()
-        { ModelDb.Potion<PlannedPotion>(), ModelDb.Potion<TunedPotion>(), ModelDb.Potion<SwapPotion>() };
+        { ModelDb.Potion<VigorPotion>(), ModelDb.Potion<Milkshake>(), ModelDb.Potion<GlitterBomb>() };
 
     public override string UnlockText => CreatePotionUnlockText(Potions);
     public override void QueueUnlocks() => NTimelineScreen.Instance.QueuePotionUnlock(Potions);

@@ -1,7 +1,7 @@
 {
-  "OPTION_THEUNDERSTUDY_SCORE.name": "Notate",
-  "OPTION_THEUNDERSTUDY_SCORE.description": "Enchant a card in your deck with [gold]Planned[/gold].",
-  "OPTION_THEUNDERSTUDY_SCORE.selectionPrompt": "Choose a card to enchant with [gold]Planned[/gold].",
+  "OPTION_THEUNDERSTUDY_DRAFTING_PAPER.name": "Notate",
+  "OPTION_THEUNDERSTUDY_DRAFTING_PAPER.description": "Enchant a card in your deck with [gold]Planned[/gold].",
+  "OPTION_THEUNDERSTUDY_DRAFTING_PAPER.selectionPrompt": "Choose a card to enchant with [gold]Planned[/gold].",
 
   "OPTION_THEUNDERSTUDY_FOLDABLE_STAGE.name": "Enact",
   "OPTION_THEUNDERSTUDY_FOLDABLE_STAGE.description": "Enchant a card in your deck with [gold]Tuned[/gold].",

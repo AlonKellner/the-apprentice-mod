@@ -7,20 +7,24 @@ using MegaCrit.Sts2.Core.Entities.Potions;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
 using TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
+using TheUnderstudy.TheUnderstudyCode.Extensions;
 
 namespace TheUnderstudy.TheUnderstudyCode.Potions;
 
-// Remove Unplayable from every attack/skill in hand (Composure's mechanism).
+// Remove Unplayable from every attack/skill across your whole combat deck — draw, hand and discard
+// (Composure's mechanism, deck-wide).
 public class Milkshake : UnderstudyPotion
 {
-    public override PotionRarity Rarity => PotionRarity.Common;
+    public override PotionRarity Rarity => PotionRarity.Uncommon;
 
     public override IEnumerable<IHoverTip> ExtraHoverTips =>
         new[] { HoverTipFactory.FromKeyword(CardKeyword.Unplayable) };
 
     protected override Task OnUse(PlayerChoiceContext choiceContext, Creature? target)
     {
-        foreach (var card in PileType.Hand.GetPile(Owner).Cards.Where(UnplayableModifier.CanApplyTo).ToList())
+        var cards = Owner.Piles.Where(p => p.Type.IsCombatPile())
+            .SelectMany(p => p.Cards).Where(UnplayableModifier.CanApplyTo).ToList();
+        foreach (var card in cards)
             UnplayableModifier.Remove(card);
         return Task.CompletedTask;
     }

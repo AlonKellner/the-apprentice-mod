@@ -10,20 +10,20 @@ using Xunit;
 
 namespace TheUnderstudy.Tests.Relics;
 
-// Shape tests for the five non-rest-site relics (Rosin, Lozenge, Safety Net, Cue Light, Greasepaint).
-// Their hook bodies need a live combat and are verified in-game; here we assert the bare-instantiable
-// surface (rarity, pool wiring, non-empty inline loc), same convention as TrueMaskTests.
+// Shape tests for the reward-pool relics (1 Common / 2 Uncommon / 3 Rare / 1 Shop). Their hook bodies need
+// a live combat and are verified in-game; here we assert the bare-instantiable surface (rarity, pool
+// wiring, non-empty inline loc), same convention as TrueMaskTests.
 public class NewRelicTests
 {
     public static IEnumerable<object[]> Relics => new List<object[]>
     {
-        new object[] { typeof(Rosin), RelicRarity.Uncommon },
-        new object[] { typeof(Lozenge), RelicRarity.Uncommon },
-        new object[] { typeof(SafetyNet), RelicRarity.Common },
-        new object[] { typeof(CueLight), RelicRarity.Uncommon },
+        new object[] { typeof(GoldenCape), RelicRarity.Common },
+        new object[] { typeof(Lampshade), RelicRarity.Uncommon },
         new object[] { typeof(Greasepaint), RelicRarity.Uncommon },
-        new object[] { typeof(FoldableStage), RelicRarity.Uncommon },
-        new object[] { typeof(Score), RelicRarity.Uncommon },
+        new object[] { typeof(FoldableStage), RelicRarity.Rare },
+        new object[] { typeof(DraftingPaper), RelicRarity.Rare },
+        new object[] { typeof(Rosin), RelicRarity.Rare },
+        new object[] { typeof(Lozenge), RelicRarity.Shop },
     };
 
     private static CustomRelicModel Create(Type type) => (CustomRelicModel)Activator.CreateInstance(type)!;

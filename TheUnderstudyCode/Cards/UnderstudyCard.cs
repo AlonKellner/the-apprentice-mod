@@ -269,7 +269,7 @@ public abstract class UnderstudyCard(
     // The Planned/Tuned Potions apply their modifier outside any card play, so the counter grant needs
     // its own trigger here or the badge would not show until the next card played. This hook carries no
     // PlayerChoiceContext; applying a power asks the player nothing, so a ThrowingPlayerChoiceContext is
-    // safe (same pattern as SafetyNet and DebuffClearNotifier).
+    // safe (same pattern as GoldenCape and DebuffClearNotifier).
     public override async Task AfterPotionUsed(PotionModel potion, Creature? target)
     {
         if (Owner == null || CombatState == null) return;

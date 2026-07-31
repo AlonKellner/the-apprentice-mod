@@ -7,7 +7,7 @@ using TheUnderstudy.TheUnderstudyCode.Relics;
 namespace TheUnderstudy.TheUnderstudyCode.RestSite;
 
 // The "Study" rest-site action, offered by the Book of Endings. Spends the rest action to reveal one
-// alternative boss on the current act's map. Mirrors ScoreRestSiteOption in shape; loc in
+// alternative boss on the current act's map. Mirrors DraftingPaperRestSiteOption in shape; loc in
 // rest_site_ui.json under OPTION_THEUNDERSTUDY_STUDY.
 public class StudyRestSiteOption : CustomRestSiteOption
 {

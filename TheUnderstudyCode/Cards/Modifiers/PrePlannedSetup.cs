@@ -23,7 +23,7 @@ public static class PrePlannedSetup
     private static readonly ConditionalWeakTable<Player, object> _assignedFor = new();
 
     // A card is pre-Planned if its class declares it (Playlist) or it carries a
-    // persistent PrePlanned enchantment applied out of combat by the Score relic.
+    // persistent PrePlanned enchantment applied out of combat by the Drafting Paper relic.
     public static bool IsPrePlanned(CardModel card) =>
         (card is UnderstudyCard uc && uc.IsPrePlanned) || card.Enchantment is PrePlanned;
 

@@ -12,7 +12,7 @@ namespace TheUnderstudy.TheUnderstudyCode.Potions;
 // Gain 10 Vigor.
 public class VigorPotion : UnderstudyPotion
 {
-    public override PotionRarity Rarity => PotionRarity.Uncommon;
+    public override PotionRarity Rarity => PotionRarity.Common;
 
     public override IEnumerable<IHoverTip> ExtraHoverTips =>
         new[] { HoverTipFactory.FromPower<VigorPower>() };

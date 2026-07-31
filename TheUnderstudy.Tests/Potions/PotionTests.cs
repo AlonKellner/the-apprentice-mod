@@ -11,21 +11,16 @@ using Xunit;
 
 namespace TheUnderstudy.Tests.Potions;
 
-// Shape tests for the 8 potions. OnUse bodies need a live ModelDb/combat and are verified in-game;
-// here we assert the pool wiring, usage/target config, and each potion's rarity (the reflected,
+// Shape tests for the 3 potions (one per rarity). OnUse bodies need a live ModelDb/combat and are verified
+// in-game; here we assert the pool wiring, usage/target config, and each potion's rarity (the reflected,
 // bare-instantiable surface — same convention as the relic tests).
 public class PotionTests
 {
     public static IEnumerable<object[]> AllPotions => new List<object[]>
     {
-        new object[] { typeof(InvertPotion), PotionRarity.Uncommon },
-        new object[] { typeof(SwapPotion), PotionRarity.Rare },
-        new object[] { typeof(PlannedPotion), PotionRarity.Uncommon },
-        new object[] { typeof(TunedPotion), PotionRarity.Uncommon },
-        new object[] { typeof(Milkshake), PotionRarity.Common },
-        new object[] { typeof(LovePotion), PotionRarity.Common },
-        new object[] { typeof(ProteinPotion), PotionRarity.Common },
-        new object[] { typeof(VigorPotion), PotionRarity.Uncommon },
+        new object[] { typeof(VigorPotion), PotionRarity.Common },
+        new object[] { typeof(Milkshake), PotionRarity.Uncommon },
+        new object[] { typeof(GlitterBomb), PotionRarity.Rare },
     };
 
     private static UnderstudyPotion Create(Type type) => (UnderstudyPotion)Activator.CreateInstance(type)!;

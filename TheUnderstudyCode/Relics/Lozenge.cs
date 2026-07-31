@@ -12,12 +12,12 @@ using TheUnderstudy.TheUnderstudyCode.Character;
 
 namespace TheUnderstudy.TheUnderstudyCode.Relics;
 
-// "At the start of your turn, gain 2 Vigor." — the small-passive-per-turn idiom (Brimstone /
+// "At the start of your turn, gain 3 Vigor." — the small-passive-per-turn idiom (Brimstone /
 // MercuryHourglass; Akabeko grants 8 Vigor as a one-shot for comparison).
 [Pool(typeof(TheUnderstudyRelicPool))]
 public class Lozenge : CustomRelicModel
 {
-    public override RelicRarity Rarity => RelicRarity.Uncommon;
+    public override RelicRarity Rarity => RelicRarity.Shop;
 
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips =>
@@ -27,6 +27,6 @@ public class Lozenge : CustomRelicModel
     {
         if (player != Owner) return;
         Flash();
-        await PowerCmd.Apply<VigorPower>(choiceContext, Owner.Creature, 2, Owner.Creature, null, false);
+        await PowerCmd.Apply<VigorPower>(choiceContext, Owner.Creature, 3, Owner.Creature, null, false);
     }
 }

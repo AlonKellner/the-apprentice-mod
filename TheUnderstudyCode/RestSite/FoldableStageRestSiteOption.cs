@@ -12,14 +12,14 @@ using TheUnderstudy.TheUnderstudyCode.Extensions;
 namespace TheUnderstudy.TheUnderstudyCode.RestSite;
 
 // The rest-site action granted by the Foldable Stage relic: pick a deck card and enchant it with
-// PreTuned, so it starts each combat with Tuned. Same select-then-apply shape as ScoreRestSiteOption.
+// PreTuned, so it starts each combat with Tuned. Same select-then-apply shape as DraftingPaperRestSiteOption.
 public class FoldableStageRestSiteOption : CustomRestSiteOption
 {
     public const string Id = "THEUNDERSTUDY_FOLDABLE_STAGE";
     public override string OptionId => Id;
 
     // Without a CustomIconPath the button falls back to the base game's Dig shovel (see
-    // ScoreRestSiteOption). PLACEHOLDER: the Tension glyph — closest available to Tuned (strings under
+    // DraftingPaperRestSiteOption). PLACEHOLDER: the Tension glyph — closest available to Tuned (strings under
     // tension) — until dedicated rest-site art is drawn.
     public override string? CustomIconPath => "powers/tension_power.png".ImagePath();
 

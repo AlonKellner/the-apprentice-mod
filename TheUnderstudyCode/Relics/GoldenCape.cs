@@ -17,7 +17,7 @@ namespace TheUnderstudy.TheUnderstudyCode.Relics;
 // exactly like base OddlySmoothStone/Vajra (BeforeCombatStart carries no PlayerChoiceContext, and a
 // flat power grant needs no player choice).
 [Pool(typeof(TheUnderstudyRelicPool))]
-public class SafetyNet : CustomRelicModel
+public class GoldenCape : CustomRelicModel
 {
     public override RelicRarity Rarity => RelicRarity.Common;
 
