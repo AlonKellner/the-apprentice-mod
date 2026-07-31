@@ -59,7 +59,7 @@ public class CardRarityMechanicCoverageTests
         },
         ["Swap"] = new[]
         {
-            typeof(CaptiveAudience), typeof(WinThemOver),
+            typeof(Dazzle), typeof(Charisma),
             typeof(AllEyesOnMe), typeof(BestOfBoth), typeof(StagePresence),
         },
         ["remove-Unplayable"] = new[]

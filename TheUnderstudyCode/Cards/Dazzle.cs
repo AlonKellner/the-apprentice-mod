@@ -7,11 +7,11 @@ using MegaCrit.Sts2.Core.Localization.DynamicVars;
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
 // The deck's single pure-Swap card: nothing but the debuff/buff-to-enemy swap.
-public class CaptiveAudience : UnderstudyCard
+public class Dazzle : UnderstudyCard
 {
-    public const string CardId = "TheUnderstudy:CaptiveAudience";
+    public const string CardId = "TheUnderstudy:Dazzle";
 
-    public CaptiveAudience() : base(1, CardType.Skill, CardRarity.Common, TargetType.None)
+    public Dazzle() : base(1, CardType.Skill, CardRarity.Common, TargetType.None)
     {
         WithVars(new IntVar("Swap", 2));
         WithTip(UnderstudyKeywords.Swap);

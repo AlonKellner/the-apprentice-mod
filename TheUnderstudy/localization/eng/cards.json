@@ -133,11 +133,11 @@
   "THEUNDERSTUDY-UPSIDE_DOWN.title": "Upside Down",
   "THEUNDERSTUDY-UPSIDE_DOWN.description": "[gold]Invert[/gold] {Invert:diff()}.",
 
-  "THEUNDERSTUDY-CAPTIVE_AUDIENCE.title": "Captive Audience",
-  "THEUNDERSTUDY-CAPTIVE_AUDIENCE.description": "[gold]Swap[/gold]{IfUpgraded:show: 3 times| twice}.",
+  "THEUNDERSTUDY-DAZZLE.title": "Dazzle",
+  "THEUNDERSTUDY-DAZZLE.description": "[gold]Swap[/gold]{IfUpgraded:show: 3 times| twice}.",
 
-  "THEUNDERSTUDY-WIN_THEM_OVER.title": "Win Them Over",
-  "THEUNDERSTUDY-WIN_THEM_OVER.description": "Gain {Block:diff()} [gold]Block[/gold].\n[gold]Swap[/gold].",
+  "THEUNDERSTUDY-CHARISMA.title": "Charisma",
+  "THEUNDERSTUDY-CHARISMA.description": "Gain {Block:diff()} [gold]Block[/gold].\n[gold]Swap[/gold].",
 
   "THEUNDERSTUDY-MASK_DROP.title": "Mask Drop",
   "THEUNDERSTUDY-MASK_DROP.description": "Deal {Damage:diff()} damage.\n[gold]Invert[/gold] {Invert:diff()}.\nApply {Vulnerable:inverseDiff()} [gold]Vulnerable[/gold] to yourself.",

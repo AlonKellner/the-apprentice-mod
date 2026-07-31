@@ -7,11 +7,11 @@ using MegaCrit.Sts2.Core.Localization.DynamicVars;
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
 // Defensive Swap — win the crowd's goodwill as Block, then trade fortunes with the enemy team.
-public class WinThemOver : UnderstudyCard
+public class Charisma : UnderstudyCard
 {
-    public const string CardId = "TheUnderstudy:WinThemOver";
+    public const string CardId = "TheUnderstudy:Charisma";
 
-    public WinThemOver() : base(1, CardType.Skill, CardRarity.Common, TargetType.None)
+    public Charisma() : base(1, CardType.Skill, CardRarity.Common, TargetType.None)
     {
         WithBlock(8);
         WithVars(new IntVar("Swap", 1));

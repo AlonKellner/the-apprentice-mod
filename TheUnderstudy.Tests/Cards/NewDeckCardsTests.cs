@@ -33,7 +33,7 @@ public class NewDeckCardsTests
     [InlineData(typeof(UpsideDown), "TheUnderstudy:UpsideDown", CardType.Skill, CardRarity.Common, TargetType.None)]
     [InlineData(typeof(FolkSong), "TheUnderstudy:FolkSong", CardType.Skill, CardRarity.Uncommon, TargetType.None)]
     [InlineData(typeof(LoveSong), "TheUnderstudy:LoveSong", CardType.Skill, CardRarity.Uncommon, TargetType.None)]
-    [InlineData(typeof(WinThemOver), "TheUnderstudy:WinThemOver", CardType.Skill, CardRarity.Common, TargetType.None)]
+    [InlineData(typeof(Charisma), "TheUnderstudy:Charisma", CardType.Skill, CardRarity.Common, TargetType.None)]
     [InlineData(typeof(MasterForm), "TheUnderstudy:MasterForm", CardType.Power, CardRarity.Rare, TargetType.None)]
     [InlineData(typeof(HeldNote), "TheUnderstudy:HeldNote", CardType.Power, CardRarity.Rare, TargetType.None)]
     [InlineData(typeof(Showtime), "TheUnderstudy:Showtime", CardType.Skill, CardRarity.Common, TargetType.AnyEnemy)]
