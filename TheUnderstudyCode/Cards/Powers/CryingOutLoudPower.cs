@@ -9,6 +9,7 @@ using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.Rooms;
+using TheUnderstudy.TheUnderstudyCode.Cards;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 
@@ -43,21 +44,19 @@ public class CryingOutLoudPower : UnderstudyPower
         await PowerCmd.Apply<VigorPower>(ctx, Owner, Amount, Owner, null, false);
     }
 
-    // Vigor, Strength and Dexterity are Buff-typed but can go negative (AllowNegative — Vigor via
-    // VigorAllowNegativePatch, Str/Dex in vanilla), acting as debuffs while below 0. Clearing one — spending
-    // negative Vigor on an attack, or Invert/Swap/decay lifting a negative stat back to >= 0 — is a debuff
-    // clearing, but it never routes through DebuffClearNotifier: that only fires for Type==Debuff powers, and
-    // these are removed at exactly 0 where the sign is already gone. Catch it here on the amount change,
-    // where the old amount is still recoverable (`amount` is the delta, so old = new - delta). A negative
-    // Buff must have been AllowNegative to be negative at all, so Type==Buff + the crossing is the whole
-    // test — no need to enumerate Vigor/Strength/Dexterity explicitly.
+    // The amount-change half of "a debuff of yours clears": a negative Buff (Vigor / Strength / Dexterity,
+    // which act as debuffs while below 0) lifted back to >= 0 — spending negative Vigor on an attack, or
+    // Invert/Swap/decay raising a negative stat. Debuff-typed clears instead come through
+    // DebuffClearNotifier (removal); EmotionalExpression.IsDebuffClear is false for a Debuff type here, so
+    // this fires only on the negative-Buff crossing — the same shared IsDebuff definition, no double count.
+    // The old amount is recoverable because `amount` is the change delta (old = new - delta).
     private bool _granting;
 
     public override async Task AfterPowerAmountChanged(
         PlayerChoiceContext context, PowerModel power, decimal amount, Creature? applier, CardModel? cardSource)
     {
-        if (_granting || power.Owner != Owner || power.Type != PowerType.Buff) return;
-        if (!ClearedNegativeBuff(power.Amount - amount, power.Amount)) return;
+        if (_granting || power.Owner != Owner) return;
+        if (!EmotionalExpression.IsDebuffClear(power.Type, power.Amount - amount, power.Amount)) return;
 
         // Re-entrancy guard: the Vigor we grant could itself lift a separate negative Vigor across 0 and
         // re-enter here. One external clear should grant exactly once.
@@ -65,8 +64,4 @@ public class CryingOutLoudPower : UnderstudyPower
         try { await PowerCmd.Apply<VigorPower>(context, Owner, Amount, Owner, null, false); }
         finally { _granting = false; }
     }
-
-    // Pure decision: a negative stat buff cleared iff it was below 0 and is now back to zero-or-positive.
-    public static bool ClearedNegativeBuff(decimal oldAmount, decimal newAmount) =>
-        oldAmount < 0m && newAmount >= 0m;
 }

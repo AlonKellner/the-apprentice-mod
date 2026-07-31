@@ -45,6 +45,29 @@ public class EmotionalExpressionTests
     public void IsDebuffApplication_ClassifiesBySign(PowerType type, int amount, int newAmount, bool expected) =>
         Assert.Equal(expected, EmotionalExpression.IsDebuffApplication(type, amount, newAmount));
 
+    // IsDebuff — the one shared classifier every "debuff" mechanic uses: a Debuff type, or a negative Buff.
+    [Theory]
+    [InlineData(PowerType.Debuff, 3, true)]
+    [InlineData(PowerType.Debuff, 0, true)]     // a Debuff-typed power is a debuff while it exists
+    [InlineData(PowerType.Buff, -2, true)]      // negative Vigor / Strength / Dexterity
+    [InlineData(PowerType.Buff, 0, false)]
+    [InlineData(PowerType.Buff, 5, false)]
+    public void IsDebuff_ClassifiesDebuffTypeOrNegativeBuff(PowerType type, int amount, bool expected) =>
+        Assert.Equal(expected, EmotionalExpression.IsDebuff(type, amount));
+
+    // IsDebuffClear — the amount-change half of "a debuff cleared" (Crying Out Loud): a negative Buff lifted
+    // back to >= 0. Always false for Debuff types — their clear is a removal, owned by DebuffClearNotifier.
+    [Theory]
+    [InlineData(PowerType.Buff, -3, 0, true)]    // spent on an attack: -3 -> 0
+    [InlineData(PowerType.Buff, -3, 2, true)]    // lifted past zero: -3 -> +2
+    [InlineData(PowerType.Buff, -5, -2, false)]  // still negative
+    [InlineData(PowerType.Buff, 0, 3, false)]    // gaining a positive buff
+    [InlineData(PowerType.Buff, 3, 0, false)]    // spending a positive buff down to 0
+    [InlineData(PowerType.Debuff, 3, 0, false)]  // a Debuff decaying is not an amount-level clear
+    [InlineData(PowerType.Debuff, 3, 1, false)]
+    public void IsDebuffClear_OnlyNegativeBuffCrossing(PowerType type, int oldAmount, int newAmount, bool expected) =>
+        Assert.Equal(expected, EmotionalExpression.IsDebuffClear(type, oldAmount, newAmount));
+
     // ComputeWeakCancellation — the shared cancellation primitive InvertTrackerPower leans on for every
     // same-shape pair, both directions.
 

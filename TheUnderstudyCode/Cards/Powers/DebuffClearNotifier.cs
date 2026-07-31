@@ -1,9 +1,9 @@
 using System;
 using System.Threading.Tasks;
 using MegaCrit.Sts2.Core.Entities.Creatures;
-using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models;
+using TheUnderstudy.TheUnderstudyCode.Cards;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 
@@ -30,7 +30,11 @@ public static class DebuffClearNotifier
     public static async Task NotifyDebuffRemoved(PowerModel? power)
     {
         if (DebuffCleared == null) return;
-        if (power == null || power.Type != PowerType.Debuff) return;
+        // "A debuff of yours cleared" uses the mod's one shared debuff definition (EmotionalExpression.
+        // IsDebuff): a Debuff-typed power, or a Buff still negative at removal (a negative stat removed
+        // outright). A Buff spent to exactly 0 reads as non-debuff here (Amount == 0) — that clear is the
+        // negative->0 crossing, caught on the amount-change hook instead, so it isn't double-counted.
+        if (power == null || !EmotionalExpression.IsDebuff(power)) return;
         // RemovePowerInternal removes the power from the creature's list but does not null its
         // back-reference, so Owner is still readable here (base-game PowerCmd.Remove itself reads
         // power.Owner for AfterRemoved after RemoveInternal). The handler filters by owner.

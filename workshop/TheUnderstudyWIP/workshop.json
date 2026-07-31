@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.13.35: Crying Out Loud now also grants Vigor when negative Strength or Dexterity is cleared, not just negative Vigor.",
+  "changeNote": "v1.13.36: Unified 'debuff' across all cards and relics behind one shared definition - a Debuff-type power OR a negative Buff (negative Vigor/Strength/Dexterity) - so Crying Out Loud, Another Brick and Greasepaint all treat it the same.",
   "tags": [],
   "dependencies": [
     3737335127

@@ -19,11 +19,28 @@ public static class EmotionalExpression
     public static int CountUniqueDebuffTypes(int weakAmt, int vulAmt) =>
         (weakAmt > 0 ? 1 : 0) + (vulAmt > 0 ? 1 : 0);
 
-    // Whether an AfterPowerAmountChanged event is "a debuff being applied to you". A real Debuff counts
-    // when it gains a positive amount. A Buff counts when it is driven further into NEGATIVE territory —
-    // the mod treats a negative-valued buff (negative Vigor / Strength / Dexterity) as a debuff, so
-    // spending Vigor below 0 (or piling on more negative) is a self-debuff. A buff merely spent down but
-    // still >= 0 (e.g. Vigor 10 -> 7) is not.
+    // ── The one shared definition of "a debuff" ────────────────────────────────────────────────────
+    // A power is a debuff if it is Debuff-typed, OR a Buff driven negative — the mod treats a
+    // negative-valued buff (negative Vigor / Strength / Dexterity) as a functional debuff. EVERY "debuff"
+    // mechanic funnels through this so they all mean the same thing: Another Brick / Greasepaint (a debuff
+    // is applied), Crying Out Loud + DebuffClearNotifier (a debuff clears).
+    public static bool IsDebuff(PowerModel power) => IsDebuff(power.Type, power.Amount);
+
+    public static bool IsDebuff(PowerType type, decimal amount) =>
+        type == PowerType.Debuff || (type == PowerType.Buff && amount < 0m);
+
+    // A debuff CLEARED iff the power was a debuff and now is not — a Debuff removed, or a negative Buff
+    // lifted back to >= 0. `oldAmount`/`newAmount` are the totals before and after a change. For a Debuff
+    // type this is always false at the amount level (a Debuff stays a debuff until removed — the
+    // removal-based DebuffClearNotifier owns that); this is the amount-change half, i.e. the negative-Buff
+    // case (Crying Out Loud).
+    public static bool IsDebuffClear(PowerType type, decimal oldAmount, decimal newAmount) =>
+        IsDebuff(type, oldAmount) && !IsDebuff(type, newAmount);
+
+    // A debuff APPLIED: an AfterPowerAmountChanged event that made the power more of a debuff. A real
+    // Debuff counts when it gains a positive amount; a Buff counts when it is driven further NEGATIVE
+    // (still a debuff after) — the same negative-buff-is-a-debuff rule as IsDebuff. A buff merely spent
+    // down but still >= 0 (e.g. Vigor 10 -> 7) is not.
     public static bool IsDebuffApplication(PowerModel power, decimal amount) =>
         IsDebuffApplication(power.Type, amount, power.Amount);
 
@@ -31,7 +48,7 @@ public static class EmotionalExpression
     public static bool IsDebuffApplication(PowerType type, decimal amount, decimal newAmount) =>
         type == PowerType.Debuff
             ? amount > 0m
-            : amount < 0m && newAmount < 0m;
+            : amount < 0m && IsDebuff(type, newAmount);
 
     // The one shared cancellation primitive every Un-X power's bidirectional
     // TryModifyPowerAmountReceived leans on, in both directions, for all 6 pairs: reduce an
