@@ -43,22 +43,30 @@ public class CryingOutLoudPower : UnderstudyPower
         await PowerCmd.Apply<VigorPower>(ctx, Owner, Amount, Owner, null, false);
     }
 
-    // Negative Vigor is a functional debuff — Vigor is Buff-typed but AllowNegative (VigorAllowNegativePatch)
-    // lets it drop below 0, reducing your attacks. DebuffClearNotifier can't see it clear: it only fires for
-    // Type==Debuff powers, and by removal time (Vigor is removed at exactly 0) the amount is already 0, so
-    // the sign is gone. Catch it here instead — when this creature's Vigor rises from below 0 to >= 0
-    // (spending it on an attack zeroes it; Invert/Swap/Silence can also lift it), a debuff cleared, so grant
-    // Vigor the same as any other clear. `amount` is the change delta, so old = new - delta. The grant runs
-    // from Vigor >= 0 (old >= 0 there), so it can't re-satisfy the condition — no re-entrancy guard needed.
+    // Vigor, Strength and Dexterity are Buff-typed but can go negative (AllowNegative — Vigor via
+    // VigorAllowNegativePatch, Str/Dex in vanilla), acting as debuffs while below 0. Clearing one — spending
+    // negative Vigor on an attack, or Invert/Swap/decay lifting a negative stat back to >= 0 — is a debuff
+    // clearing, but it never routes through DebuffClearNotifier: that only fires for Type==Debuff powers, and
+    // these are removed at exactly 0 where the sign is already gone. Catch it here on the amount change,
+    // where the old amount is still recoverable (`amount` is the delta, so old = new - delta). A negative
+    // Buff must have been AllowNegative to be negative at all, so Type==Buff + the crossing is the whole
+    // test — no need to enumerate Vigor/Strength/Dexterity explicitly.
+    private bool _granting;
+
     public override async Task AfterPowerAmountChanged(
         PlayerChoiceContext context, PowerModel power, decimal amount, Creature? applier, CardModel? cardSource)
     {
-        if (power.Owner != Owner || power is not VigorPower) return;
-        if (ClearedNegativeVigor(power.Amount - amount, power.Amount))
-            await PowerCmd.Apply<VigorPower>(context, Owner, Amount, Owner, null, false);
+        if (_granting || power.Owner != Owner || power.Type != PowerType.Buff) return;
+        if (!ClearedNegativeBuff(power.Amount - amount, power.Amount)) return;
+
+        // Re-entrancy guard: the Vigor we grant could itself lift a separate negative Vigor across 0 and
+        // re-enter here. One external clear should grant exactly once.
+        _granting = true;
+        try { await PowerCmd.Apply<VigorPower>(context, Owner, Amount, Owner, null, false); }
+        finally { _granting = false; }
     }
 
-    // Pure decision: a debuff cleared iff Vigor was negative and is now back to zero-or-positive.
-    public static bool ClearedNegativeVigor(decimal oldAmount, decimal newAmount) =>
+    // Pure decision: a negative stat buff cleared iff it was below 0 and is now back to zero-or-positive.
+    public static bool ClearedNegativeBuff(decimal oldAmount, decimal newAmount) =>
         oldAmount < 0m && newAmount >= 0m;
 }

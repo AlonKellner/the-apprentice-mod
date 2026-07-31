@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.13.34: Renamed Turn It Around to Recovery and gave it pre-Tuned 1. Fixed Crying Out Loud: clearing negative Vigor (spending it on an attack, or lifting it with Invert/Swap) now counts as a debuff clearing and grants Vigor.",
+  "changeNote": "v1.13.35: Crying Out Loud now also grants Vigor when negative Strength or Dexterity is cleared, not just negative Vigor.",
   "tags": [],
   "dependencies": [
     3737335127
