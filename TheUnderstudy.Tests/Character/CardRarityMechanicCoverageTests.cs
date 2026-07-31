@@ -64,7 +64,7 @@ public class CardRarityMechanicCoverageTests
         },
         ["remove-Unplayable"] = new[]
         {
-            typeof(Improvise), typeof(LoosenUp), typeof(Balanced),
+            typeof(Improvise), typeof(LetLoose), typeof(Balanced),
             typeof(CleanSlate), typeof(SecondNature),
             typeof(Resolve), typeof(Composure), typeof(TurnItAround), typeof(GoForBroke),
         },

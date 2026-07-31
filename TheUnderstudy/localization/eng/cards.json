@@ -66,8 +66,8 @@
   "THEUNDERSTUDY-BREAKING_VOICE.title": "Breaking Voice",
   "THEUNDERSTUDY-BREAKING_VOICE.description": "Deal {Damage:diff()} damage.\nGain {Vigor:diff()} [gold]Vigor[/gold].\nApply {Weak:inverseDiff()} [gold]Weak[/gold] to yourself.",
 
-  "THEUNDERSTUDY-LOOSEN_UP.title": "Loosen Up",
-  "THEUNDERSTUDY-LOOSEN_UP.description": "Deal {Damage:diff()} damage for each [gold]Unplayable[/gold] in hand.{InCombat:\n(Hits {CalculatedHits:diff()} {CalculatedHits:plural:time|times})|}\nRemove [gold]Unplayable[/gold] from all attacks and skills in hand.",
+  "THEUNDERSTUDY-LET_LOOSE.title": "Let Loose",
+  "THEUNDERSTUDY-LET_LOOSE.description": "Deal {Damage:diff()} damage for each [gold]Unplayable[/gold] in hand.{InCombat:\n(Hits {CalculatedHits:diff()} {CalculatedHits:plural:time|times})|}\nRemove [gold]Unplayable[/gold] from all attacks and skills in hand.",
 
   "THEUNDERSTUDY-FOLK_SONG.title": "Folk Song",
   "THEUNDERSTUDY-FOLK_SONG.description": "Gain {Unweak:diff()} [gold]Unweak[/gold].",

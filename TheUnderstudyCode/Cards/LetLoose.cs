@@ -10,11 +10,11 @@ using TheUnderstudy.TheUnderstudyCode.Extensions;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
-public class LoosenUp : UnderstudyCard
+public class LetLoose : UnderstudyCard
 {
-    public const string CardId = "TheUnderstudy:LoosenUp";
+    public const string CardId = "TheUnderstudy:LetLoose";
 
-    public LoosenUp() : base(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
+    public LetLoose() : base(1, CardType.Attack, CardRarity.Uncommon, TargetType.AnyEnemy)
     {
         WithDamage(5);
         // Live "(Hits N times)" preview: N = number of Unplayable cards in hand (each drives one hit).
@@ -51,7 +51,7 @@ public class LoosenUp : UnderstudyCard
         // comes from the same static helper the preview var uses, so text and effect always agree.
         int unplayableCount = UnplayableHandCount(cardPlay.Card);
         var toFree = handCards.Where(UnplayableModifier.CanApplyTo).ToList();
-        Invariants.Check(toFree.Count <= unplayableCount, nameof(LoosenUp) + "." + nameof(OnPlay),
+        Invariants.Check(toFree.Count <= unplayableCount, nameof(LetLoose) + "." + nameof(OnPlay),
             $"freeing {toFree.Count} card(s), more than the {unplayableCount} counted for damage — toFree must be a subset");
         foreach (var card in toFree)
             UnplayableModifier.Remove(card);

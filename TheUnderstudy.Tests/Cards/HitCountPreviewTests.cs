@@ -20,7 +20,7 @@ public class HitCountPreviewTests
     public static IEnumerable<object[]> HitCountCards() => new List<object[]>
     {
         new object[] { typeof(CleanSlate) },
-        new object[] { typeof(LoosenUp) },
+        new object[] { typeof(LetLoose) },
     };
 
     [Theory]
