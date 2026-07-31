@@ -30,7 +30,7 @@ public class CardRarityMechanicCoverageTests
         {
             typeof(MaskDrop), typeof(BrightSide), typeof(Apathy),
             typeof(HeldNote), typeof(MyOwnLesson), typeof(OwnIt), typeof(UpsideDown),
-            typeof(StrikeAPose), typeof(SilverLining), typeof(BestOfBoth), typeof(TurnItAround),
+            typeof(StrikeAPose), typeof(SilverLining), typeof(BestOfBoth), typeof(Recovery),
         },
         ["Planned"] = new[]
         {
@@ -66,7 +66,7 @@ public class CardRarityMechanicCoverageTests
         {
             typeof(Improvise), typeof(LetLoose), typeof(Balanced),
             typeof(CleanSlate), typeof(SecondNature),
-            typeof(Composure), typeof(TurnItAround), typeof(GoForBroke),
+            typeof(Composure), typeof(Recovery), typeof(GoForBroke),
         },
         ["Vigor"] = new[]
         {

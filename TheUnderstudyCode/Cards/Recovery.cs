@@ -9,17 +9,21 @@ using TheUnderstudy.TheUnderstudyCode.Extensions;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
-// A full comeback swing: flip your debuffs to buffs, and clear the whole jammed hand.
-public class TurnItAround : UnderstudyCard
+// A full comeback swing: flip your debuffs to buffs, and clear the whole jammed hand. Pre-Tuned 1, so it
+// starts each combat already counting toward your Tuned board (and locks after its first play).
+public class Recovery : UnderstudyCard
 {
-    public const string CardId = "TheUnderstudy:TurnItAround";
+    public const string CardId = "TheUnderstudy:Recovery";
 
-    public TurnItAround() : base(0, CardType.Skill, CardRarity.Uncommon, TargetType.None)
+    public Recovery() : base(0, CardType.Skill, CardRarity.Uncommon, TargetType.None)
     {
         WithVars(new IntVar("Invert", 1));
         WithTip(UnderstudyKeywords.Invert);
         WithTip(CardKeyword.Unplayable);
+        WithTip(UnderstudyKeywords.Tuned);
     }
+
+    public override bool IsPreTuned => true;
 
     protected override void OnUpgrade()
     {

@@ -276,8 +276,8 @@
   "THEUNDERSTUDY-CONDUCTOR.title": "Conductor",
   "THEUNDERSTUDY-CONDUCTOR.description": "At the end of your turn, all allies gain [gold]Vigor[/gold] equal to your Vigor.",
 
-  "THEUNDERSTUDY-TURN_IT_AROUND.title": "Turn It Around",
-  "THEUNDERSTUDY-TURN_IT_AROUND.description": "[gold]Invert[/gold] {Invert:diff()}.\nRemove [gold]Unplayable[/gold] from all attacks and skills in hand.",
+  "THEUNDERSTUDY-RECOVERY.title": "Recovery",
+  "THEUNDERSTUDY-RECOVERY.description": "{InCombat:cond:|[gold]Tuned[/gold] 1.\n}[gold]Invert[/gold] {Invert:diff()}.\nRemove [gold]Unplayable[/gold] from all attacks and skills in hand.",
 
   "THEUNDERSTUDY-GO_FOR_BROKE.title": "Go for Broke",
   "THEUNDERSTUDY-GO_FOR_BROKE.description": "Remove [gold]Unplayable[/gold] from ALL attacks and skills in your entire deck.\nApply {Shaken:inverseDiff()} [gold]Shaken[/gold] to yourself.",
