@@ -133,8 +133,8 @@
   "THEUNDERSTUDY-UPSIDE_DOWN.title": "Upside Down",
   "THEUNDERSTUDY-UPSIDE_DOWN.description": "[gold]Invert[/gold] {Invert:diff()}.",
 
-  "THEUNDERSTUDY-DAZZLE.title": "Dazzle",
-  "THEUNDERSTUDY-DAZZLE.description": "[gold]Swap[/gold]{IfUpgraded:show: 3 times| twice}.",
+  "THEUNDERSTUDY-OUTPOUR.title": "Outpour",
+  "THEUNDERSTUDY-OUTPOUR.description": "[gold]Swap[/gold]{IfUpgraded:show: 3 times| twice}.",
 
   "THEUNDERSTUDY-CHARISMA.title": "Charisma",
   "THEUNDERSTUDY-CHARISMA.description": "Gain {Block:diff()} [gold]Block[/gold].\n[gold]Swap[/gold].",
@@ -240,8 +240,8 @@
   "THEUNDERSTUDY-STRIKE_A_POSE.title": "Strike a Pose",
   "THEUNDERSTUDY-STRIKE_A_POSE.description": "Deal {Damage:diff()} damage to a random enemy 3 times.\n[gold]Invert[/gold] {Invert:diff()}.",
 
-  "THEUNDERSTUDY-ALL_EYES_ON_ME.title": "All Eyes on Me",
-  "THEUNDERSTUDY-ALL_EYES_ON_ME.description": "Deal {Damage:diff()} damage to ALL enemies.\n[gold]Swap[/gold]{IfUpgraded:show: twice|}.",
+  "THEUNDERSTUDY-DAZZLE.title": "Dazzle",
+  "THEUNDERSTUDY-DAZZLE.description": "Deal {Damage:diff()} damage to ALL enemies.\n[gold]Swap[/gold]{IfUpgraded:show: twice|}.",
 
   "THEUNDERSTUDY-MELTDOWN.title": "Meltdown",
   "THEUNDERSTUDY-MELTDOWN.description": "Deal {Damage:diff()} damage to ALL enemies.\nApply {Vulnerable:inverseDiff()} [gold]Vulnerable[/gold] to yourself and 1 to ALL enemies.",

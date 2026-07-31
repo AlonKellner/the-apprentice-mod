@@ -6,27 +6,25 @@ using MegaCrit.Sts2.Core.Localization.DynamicVars;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
-// Hold the whole room at once: AoE hit, then push your debuffs onto them. (Swap = Audience / Interaction.)
-public class AllEyesOnMe : UnderstudyCard
+// The deck's single pure-Swap card: nothing but the debuff/buff-to-enemy swap.
+public class Outpour : UnderstudyCard
 {
-    public const string CardId = "TheUnderstudy:AllEyesOnMe";
+    public const string CardId = "TheUnderstudy:Outpour";
 
-    public AllEyesOnMe() : base(1, CardType.Attack, CardRarity.Common, TargetType.AllEnemies)
+    public Outpour() : base(1, CardType.Skill, CardRarity.Common, TargetType.None)
     {
-        WithDamage(6);
-        WithVars(new IntVar("Swap", 1));
+        WithVars(new IntVar("Swap", 2));
         WithTip(UnderstudyKeywords.Swap);
     }
 
     protected override void OnUpgrade()
     {
         base.OnUpgrade();
-        DynamicVars["Swap"].UpgradeValueBy(1m); // Swap -> Swap twice
+        DynamicVars["Swap"].UpgradeValueBy(1m); // Swap twice -> Swap 3 times
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
-        await CommonActions.CardAttack(cardPlay.Card, cardPlay).Execute(context);
         int repeats = (int)DynamicVars["Swap"].BaseValue;
         await SceneStealing.Swap(context, cardPlay.Card.Owner.Creature, repeats);
     }
