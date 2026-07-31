@@ -190,12 +190,14 @@ public class TunedModifierTests
         Assert.True(TunedModifier.IsFinalTunedPlay(secondPlay));
     }
 
-    // ── Damage/block delivery via BaseLib's card-modifier ModifyBase* contract ───────────────
-    // Tuned must deliver its bonus through CardModifier.ModifyBaseDamageAdditive /
-    // ModifyBaseBlockAdditive (invoked directly on cardSource.GetModifiers() by a Harmony patch),
-    // NOT the game's 5-arg AbstractModel.ModifyDamageAdditive/ModifyBlockAdditive hooks — those only
-    // reach card modifiers through the version-fragile run-state hook-listener chain, which is why
-    // damage silently stopped applying on some players' installs while block kept working.
+    // ── Damage/block delivery ────────────────────────────────────────────────────────────────
+    // DAMAGE goes through BaseLib's card-modifier contract: ModifyBaseDamageAdditive, invoked directly
+    // on cardSource.GetModifiers() by BaseLib's Harmony patch — NOT the game's 5-arg
+    // AbstractModel.ModifyDamageAdditive hook (version-fragile run-state hook-listener chain).
+    // BLOCK is delivered by the mod's own ModifyBaseBlockPatch reading Bonus directly (BaseLib's
+    // ModifyBaseBlockAdditive virtual is deprecated/non-functional and its signature drifted), so the
+    // block bonus is just Bonus — covered by Bonus_IsStacksTimesTunedCardCount below; the patch wiring
+    // itself is runtime-only (needs a live card + combat), per the repo's no-combat-harness note.
 
     private static void SetStacks(TunedModifier mod, int stacks) =>
         typeof(TunedModifier).GetProperty(nameof(TunedModifier.Stacks))!.SetValue(mod, stacks);
@@ -214,14 +216,6 @@ public class TunedModifierTests
     public void ModifyBaseDamageAdditive_IsOverride()
     {
         var method = typeof(TunedModifier).GetMethod(nameof(TunedModifier.ModifyBaseDamageAdditive));
-        Assert.NotNull(method);
-        Assert.True(method!.DeclaringType == typeof(TunedModifier));
-    }
-
-    [Fact]
-    public void ModifyBaseBlockAdditive_IsOverride()
-    {
-        var method = typeof(TunedModifier).GetMethod(nameof(TunedModifier.ModifyBaseBlockAdditive));
         Assert.NotNull(method);
         Assert.True(method!.DeclaringType == typeof(TunedModifier));
     }
@@ -262,13 +256,9 @@ public class TunedModifierTests
         Assert.Equal(0m, mod.ModifyBaseDamageAdditive(10m, ValueProp.Move | ValueProp.Unpowered));
     }
 
-    [Fact]
-    public void ModifyBaseBlockAdditive_ReturnsStacksScaledBonus()
-    {
-        var mod = new TunedWithCardCount(3);
-        SetStacks(mod, 2); // bonus = 6
-        Assert.Equal(6m, mod.ModifyBaseBlockAdditive(5m));
-    }
+    // Block delivery: ModifyBaseBlockPatch adds Bonus for a powered block. The bonus value is Bonus
+    // (asserted by Bonus_IsStacksTimesTunedCardCount); the patch's powered-block gate + hook wiring
+    // need a live card and combat, so they are verified in-game per the no-combat-harness note.
 
     [Fact]
     public void DoubleStacks_StacksOne_BecomesTwo()

@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.13.29: The Understudy's relics and potions now show the character's gold shadow in the compendium, like base-game characters.",
+  "changeNote": "v1.13.30: Fixed a crash from BaseLib 3.4.x changing its block-modifier API (Method not found: ModifyBaseBlockAdditive) that caused multiplayer state divergence on turn 1 and could crash single-player on Tuned block cards. Tuned's block bonus no longer touches the deprecated BaseLib method.",
   "tags": [],
   "dependencies": [
     3737335127

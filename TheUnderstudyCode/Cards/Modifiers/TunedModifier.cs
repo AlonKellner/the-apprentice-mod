@@ -133,31 +133,26 @@ public class TunedModifier : CardModifier
             mod!.Stacks *= 2;
     }
 
-    // ── Strength/Dexterity-style bonus, delivered via BaseLib's card-modifier contract ─────────
-    // These are the ModifyBase* hooks BaseLib invokes directly on the calculated card's own
-    // modifiers (cardSource.GetModifiers()): the damage side via BaseLib's ModifyBaseDamagePatches
-    // Harmony patch on Hook.ModifyDamage, the block side via our own ModifyBaseBlockPatch (BaseLib
-    // ships no block equivalent — see that class). We deliberately do NOT override the game's 5/6-arg
-    // AbstractModel.ModifyDamageAdditive / ModifyBlockAdditive: those only reach a card modifier
-    // through the game's hook-listener enumeration, whose signature and (for damage) run-state
-    // routing drift between game versions — a Slay the Spire 2 update that added a CardPlay? param
-    // to ModifyDamageAdditive silently unbound that override and killed Tuned's damage bonus for
-    // players on the newer build while Block (whose signature was unchanged) kept working. The
-    // ModifyBase* signatures are BaseLib-owned and stable across those game changes.
+    // ── Strength/Dexterity-style bonus ─────────────────────────────────────────────────────────
+    // DAMAGE is delivered through BaseLib's card-modifier contract: BaseLib's ModifyBaseDamagePatches
+    // Harmony patch on Hook.ModifyDamage invokes ModifyBaseDamageAdditive directly on the calculated
+    // card's own modifiers (cardSource.GetModifiers()). We deliberately do NOT override the game's
+    // 5/6-arg AbstractModel.ModifyDamageAdditive: it only reaches a card modifier through the game's
+    // hook-listener enumeration, whose signature and run-state routing drift between game versions.
     //
-    // BaseLib calls these only on THIS card's own modifiers, so no cardSource/Owner check is needed.
-    // originalDamage/originalBlock are unused — Tuned is a flat additive, like Strength/Dexterity.
-    // The powered-attack gate lives here (props is available); the powered-block gate lives in
-    // ModifyBaseBlockPatch, because BaseLib's ModifyBaseBlockAdditive virtual carries no props.
+    // BLOCK is delivered by our own ModifyBaseBlockPatch, which reads Bonus off this modifier DIRECTLY
+    // (see that class) rather than through BaseLib's CardModifier.ModifyBaseBlockAdditive virtual.
+    // BaseLib never bridged that block virtual and, as of 3.4.x, marked it [Obsolete("Not currently
+    // functional")] AND changed its signature (added a ValueProp param) — a mod compiled against the
+    // old one-arg signature threw MissingMethodException at runtime against the newer BaseLib. Reading
+    // Bonus keeps Tuned's block bonus off that drifting/deprecated API entirely.
+    //
+    // originalDamage is unused — Tuned is a flat additive, like Strength/Dexterity. The powered-attack
+    // gate lives here (props is available); the powered-block gate lives in ModifyBaseBlockPatch.
 
     public override decimal ModifyBaseDamageAdditive(decimal originalDamage, ValueProp props)
     {
         if (!props.IsPoweredAttack()) return 0m;
-        return Bonus;
-    }
-
-    public override decimal ModifyBaseBlockAdditive(decimal originalBlock)
-    {
         return Bonus;
     }
 

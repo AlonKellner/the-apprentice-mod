@@ -4,19 +4,21 @@ using HarmonyLib;
 using MegaCrit.Sts2.Core.Hooks;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.ValueProps;
+using TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
 
 namespace TheUnderstudy.TheUnderstudyCode.Patches;
 
 // Fills the block-side gap BaseLib left. BaseLib bridges card modifiers into the DAMAGE calculation
 // via ModifyBaseDamagePatches (a Harmony prefix on Hook.ModifyDamage that calls
-// modifier.ModifyBaseDamageAdditive on cardSource.GetModifiers()), but ships no equivalent for block:
-// CardModifier.ModifyBaseBlockAdditive exists as a virtual yet nothing ever invokes it. This mirrors
-// the damage patch on Hook.ModifyBlock so a card modifier can modify its card's Block through the same
-// version-stable ModifyBase* contract instead of the game's 6-arg AbstractModel.ModifyBlockAdditive
-// hook (whose signature drifts between game versions). Tuned is the only modifier that uses it today.
+// modifier.ModifyBaseDamageAdditive on cardSource.GetModifiers()), but ships no equivalent for block —
+// and its CardModifier.ModifyBaseBlockAdditive virtual was never invoked, then in 3.4.x marked
+// [Obsolete("Not currently functional")] with a changed signature (a ValueProp param added). Calling
+// that virtual from here crashed with MissingMethodException once players' Workshop BaseLib drifted
+// ahead of the mod's compile-time version. So this patch does NOT touch that virtual: it reads Tuned's
+// Bonus off the card's own TunedModifier directly, keeping Tuned's block bonus off the drifting API.
+// Tuned is the only modifier that adds Block today; if another is ever added, extend the check here.
 //
-// The powered-block gate lives here rather than in ModifyBaseBlockAdditive because BaseLib's
-// ModifyBaseBlockAdditive(decimal) virtual carries no ValueProp (unlike ModifyBaseDamageAdditive).
+// The powered-block gate lives here (props is available on this hook).
 [HarmonyPatch(typeof(Hook), nameof(Hook.ModifyBlock))]
 public static class ModifyBaseBlockPatch
 {
@@ -25,6 +27,7 @@ public static class ModifyBaseBlockPatch
     {
         if (cardSource == null || !props.IsPoweredCardOrMonsterMoveBlock()) return;
         foreach (CardModifier modifier in cardSource.GetModifiers())
-            block += modifier.ModifyBaseBlockAdditive(block);
+            if (modifier is TunedModifier tuned)
+                block += tuned.Bonus;
     }
 }
