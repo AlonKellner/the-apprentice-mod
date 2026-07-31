@@ -38,6 +38,11 @@ public class CardTooltipKeywordSyncTests
         ["Unshaken"] = "typeof(UnshakenPower)",
         ["Unjaded"] = "typeof(UnjadedPower)",
         ["Unlimited"] = "typeof(UnlimitedPower)",
+        ["Stable"] = "UnderstudyKeywords.Stable)",
+        // Replay is a base-game card keyword with no CardKeyword enum value and no Power — its explainer
+        // is the static hover tip StaticHoverTip.ReplayStatic (same one base-game HiddenGem uses when it
+        // grants Replay to another card). A card that only mentions Replay must add that tip explicitly.
+        ["Replay"] = "StaticHoverTip.ReplayStatic",
     };
 
     // Gold-highlighted terms that are just prose emphasis, not mechanics with their own tip
@@ -137,6 +142,47 @@ public class CardTooltipKeywordSyncTests
         }
 
         Assert.True(mismatches.Count == 0, $"{className}: " + string.Join("; ", mismatches));
+    }
+
+    // Comprehensive guard, and the reason this file exists at all: EVERY gold-highlighted keyword in a
+    // card's description — mod OR base game — must have a matching hover tip on that card. The
+    // bidirectional test above only iterates the curated TermToTipSubstring map, so a gold term that
+    // isn't in the map is silently ignored — which is how Master Form shipped mentioning [gold]Replay[/gold]
+    // (a base-game keyword) with no Replay tooltip. This test instead walks the actual gold terms in the
+    // description and fails on ANY that isn't either excluded prose or a recognized-and-tipped keyword.
+    // Adding a new keyword to a card therefore forces you to either register it here with the source
+    // substring proving its tip, or mark it excluded — the term can never slip through untipped.
+    [Theory]
+    [MemberData(nameof(AllCardFiles))]
+    public void Card_EveryGoldKeyword_HasATooltip(string filePath)
+    {
+        string className = Path.GetFileNameWithoutExtension(filePath);
+        string text = File.ReadAllText(filePath);
+
+        var descriptions = LoadDescriptions();
+        string key = "THEUNDERSTUDY-" + ToScreamingSnakeCase(className);
+        if (!descriptions.TryGetValue(key, out var description)) return; // missing-description is asserted above
+
+        var goldTerms = new HashSet<string>(
+            GoldTagPattern.Matches(description!).Select(m => m.Groups[1].Value),
+            StringComparer.OrdinalIgnoreCase);
+
+        var problems = new List<string>();
+        foreach (var term in goldTerms)
+        {
+            if (ExcludedTerms.Contains(term)) continue;
+            // Order/Orders has no tip-able backing type; Card_OrderMentions_AreTaggedRedNotGold owns
+            // enforcing it is [red], not [gold], so don't double-report it here.
+            if (OrderWordPattern.IsMatch(term)) continue;
+
+            if (!TermToTipSubstring.TryGetValue(term, out var tipSubstring))
+                problems.Add($"[gold]{term}[/gold] is not a recognized keyword — add a hover tip for it " +
+                             $"and register '{term}' in TermToTipSubstring (or add it to ExcludedTerms if it's plain emphasis)");
+            else if (!text.Contains(tipSubstring))
+                problems.Add($"[gold]{term}[/gold] has no matching hover tip (expected the card source to contain \"{tipSubstring}\")");
+        }
+
+        Assert.True(problems.Count == 0, $"{className}: " + string.Join("; ", problems));
     }
 
     // Order/Orders must always be tagged [red], never [gold] — it's the one term with no
