@@ -15,6 +15,11 @@ public class TheUnderstudyPotionPool : CustomPotionPoolModel
     // invisible, so use the character's gold accent — base-game characters all use a saturated color here.
     public override Color LabOutlineColor => TheUnderstudy.GoldColor;
 
+    // Mark the character's potions "seen" so the Potion Lab shows them in full — with the gold shadow above
+    // — like base-game character potions, instead of as dark "unknown" tiles (which never get the color).
+    // (Epoch-gated potions still show Locked until "Consumed" is revealed; Locked takes precedence.)
+    public override bool SeenByDefault => true;
+
     public override string BigEnergyIconPath => "charui/big_energy.png".ImagePath();
     public override string TextEnergyIconPath => "charui/text_energy.png".ImagePath();
 
