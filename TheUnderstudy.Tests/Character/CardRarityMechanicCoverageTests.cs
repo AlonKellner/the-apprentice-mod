@@ -66,7 +66,7 @@ public class CardRarityMechanicCoverageTests
         {
             typeof(Improvise), typeof(LoosenUp), typeof(Balanced),
             typeof(CleanSlate), typeof(SecondNature),
-            typeof(Revisit), typeof(Composure), typeof(TurnItAround), typeof(GoForBroke),
+            typeof(Resolve), typeof(Composure), typeof(TurnItAround), typeof(GoForBroke),
         },
         ["Vigor"] = new[]
         {

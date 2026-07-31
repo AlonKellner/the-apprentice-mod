@@ -212,8 +212,8 @@
   "THEUNDERSTUDY-PLAYLIST.title": "Playlist",
   "THEUNDERSTUDY-PLAYLIST.description": "Gain 1 [gold]Unweak[/gold], 1 [gold]Unvulnerable[/gold], 1 [gold]Unshaken[/gold], 1 [gold]Unlimited[/gold], and 1 [gold]Unjaded[/gold].{IfUpgraded:show:\nStarts each combat [gold]Planned[/gold].|}",
 
-  "THEUNDERSTUDY-REVISIT.title": "Revisit",
-  "THEUNDERSTUDY-REVISIT.description": "Deal {Damage:diff()} damage twice.\nRemove [gold]Unplayable[/gold] from all attacks and skills in hand.",
+  "THEUNDERSTUDY-RESOLVE.title": "Resolve",
+  "THEUNDERSTUDY-RESOLVE.description": "Deal {Damage:diff()} damage twice.\nRemove [gold]Unplayable[/gold] from all attacks and skills in hand.",
 
   "THEUNDERSTUDY-COMPOSURE.title": "Composure",
   "THEUNDERSTUDY-COMPOSURE.description": "Gain {Block:diff()} [gold]Block[/gold].\nRemove [gold]Unplayable[/gold] from all attacks and skills in hand.",
