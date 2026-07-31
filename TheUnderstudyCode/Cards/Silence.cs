@@ -17,7 +17,7 @@ public class Silence : UnderstudyCard
     public Silence() : base(2, CardType.Attack, CardRarity.Uncommon, TargetType.AllEnemies)
     {
         WithDamage(6);
-        WithVars(new IntVar("Vigor", 6));
+        WithVars(new IntVar("Vigor", 3));
         WithMarkedTip(typeof(VigorPower));
     }
 
