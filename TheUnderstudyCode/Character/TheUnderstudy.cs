@@ -45,6 +45,11 @@ public class TheUnderstudy : PlaceholderCharacterModel
 
     public static readonly Color Color = new("ffffff");
 
+    // The Understudy's gold accent (energy burst / map path). Used anywhere a saturated character color is
+    // wanted — including the compendium tile shadow (the relic/potion pools' LabOutlineColor) — since the
+    // white NameColor above reads as invisible there.
+    public static readonly Color GoldColor = new("f0c040");
+
     public override Color NameColor => Color;
     public override CharacterGender Gender => CharacterGender.Neutral;
     public override int StartingHp => 70;
@@ -52,7 +57,7 @@ public class TheUnderstudy : PlaceholderCharacterModel
     // Map path color: a warm golden tone matching the Understudy's gold palette (the energy-burst
     // f0c040), deliberately brighter and more yellow than the Regent's muted brown-orange (935206)
     // so the two characters' map trails read as clearly distinct.
-    public override Color MapDrawingColor => new("f0c040");
+    public override Color MapDrawingColor => GoldColor;
 
     public override IEnumerable<CardModel> StartingDeck =>
     [

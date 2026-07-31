@@ -11,7 +11,9 @@ namespace TheUnderstudy.TheUnderstudyCode.Character;
 
 public class TheUnderstudyPotionPool : CustomPotionPoolModel
 {
-    public override Color LabOutlineColor => TheUnderstudy.Color;
+    // The compendium (Potion Lab) tints each potion tile's shadow to this (at 66% alpha). White reads as
+    // invisible, so use the character's gold accent — base-game characters all use a saturated color here.
+    public override Color LabOutlineColor => TheUnderstudy.GoldColor;
 
     public override string BigEnergyIconPath => "charui/big_energy.png".ImagePath();
     public override string TextEnergyIconPath => "charui/text_energy.png".ImagePath();

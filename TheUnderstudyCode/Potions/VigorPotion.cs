@@ -18,5 +18,5 @@ public class VigorPotion : UnderstudyPotion
         new[] { HoverTipFactory.FromPower<VigorPower>() };
 
     protected override async Task OnUse(PlayerChoiceContext choiceContext, Creature? target) =>
-        await PowerCmd.Apply<VigorPower>(choiceContext, Owner.Creature, 10, Owner.Creature, null, false);
+        await PowerCmd.Apply<VigorPower>(choiceContext, Owner.Creature, 12, Owner.Creature, null, false);
 }
