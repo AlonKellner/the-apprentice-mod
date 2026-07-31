@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.13.32: Master Form now shows the Replay keyword tooltip. Added a test that flags any card whose description mentions a keyword (mod or base-game) without a matching tooltip.",
+  "changeNote": "v1.13.33: Fixed Planned play order in the draw/discard selection: it now follows your click order (the numbered badges) instead of an arbitrary internal order, so reordering mid-selection no longer makes the visual order disagree with the actual order. Especially relevant in multiplayer.",
   "tags": [],
   "dependencies": [
     3737335127

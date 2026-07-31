@@ -75,15 +75,28 @@ public static class PlannedGridSelectionPatch
         RenderBadges(__instance, order);
     }
 
-    // Runs before the base method sets the result and closes the screen: tear down badges and untag so
-    // later postfixes (e.g. UpdatePileContents fired from the same call) skip. The click order is NOT
-    // published anywhere — Planned slots are assigned in the synced selection-result order, not click
-    // order (see PlannedSelectionState); this order tracking drives the badge visual only.
+    // Runs before the base method reads _selectedCards to build its result and close the screen. Two jobs:
+    // (1) reorder the selection into the badge (click) order, and (2) tear down badges + untag so later
+    // postfixes (e.g. UpdatePileContents fired from the same call) skip.
+    //
+    // The grid stores selections in an UNORDERED HashSet, so without (1) the result — and in multiplayer
+    // the synced Planned slot numbers on every client — comes back in hash order, not the order the badges
+    // promised (reselecting a card to reorder just reshuffles the hash). This was the visual-vs-logical
+    // Planned order mismatch. A fresh HashSet built in click order enumerates in that order, and doing it
+    // here is deterministic in multiplayer: this prefix runs only on the SELECTING client, whose ordered
+    // result is turned into the index list that CardSelectCmd syncs to (and every client replays
+    // identically). It only changes which order those synced indexes are in — never diverging per client.
+    // (This is why the order is fixed on the result, not applied post-sync as PlannedSelectionState warns.)
     [HarmonyPatch(typeof(NCombatPileCardSelectScreen), "CompleteSelection")]
     [HarmonyPrefix]
     public static void CompleteSelectionPrefix(NCombatPileCardSelectScreen __instance)
     {
-        if (!Orders.TryGetValue(__instance, out _)) return;
+        if (!Orders.TryGetValue(__instance, out var order)) return;
+
+        var selected = SelectedCardsRef(__instance);
+        var ordered = PlannedSelectionState.ReorderByClickOrder(selected.ToList(), order);
+        SelectedCardsRef(__instance) = new HashSet<CardModel>(ordered);
+
         SelectionIndexBadge.ClearAll();
         Orders.Remove(__instance);
     }
