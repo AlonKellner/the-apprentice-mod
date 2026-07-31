@@ -66,7 +66,7 @@ public class CardRarityMechanicCoverageTests
         {
             typeof(Improvise), typeof(LetLoose), typeof(Balanced),
             typeof(CleanSlate), typeof(SecondNature),
-            typeof(Resolve), typeof(Composure), typeof(TurnItAround), typeof(GoForBroke),
+            typeof(Composure), typeof(TurnItAround), typeof(GoForBroke),
         },
         ["Vigor"] = new[]
         {
@@ -91,7 +91,7 @@ public class CardRarityMechanicCoverageTests
         },
         ["energy"] = new[]
         {
-            typeof(Forte), typeof(BurnOut),
+            typeof(Forte), typeof(BurnOut), typeof(Pumped),
         },
     };
 

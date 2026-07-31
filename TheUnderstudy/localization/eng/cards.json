@@ -49,7 +49,7 @@
   "THEUNDERSTUDY-CALLBACK.selectionPrompt": "Choose cards to make [gold]Planned[/gold].",
 
   "THEUNDERSTUDY-SPECTACLE.title": "Spectacle",
-  "THEUNDERSTUDY-SPECTACLE.description": "Play all [gold]Tuned[/gold] cards in a random order, at most once per turn.\nRemove [gold]Tuned[/gold] from all cards.",
+  "THEUNDERSTUDY-SPECTACLE.description": "Play all [gold]Tuned[/gold] cards, at most once per turn.\nRemove [gold]Tuned[/gold] from all cards.",
 
   "THEUNDERSTUDY-REPERTOIRE.title": "Repertoire",
   "THEUNDERSTUDY-REPERTOIRE.description": "{InCombat:cond:|[gold]Tuned[/gold] {Tuned:diff()}.\n}Deal {Damage:diff()} damage.\nGain {Block:diff()} [gold]Block[/gold].",
@@ -212,8 +212,8 @@
   "THEUNDERSTUDY-PLAYLIST.title": "Playlist",
   "THEUNDERSTUDY-PLAYLIST.description": "Gain 1 [gold]Unweak[/gold], 1 [gold]Unvulnerable[/gold], 1 [gold]Unshaken[/gold], 1 [gold]Unlimited[/gold], and 1 [gold]Unjaded[/gold].{IfUpgraded:show:\nStarts each combat [gold]Planned[/gold].|}",
 
-  "THEUNDERSTUDY-RESOLVE.title": "Resolve",
-  "THEUNDERSTUDY-RESOLVE.description": "Deal {Damage:diff()} damage twice.\nRemove [gold]Unplayable[/gold] from all attacks and skills in hand.",
+  "THEUNDERSTUDY-PUMPED.title": "Pumped",
+  "THEUNDERSTUDY-PUMPED.description": "Gain {Energy:energyIcons()} for each [gold]Unplayable[/gold] card in hand.{InCombat:\n(Gain {CalculatedEnergy:diff()})|}",
 
   "THEUNDERSTUDY-COMPOSURE.title": "Composure",
   "THEUNDERSTUDY-COMPOSURE.description": "Gain {Block:diff()} [gold]Block[/gold].\nRemove [gold]Unplayable[/gold] from all attacks and skills in hand.",

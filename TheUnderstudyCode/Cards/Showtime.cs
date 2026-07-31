@@ -14,7 +14,7 @@ public class Showtime : PlayAllPlannedCard
 {
     public const string CardId = "TheUnderstudy:Showtime";
 
-    public Showtime() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.AnyEnemy)
+    public Showtime() : base(1, CardType.Skill, CardRarity.Common, TargetType.AnyEnemy)
     {
         WithKeyword(CardKeyword.Retain, ConstructedCardModel.UpgradeType.Add);
         WithTip(UnderstudyKeywords.Planned);

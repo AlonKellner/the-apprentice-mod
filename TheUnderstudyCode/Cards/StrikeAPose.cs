@@ -6,8 +6,8 @@ using MegaCrit.Sts2.Core.Localization.DynamicVars;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
-// Strike a pose: three quick hits at random enemies, then flip a debuff. Random multi-hit sets it
-// apart from Resolve (its single-target twin). (Invert = Self / Positive / Fun theme.)
+// Strike a pose: three quick hits at random enemies, then flip a debuff. (Invert = Self / Positive /
+// Fun theme.)
 public class StrikeAPose : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:StrikeAPose";
