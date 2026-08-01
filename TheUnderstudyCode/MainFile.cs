@@ -1,6 +1,7 @@
 using Godot;
 using HarmonyLib;
 using MegaCrit.Sts2.Core.Modding;
+using TheUnderstudy.TheUnderstudyCode.Patches;
 using TheUnderstudy.TheUnderstudyCode.Timeline;
 
 namespace TheUnderstudy.TheUnderstudyCode;
@@ -22,5 +23,9 @@ public partial class MainFile : Node
 
         Harmony harmony = new(ModId);
         harmony.PatchAll();
+
+        // Give the reward-pool relics a generic outline texture so the compendium's colored-shadow branch
+        // has something to tint gold (see RelicOutlineOverride).
+        RelicOutlineOverride.Register();
     }
 }

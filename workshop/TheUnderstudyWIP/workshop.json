@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.13.42: Follow-up diagnostic - logs each Understudy relics icon/outline texture existence, plus base-game controls (Red Skull/Snecko Skull/Fencing Manual) for comparison. Open the Relic compendium and share the log.",
+  "changeNote": "v1.13.43: The Understudy reward-pool relics now show the gold character outline in the compendium, like base-game character relics (using a generic outline placeholder until per-relic art exists). Removed the diagnostic logging.",
   "tags": [],
   "dependencies": [
     3737335127
