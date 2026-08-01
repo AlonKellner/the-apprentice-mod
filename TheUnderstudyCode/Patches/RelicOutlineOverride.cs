@@ -16,7 +16,7 @@ namespace TheUnderstudy.TheUnderstudyCode.Patches;
 // (Book of Endings) are deliberately excluded.
 public static class RelicOutlineOverride
 {
-    private const string GenericOutline = MainFile.ResPath + "/images/relics/generic_relic_outline.png";
+    private const string GenericOutline = MainFile.ResPath + "/images/generic_outline.png";
 
     public static void Register()
     {
