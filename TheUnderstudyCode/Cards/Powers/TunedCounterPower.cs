@@ -25,9 +25,9 @@ public class TunedCounterPower : UnderstudyPower
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Counter;
 
-    // Share the existing Tuned/tension glyph rather than a dedicated (nonexistent) tuned_counter icon.
-    public override string? CustomPackedIconPath => "tension_power.png".PowerImagePath();
-    public override string? CustomBigIconPath => "tension_power.png".BigPowerImagePath();
+    // The dedicated Tuned icon (tuned_power.png).
+    public override string? CustomPackedIconPath => "tuned_power.png".PowerImagePath();
+    public override string? CustomBigIconPath => "tuned_power.png".BigPowerImagePath();
 
     private const string EmptyHeader = "You have no [gold]Tuned[/gold] cards";
     private const string NonEmptyHeader = "Your [gold]Tuned[/gold] cards:";

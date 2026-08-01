@@ -47,7 +47,7 @@ public static class CounterKeywordIconPatch
         if (tip.Icon != null && GodotObject.IsInstanceValid(tip.Icon)) return;
 
         // The canonical counter power's own icon (its CustomPackedIconPath: planned_counter_power.png /
-        // tension_power.png). null for any other keyword — leave those untouched.
+        // tuned_power.png). null for any other keyword — leave those untouched.
         Texture2D? icon =
             keyword == UnderstudyKeywords.Planned ? ModelDb.Power<PlannedCounterPower>().Icon
             : keyword == UnderstudyKeywords.Tuned ? ModelDb.Power<TunedCounterPower>().Icon

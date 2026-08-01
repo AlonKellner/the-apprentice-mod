@@ -19,9 +19,8 @@ public class FoldableStageRestSiteOption : CustomRestSiteOption
     public override string OptionId => Id;
 
     // Without a CustomIconPath the button falls back to the base game's Dig shovel (see
-    // DraftingPaperRestSiteOption). PLACEHOLDER: the Tension glyph — closest available to Tuned (strings under
-    // tension) — until dedicated rest-site art is drawn.
-    public override string? CustomIconPath => "powers/tension_power.png".ImagePath();
+    // DraftingPaperRestSiteOption). Uses the Tuned power icon until dedicated rest-site art is drawn.
+    public override string? CustomIconPath => "powers/tuned_power.png".ImagePath();
 
     public FoldableStageRestSiteOption(Player owner) : base(owner) { }
 
