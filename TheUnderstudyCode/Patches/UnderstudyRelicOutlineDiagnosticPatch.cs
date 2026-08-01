@@ -1,4 +1,6 @@
 using System.Linq;
+using System.Reflection;
+using Godot;
 using HarmonyLib;
 using MegaCrit.Sts2.Core.Entities.UI;
 using MegaCrit.Sts2.Core.Logging;
@@ -27,11 +29,19 @@ public static class UnderstudyRelicOutlineDiagnosticPatch
 {
     private static bool _loggedPools;
 
+    // Base-game character relics that DO get the colored outline — logged as a control so we can compare a
+    // working relic's icon/outline resolution against the Understudy's broken ones.
+    private static readonly string[] ControlRelics = { "RED_SKULL", "SNECKO_SKULL", "FENCING_MANUAL" };
+
     [HarmonyPostfix]
     public static void Postfix(RelicModel relic, ModelVisibility visibility)
     {
         var pool = ModelDb.RelicPool<TheUnderstudyRelicPool>();
-        if (!pool.AllRelicIds.Contains(relic.Id)) return; // only the Understudy's own relics
+        bool isUnderstudy = pool.AllRelicIds.Contains(relic.Id);
+        string idStr = relic.Id.ToString();
+        bool isControl = ControlRelics.Any(n => idStr.Contains(n));
+        if (!isUnderstudy && !isControl) return; // Understudy relics + a few base-game controls
+        string owner = isUnderstudy ? "UNDERSTUDY" : "BASEGAME";
 
         var charPools = ModelDb.AllCharacterRelicPools.ToList();
 
@@ -46,10 +56,21 @@ public static class UnderstudyRelicOutlineDiagnosticPatch
         var owningCharacterPool = charPools.FirstOrDefault(p => p.AllRelicIds.Contains(relic.Id));
         bool willColorOutline = visibility == ModelVisibility.Visible && owningCharacterPool != null;
 
-        Log.Info($"[UnderstudyRelicOutline] {relic.Id} rarity={relic.Rarity} visibility={visibility} " +
+        Log.Info($"[UnderstudyRelicOutline] [{owner}] {relic.Id} rarity={relic.Rarity} visibility={visibility} " +
                  $"understudyPoolInList={understudyPoolInList} " +
                  $"owningCharacterPool={owningCharacterPool?.GetType().Name ?? "NONE"} " +
                  $"labOutlineColor={(owningCharacterPool != null ? owningCharacterPool.LabOutlineColor.ToString() : "n/a")} " +
                  $"willColorOutline={willColorOutline}");
+
+        // The tint is set on the Outline TextureRect, whose TEXTURE is Model.IconOutline. If that texture
+        // is null/missing (custom relics have no entry in the base-game relic_outline_atlas and register no
+        // override), SelfModulate has nothing to color. Log whether the icon/outline resources exist.
+        string? outlinePath = typeof(RelicModel)
+            .GetProperty("PackedIconOutlinePath", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)
+            ?.GetValue(relic) as string;
+        bool iconExists = ResourceLoader.Exists(relic.PackedIconPath);
+        bool outlineExists = outlinePath != null && ResourceLoader.Exists(outlinePath);
+        Log.Info($"[UnderstudyRelicOutline]   [{owner}] assets: iconPath={relic.PackedIconPath} iconExists={iconExists} " +
+                 $"outlinePath={outlinePath ?? "null"} outlineExists={outlineExists} iconOutlineTextureNull={relic.IconOutline == null}");
     }
 }
