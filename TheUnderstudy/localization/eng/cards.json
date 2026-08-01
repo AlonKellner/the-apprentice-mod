@@ -143,11 +143,11 @@
   "THEUNDERSTUDY-MASK_DROP.description": "Deal {Damage:diff()} damage.\n[gold]Invert[/gold] {Invert:diff()}.\nApply {Vulnerable:inverseDiff()} [gold]Vulnerable[/gold] to yourself.",
 
   "THEUNDERSTUDY-MUSE.title": "Muse",
-  "THEUNDERSTUDY-MUSE.description": "At the start of your turn, apply [gold]Planned[/gold] to a card.",
+  "THEUNDERSTUDY-MUSE.description": "At the start of your turn, apply [gold]Planned[/gold] to an attack or skill in your hand.",
   "THEUNDERSTUDY-MUSE.selectionPrompt": "Choose cards to make [gold]Planned[/gold].",
 
   "THEUNDERSTUDY-PERFECTIONISM.title": "Perfectionism",
-  "THEUNDERSTUDY-PERFECTIONISM.description": "At the start of your turn, apply [gold]Tuned[/gold] to a card.",
+  "THEUNDERSTUDY-PERFECTIONISM.description": "At the start of your turn, apply [gold]Tuned[/gold] to an attack or skill in your hand.",
   "THEUNDERSTUDY-PERFECTIONISM.selectionPrompt": "Choose cards to make [gold]Tuned[/gold].",
 
   "THEUNDERSTUDY-MUSCLE_MEMORY.title": "Muscle Memory",
