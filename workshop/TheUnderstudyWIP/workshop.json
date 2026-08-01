@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.13.39: Tuned now has its own dedicated icon instead of borrowing the Tension glyph.",
+  "changeNote": "v1.13.40: Clean rebuild and re-upload (no gameplay changes since v1.13.39).",
   "tags": [],
   "dependencies": [
     3737335127
