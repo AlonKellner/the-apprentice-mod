@@ -10,6 +10,7 @@ using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.ValueProps;
 using TheUnderstudy.TheUnderstudyCode.Cards;
+using TheUnderstudy.TheUnderstudyCode.Cards.Powers;
 using TheUnderstudy.TheUnderstudyCode.Extensions;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
@@ -177,9 +178,13 @@ public class TunedModifier : CardModifier
         if (Stacks <= 0) return;
         string keywordTipId = HoverTipFactory.FromKeyword(UnderstudyKeywords.Tuned).Id;
         tips.RemoveAll(t => t.Id == keywordTipId);
+        // Carry the Tuned counter power's icon so this stack-aware tip matches the plain Tuned keyword tip
+        // (which gets the same icon via CounterKeywordIconPatch) and the Planned tooltip. Re-resolved per
+        // call (PowerModel.Icon is a cache-reuse load), so it's never a disposed cross-combat texture.
         tips.Add(new HoverTip(
             new LocString("card_keywords", "THEUNDERSTUDY-TUNED.title"),
-            TipDescription(Stacks)));
+            TipDescription(Stacks),
+            ModelDb.Power<TunedCounterPower>().Icon));
     }
 
     // UnderstudyKeywords.Tuned is NOT added here — that would create a second un-numbered

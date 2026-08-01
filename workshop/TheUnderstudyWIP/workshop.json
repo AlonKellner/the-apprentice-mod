@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.13.37: Muse and Perfectionism descriptions now say 'an attack or skill in your hand', matching the other Planned/Tuned cards.",
+  "changeNote": "v1.13.38: The Tuned keyword tooltip now shows the Tuned counter icon, matching the Planned tooltip - on both the plain keyword tip and the stack-aware 'Tuned N' tip.",
   "tags": [],
   "dependencies": [
     3737335127
