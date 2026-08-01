@@ -82,11 +82,18 @@ public static class PlannedGridSelectionPatch
     // The grid stores selections in an UNORDERED HashSet, so without (1) the result — and in multiplayer
     // the synced Planned slot numbers on every client — comes back in hash order, not the order the badges
     // promised (reselecting a card to reorder just reshuffles the hash). This was the visual-vs-logical
-    // Planned order mismatch. A fresh HashSet built in click order enumerates in that order, and doing it
-    // here is deterministic in multiplayer: this prefix runs only on the SELECTING client, whose ordered
-    // result is turned into the index list that CardSelectCmd syncs to (and every client replays
-    // identically). It only changes which order those synced indexes are in — never diverging per client.
-    // (This is why the order is fixed on the result, not applied post-sync as PlannedSelectionState warns.)
+    // Planned order mismatch. A fresh HashSet built in click order enumerates in that order.
+    //
+    // MULTIPLAYER-SAFE (audited): this runs ONLY on the selecting client. The grid screen is constructed
+    // solely in CardSelectCmd.FromCombatPile's ShouldSelectLocalCard (LocalContext.IsMe) branch — remote
+    // clients take WaitForRemoteChoice and never build the screen; and Orders is populated only by this
+    // screen's own Create/click postfixes, so the guard above no-ops anywhere it didn't open. The selecting
+    // client's ordered `result` is what CardSelectCmd syncs, whole, via FromMutableCombatCards(result) (an
+    // order-preserving list); every client receives the identical set AND order through AsCombatCards and
+    // applies Planned in it. So this only fixes WHICH order the one synced choice is in — it can never make
+    // clients diverge. Worst case (if the HashSet didn't preserve insertion order) is a cosmetic mismatch,
+    // still identical on all clients, never a desync. (This is why the order is fixed on the pre-sync
+    // result, not applied post-sync as PlannedSelectionState warns.)
     [HarmonyPatch(typeof(NCombatPileCardSelectScreen), "CompleteSelection")]
     [HarmonyPrefix]
     public static void CompleteSelectionPrefix(NCombatPileCardSelectScreen __instance)
