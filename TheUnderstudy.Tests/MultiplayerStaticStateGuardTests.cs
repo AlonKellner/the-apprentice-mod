@@ -32,6 +32,11 @@ public class MultiplayerStaticStateGuardTests
         // Transient [ThreadStatic] re-entrancy guards — single synchronous scope, never cross-client.
         "PlannedModifier.cs::_evaluatingQueueTarget",
         "StableEnforcer.cs::Enforcing",
+        // Ordered-resolver "prompt for the ally" flag. Set by AutoPlayOrdered and CONSUMED (read+cleared) at
+        // the top of the ally card's OnPlay before any pause, so its value is set/read by the same lockstep
+        // code on every client and never lingers across a choice pause to leak into another player's
+        // interleaved auto-play. Control-flow only (prompt vs random ally), no persisted gameplay state.
+        "AllyTargeting.cs::PromptAutoPlayedAlly",
         // Init-once keyword identities (registered from ModelDb at load, then read-only — like enum values,
         // identical on every client). Not per-combat gameplay state.
         "UnderstudyKeywords.cs::Planned",

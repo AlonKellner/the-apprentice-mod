@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.13.46: When Pass the Mic or Duet is auto-played by an ordered resolver (Workshop, Showtime, Da Capo, Spectacle), you now pick which ally to target via the normal targeting reticle, synced across clients. Remix (and the Intermission turn-end auto-play) still pick a random ally. No prompt appears with only one ally, so 2-player co-op is unchanged.",
+  "changeNote": "v1.13.47: The ally-selection prompt for Pass the Mic / Duet now happens during that card's own play (not the resolver's) and is paused correctly through the multiplayer action framework, fixing the state-divergence risk from v1.13.46. When an ordered resolver (Workshop/Showtime/Da Capo/Spectacle) auto-plays one, you pick the ally via the targeting reticle; Remix and the Intermission turn-end auto-play still pick randomly; no prompt appears with only one ally (2-player unchanged).",
   "tags": [],
   "dependencies": [
     3737335127

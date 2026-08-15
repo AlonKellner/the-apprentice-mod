@@ -2,11 +2,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Godot;
+using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Context;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
+using MegaCrit.Sts2.Core.Entities.Multiplayer;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.GameActions;
+using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Nodes.CommonUi;
 using MegaCrit.Sts2.Core.Nodes.Combat;
 using MegaCrit.Sts2.Core.Nodes.Multiplayer;
@@ -15,86 +19,119 @@ using MegaCrit.Sts2.Core.Runs;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
-// Target resolution for the AnyAlly co-op cards (Pass the Mic, Duet). A manual play sets cardPlay.Target
-// from the targeting reticle, but a Planned/Tuned resolver AUTO-plays cards with no reticle. Two behaviours:
+// Target resolution for the AnyAlly co-op cards (Pass the Mic, Duet). The ally choice lives inside each
+// card's OWN OnPlay (via ResolveTarget), so when a resolver auto-plays it the selection reticle is visibly
+// that card's — "who does Pass the Mic hand off to?" — not the resolver's.
 //
-//  • Resolve(picked, owner) — the defensive path used inside the cards' own OnPlay. Uses the picked target
-//    if it is a living ally, else a random living ally. Runs in lockstep OnPlay on every client and uses the
-//    shared deterministic RunState.Rng, so the random pick never diverges. (With the resolver wiring below it
-//    almost never has to fall back: the resolver already hands OnPlay a valid ally.)
+// Three cases:
+//  • Manual play — the targeting reticle already chose the ally in the UI before the action ran; use it.
+//  • Ordered-resolver auto-play (Workshop/Showtime/Da Capo/Spectacle) — the resolver flags the play via
+//    AutoPlayOrdered, so the card PROMPTS for the ally, paused SAFELY through the action framework.
+//  • Remix / Intermission auto-play — unflagged, so the card takes a random living ally (AutoPlay already
+//    seeded one), matching "Remix is the random resolver".
 //
-//  • Prompt(owner) — the ordered-resolver path (Workshop/Showtime/Da Capo/Spectacle). At the moment the
-//    resolver reaches an AnyAlly card it lets the ACTING player pick which ally via the combat targeting
-//    reticle, synced across clients exactly like base-game MendRestSiteOption (heal-a-teammate): reserve a
-//    choice id, the local player targets, the chosen player's NetId is broadcast, remote clients apply it.
-//    The chaotic resolver (Remix) and the automatic turn-end resolver (Intermission) deliberately DON'T call
-//    this — they hand null to AutoPlay, which picks a random ally itself. See the resolver call sites.
-//
-// Prompt short-circuits when there are 0-1 allies (no reticle at all), so in a 2-player co-op — where the one
-// teammate is the only possible target — nothing pops up; the prompt only ever appears with 3+ players, which
-// is exactly when the choice is meaningful.
+// The prompt mirrors CardSelectCmd's synced-choice pattern EXACTLY: ReserveChoiceId, then
+// SignalPlayerChoiceBegun to register the pause with the ActionExecutor, then the local reticle (or the
+// remote wait), SyncLocalChoice, and finally SignalPlayerChoiceEnded. The SignalPlayerChoiceBegun/Ended
+// brackets are what a previous version was missing — without them the raw reticle await ended up "Canceled
+// while paused" and desynced. See [[project_reticle_in_action_desync]].
 public static class AllyTargeting
 {
-    // Other living player-creatures (never self). Deterministic order across clients (by NetId) so any
-    // fallback pick is identical everywhere without consuming the RNG stream.
+    // Set true by an ORDERED resolver immediately around its AutoPlay of an AnyAlly card, telling that card
+    // to prompt for its ally (vs. Remix/Intermission, which leave it false → random ally). ResolveTarget
+    // reads AND clears it (consume-on-read) at the very top of the card's play — before any await that could
+    // pause — so its value is identical on every client (set/read by the same lockstep code) and can never
+    // linger across a pause to leak into another player's interleaved auto-play. AutoPlayOrdered's
+    // save/restore additionally covers the case where the card never reaches ResolveTarget (e.g. Unplayable,
+    // so AutoPlay no-ops before OnPlay). Vetted in MultiplayerStaticStateGuardTests.
+    public static bool PromptAutoPlayedAlly;
+
     private static List<Creature> LivingAllies(Creature self) =>
         (self.CombatState?.Allies ?? Enumerable.Empty<Creature>())
             .Where(c => c != null && c.IsAlive && c.IsPlayer && c != self)
             .OrderBy(c => c.Player!.NetId)
             .ToList();
 
-    public static Creature? Resolve(Creature? picked, Player owner)
+    // Auto-play one queued card for an ordered resolver. AnyAlly cards are flagged so they prompt for the
+    // ally inside their own OnPlay (target passed as null → AutoPlay seeds a random-ally fallback in case
+    // there's no prompt); every other card keeps the resolver's own (enemy) target.
+    public static async Task AutoPlayOrdered(PlayerChoiceContext context, CardModel card, Creature? resolverTarget)
     {
+        if (card.TargetType != TargetType.AnyAlly)
+        {
+            await CardCmd.AutoPlay(context, card, resolverTarget, AutoPlayType.None, false, false);
+            return;
+        }
+        var prev = PromptAutoPlayedAlly;
+        PromptAutoPlayedAlly = true;
+        try { await CardCmd.AutoPlay(context, card, null, AutoPlayType.None, false, false); }
+        finally { PromptAutoPlayedAlly = prev; }
+    }
+
+    // Decide an AnyAlly card's target, called at the top of the card's OnPlay. Null only when the caster has
+    // no living ally (the card then no-ops, which is correct — an ally card with no ally).
+    public static async Task<Creature?> ResolveTarget(PlayerChoiceContext context, CardPlay cardPlay)
+    {
+        // Consume the ordered-resolver flag immediately — BEFORE any await below can pause this action — so
+        // it can never leak into another player's interleaved auto-play while we're paused for our own choice.
+        bool prompt = PromptAutoPlayedAlly;
+        PromptAutoPlayedAlly = false;
+
+        var owner = cardPlay.Card.Owner;
         var allies = LivingAllies(owner.Creature);
         if (allies.Count == 0) return null;
-        if (picked != null && allies.Contains(picked)) return picked;
+
+        // Manual play: the reticle already picked a valid ally in the UI before this action ran.
+        if (!cardPlay.IsAutoPlay && cardPlay.Target is { } picked && allies.Contains(picked))
+            return picked;
+
+        // Ordered-resolver auto-play: prompt for the ally now, as part of THIS card's play.
+        if (prompt)
+            return await Prompt(context, owner, allies);
+
+        // Remix / Intermission / stray: a random living ally. Runs in lockstep OnPlay with the shared RNG,
+        // so the pick is identical on every client.
+        if (cardPlay.Target is { } t && allies.Contains(t)) return t;
         return owner.RunState.Rng.CombatTargets.NextItem(allies);
     }
 
-    // Synced ally prompt for the ordered resolvers. Returns the chosen ally, or null only when the caster has
-    // no living ally at all (AutoPlay then no-ops the card, which is correct — an ally card with no ally).
-    public static async Task<Creature?> Prompt(Player owner)
+    private static async Task<Creature?> Prompt(PlayerChoiceContext context, Player owner, List<Creature> allies)
     {
-        var self = owner.Creature;
-        var allies = LivingAllies(self);
-        if (allies.Count == 0) return null;
-        if (allies.Count == 1) return allies[0]; // only one possible target — skip the reticle entirely
+        if (allies.Count == 1) return allies[0]; // only one possible target — no pause, no reticle
 
-        // Both the acting client and every remote reserve the same choice id at the same logical point, then
-        // exactly one side (the acter) resolves it and broadcasts; the others wait for that broadcast.
         var sync = RunManager.Instance.PlayerChoiceSynchronizer;
         uint choiceId = sync.ReserveChoiceId(owner);
-
-        if (LocalContext.IsMe(owner))
+        // Register the pause with the action framework BEFORE the long reticle/remote await, exactly as
+        // CardSelectCmd does — this is what lets the ActionExecutor pause and cleanly resume the action.
+        await context.SignalPlayerChoiceBegun(owner, PlayerChoiceOptions.None);
+        Creature chosen;
+        try
         {
-            Creature? chosen = null;
-            try
+            if (LocalContext.IsMe(owner))
             {
-                chosen = await RunReticle(self);
+                Creature? picked = null;
+                try { picked = await RunReticle(owner.Creature); }
+                catch { picked = null; } // a UI failure must still broadcast a choice, never hang remotes
+                chosen = picked != null && allies.Contains(picked) ? picked : allies[0];
+                sync.SyncLocalChoice(owner, choiceId, PlayerChoiceResult.FromPlayerId(chosen.Player!.NetId));
             }
-            catch
+            else
             {
-                // A UI failure must never leave remote clients waiting forever — fall through to the
-                // deterministic fallback and still broadcast a choice below.
-                chosen = null;
+                var id = (await sync.WaitForRemoteChoice(owner, choiceId)).AsPlayerId();
+                var remote = id.HasValue ? owner.RunState.GetPlayer(id.Value)?.Creature : null;
+                chosen = remote != null && allies.Contains(remote) ? remote : allies[0];
             }
-            if (chosen == null || !allies.Contains(chosen)) chosen = allies[0];
-            sync.SyncLocalChoice(owner, choiceId, PlayerChoiceResult.FromPlayerId(chosen.Player!.NetId));
-            return chosen;
         }
-        else
+        finally
         {
-            var id = (await sync.WaitForRemoteChoice(owner, choiceId)).AsPlayerId();
-            var chosen = id.HasValue ? owner.RunState.GetPlayer(id.Value)?.Creature : null;
-            if (chosen == null || !allies.Contains(chosen)) chosen = allies[0];
-            return chosen;
+            await context.SignalPlayerChoiceEnded();
         }
+        return chosen;
     }
 
-    // Runs the same combat targeting reticle a manually-played AnyAlly card uses (SingleCreatureTargeting):
-    // AnyAlly restricts selectable nodes to other players, and combat creature nodes handle both mouse and
-    // controller natively, so no per-node focus wiring is needed. Local-only — only the acting client reaches
-    // this (gated by LocalContext.IsMe), so touching UI singletons here is safe.
+    // The same combat targeting reticle a manually-played AnyAlly card uses (SingleCreatureTargeting):
+    // AnyAlly restricts selectable nodes to other players, and combat creature nodes handle mouse and
+    // controller natively. Local-only — only the acting client reaches this (gated by LocalContext.IsMe).
     private static async Task<Creature?> RunReticle(Creature self)
     {
         var tm = NTargetManager.Instance;

@@ -90,13 +90,10 @@ public class Spectacle : PlayAllPlannedCard
                           $"re-targeted to {currentTarget?.LogName ?? "(none)"}");
             }
 
-            // An AnyAlly card (Pass the Mic / Duet) can't use our enemy target — let the acting player pick
-            // which ally, synced across clients (no prompt with 0-1 allies, i.e. in 2-player). Ordered
-            // resolver, so it prompts; Remix/Intermission hand null to AutoPlay and get a random ally.
-            var playTarget = card.TargetType == TargetType.AnyAlly
-                ? await AllyTargeting.Prompt(player)
-                : currentTarget;
-            await CardCmd.AutoPlay(context, card, playTarget, AutoPlayType.None, false, false);
+            // AnyAlly cards (Pass the Mic / Duet) prompt for the ally inside their OWN play, so the reticle
+            // is visibly that card's and the pause is handled safely there. AutoPlayOrdered flags the play so
+            // the card prompts; every other card keeps our enemy target. See AllyTargeting.
+            await AllyTargeting.AutoPlayOrdered(context, card, currentTarget);
         }
 
         // "Remove Tuned from ALL cards" — a fresh scan, not the captured list: a card played above may

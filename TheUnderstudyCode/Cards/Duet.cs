@@ -32,8 +32,9 @@ public class Duet : UnderstudyCard
         // Gain the flat Vigor first, so "equal to yours" below includes it.
         await PowerCmd.Apply<VigorPower>(context, self, (int)DynamicVars["Vigor"].BaseValue, self, cardPlay.Card, false);
 
-        // Fall back to a random living ally when auto-played by a Planned/Tuned resolver (no reticle).
-        if (AllyTargeting.Resolve(cardPlay.Target, cardPlay.Card.Owner) is not { } target) return;
+        // Reticle target on a manual play; a prompt here when an ordered resolver auto-plays this; a random
+        // ally under Remix. Null only when there is no living ally.
+        if (await AllyTargeting.ResolveTarget(context, cardPlay) is not { } target) return;
         int vigor = self.GetPowerAmount<VigorPower>();
         if (vigor > 0)
             await PowerCmd.Apply<VigorPower>(context, target, vigor, self, cardPlay.Card, false);
