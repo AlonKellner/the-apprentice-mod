@@ -115,7 +115,13 @@ public class Workshop : PlayAllPlannedCard
                           $"re-targeted to {currentTarget?.LogName ?? "(none)"}");
             }
 
-            await CardCmd.AutoPlay(context, card, currentTarget, AutoPlayType.None, false, false);
+            // An AnyAlly card (Pass the Mic / Duet) can't use our enemy target — let the acting player pick
+            // which ally, synced across clients (no prompt with 0-1 allies, i.e. in 2-player). Ordered
+            // resolver, so it prompts; Remix/Intermission hand null to AutoPlay and get a random ally.
+            var playTarget = card.TargetType == TargetType.AnyAlly
+                ? await AllyTargeting.Prompt(player)
+                : currentTarget;
+            await CardCmd.AutoPlay(context, card, playTarget, AutoPlayType.None, false, false);
         }
         PlannedModifier.InvokeChanged();
 
