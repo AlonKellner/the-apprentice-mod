@@ -36,6 +36,8 @@ public class Remix : PlayAllPlannedCard
         var allCardsList = PlannedModifier.RelevantCards(player).ToList();
         var planned = PlannedModifier.GetSorted(allCardsList);
         player.RunState.Rng.CombatCardSelection.Shuffle(planned);
+        // Shuffle-then-take = MaxPlays RANDOM slots in random order (no order guarantee).
+        planned = planned.Take(MaxPlays).ToList();
         Log.Info($"Remix.OnPlay: playing {planned.Count} Planned slot(s) in shuffled order, each independently retargeted");
         foreach (var (card, _, slotSeqIdx) in planned)
         {

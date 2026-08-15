@@ -6,7 +6,7 @@
   "THEUNDERSTUDY-UNDERSTUDY_DEFEND.description": "Gain {Block:diff()} [gold]Block[/gold].",
 
   "THEUNDERSTUDY-WORKSHOP.title": "Workshop",
-  "THEUNDERSTUDY-WORKSHOP.description": "Play all [gold]Planned[/gold] cards.\nApply [gold]Planned[/gold] to {Select:diff()} attacks and skills in your discard pile.",
+  "THEUNDERSTUDY-WORKSHOP.description": "Play 10 [gold]Planned[/gold] cards.\nApply [gold]Planned[/gold] to {Select:diff()} attacks and skills in your discard pile.",
   "THEUNDERSTUDY-WORKSHOP.selectionPrompt": "Choose cards to make [gold]Planned[/gold].",
 
   "THEUNDERSTUDY-HIGH_NOTE.title": "High Note",
@@ -61,7 +61,7 @@
   "THEUNDERSTUDY-ONE_UP.description": "{InCombat:cond:|[gold]Tuned[/gold] 1.\n}Deal {Damage:diff()} damage {Repeat:diff()} times.\nApply [gold]Tuned[/gold] to this card.",
 
   "THEUNDERSTUDY-DA_CAPO.title": "Da Capo",
-  "THEUNDERSTUDY-DA_CAPO.description": "Play all [gold]Planned[/gold] cards, at most once per turn.\nApply [gold]Planned[/gold] to each card played this way.",
+  "THEUNDERSTUDY-DA_CAPO.description": "Play 10 [gold]Planned[/gold] cards, at most once per turn.\nApply [gold]Planned[/gold] to each card played this way.",
 
   "THEUNDERSTUDY-BREAKING_VOICE.title": "Breaking Voice",
   "THEUNDERSTUDY-BREAKING_VOICE.description": "Deal {Damage:diff()} damage.\nGain {Vigor:diff()} [gold]Vigor[/gold].\nApply {Weak:inverseDiff()} [gold]Weak[/gold] to yourself.",
@@ -82,7 +82,7 @@
   "THEUNDERSTUDY-HELD_NOTE.description": "Turn-based buffs and debuffs no longer decrease by 1 each turn.",
 
   "THEUNDERSTUDY-SHOWTIME.title": "Showtime",
-  "THEUNDERSTUDY-SHOWTIME.description": "Play all [gold]Planned[/gold] cards, at most once per turn.",
+  "THEUNDERSTUDY-SHOWTIME.description": "Play 10 [gold]Planned[/gold] cards, at most once per turn.",
 
   "THEUNDERSTUDY-OWN_IT.title": "Own It",
   "THEUNDERSTUDY-OWN_IT.description": "[gold]Invert[/gold] {IfUpgraded:show:2|1}.\nGain each inverted buff X more times.",
@@ -100,7 +100,7 @@
   "THEUNDERSTUDY-SHOWSTOPPER.description": "{InCombat:cond:|[gold]Tuned[/gold] 1.\n}Deal {Damage:diff()} damage.",
 
   "THEUNDERSTUDY-REMIX.title": "Remix",
-  "THEUNDERSTUDY-REMIX.description": "Play all [gold]Planned[/gold] cards in a random order, at most once per turn.",
+  "THEUNDERSTUDY-REMIX.description": "Play 10 [gold]Planned[/gold] cards in a random order, at most once per turn.",
 
   "THEUNDERSTUDY-THE_SECOND_LESSON.title": "The Second Lesson",
   "THEUNDERSTUDY-THE_SECOND_LESSON.description": "Obey my [red][sine]Orders[/sine][/red], and be [gold]Rewarded[/gold].\nOtherwise, you'll be [gold]Punished[/gold].",
@@ -182,7 +182,7 @@
   "THEUNDERSTUDY-STEREO.description": "Double all gained [gold]Vigor[/gold].",
 
   "THEUNDERSTUDY-INTERMISSION.title": "Intermission",
-  "THEUNDERSTUDY-INTERMISSION.description": "When you end your turn without playing any card, play all [gold]Planned[/gold] cards.",
+  "THEUNDERSTUDY-INTERMISSION.description": "When you end your turn without playing any card, play 10 [gold]Planned[/gold] cards.",
 
   "THEUNDERSTUDY-THE_WALL.title": "The Wall",
   "THEUNDERSTUDY-THE_WALL.description": "Gain {Block:diff()} [gold]Block[/gold].\nApply {Vulnerable:inverseDiff()} [gold]Vulnerable[/gold] to yourself.",
@@ -265,7 +265,7 @@
   "THEUNDERSTUDY-DUET.description": "Gain {Vigor:diff()} [gold]Vigor[/gold].\nGrant an ally [gold]Vigor[/gold] equal to yours.",
 
   "THEUNDERSTUDY-PASS_THE_MIC.title": "Pass the Mic",
-  "THEUNDERSTUDY-PASS_THE_MIC.description": "[gold]Swap[/gold]{IfUpgraded:show: 3 times| twice} & [gold]Invert[/gold] {Invert:diff()} simultaneously for the target player.",
+  "THEUNDERSTUDY-PASS_THE_MIC.description": "[gold]Swap[/gold]{IfUpgraded:show: twice|} & [gold]Invert[/gold] {Invert:diff()} simultaneously for the target player.",
 
   "THEUNDERSTUDY-ANTAGONIST.title": "Antagonist",
   "THEUNDERSTUDY-ANTAGONIST.description": "Take all debuffs you can [gold]Swap[/gold] or [gold]Invert[/gold] from all allies.",

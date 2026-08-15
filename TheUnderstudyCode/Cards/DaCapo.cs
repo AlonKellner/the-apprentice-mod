@@ -45,7 +45,8 @@ public class DaCapo : PlayAllPlannedCard
         // that's guaranteed to sort after everything already in THIS locked list, so it's never a
         // member of `planned` and can't cause this loop to re-process what it just re-queued.
         var allCardsList = PlannedModifier.RelevantCards(player).ToList();
-        var planned = PlannedModifier.GetSorted(allCardsList);
+        // Play at most the first MaxPlays slots, in queue order.
+        var planned = PlannedModifier.GetSorted(allCardsList).Take(MaxPlays).ToList();
         Log.Info($"DaCapo.OnPlay: playing {planned.Count} Planned slot(s), re-queuing eligible cards afterward");
         var currentTarget = cardPlay.Target;
         foreach (var (card, _, slotSeqIdx) in planned)

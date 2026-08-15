@@ -5,11 +5,12 @@ using MegaCrit.Sts2.Core.Localization.DynamicVars;
 
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
-// Multiplayer "ultimate" Best of Both: step in for a castmate — run the whole Best of Both resolution FOR
-// them (their debuffs simultaneously flip into buffs on them and land on the enemies, and each enemy's buff
-// is stolen onto them). Shares BestOfBoth.ResolveFor so it stays identical. Cost 1; multiplayer cards run
-// hot. (Swap = Audience / Interaction, Invert = Self / Positive / Fun.) Named for handing the crowd over to
-// your partner — the room's attention becomes theirs for a moment. Was the original Duet.
+// Multiplayer Best of Both cast onto a teammate: run the whole Best of Both resolution FOR them (their
+// debuffs simultaneously flip into buffs on them and land on the enemies, and each enemy's buff is stolen
+// onto them). Shares BestOfBoth.ResolveFor and uses the SAME Swap/Invert values as Best of Both (1/1,
+// upgrading to 2/2) — it is simply Best of Both aimed at an ally. (Swap = Audience / Interaction, Invert =
+// Self / Positive / Fun.) Named for handing the crowd over to your partner — the room's attention becomes
+// theirs for a moment. Was the original Duet.
 public class PassTheMic : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:PassTheMic";
@@ -20,7 +21,7 @@ public class PassTheMic : UnderstudyCard
     // AnyAlly, not AnyPlayer: "another player" excludes yourself (Best of Both already covers your own creature).
     public PassTheMic() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.AnyAlly)
     {
-        WithVars(new IntVar("Swap", 2), new IntVar("Invert", 2));
+        WithVars(new IntVar("Swap", 1), new IntVar("Invert", 1));
         WithTip(UnderstudyKeywords.Swap);
         WithTip(UnderstudyKeywords.Invert);
     }
@@ -28,8 +29,8 @@ public class PassTheMic : UnderstudyCard
     protected override void OnUpgrade()
     {
         base.OnUpgrade();
-        DynamicVars["Swap"].UpgradeValueBy(1m);   // Swap twice -> Swap 3 times
-        DynamicVars["Invert"].UpgradeValueBy(1m); // 2 -> 3
+        DynamicVars["Swap"].UpgradeValueBy(1m);   // Swap -> Swap twice
+        DynamicVars["Invert"].UpgradeValueBy(1m); // 1 -> 2
     }
 
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)

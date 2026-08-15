@@ -48,8 +48,8 @@
   "THEUNDERSTUDY-HELD_NOTE_POWER.smartDescription": "Turn-based buffs and debuffs no longer decrease by 1 each turn.",
 
   "THEUNDERSTUDY-INTERMISSION_POWER.title": "Intermission",
-  "THEUNDERSTUDY-INTERMISSION_POWER.description": "When you end your turn without playing any card, play all [gold]Planned[/gold] cards.",
-  "THEUNDERSTUDY-INTERMISSION_POWER.smartDescription": "When you end your turn without playing any card, play all [gold]Planned[/gold] cards.",
+  "THEUNDERSTUDY-INTERMISSION_POWER.description": "When you end your turn without playing any card, play 10 [gold]Planned[/gold] cards.",
+  "THEUNDERSTUDY-INTERMISSION_POWER.smartDescription": "When you end your turn without playing any card, play 10 [gold]Planned[/gold] cards.",
 
   "THEUNDERSTUDY-INVERT_TRACKER_POWER.title": "Invert Tracker",
   "THEUNDERSTUDY-INVERT_TRACKER_POWER.description": "",

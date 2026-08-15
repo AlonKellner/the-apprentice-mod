@@ -26,6 +26,11 @@ public abstract class PlayAllPlannedCard(
     int cost, CardType type, CardRarity rarity, TargetType target, bool showInCardLibrary = true)
     : UnderstudyCard(cost, type, rarity, target, showInCardLibrary)
 {
+    // The play-all resolvers (and the Intermission power) play at most this many Planned slots per
+    // resolution — the first MaxPlays in queue order for the ordered resolvers, or MaxPlays random slots in
+    // random order for Remix. Keep in sync with the "10" in each resolver's loc description.
+    public const int MaxPlays = 10;
+
     private bool _resolvedThisTurn;
 
     // Whether this resolver may resolve the queue only ONCE per turn (the default: Remix/Showtime/DaCapo).

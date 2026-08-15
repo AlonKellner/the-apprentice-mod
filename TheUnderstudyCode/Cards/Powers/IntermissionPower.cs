@@ -53,7 +53,8 @@ public class IntermissionPower : UnderstudyPower
         var player = Owner.Player!;
         var combatState = Owner.CombatState!;
         var allCards = PlannedModifier.RelevantCards(player).ToList();
-        var planned = PlannedModifier.GetSorted(allCards);
+        // Play at most the first MaxPlays slots, in queue order.
+        var planned = PlannedModifier.GetSorted(allCards).Take(PlayAllPlannedCard.MaxPlays).ToList();
         Log.Info($"IntermissionPower.AfterSideTurnEnd: no card played this turn — auto-playing {planned.Count} Planned slot(s)");
         Creature? currentTarget = null;
 

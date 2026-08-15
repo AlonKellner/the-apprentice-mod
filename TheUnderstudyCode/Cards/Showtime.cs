@@ -42,7 +42,8 @@ public class Showtime : PlayAllPlannedCard
         // pass — every entry below always gets played regardless, and the per-entry guards just
         // avoid redoing (not re-playing) work another resolver already did.
         var allCardsList = PlannedModifier.RelevantCards(player).ToList();
-        var planned = PlannedModifier.GetSorted(allCardsList);
+        // Play at most the first MaxPlays slots, in queue order.
+        var planned = PlannedModifier.GetSorted(allCardsList).Take(MaxPlays).ToList();
         Log.Info($"Showtime.OnPlay: playing {planned.Count} Planned slot(s)");
         var currentTarget = cardPlay.Target;
         foreach (var (card, _, slotSeqIdx) in planned)
