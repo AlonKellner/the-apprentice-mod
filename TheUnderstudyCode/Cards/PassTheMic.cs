@@ -35,8 +35,9 @@ public class PassTheMic : UnderstudyCard
     protected override async Task OnPlay(PlayerChoiceContext context, CardPlay cardPlay)
     {
         // The chosen teammate's creature — the whole Best of Both resolution runs relative to them, exactly
-        // as it does for Best of Both's own owner (shared code, so the two never drift).
-        if (cardPlay.Target is not { } target) return;
+        // as it does for Best of Both's own owner (shared code, so the two never drift). AllyTargeting falls
+        // back to a random living ally when a Planned/Tuned resolver auto-plays this with no valid target.
+        if (AllyTargeting.Resolve(cardPlay.Target, cardPlay.Card.Owner) is not { } target) return;
         await BestOfBoth.ResolveFor(context, target,
             (int)DynamicVars["Swap"].BaseValue, (int)DynamicVars["Invert"].BaseValue);
     }
