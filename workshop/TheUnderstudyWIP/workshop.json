@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.13.48: The Planned resolvers now play at most 10 Planned cards instead of all - Workshop, Showtime, Da Capo and Intermission play the first 10 in order; Remix plays 10 random ones in random order (Spectacle's Tuned play-all is unchanged). Pass the Mic is now exactly Best of Both aimed at an ally: Swap and Invert reduced by 1 each (now 1/1, upgrading to 2/2).",
+  "changeNote": "v1.13.49: Reduced Motif's damage from 15 (20 upgraded) to 9 (12 upgraded).",
   "tags": [],
   "dependencies": [
     3737335127
