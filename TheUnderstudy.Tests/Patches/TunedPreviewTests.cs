@@ -102,6 +102,22 @@ public class TunedPreviewTests
         Assert.Equal(1, (int)damage.PreviewValue);
     }
 
+    // Regression for the One-Up bug: another preview pass could leave the Tuned bonus already in
+    // PreviewValue before Add ran (One-Up previewed 2 in the draw/deck view but 1 in hand). Add must
+    // assign PreviewValue absolutely (baseline + total), not `+= total`, so a pre-seeded value can't
+    // double it.
+    [Fact]
+    public void Add_PreSeededPreviewValue_DoesNotDoubleCount()
+    {
+        var damage = Damage(0);
+        damage.PreviewValue = 1; // pretend an earlier pass already showed the +1 Tuned bonus
+
+        TunedPreview.Add(damage, new Practice(), runGlobalHooks: false);
+
+        Assert.Equal(1, (int)damage.PreviewValue); // base 0 + Tuned 1, NOT 2
+        Assert.Equal(1, (int)damage.EnchantedValue);
+    }
+
     [Fact]
     public void ApplyOutOfRun_NonPreTunedCard_LeavesDamageAlone()
     {

@@ -1,13 +1,10 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using BaseLib.Extensions;
 using HarmonyLib;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
 using TheUnderstudy.TheUnderstudyCode.Cards;
 using TheUnderstudy.TheUnderstudyCode.Cards.Modifiers;
-using TheUnderstudy.TheUnderstudyCode.Extensions;
 
 namespace TheUnderstudy.TheUnderstudyCode.Patches;
 
@@ -58,9 +55,13 @@ public static class TunedPreview
         decimal baseline = card.Enchantment != null ? var.EnchantedValue : var.BaseValue;
         var.EnchantedValue = baseline + dynamicBasePart;
 
-        // Displayed value: the active in-hand preview already had the full Tuned bonus applied by the
-        // hook; pile & out-of-combat previews (no hooks ran) add it here.
-        if (!runGlobalHooks) var.PreviewValue += total;
+        // Displayed value: the active in-hand preview already had the full Tuned bonus applied by the hook,
+        // so leave PreviewValue alone (runGlobalHooks). For pile & out-of-combat previews (no hooks ran) set
+        // it ABSOLUTELY to baseline + total rather than `+= total`. A `+=` double-counted whenever some
+        // other preview pass had already seeded PreviewValue with the bonus before this postfix ran — e.g.
+        // One-Up read "base + Tuned" twice and showed 2 in the draw/deck view while showing 1 in hand. An
+        // absolute assignment is idempotent no matter what PreviewValue held on entry.
+        if (!runGlobalHooks) var.PreviewValue = baseline + total;
     }
 
     // ── Out-of-run surfaces (the Compendium) ────────────────────────────────────────────────────────
@@ -102,66 +103,14 @@ public static class TunedPreview
 public static class TunedDamagePreviewPatch
 {
     [HarmonyPostfix]
-    public static void Postfix(DamageVar __instance, CardModel card, bool runGlobalHooks)
-    {
-        decimal beforePreview = __instance.PreviewValue, beforeEnch = __instance.EnchantedValue;
+    public static void Postfix(DamageVar __instance, CardModel card, bool runGlobalHooks) =>
         TunedPreview.Add(__instance, card, runGlobalHooks);
-        TunedPreviewDiagnostics.Log("Damage", __instance, card, runGlobalHooks, beforePreview, beforeEnch);
-    }
 }
 
 [HarmonyPatch(typeof(BlockVar), nameof(BlockVar.UpdateCardPreview))]
 public static class TunedBlockPreviewPatch
 {
     [HarmonyPostfix]
-    public static void Postfix(BlockVar __instance, CardModel card, bool runGlobalHooks)
-    {
-        decimal beforePreview = __instance.PreviewValue, beforeEnch = __instance.EnchantedValue;
+    public static void Postfix(BlockVar __instance, CardModel card, bool runGlobalHooks) =>
         TunedPreview.Add(__instance, card, runGlobalHooks);
-        TunedPreviewDiagnostics.Log("Block", __instance, card, runGlobalHooks, beforePreview, beforeEnch);
-    }
-}
-
-// Temporary diagnostics for the "One-Up previews 2 in the deck view but 1 in hand" bug. Lives here (only
-// invoked from the Harmony postfixes above, never from a bare test) so its Log.* calls can't crash the test
-// host. Logs only for pre-Tuned / Tuned-carrying cards to limit spam, dumping enough to see which TunedParts
-// branch fired and the exact live Tuned-carrier set the Bonus multiplies by.
-public static class TunedPreviewDiagnostics
-{
-    public static void Log(string kind, DynamicVar var, CardModel card, bool runGlobalHooks,
-        decimal beforePreview, decimal beforeEnch)
-    {
-        bool hasMod = card.TryGetModifier<TunedModifier>(out var mod);
-        bool preTuned = card is UnderstudyCard { IsPreTuned: true };
-        if (!hasMod && !preTuned) return;
-
-        var (dynamicBasePart, total) = TunedPreview.TunedParts(card);
-
-        // Replicate TunedModifier.TunedCardCount's enumeration so we can SEE the carriers it counts.
-        string carriers = "n/a";
-        int count = -1;
-        try
-        {
-            if (card is { IsMutable: true } && card.Owner is { } player)
-            {
-                var found = player.Piles.Where(p => p.IsCombatPile).SelectMany(p => p.Cards)
-                    .Where(c => c.TryGetModifier<TunedModifier>(out _)).ToList();
-                count = found.Count;
-                carriers = string.Join(" | ", found.ConvertAll(c =>
-                {
-                    c.TryGetModifier<TunedModifier>(out var m);
-                    return $"{c.GetType().Name}#{c.GetHashCode()}[pile={c.Pile?.Type.ToString() ?? "null"},stacks={m?.Stacks}]";
-                }));
-            }
-        }
-        catch (Exception e) { carriers = "err:" + e.Message; }
-
-        MegaCrit.Sts2.Core.Logging.Log.Info(
-            $"[TunedPreviewDiag] {kind} {card.GetType().Name}#{card.GetHashCode()} " +
-            $"pile={card.Pile?.Type.ToString() ?? "null"} upgPrev={card.UpgradePreviewType} " +
-            $"runGlobalHooks={runGlobalHooks} combatNull={card.CombatState == null} runNull={card.RunState == null} " +
-            $"hasMod={hasMod} stacks={(hasMod ? mod!.Stacks : 0)} preTuned={preTuned} " +
-            $"TunedParts=({dynamicBasePart},{total}) carrierCount={count} carriers=[{carriers}] " +
-            $"BaseValue={var.BaseValue} Ench:{beforeEnch}->{var.EnchantedValue} Preview:{beforePreview}->{var.PreviewValue}");
-    }
 }
