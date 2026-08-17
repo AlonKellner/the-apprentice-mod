@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.13.49: Reduced Motif's damage from 15 (20 upgraded) to 9 (12 upgraded).",
+  "changeNote": "v1.13.50: Diagnostic build - adds [TunedPreviewDiag] logging to investigate One-Up showing the wrong damage in the deck view. No gameplay changes.",
   "tags": [],
   "dependencies": [
     3737335127
