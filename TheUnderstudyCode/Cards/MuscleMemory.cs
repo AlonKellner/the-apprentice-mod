@@ -10,7 +10,7 @@ public class MuscleMemory : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:MuscleMemory";
 
-    public MuscleMemory() : base(2, CardType.Power, CardRarity.Rare, TargetType.None)
+    public MuscleMemory() : base(3, CardType.Power, CardRarity.Rare, TargetType.None)
     {
         WithCostUpgradeBy(-1);
         WithPowerNoTip<MuscleMemoryPower>(1, 1);

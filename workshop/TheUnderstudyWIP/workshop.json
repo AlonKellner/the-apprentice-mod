@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.13.51: Fixed Tuned cards (e.g. One-Up) previewing double their damage/Block in the draw-pile and deck views (it showed 2 while hand showed 1). The Tuned preview bonus is now applied idempotently, so a second preview pass can't double it. Removes the v1.13.50 diagnostic logging.",
+  "changeNote": "v1.13.52: Increased Muscle Memory's cost from 2 (1 upgraded) to 3 (2 upgraded).",
   "tags": [],
   "dependencies": [
     3737335127
