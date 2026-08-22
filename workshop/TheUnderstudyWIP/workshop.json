@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.13.54: Clean Slate now deals 1 damage per exhausted card (down from 3/4), unchanged on upgrade; the base card now Exhausts, and the upgrade removes the Exhaust.",
+  "changeNote": "v1.13.55: Clean Slate now deals 0 base damage per exhausted card (down from 3/4), unchanged on upgrade; the base card Exhausts, and the upgrade removes the Exhaust. (Its damage comes from Tuned.)",
   "tags": [],
   "dependencies": [
     3737335127

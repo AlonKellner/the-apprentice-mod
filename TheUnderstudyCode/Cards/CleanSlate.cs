@@ -18,7 +18,7 @@ public class CleanSlate : UnderstudyCard
 
     public CleanSlate() : base(1, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
     {
-        WithDamage(1);
+        WithDamage(0);
         // Base card Exhausts after playing (one-shot); the upgrade removes Exhaust so it can be reused.
         WithKeyword(CardKeyword.Exhaust, ConstructedCardModel.UpgradeType.Remove);
         // Live "(Hits N times)" preview: N = number of Unplayable cards this will Exhaust and hit
