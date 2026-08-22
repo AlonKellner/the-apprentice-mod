@@ -38,8 +38,7 @@ public class Spectacle : PlayAllPlannedCard
     // value there (bare-construction tests, card library previews, etc).
     public override TargetType TargetType =>
         IsMutable
-            ? (TunedModifier.TunedCards(Owner).Any(c => c.TargetType == TargetType.AnyEnemy)
-                ? TargetType.AnyEnemy : TargetType.None)
+            ? (TunedModifier.TunedQueueNeedsEnemyTarget(Owner) ? TargetType.AnyEnemy : TargetType.None)
             : base.TargetType;
 
     // What this one resolves is the Tuned board, not the Planned queue — nothing to cash out when empty.

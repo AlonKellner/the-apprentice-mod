@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.13.56: Diagnostic build for the stack-overflow crash during Planned-heavy resolution (Workshop + Da Capo). Adds a recursion guard that logs the offending call stack ([RecursionDiag]) and short-circuits BEFORE the crash, so the game should no longer hard-crash in that spot. No intended gameplay change.",
+  "changeNote": "v1.13.57: Fixed the crash (stack overflow) when a Tuned Spectacle was in play - Spectacle's target type infinitely recursed because it scanned every Tuned card's target type, including its own. Now re-entrancy-guarded like the other Planned/Tuned resolvers. Removed the v1.13.56 diagnostic.",
   "tags": [],
   "dependencies": [
     3737335127

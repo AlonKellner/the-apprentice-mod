@@ -53,11 +53,6 @@ public class PlannedCounterPower : UnderstudyPower
 
     private void UpdateDisplayIfChanged()
     {
-        // DIAGNOSTIC (RecursionDiag): this is the PlannedModifier.Changed subscriber and fires after every
-        // Apply; if it (or something it triggers) re-enters Changed, short-circuit + dump the stack once.
-        if (!RecursionDiag.Enter(nameof(PlannedCounterPower) + "." + nameof(UpdateDisplayIfChanged))) return;
-        try
-        {
         var allCards = PlannedModifier.RelevantCards(Owner?.Player).ToList();
         PlannedModifier.RefreshVisualIndices(allCards);
         var sorted = PlannedModifier.GetSorted(allCards);
@@ -78,8 +73,6 @@ public class PlannedCounterPower : UnderstudyPower
         ((StringVar)DynamicVars["Header"]).StringValue = current.Length == 0 ? EmptyHeader : NonEmptyHeader;
         ((StringVar)DynamicVars["CardList"]).StringValue = current;
         InvokeDisplayAmountChanged();
-        }
-        finally { RecursionDiag.Leave(); }
     }
 
     public override Task AfterApplied(Creature? creature, CardModel? card)

@@ -82,6 +82,22 @@ public class TunedModifier : CardModifier
             : player.Piles.Where(p => p.Type.IsCombatPile()).SelectMany(p => p.Cards)
                 .Where(c => c.TryGetModifier<TunedModifier>(out _));
 
+    // Re-entrancy guard for the Spectacle-target question below — the exact analogue of
+    // PlannedModifier.QueueNeedsEnemyTarget's _evaluatingQueueTarget. Spectacle can itself be Tuned, so it
+    // appears in TunedCards; reading its TargetType while answering "does any Tuned card want an enemy?"
+    // would re-enter this method forever (a stack-overflow crash) without the flag.
+    [ThreadStatic] private static bool _evaluatingTunedTarget;
+
+    // Whether any Tuned card in the player's combat piles wants an enemy target — Spectacle.TargetType uses
+    // this instead of scanning c.TargetType inline, so a Tuned Spectacle can't recurse into its own getter.
+    public static bool TunedQueueNeedsEnemyTarget(Player? player)
+    {
+        if (_evaluatingTunedTarget) return false;
+        _evaluatingTunedTarget = true;
+        try { return TunedCards(player).Any(c => c.TargetType == TargetType.AnyEnemy); }
+        finally { _evaluatingTunedTarget = false; }
+    }
+
     // Any non-Stable Attack/Skill is eligible — matches PlannedModifier/UnplayableModifier's own
     // eligibility check. A card with no Damage/Block var (e.g. Workshop-shaped utility Skills)
     // still becomes Unplayable when played; it just gets zero numeric bonus from

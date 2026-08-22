@@ -27,28 +27,19 @@ public static class CardExtensions
         // instantiated cards in tests, or any other out-of-combat context.
         if (card.Keywords.Contains(CardKeyword.Unplayable))
             return true;
-        // DIAGNOSTIC (RecursionDiag): if this is being re-entered pathologically deep, short-circuit to the
-        // keyword-only result rather than recursing into CanPlay again — averts the stack-overflow crash and
-        // logs the offending stack once. Placed after the cheap keyword check so the fallback is meaningful.
-        if (!RecursionDiag.Enter(nameof(IsUnplayable)))
-            return false;
-        try
-        {
-            var kw = new HashSet<CardKeyword>();
-            foreach (var mod in CardModifier.DirectModifiers(card))
-                mod.TryModifyKeywordsInCombat(card, kw);
-            if (kw.Contains(CardKeyword.Unplayable))
-                return true;
+        var kw = new HashSet<CardKeyword>();
+        foreach (var mod in CardModifier.DirectModifiers(card))
+            mod.TryModifyKeywordsInCombat(card, kw);
+        if (kw.Contains(CardKeyword.Unplayable))
+            return true;
 
-            // Broader "functionally unplayable" reasons — a hook blocking it (e.g. base-game Smog),
-            // the card's own built-in play condition, or no valid ally target — the same "crossed
-            // out" look the player reads as "this card is stuck." Only assessable with a live
-            // CombatState; CanPlay() is a graceful no-op (returns false with reason None) without one.
-            if (!card.CanPlay(out var reason, out _))
-                return IsFunctionallyUnplayableReason(reason);
-            return false;
-        }
-        finally { RecursionDiag.Leave(); }
+        // Broader "functionally unplayable" reasons — a hook blocking it (e.g. base-game Smog),
+        // the card's own built-in play condition, or no valid ally target — the same "crossed
+        // out" look the player reads as "this card is stuck." Only assessable with a live
+        // CombatState; CanPlay() is a graceful no-op (returns false with reason None) without one.
+        if (!card.CanPlay(out var reason, out _))
+            return IsFunctionallyUnplayableReason(reason);
+        return false;
     }
 
     // Whether any card in the given set is Unplayable, regardless of type — broader than

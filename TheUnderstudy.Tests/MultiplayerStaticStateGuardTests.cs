@@ -31,6 +31,7 @@ public class MultiplayerStaticStateGuardTests
     {
         // Transient [ThreadStatic] re-entrancy guards — single synchronous scope, never cross-client.
         "PlannedModifier.cs::_evaluatingQueueTarget",
+        "TunedModifier.cs::_evaluatingTunedTarget",
         "StableEnforcer.cs::Enforcing",
         // Ordered-resolver "prompt for the ally" flag. Set by AutoPlayOrdered and CONSUMED (read+cleared) at
         // the top of the ally card's OnPlay before any pause, so its value is set/read by the same lockstep
