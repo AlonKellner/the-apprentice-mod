@@ -37,9 +37,9 @@ public class Foreshadow : UnderstudyCard
         var player = cardPlay.Card.Owner;
         int maxSelect = (int)DynamicVars["Select"].BaseValue;
         var pile = PileType.Draw.GetPile(player);
-        var selected = await ExactPileSelection.Select(
+        var selected = await PlannedSelection.FromPile(
             context, pile, player, maxSelect, "THEUNDERSTUDY-FORESHADOW.selectionPrompt",
-            c => PlannedModifier.CanApplyTo(c), armPlannedBadges: true);
+            c => PlannedModifier.CanApplyTo(c));
 
         foreach (var card in PlannedSelectionState.InClickOrder(selected.ToList()))
             PlannedModifier.Apply(card, CombatState!);

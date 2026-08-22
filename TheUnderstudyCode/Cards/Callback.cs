@@ -37,10 +37,10 @@ public class Callback : UnderstudyCard
         await CommonActions.CardAttack(cardPlay.Card, cardPlay).Execute(context);
 
         var player = cardPlay.Card.Owner;
-        var selected = await ExactPileSelection.Select(
+        var selected = await PlannedSelection.FromPile(
             context, PileType.Discard.GetPile(player), player, (int)DynamicVars["Select"].BaseValue,
             "THEUNDERSTUDY-CALLBACK.selectionPrompt",
-            c => c != this && PlannedModifier.CanApplyTo(c), armPlannedBadges: true);
+            c => c != this && PlannedModifier.CanApplyTo(c));
 
         foreach (var card in PlannedSelectionState.InClickOrder(selected.ToList()))
             PlannedModifier.Apply(card, CombatState!);

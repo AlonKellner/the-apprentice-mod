@@ -38,14 +38,9 @@ public class KeepInMind : UnderstudyCard
 
         var player = cardPlay.Card.Owner;
         int maxSelect = (int)DynamicVars["Select"].BaseValue;
-        if (MultiplayerUtil.IsLocalPlayer(player)) PlannedSelectionState.Arm();
-        var selected = await CardSelectCmd.FromHand(
-            context,
-            player,
-            new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-KEEP_IN_MIND.selectionPrompt"),maxSelect),
-            c => c != this && PlannedModifier.CanApplyTo(c) && TunedModifier.CanApplyTo(c),
-            this);
-        if (selected == null) return;
+        var selected = await PlannedSelection.FromHand(
+            context, player, maxSelect, "THEUNDERSTUDY-KEEP_IN_MIND.selectionPrompt",
+            c => c != this && PlannedModifier.CanApplyTo(c) && TunedModifier.CanApplyTo(c), this);
 
         foreach (var card in PlannedSelectionState.InClickOrder(selected.ToList()))
         {

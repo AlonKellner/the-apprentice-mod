@@ -37,15 +37,10 @@ public class Orchestration : UnderstudyCard
 
         var player = cardPlay.Card.Owner;
         int maxSelect = (int)DynamicVars["Select"].BaseValue;
-        if (MultiplayerUtil.IsLocalPlayer(player)) PlannedSelectionState.Arm();
-        var selected = await CardSelectCmd.FromHand(
-            context,
-            player,
-            new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-ORCHESTRATION.selectionPrompt"),maxSelect),
-            c => c != this && PlannedModifier.CanApplyTo(c),
-            this);
+        var selected = await PlannedSelection.FromHand(
+            context, player, maxSelect, "THEUNDERSTUDY-ORCHESTRATION.selectionPrompt",
+            c => c != this && PlannedModifier.CanApplyTo(c), this);
 
-        if (selected == null) return;
         foreach (var card in PlannedSelectionState.InClickOrder(selected.ToList()))
             PlannedModifier.Apply(card, CombatState!);
     }

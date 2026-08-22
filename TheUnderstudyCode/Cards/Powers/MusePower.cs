@@ -23,15 +23,10 @@ public class MusePower : UnderstudyPower
     {
         if (player != Owner.Player) return;
         int maxSelect = (int)Amount;
-        if (MultiplayerUtil.IsLocalPlayer(player)) PlannedSelectionState.Arm();
-        var selected = await CardSelectCmd.FromHand(
-            context,
-            player,
-            new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-MUSE.selectionPrompt"),maxSelect),
-            PlannedModifier.CanApplyTo,
-            this);
-        if (selected == null) return;
-        foreach (var card in selected)
+        var selected = await PlannedSelection.FromHand(
+            context, player, maxSelect, "THEUNDERSTUDY-MUSE.selectionPrompt",
+            PlannedModifier.CanApplyTo, this);
+        foreach (var card in PlannedSelectionState.InClickOrder(selected))
             PlannedModifier.Apply(card, Owner.CombatState!);
     }
 }
