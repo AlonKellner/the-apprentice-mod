@@ -222,12 +222,27 @@ public class PlannedModifier : CardModifier
         // of failure — only reconstructible after the fact from timing. If slot derivation ever falls
         // out of step with live card state again (a future caller mutating SequenceIndices out of
         // band, an unanticipated edge case, etc.), this fires immediately and points at the exact slot.
-        int collisions = RelevantCards(card.Owner).Count(c => c != card
-            && c.TryGetModifier<PlannedModifier>(out var other) && other.SequenceIndices.Contains(newSlot));
-        Invariants.Check(collisions == 0,
-            nameof(PlannedModifier) + "." + nameof(Apply),
-            $"slot {newSlot} assigned to {card.Id} is already held by {collisions} other card(s) — " +
-            "monotonic counter desynced from live state");
+        var colliders = RelevantCards(card.Owner).Where(c => c != card
+            && c.TryGetModifier<PlannedModifier>(out var other) && other.SequenceIndices.Contains(newSlot)).ToList();
+        if (colliders.Count > 0)
+        {
+            // DIAGNOSTIC: identify the colliding card(s) and — crucially — whether they SHARE the same
+            // SequenceIndices list instance as `card` (sharesList=True). Shared-list aliasing (a shallow
+            // modifier clone that never went through ReinitCollections) is the leading suspected cause:
+            // writing a slot to one card then also "appears" on its alias, so NextSlotFor and the live
+            // state disagree. See the DaCapo-requeue / pre-Planned multi-slot desync investigation.
+            string detail = string.Join("; ", colliders.Select(c =>
+            {
+                c.TryGetModifier<PlannedModifier>(out var o);
+                return $"{c.Id}#{c.GetHashCode()} pile={c.Pile?.Type.ToString() ?? "null"} " +
+                       $"slots=[{string.Join(",", o!.SequenceIndices)}] " +
+                       $"sharesList={ReferenceEquals(o.SequenceIndices, mod.SequenceIndices)}";
+            }));
+            Invariants.Check(false, nameof(PlannedModifier) + "." + nameof(Apply),
+                $"slot {newSlot} assigned to {card.Id}#{card.GetHashCode()} " +
+                $"(pile={card.Pile?.Type.ToString() ?? "null"}, slots=[{string.Join(",", mod.SequenceIndices)}]) " +
+                $"is already held by {colliders.Count} other card(s): {detail} — monotonic counter desynced from live state");
+        }
 
         // Muscle Memory immunity (Tuned cards) is enforced centrally in
         // UnplayableModifier.OnInitialApplication — a Planned Tuned card under Muscle Memory simply
