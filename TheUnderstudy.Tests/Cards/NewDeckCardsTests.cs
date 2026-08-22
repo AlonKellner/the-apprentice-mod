@@ -106,8 +106,14 @@ public class NewDeckCardsTests
     public void CleanSlate_IsPreTuned() => Assert.True(new CleanSlate().IsPreTuned);
 
     [Fact]
-    public void CleanSlate_DamageIs3() =>
-        Assert.Equal(3m, new CleanSlate().DynamicVars.Damage.BaseValue);
+    public void CleanSlate_DamageIs1() =>
+        Assert.Equal(1m, new CleanSlate().DynamicVars.Damage.BaseValue);
+
+    // Base card Exhausts (one-shot); the upgrade removes Exhaust (declared via UpgradeType.Remove, same as
+    // Remix). Bare state is checked here; the upgrade removal is verified in-game.
+    [Fact]
+    public void CleanSlate_BaseHasExhaust() =>
+        Assert.True(new CleanSlate().Keywords.Contains(CardKeyword.Exhaust));
 
     [Fact]
     public void Experience_HasNoExhaust_AndIsPrePlannedOnlyWhenUpgraded()

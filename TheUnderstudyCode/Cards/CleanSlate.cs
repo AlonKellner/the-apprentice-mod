@@ -18,7 +18,9 @@ public class CleanSlate : UnderstudyCard
 
     public CleanSlate() : base(1, CardType.Attack, CardRarity.Rare, TargetType.AnyEnemy)
     {
-        WithDamage(3);
+        WithDamage(1);
+        // Base card Exhausts after playing (one-shot); the upgrade removes Exhaust so it can be reused.
+        WithKeyword(CardKeyword.Exhaust, ConstructedCardModel.UpgradeType.Remove);
         // Live "(Hits N times)" preview: N = number of Unplayable cards this will Exhaust and hit
         // (CalculationBase 0 + CalculationExtra 1 * count). Mirrors base-game FlakCannon.
         WithVars(
@@ -36,12 +38,6 @@ public class CleanSlate : UnderstudyCard
         PlannedModifier.RelevantCards(card.Owner).Where(c => c != card && c.IsUnplayable()).ToList();
 
     public override bool IsPreTuned => true;
-
-    protected override void OnUpgrade()
-    {
-        base.OnUpgrade();
-        DynamicVars.Damage.UpgradeValueBy(1m);
-    }
 
     protected override bool ShouldGlowGoldInternal =>
         CardExtensions.AnyUnplayable(PlannedModifier.RelevantCards(Owner).Where(c => c != this));
