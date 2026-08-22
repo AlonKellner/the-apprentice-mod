@@ -42,7 +42,7 @@ public class KeepInMind : UnderstudyCard
         var selected = await CardSelectCmd.FromHand(
             context,
             player,
-            new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-KEEP_IN_MIND.selectionPrompt"), 0, maxSelect),
+            new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-KEEP_IN_MIND.selectionPrompt"),maxSelect),
             c => c != this && PlannedModifier.CanApplyTo(c) && TunedModifier.CanApplyTo(c),
             this);
         if (selected == null) return;

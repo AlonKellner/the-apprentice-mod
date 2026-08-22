@@ -45,7 +45,7 @@ public class Practice : UnderstudyCard
         var selected = await CardSelectCmd.FromHand(
             context,
             player,
-            new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-PRACTICE.selectionPrompt"), 0, maxSelect),
+            new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-PRACTICE.selectionPrompt"),maxSelect),
             c => c != this && TunedModifier.CanApplyTo(c),
             this);
 

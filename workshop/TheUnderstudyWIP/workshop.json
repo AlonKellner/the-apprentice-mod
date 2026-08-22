@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.13.52: Increased Muscle Memory's cost from 2 (1 upgraded) to 3 (2 upgraded).",
+  "changeNote": "v1.13.53: Card-selection prompts (Run Through, Workshop, Practice, etc.) now state the amount - e.g. 'Choose 2 cards to make Tuned' - and require you to pick exactly that many: the confirm button stays disabled until the full amount is selected, like base-game discard cards. When only that many (or fewer) eligible cards exist, they are applied automatically with no prompt.",
   "tags": [],
   "dependencies": [
     3737335127

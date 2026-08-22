@@ -123,17 +123,14 @@ public class Workshop : PlayAllPlannedCard
         }
         PlannedModifier.InvokeChanged();
 
-        // Step 2: Apply Planned to 0-N cards selected from the discard pile (sets up next turn's queue).
+        // Step 2: Apply Planned to exactly N cards selected from the discard pile (sets up next turn's
+        // queue) — or all of them with no prompt when N or fewer are eligible. See ExactPileSelection.
         var maxSelect = IsUpgraded ? 3 : 2;
-        if (MultiplayerUtil.IsLocalPlayer(player)) PlannedSelectionState.Arm();
-        var selectedRaw = await CardSelectCmd.FromCombatPile(
-            context,
-            PileType.Discard.GetPile(player),
-            player,
-            new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-WORKSHOP.selectionPrompt"), 0, maxSelect),
-            c => c != this && PlannedModifier.CanApplyTo(c));
+        var selectedRaw = await ExactPileSelection.Select(
+            context, PileType.Discard.GetPile(player), player, maxSelect,
+            "THEUNDERSTUDY-WORKSHOP.selectionPrompt",
+            c => c != this && PlannedModifier.CanApplyTo(c), armPlannedBadges: true);
 
-        if (selectedRaw == null) return;
         foreach (var card in PlannedSelectionState.InClickOrder(selectedRaw.ToList()))
             PlannedModifier.Apply(card, combatState);
 

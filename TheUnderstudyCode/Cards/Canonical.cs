@@ -24,7 +24,7 @@ public class Canonical : UnderstudyCard
         var selected = await CardSelectCmd.FromHand(
             context,
             player,
-            new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-CANONICAL.selectionPrompt"), 0, 1),
+            new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-CANONICAL.selectionPrompt"), 1),
             c => c != this && StableModifier.CanApplyTo(c),
             this);
 

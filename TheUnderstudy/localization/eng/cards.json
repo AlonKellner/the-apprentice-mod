@@ -7,14 +7,14 @@
 
   "THEUNDERSTUDY-WORKSHOP.title": "Workshop",
   "THEUNDERSTUDY-WORKSHOP.description": "Play 10 [gold]Planned[/gold] cards.\nApply [gold]Planned[/gold] to {Select:diff()} attacks and skills in your discard pile.",
-  "THEUNDERSTUDY-WORKSHOP.selectionPrompt": "Choose cards to make [gold]Planned[/gold].",
+  "THEUNDERSTUDY-WORKSHOP.selectionPrompt": "Choose {Amount} {Amount:plural:card|cards} to make [gold]Planned[/gold].",
 
   "THEUNDERSTUDY-HIGH_NOTE.title": "High Note",
   "THEUNDERSTUDY-HIGH_NOTE.description": "Deal {Damage:diff()} damage twice.\nGain {Vigor:diff()} [gold]Vigor[/gold].\n[gold]Invert[/gold] {Invert:diff()}.",
 
   "THEUNDERSTUDY-PRACTICE.title": "Practice",
   "THEUNDERSTUDY-PRACTICE.description": "{InCombat:cond:|[gold]Tuned[/gold] 1.\n}Deal {Damage:diff()} damage.\nApply [gold]Tuned[/gold] to {Select:diff()} {Select:plural:attack or skill|attacks and skills} in your hand.",
-  "THEUNDERSTUDY-PRACTICE.selectionPrompt": "Choose cards to make [gold]Tuned[/gold].",
+  "THEUNDERSTUDY-PRACTICE.selectionPrompt": "Choose {Amount} {Amount:plural:card|cards} to make [gold]Tuned[/gold].",
 
   "THEUNDERSTUDY-FREEZE_UP.title": "Freeze Up",
   "THEUNDERSTUDY-FREEZE_UP.description": "Deal {Damage:diff()} damage.\nGain {Block:diff()} [gold]Block[/gold].\nApply {Weak:inverseDiff()} [gold]Weak[/gold] to yourself.",
@@ -24,29 +24,29 @@
 
   "THEUNDERSTUDY-RUN_THROUGH.title": "Run Through",
   "THEUNDERSTUDY-RUN_THROUGH.description": "Deal {Damage:diff()} damage to ALL enemies.\nApply [gold]Tuned[/gold] to 2 attacks or skills in hand.",
-  "THEUNDERSTUDY-RUN_THROUGH.selectionPrompt": "Choose cards to make [gold]Tuned[/gold].",
+  "THEUNDERSTUDY-RUN_THROUGH.selectionPrompt": "Choose {Amount} {Amount:plural:card|cards} to make [gold]Tuned[/gold].",
 
   "THEUNDERSTUDY-ORCHESTRATION.title": "Orchestration",
   "THEUNDERSTUDY-ORCHESTRATION.description": "Draw {Cards:diff()} {Cards:plural:card|cards}.\nApply [gold]Planned[/gold] to {Select:diff()} {Select:plural:attack or skill|attacks and skills} in your hand.",
-  "THEUNDERSTUDY-ORCHESTRATION.selectionPrompt": "Choose cards to make [gold]Planned[/gold].",
+  "THEUNDERSTUDY-ORCHESTRATION.selectionPrompt": "Choose {Amount} {Amount:plural:card|cards} to make [gold]Planned[/gold].",
 
   "THEUNDERSTUDY-KEEP_IN_MIND.title": "Keep in Mind",
   "THEUNDERSTUDY-KEEP_IN_MIND.description": "Draw {Cards:diff()} {Cards:plural:card|cards}.\nApply [gold]Planned[/gold] and [gold]Tuned[/gold] to {Select:diff()} {Select:plural:attack or skill|attacks and skills} in hand.",
-  "THEUNDERSTUDY-KEEP_IN_MIND.selectionPrompt": "Choose cards to make [gold]Planned[/gold] and [gold]Tuned[/gold].",
+  "THEUNDERSTUDY-KEEP_IN_MIND.selectionPrompt": "Choose {Amount} {Amount:plural:card|cards} to make [gold]Planned[/gold] and [gold]Tuned[/gold].",
 
   "THEUNDERSTUDY-CRYING_OUT_LOUD.title": "Crying Out Loud",
   "THEUNDERSTUDY-CRYING_OUT_LOUD.description": "Whenever a debuff of yours clears, gain {IfUpgraded:show:4|3} [gold]Vigor[/gold].",
 
   "THEUNDERSTUDY-FORESHADOW.title": "Foreshadow",
   "THEUNDERSTUDY-FORESHADOW.description": "Gain {Block:diff()} [gold]Block[/gold].\nApply [gold]Planned[/gold] to {Select:diff()} {Select:plural:attack or skill|attacks and skills} in your draw pile.",
-  "THEUNDERSTUDY-FORESHADOW.selectionPrompt": "Choose cards to make [gold]Planned[/gold].",
+  "THEUNDERSTUDY-FORESHADOW.selectionPrompt": "Choose {Amount} {Amount:plural:card|cards} to make [gold]Planned[/gold].",
 
   "THEUNDERSTUDY-BALANCED.title": "Balanced",
   "THEUNDERSTUDY-BALANCED.description": "Whenever a card becomes [gold]Unplayable[/gold], remove [gold]Unplayable[/gold] from 1 random attack or skill in hand.",
 
   "THEUNDERSTUDY-CALLBACK.title": "Callback",
   "THEUNDERSTUDY-CALLBACK.description": "Deal {Damage:diff()} damage.\nApply [gold]Planned[/gold] to {Select:diff()} {Select:plural:attack or skill|attacks and skills} in your discard pile.",
-  "THEUNDERSTUDY-CALLBACK.selectionPrompt": "Choose cards to make [gold]Planned[/gold].",
+  "THEUNDERSTUDY-CALLBACK.selectionPrompt": "Choose {Amount} {Amount:plural:card|cards} to make [gold]Planned[/gold].",
 
   "THEUNDERSTUDY-SPECTACLE.title": "Spectacle",
   "THEUNDERSTUDY-SPECTACLE.description": "Play all [gold]Tuned[/gold] cards, at most once per turn.\nRemove [gold]Tuned[/gold] from all cards.",
@@ -116,7 +116,7 @@
 
   "THEUNDERSTUDY-MAGNUM_OPUS.title": "Magnum Opus",
   "THEUNDERSTUDY-MAGNUM_OPUS.description": "Apply [gold]Planned[/gold] to {Select:diff()} attacks or skills in your draw pile.",
-  "THEUNDERSTUDY-MAGNUM_OPUS.selectionPrompt": "Choose cards to make [gold]Planned[/gold].",
+  "THEUNDERSTUDY-MAGNUM_OPUS.selectionPrompt": "Choose {Amount} {Amount:plural:card|cards} to make [gold]Planned[/gold].",
 
   "THEUNDERSTUDY-MOTIF.title": "Motif",
   "THEUNDERSTUDY-MOTIF.description": "Deal {Damage:diff()} damage.\nApply [gold]Planned[/gold] to this card.",
@@ -144,11 +144,11 @@
 
   "THEUNDERSTUDY-MUSE.title": "Muse",
   "THEUNDERSTUDY-MUSE.description": "At the start of your turn, apply [gold]Planned[/gold] to an attack or skill in your hand.",
-  "THEUNDERSTUDY-MUSE.selectionPrompt": "Choose cards to make [gold]Planned[/gold].",
+  "THEUNDERSTUDY-MUSE.selectionPrompt": "Choose {Amount} {Amount:plural:card|cards} to make [gold]Planned[/gold].",
 
   "THEUNDERSTUDY-PERFECTIONISM.title": "Perfectionism",
   "THEUNDERSTUDY-PERFECTIONISM.description": "At the start of your turn, apply [gold]Tuned[/gold] to an attack or skill in your hand.",
-  "THEUNDERSTUDY-PERFECTIONISM.selectionPrompt": "Choose cards to make [gold]Tuned[/gold].",
+  "THEUNDERSTUDY-PERFECTIONISM.selectionPrompt": "Choose {Amount} {Amount:plural:card|cards} to make [gold]Tuned[/gold].",
 
   "THEUNDERSTUDY-MUSCLE_MEMORY.title": "Muscle Memory",
   "THEUNDERSTUDY-MUSCLE_MEMORY.description": "[gold]Tuned[/gold] cards will not become [gold]Unplayable[/gold].",
@@ -158,7 +158,7 @@
 
   "THEUNDERSTUDY-CANONICAL.title": "Canonical",
   "THEUNDERSTUDY-CANONICAL.description": "Apply [gold]Stable[/gold] to 1 card in your hand.",
-  "THEUNDERSTUDY-CANONICAL.selectionPrompt": "Choose a card to make [gold]Stable[/gold].",
+  "THEUNDERSTUDY-CANONICAL.selectionPrompt": "Choose {Amount} {Amount:plural:card|cards} to make [gold]Stable[/gold].",
 
   "THEUNDERSTUDY-CLEAN_SLATE.title": "Clean Slate",
   "THEUNDERSTUDY-CLEAN_SLATE.description": "{InCombat:cond:|[gold]Tuned[/gold] 1.\n}Exhaust all [gold]Unplayable[/gold] cards. Deal {Damage:diff()} damage for each exhausted.{InCombat:\n(Hits {CalculatedHits:diff()} {CalculatedHits:plural:time|times})|}",
@@ -189,7 +189,7 @@
 
   "THEUNDERSTUDY-TUNING_RITUAL.title": "Tuning Ritual",
   "THEUNDERSTUDY-TUNING_RITUAL.description": "Gain {Block:diff()} [gold]Block[/gold].\nApply [gold]Tuned[/gold] to {Select:diff()} attacks and skills in hand.",
-  "THEUNDERSTUDY-TUNING_RITUAL.selectionPrompt": "Choose cards to make [gold]Tuned[/gold].",
+  "THEUNDERSTUDY-TUNING_RITUAL.selectionPrompt": "Choose {Amount} {Amount:plural:card|cards} to make [gold]Tuned[/gold].",
 
   "THEUNDERSTUDY-AUTO_TUNE.title": "Auto Tune",
   "THEUNDERSTUDY-AUTO_TUNE.description": "At the start of your turn, apply [gold]Tuned[/gold] to all [gold]Tuned[/gold] cards.",
@@ -226,7 +226,7 @@
 
   "THEUNDERSTUDY-TAKE_NOTES.title": "Take Notes",
   "THEUNDERSTUDY-TAKE_NOTES.description": "Draw {Cards:diff()} {Cards:plural:card|cards}.\nApply [gold]Tuned[/gold] to {Select:diff()} {Select:plural:attack or skill|attacks and skills} in hand.",
-  "THEUNDERSTUDY-TAKE_NOTES.selectionPrompt": "Choose cards to make [gold]Tuned[/gold].",
+  "THEUNDERSTUDY-TAKE_NOTES.selectionPrompt": "Choose {Amount} {Amount:plural:card|cards} to make [gold]Tuned[/gold].",
 
   "THEUNDERSTUDY-CRAM.title": "Cram",
   "THEUNDERSTUDY-CRAM.description": "Draw {Cards:diff()} {Cards:plural:card|cards}.\nApply {Limited:inverseDiff()} [gold]Limited[/gold] to yourself.",

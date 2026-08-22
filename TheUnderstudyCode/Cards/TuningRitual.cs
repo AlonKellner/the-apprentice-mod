@@ -37,7 +37,7 @@ public class TuningRitual : UnderstudyCard
         var selected = await CardSelectCmd.FromHand(
             context,
             player,
-            new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-TUNING_RITUAL.selectionPrompt"), 0, maxSelect),
+            new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-TUNING_RITUAL.selectionPrompt"),maxSelect),
             c => c != this && TunedModifier.CanApplyTo(c),
             this);
 

@@ -42,7 +42,7 @@ public class RunThrough : UnderstudyCard
         var selected = await CardSelectCmd.FromHand(
             context,
             player,
-            new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-RUN_THROUGH.selectionPrompt"), 0, MaxTuned),
+            new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-RUN_THROUGH.selectionPrompt"), MaxTuned),
             c => c != this && TunedModifier.CanApplyTo(c),
             this);
 

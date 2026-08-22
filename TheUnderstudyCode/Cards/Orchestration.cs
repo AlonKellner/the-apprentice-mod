@@ -41,7 +41,7 @@ public class Orchestration : UnderstudyCard
         var selected = await CardSelectCmd.FromHand(
             context,
             player,
-            new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-ORCHESTRATION.selectionPrompt"), 0, maxSelect),
+            new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-ORCHESTRATION.selectionPrompt"),maxSelect),
             c => c != this && PlannedModifier.CanApplyTo(c),
             this);
 

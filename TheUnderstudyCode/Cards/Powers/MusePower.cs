@@ -27,7 +27,7 @@ public class MusePower : UnderstudyPower
         var selected = await CardSelectCmd.FromHand(
             context,
             player,
-            new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-MUSE.selectionPrompt"), 0, maxSelect),
+            new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-MUSE.selectionPrompt"),maxSelect),
             PlannedModifier.CanApplyTo,
             this);
         if (selected == null) return;

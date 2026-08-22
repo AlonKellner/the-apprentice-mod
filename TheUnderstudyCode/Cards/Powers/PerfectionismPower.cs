@@ -25,7 +25,7 @@ public class PerfectionismPower : UnderstudyPower
         var selected = await CardSelectCmd.FromHand(
             context,
             player,
-            new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-PERFECTIONISM.selectionPrompt"), 0, maxSelect),
+            new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-PERFECTIONISM.selectionPrompt"),maxSelect),
             TunedModifier.CanApplyTo,
             this);
         if (selected == null) return;

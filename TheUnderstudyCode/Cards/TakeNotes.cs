@@ -38,7 +38,7 @@ public class TakeNotes : UnderstudyCard
         var selected = await CardSelectCmd.FromHand(
             context,
             player,
-            new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-TAKE_NOTES.selectionPrompt"), 0, maxSelect),
+            new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-TAKE_NOTES.selectionPrompt"),maxSelect),
             c => c != this && TunedModifier.CanApplyTo(c),
             this);
         if (selected == null) return;

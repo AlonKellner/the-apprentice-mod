@@ -37,13 +37,9 @@ public class Foreshadow : UnderstudyCard
         var player = cardPlay.Card.Owner;
         int maxSelect = (int)DynamicVars["Select"].BaseValue;
         var pile = PileType.Draw.GetPile(player);
-        if (MultiplayerUtil.IsLocalPlayer(player)) PlannedSelectionState.Arm();
-        var selected = await CardSelectCmd.FromCombatPile(
-            context,
-            pile,
-            player,
-            new CardSelectorPrefs(new LocString("cards", "THEUNDERSTUDY-FORESHADOW.selectionPrompt"), 0, maxSelect),
-            c => PlannedModifier.CanApplyTo(c));
+        var selected = await ExactPileSelection.Select(
+            context, pile, player, maxSelect, "THEUNDERSTUDY-FORESHADOW.selectionPrompt",
+            c => PlannedModifier.CanApplyTo(c), armPlannedBadges: true);
 
         foreach (var card in PlannedSelectionState.InClickOrder(selected.ToList()))
             PlannedModifier.Apply(card, CombatState!);
