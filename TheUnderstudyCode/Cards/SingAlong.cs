@@ -15,9 +15,12 @@ public class SingAlong : UnderstudyCard
 {
     public const string CardId = "TheUnderstudy:SingAlong";
 
-    public SingAlong() : base(1, CardType.Skill, CardRarity.Uncommon, TargetType.None)
+    // Free by default (cost 0, unchanged on upgrade): Sing Along is a timing card that's often a liability,
+    // so players skipped it — 0 cost lets them fire it the moment it helps. The upgrade adds Retain, which
+    // is what makes the timing playable (hold it until the turn it pays off).
+    public SingAlong() : base(0, CardType.Skill, CardRarity.Uncommon, TargetType.None)
     {
-        WithCostUpgradeBy(-1);
+        WithKeyword(CardKeyword.Retain, ConstructedCardModel.UpgradeType.Add);
         WithVars(new IntVar("Vigor", 6));
         WithMarkedTip(typeof(VigorPower));
     }
