@@ -112,6 +112,26 @@ public static class SceneStealing
         return holdings;
     }
 
+    // One buff you are holding, as a positive magnitude. The buff analogue of DebuffHolding, used by the
+    // reverse trade (Antagonist): where GiveableDebuffs answers "which debuffs can move", GiveableBuffs +
+    // InvertiblePair.BuffHoldingOn answer "which buffs can move".
+    public readonly record struct BuffHolding(PowerModel Power, int Magnitude);
+
+    // Every swappable buff `creature` currently holds in stock (positive portion only, which also handles
+    // AllowNegative Vigor — its buff side is the positive part). THE definition of "a swappable buff you can
+    // hand off". Invertible-only buffs (Strength/Dexterity, and the Un- sides of Shaken/Limited/Jaded) come
+    // from InvertiblePair.BuffHoldingOn instead; Antagonist unions both, deduped by Id.
+    public static List<BuffHolding> GiveableBuffs(Creature creature)
+    {
+        var holdings = new List<BuffHolding>();
+        foreach (var buff in SwappableBuffs)
+        {
+            int amt = creature.GetPower(buff.Id)?.Amount ?? 0;
+            if (amt > 0) holdings.Add(new BuffHolding(buff, amt));
+        }
+        return holdings;
+    }
+
     // Whether a holding may be given to enemies at all — the same membership rule GiveableDebuffs applies,
     // asked about one power. Best of Both uses this to decide give-and-invert vs invert-only (Strength and
     // Dexterity are invertible but deliberately not swappable).

@@ -33,6 +33,11 @@ public abstract class InvertiblePair
     // half below reuse regular Swap's own give logic instead of reimplementing it per pair.
     public abstract SceneStealing.DebuffHolding? DebuffHoldingOn(Creature creature);
 
+    // This pair's BUFF side as a holding on `creature` (magnitude always positive), or null when no buff is
+    // present. The mirror of DebuffHoldingOn, used by Antagonist's reverse trade to hand your invertible
+    // buffs to allies. For an Un-X pair it is the Un-X power; for a sign-flip power it is its positive part.
+    public abstract SceneStealing.BuffHolding? BuffHoldingOn(Creature creature);
+
     // Stage the buff this pair's Invert produces from `converted` stacks of its debuff — an Un-X power for
     // a same-shape pair, more of the same signed power for a sign-flip one. The ONLY part of Best of Both
     // that differs per pair.
@@ -114,6 +119,15 @@ public sealed class SameShapePair<TDebuff, TBuff> : InvertiblePair
             : null;
     }
 
+    // Two distinct powers: the buff is whatever TBuff (the Un-X side) you hold, always a positive amount.
+    public override SceneStealing.BuffHolding? BuffHoldingOn(Creature creature)
+    {
+        int amount = creature.GetPowerAmount<TBuff>();
+        return amount > 0
+            ? new SceneStealing.BuffHolding(ModelDb.Power<TBuff>(), amount)
+            : null;
+    }
+
     // The inverted stacks land on the separate Un-X power. Netted live by InvertTrackerPower against any
     // leftover debuff.
     protected override void StageInvertBuff(SceneStealing.SwapPlan plan, Creature self, int converted)
@@ -167,6 +181,17 @@ public sealed class SignFlipPair<TPower> : InvertiblePair where TPower : PowerMo
         int amount = creature.GetPowerAmount<TPower>();
         return amount < 0
             ? new SceneStealing.DebuffHolding(ModelDb.Power<TPower>(), -amount, true)
+            : null;
+    }
+
+    // One signed power: the buff is the POSITIVE portion, reported as a positive magnitude. Vigor/Strength/
+    // Dexterity all count here (unlike the debuff give, Antagonist hands buffs to allies, so Strength and
+    // Dexterity are welcome — the "too many enemies scale off them" caveat is about giving them to ENEMIES).
+    public override SceneStealing.BuffHolding? BuffHoldingOn(Creature creature)
+    {
+        int amount = creature.GetPowerAmount<TPower>();
+        return amount > 0
+            ? new SceneStealing.BuffHolding(ModelDb.Power<TPower>(), amount)
             : null;
     }
 

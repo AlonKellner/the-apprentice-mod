@@ -30,6 +30,7 @@ public class CardTooltipKeywordSyncTests
         ["Invert"] = "UnderstudyKeywords.Invert)",
         ["Invertible"] = "UnderstudyKeywords.Invertible)",
         ["Swap"] = "UnderstudyKeywords.Swap)",
+        ["Swappable"] = "UnderstudyKeywords.Swappable)",
         ["Unplayable"] = "CardKeyword.Unplayable)",
         ["Rewarded"] = "typeof(RewardedPower)",
         ["Punished"] = "typeof(PunishedPower)",

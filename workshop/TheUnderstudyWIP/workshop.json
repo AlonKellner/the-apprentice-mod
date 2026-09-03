@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.13.60: Sing Along now costs 0 (unchanged on upgrade, was 1/0), and its upgrade adds Retain - encouraging use of a timing-sensitive card and making the timing easier to hit.",
+  "changeNote": "v1.13.61: Antagonist reworked into a full trade - it now gives ALL of your invertible/swappable buffs to each ally and takes ALL of their invertible/swappable debuffs onto you (a regular Swap with buffs and debuffs reversed and allies as the targets), instead of only vacuuming ally debuffs.",
   "tags": [],
   "dependencies": [
     3737335127
