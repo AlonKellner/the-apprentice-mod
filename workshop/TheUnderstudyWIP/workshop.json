@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.13.61: Antagonist reworked into a full trade - it now gives ALL of your invertible/swappable buffs to each ally and takes ALL of their invertible/swappable debuffs onto you (a regular Swap with buffs and debuffs reversed and allies as the targets), instead of only vacuuming ally debuffs.",
+  "changeNote": "v1.13.62: Swap now moves FULL STACKS with no 10 cap. One Swap trades one whole debuff stack of yours to enemies for one whole buff stack from each enemy; 'Swap N times' trades up to N distinct stacks per side. Best of Both / Pass the Mic / Living the Dream now full-swap their N rightmost debuffs (still Invert all), so their Swap-count picks distinct stacks instead of raising an amount cap.",
   "tags": [],
   "dependencies": [
     3737335127

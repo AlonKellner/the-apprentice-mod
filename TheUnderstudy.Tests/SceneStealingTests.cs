@@ -9,20 +9,17 @@ namespace TheUnderstudy.Tests;
 // here; the full give/take flow is verified in-game.
 public class SceneStealingTests
 {
-    // ComputeTransfer — how much of a single holding moves per Swap application: capped at SwapCap (10)
-    // and at what you actually have, never negative. Also used for a sign-flip buff's negative magnitude.
+    // ComputeTransfer — how much of a single holding moves per Swap application: the WHOLE stack, never
+    // negative. Swap no longer caps the amount (was SwapCap = 10); a stack of any size moves in full. Also
+    // used for a sign-flip buff's negative magnitude.
 
     [Fact]
-    public void ComputeTransfer_HaveMoreThanCap_MovesCap() =>
-        Assert.Equal(SceneStealing.SwapCap, SceneStealing.ComputeTransfer(have: 25));
+    public void ComputeTransfer_LargeStack_MovesTheWholeThing() =>
+        Assert.Equal(25, SceneStealing.ComputeTransfer(have: 25));
 
     [Fact]
-    public void ComputeTransfer_HaveLessThanCap_MovesAllYouHave() =>
+    public void ComputeTransfer_SmallStack_MovesAllYouHave() =>
         Assert.Equal(3, SceneStealing.ComputeTransfer(have: 3));
-
-    [Fact]
-    public void ComputeTransfer_HaveExactlyCap_MovesCap() =>
-        Assert.Equal(10, SceneStealing.ComputeTransfer(have: 10));
 
     [Fact]
     public void ComputeTransfer_HaveNone_MovesNothing() =>
@@ -31,6 +28,34 @@ public class SceneStealingTests
     [Fact]
     public void ComputeTransfer_NegativeHolding_NeverNegative() =>
         Assert.Equal(0, SceneStealing.ComputeTransfer(have: -4));
+
+    // SelectRightmostN — the N distinct powers a "Swap N times" moves: the n candidates sitting rightmost
+    // (largest positions) in the creature's Powers list, rightmost first. Deterministic on every client.
+
+    [Fact]
+    public void SelectRightmostN_PicksTheNHighestPositions_RightmostFirst() =>
+        // positions 5,1,9,3 -> the two rightmost are index 2 (pos 9) then index 0 (pos 5)
+        Assert.Equal(new[] { 2, 0 }, SceneStealing.SelectRightmostN(new List<int> { 5, 1, 9, 3 }, 2));
+
+    [Fact]
+    public void SelectRightmostN_NGreaterThanCount_ReturnsAllRightmostFirst() =>
+        Assert.Equal(new[] { 2, 0, 1 }, SceneStealing.SelectRightmostN(new List<int> { 4, 1, 7 }, 10));
+
+    [Fact]
+    public void SelectRightmostN_One_MatchesSelectRightmost() =>
+        Assert.Equal(new[] { 2 }, SceneStealing.SelectRightmostN(new List<int> { 5, 1, 9 }, 1));
+
+    [Fact]
+    public void SelectRightmostN_ZeroOrEmpty_ReturnsNothing()
+    {
+        Assert.Empty(SceneStealing.SelectRightmostN(new List<int> { 5, 1, 9 }, 0));
+        Assert.Empty(SceneStealing.SelectRightmostN(new List<int>(), 3));
+    }
+
+    [Fact]
+    public void SelectRightmostN_Ties_PreferLaterCandidate() =>
+        // equal positions -> later index first (matches SelectRightmost's >= tie-break)
+        Assert.Equal(new[] { 2, 1 }, SceneStealing.SelectRightmostN(new List<int> { 4, 4, 4 }, 2));
 
     // SelfGiveDelta / EnemyGiveDelta — the direction a give moves the number, and the only place that
     // knows it. Both regular Swap and Best of Both build their give moves from these, which is what stops

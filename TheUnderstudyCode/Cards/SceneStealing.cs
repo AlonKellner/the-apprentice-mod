@@ -13,14 +13,16 @@ using TheUnderstudy.TheUnderstudyCode.Extensions;
 namespace TheUnderstudy.TheUnderstudyCode.Cards;
 
 // The "Swap" mechanic — sibling of EmotionalExpression (Invert). Where Invert flips your own debuffs
-// into buffs on yourself, Swap trades fortunes with the enemy team. It has NO numeric magnitude: each
-// application moves a single power per side, capped at SwapCap, and the card number is a REPEAT count
+// into buffs on yourself, Swap trades fortunes with the enemy team. It moves FULL STACKS, one power per
+// side per application, and the card number is a REPEAT count = how many distinct stacks to trade
 // ("Swap" / "Swap twice" / "Swap 3 times"):
-//   • GIVE: transfer up to SwapCap of the player's *rightmost* swappable debuff to ALL enemies.
-//   • TAKE: from EACH enemy, steal up to SwapCap of *that enemy's own* rightmost swappable buff
+//   • GIVE: transfer the WHOLE stack of the player's *rightmost* swappable debuff to ALL enemies.
+//   • TAKE: from EACH enemy, steal the WHOLE stack of *that enemy's own* rightmost swappable buff
 //           (removed from the enemy, gained by the player).
-// Each repeat recalculates the target from live state — no state is carried between applications (giving
-// your rightmost debuff empties it, so the next repeat naturally moves to the next one).
+// So one Swap might move your Weak out and pull an enemy's Regen in; a second Swap then acts on the NEXT
+// debuff/buff (e.g. your Vulnerable). There is no per-application amount limit — a stack of any size moves
+// in full. Each repeat recalculates the target from live state — no state is carried between applications
+// (giving your rightmost debuff empties it, so the next repeat naturally moves to the next one).
 //
 // "Rightmost" = the last matching entry in the creature's Powers list. That list order is part of the
 // game-state checksum (CombatState hashes creature.Powers in order, un-sorted), so it is identical on
@@ -32,10 +34,6 @@ namespace TheUnderstudy.TheUnderstudyCode.Cards;
 // registries below.
 public static class SceneStealing
 {
-    // Per-application cap: at most this much of a single power moves per Swap. High enough to read as
-    // "move (nearly) all of it", matching max hand size.
-    public const int SwapCap = 10;
-
     private static IReadOnlyList<PowerModel>? _swappableDebuffs;
     private static IReadOnlyList<PowerModel>? _swappableBuffs;
 
@@ -151,9 +149,10 @@ public static class SceneStealing
     public static PowerMove GiveDebuffToEnemy(DebuffHolding holding, Creature enemy, int amount) =>
         new(holding.Power, enemy, EnemyGiveDelta(holding.SignFlip, amount));
 
-    // Pure: how much of a holding moves per application — capped at SwapCap and at what you actually have
-    // (never negative). Also used for the negative portion of a sign-flip buff by passing its magnitude.
-    public static int ComputeTransfer(int have) => Math.Max(0, Math.Min(have, SwapCap));
+    // Pure: how much of a holding moves per application — the WHOLE stack (never negative). Swap has no
+    // per-application amount cap any more: a stack of any size moves in full. Also used for the negative
+    // portion of a sign-flip buff by passing its magnitude.
+    public static int ComputeTransfer(int have) => Math.Max(0, have);
 
     // Pure: among candidates, the index of the one that sits RIGHTMOST (last) in the creature's Powers
     // list. positions[i] is candidate i's index within creature.Powers (-1 if absent); the highest wins,
@@ -168,9 +167,22 @@ public static class SceneStealing
         return best;
     }
 
+    // Pure: the indices of the `n` candidates sitting RIGHTMOST (largest positions) in the creature's
+    // Powers list, returned rightmost-first. positions[i] is candidate i's index within creature.Powers.
+    // Deterministic on every client (synced Powers order); ties resolve toward the later candidate, the
+    // same way SelectRightmost does. Used for "Swap N stacks" — the N distinct powers a Swap N times moves.
+    public static IReadOnlyList<int> SelectRightmostN(IReadOnlyList<int> positions, int n)
+    {
+        if (n <= 0 || positions.Count == 0) return Array.Empty<int>();
+        return Enumerable.Range(0, positions.Count)
+            .OrderByDescending(i => positions[i]).ThenByDescending(i => i)
+            .Take(n).ToList();
+    }
+
     // Index of the power with this id within the creature's Powers list (the synced, checksummed order),
-    // or -1 if the creature doesn't hold it.
-    private static int PowerPosition(Creature creature, ModelId id)
+    // or -1 if the creature doesn't hold it. Public so Best of Both can rank its swap-give candidates the
+    // same deterministic way regular Swap does.
+    public static int PowerPosition(Creature creature, ModelId id)
     {
         var powers = creature.Powers;
         for (int i = 0; i < powers.Count; i++)
@@ -193,7 +205,7 @@ public static class SceneStealing
         {
             var plan = new SwapPlan();
             CaptureGiveMostRecent(plan, self, enemies);
-            CaptureTake(plan, self, enemies, SwapCap);
+            CaptureTake(plan, self, enemies, maxStacks: 1); // one full buff stack per enemy per application
             await ExecutePlan(ctx, self, plan);
         }
     }
@@ -234,25 +246,25 @@ public static class SceneStealing
         foreach (var enemy in enemies) plan.Applies.Add(GiveDebuffToEnemy(chosen.Value, enemy, move));
     }
 
-    // TAKE (shared by Swap and Best of Both): from each enemy, steal that enemy's most recently modified
-    // swappable buff (up to `cap`), removed from the enemy and gained by you.
-    public static void CaptureTake(SwapPlan plan, Creature self, IReadOnlyList<Creature> enemies, int cap)
+    // TAKE (shared by Swap and Best of Both): from each enemy, steal that enemy's `maxStacks` rightmost
+    // swappable buffs — the WHOLE stack of each — removed from the enemy and gained by you. maxStacks = 1
+    // for a single regular-Swap application; int.MaxValue for "take everything" (Standing Ovation).
+    public static void CaptureTake(SwapPlan plan, Creature self, IReadOnlyList<Creature> enemies, int maxStacks)
     {
         foreach (var enemy in enemies)
-        {
-            var buff = SelectBuff(enemy);
-            if (buff == null) continue;
-            int take = Math.Min(enemy.GetPower(buff.Id)?.Amount ?? 0, cap);
-            if (take <= 0) continue;
-            plan.Removes.Add(new PowerMove(buff, enemy, -take));
-            plan.Applies.Add(new PowerMove(buff, self, take));
-        }
+            foreach (var buff in SelectRightmostBuffs(enemy, maxStacks))
+            {
+                int take = enemy.GetPower(buff.Id)?.Amount ?? 0; // the whole stack, no cap
+                if (take <= 0) continue;
+                plan.Removes.Add(new PowerMove(buff, enemy, -take));
+                plan.Applies.Add(new PowerMove(buff, self, take));
+            }
     }
 
     // The player's RIGHTMOST giveable debuff: among everything GiveableDebuffs reports, the one sitting
     // last in the creature's Powers list wins (SelectRightmost). Null when there is nothing to give.
-    // Regular Swap moves exactly one holding per application; Best of Both moves them all — but both draw
-    // from the same GiveableDebuffs set, so neither can consider a debuff the other doesn't.
+    // Regular Swap moves exactly one holding per application; Best of Both moves its N rightmost — but both
+    // draw from the same GiveableDebuffs set, so neither can consider a debuff the other doesn't.
     private static DebuffHolding? SelectDebuff(Creature self)
     {
         var candidates = GiveableDebuffs(self);
@@ -262,20 +274,16 @@ public static class SceneStealing
         return candidates[SelectRightmost(positions)];
     }
 
-    // An enemy's RIGHTMOST swappable buff currently in stock (positive portion only, which also handles
-    // AllowNegative Vigor): the one sitting last in the enemy's Powers list. Null when the enemy has no
-    // swappable buff to steal.
-    private static PowerModel? SelectBuff(Creature enemy)
+    // An enemy's `n` RIGHTMOST swappable buffs currently in stock (positive portion only, which also handles
+    // AllowNegative Vigor), rightmost first. Empty when the enemy has no swappable buff to steal; n = 1 is
+    // regular Swap's single take, int.MaxValue is "all of them".
+    private static IReadOnlyList<PowerModel> SelectRightmostBuffs(Creature enemy, int n)
     {
         var candidates = new List<PowerModel>();
         foreach (var buff in SwappableBuffs)
-        {
-            int amt = enemy.GetPower(buff.Id)?.Amount ?? 0;
-            if (amt > 0) candidates.Add(buff);
-        }
-        if (candidates.Count == 0) return null;
+            if ((enemy.GetPower(buff.Id)?.Amount ?? 0) > 0) candidates.Add(buff);
 
         var positions = candidates.Select(b => PowerPosition(enemy, b.Id)).ToList();
-        return candidates[SelectRightmost(positions)];
+        return SelectRightmostN(positions, n).Select(i => candidates[i]).ToList();
     }
 }

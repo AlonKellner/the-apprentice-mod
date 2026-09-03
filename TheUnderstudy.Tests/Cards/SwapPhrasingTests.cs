@@ -62,9 +62,10 @@ public class SwapPhrasingTests
         var keywords = LoadJsonStrings(Path.Combine("TheUnderstudy", "localization", "eng", "card_keywords.json"));
         Assert.True(keywords.TryGetValue("THEUNDERSTUDY-SWAP.description", out var desc),
             "Missing THEUNDERSTUDY-SWAP.description in card_keywords.json");
-        // The meaning lives here: trade a debuff of yours for a buff from each enemy, capped at 10.
+        // The meaning lives here: trade a full stack of a debuff of yours for a full stack of a buff from
+        // each enemy; the card number is how many distinct stacks to trade (no per-application amount cap).
         Assert.Contains("Trade", desc, StringComparison.OrdinalIgnoreCase);
         Assert.Contains("debuff", desc, StringComparison.OrdinalIgnoreCase);
-        Assert.Contains("10", desc);
+        Assert.Contains("stack", desc, StringComparison.OrdinalIgnoreCase);
     }
 }

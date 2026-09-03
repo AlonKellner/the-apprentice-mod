@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using BaseLib.Abstracts;
 using BaseLib.Utils;
@@ -43,27 +44,46 @@ public class BestOfBoth : UnderstudyCard
     // current state, then remove from both sides, then apply to both sides — so interacting powers (an
     // enemy's Artifact, a Weak/Unweak pair) swap instead of cancelling before they're moved.
     public static Task ResolveFor(
-        PlayerChoiceContext context, Creature creature, int swapRepeats, int invertMax) =>
-        ResolveWithCaps(context, creature, SceneStealing.SwapCap * swapRepeats, invertMax);
+        PlayerChoiceContext context, Creature creature, int swapStacks, int invertMax) =>
+        Resolve(context, creature, swapStacks, invertMax);
 
     // "Swap ALL & Invert ALL" — Standing Ovation. Both halves are uncapped (int.MaxValue), which resolves
-    // to: swap until there are no more swappable debuffs on the player or swappable buffs on the enemies
-    // (the full magnitude of each moves at once, the same end state as repeating capped swaps to empty),
+    // to: swap every swappable debuff on the player and every swappable buff on the enemies (full stacks),
     // and invert the full stacks of every self-debuff. Deliberately game-breaking; it is an Ancient card.
     public static Task ResolveAllFor(PlayerChoiceContext context, Creature creature) =>
-        ResolveWithCaps(context, creature, int.MaxValue, int.MaxValue);
+        Resolve(context, creature, int.MaxValue, int.MaxValue);
 
-    // Shared core: swapCap / invertMax are the per-debuff caps (int.MaxValue = "all"). Caps only feed
-    // Math.Min/Max in ComputeGiveAndTake / CaptureTake, so there is no overflow.
-    private static async Task ResolveWithCaps(
-        PlayerChoiceContext context, Creature creature, int swapCap, int invertMax)
+    // Shared core. Swap moves FULL STACKS, `swapStacks` distinct ones (int.MaxValue = all) — the same
+    // per-stack rule as regular Swap — while Invert still flips up to `invertMax` of EVERY invertible
+    // debuff, simultaneously, on one capture -> remove -> apply plan. So the swap-give only lands on the
+    // swapStacks rightmost giveable debuffs, but every debuff can still be inverted; and the take pulls the
+    // swapStacks rightmost buffs off each enemy. Passing int.MaxValue as a give-cap means "the whole stack".
+    private static async Task Resolve(
+        PlayerChoiceContext context, Creature creature, int swapStacks, int invertMax)
     {
         var enemies = creature.CombatState!.HittableEnemies.ToList();
+        var swapGive = SelectSwapGivePairs(creature, swapStacks); // which debuffs get the full swap-give
 
         var plan = new SceneStealing.SwapPlan();
         foreach (var pair in InvertiblePairs.All)
-            pair.CaptureGiveAndInvert(plan, creature, enemies, swapCap, invertMax);
-        SceneStealing.CaptureTake(plan, creature, enemies, swapCap);
+            pair.CaptureGiveAndInvert(
+                plan, creature, enemies, swapGive.Contains(pair) ? int.MaxValue : 0, invertMax);
+        SceneStealing.CaptureTake(plan, creature, enemies, swapStacks);
         await SceneStealing.ExecutePlan(context, creature, plan);
+    }
+
+    // The `n` rightmost invertible pairs whose debuff is present AND swap-giveable on `self` (Strength/
+    // Dexterity are invertible but not giveable, so they never appear here — they stay invert-only). Ranked
+    // by the debuff's position in the synced Powers list, exactly like regular Swap's rightmost selection,
+    // so the choice is multiplayer-deterministic. n = int.MaxValue selects all of them (Swap ALL).
+    private static HashSet<InvertiblePair> SelectSwapGivePairs(Creature self, int n)
+    {
+        var candidates = new List<InvertiblePair>();
+        foreach (var pair in InvertiblePairs.All)
+            if (pair.DebuffHoldingOn(self) is { } h && SceneStealing.IsGiveable(h)) candidates.Add(pair);
+
+        var positions = candidates
+            .Select(p => SceneStealing.PowerPosition(self, p.DebuffHoldingOn(self)!.Value.Power.Id)).ToList();
+        return SceneStealing.SelectRightmostN(positions, n).Select(i => candidates[i]).ToHashSet();
     }
 }
