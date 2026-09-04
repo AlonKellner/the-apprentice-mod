@@ -26,6 +26,7 @@ public class StandingOvation : UnderstudyCard
         WithMarkedTip(typeof(VigorPower));
         WithTip(UnderstudyKeywords.Swap);
         WithTip(UnderstudyKeywords.Invert);
+        WithTip(UnderstudyKeywords.SwapAndInvert);
     }
 
     protected override void OnUpgrade()

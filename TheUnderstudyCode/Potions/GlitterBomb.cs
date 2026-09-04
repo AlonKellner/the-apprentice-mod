@@ -19,6 +19,7 @@ public class GlitterBomb : UnderstudyPotion
         {
             HoverTipFactory.FromKeyword(UnderstudyKeywords.Swap),
             HoverTipFactory.FromKeyword(UnderstudyKeywords.Invert),
+            HoverTipFactory.FromKeyword(UnderstudyKeywords.SwapAndInvert),
         };
 
     protected override async Task OnUse(PlayerChoiceContext choiceContext, Creature? target) =>

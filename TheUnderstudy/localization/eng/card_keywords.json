@@ -10,7 +10,9 @@
   "THEUNDERSTUDY-INVERTIBLE.title": "Invertible",
   "THEUNDERSTUDY-INVERTIBLE.description": "A debuff that can be converted into a buff. Not all debuffs are invertible.",
   "THEUNDERSTUDY-SWAP.title": "Swap",
-  "THEUNDERSTUDY-SWAP.description": "Trade a full stack of a [gold]swappable[/gold] debuff of yours for a full stack of a [gold]swappable[/gold] buff from each enemy. The number is how many stacks to trade.",
+  "THEUNDERSTUDY-SWAP.description": "Trade the rightmost [gold]swappable[/gold] debuff of yours for the rightmost [gold]swappable[/gold] buff from each enemy.",
   "THEUNDERSTUDY-SWAPPABLE.title": "Swappable",
-  "THEUNDERSTUDY-SWAPPABLE.description": "A universal buff or debuff that Swap can move between you and enemies. Not all buffs and debuffs are swappable."
+  "THEUNDERSTUDY-SWAPPABLE.description": "A universal buff or debuff that Swap can move between you and enemies. Not all buffs and debuffs are swappable.",
+  "THEUNDERSTUDY-SWAPANDINVERT.title": "Swap & Invert",
+  "THEUNDERSTUDY-SWAPANDINVERT.description": "If your rightmost debuff is both [gold]swappable[/gold] & [gold]invertible[/gold], trade it with each enemy, and then also gain the buff."
 }

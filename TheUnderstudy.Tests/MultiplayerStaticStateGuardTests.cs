@@ -47,6 +47,7 @@ public class MultiplayerStaticStateGuardTests
         "UnderstudyKeywords.cs::Invertible",
         "UnderstudyKeywords.cs::Swap",
         "UnderstudyKeywords.cs::Swappable",
+        "UnderstudyKeywords.cs::SwapAndInvert",
         // Immutable reflection-metadata caches (readonly PropertyInfo / FieldInfo).
         "UnderstudyCard.cs::TipDescriptionProperty",
         "UnderstudyCard.cs::ConstructedHoverTipsField",

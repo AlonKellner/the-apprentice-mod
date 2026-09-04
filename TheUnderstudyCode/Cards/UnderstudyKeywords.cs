@@ -25,4 +25,10 @@ public static class UnderstudyKeywords
 
     [CustomEnum, KeywordProperties(AutoKeywordPosition.Before)]
     public static CardKeyword Swappable;
+
+    // The simultaneous-resolution keyword for cards that do both at once (Best of Both / Pass the Mic /
+    // Standing Ovation): a debuff that is both swappable AND invertible is traded to the enemies AND its
+    // buff is gained, from the same snapshot, instead of one consuming it before the other.
+    [CustomEnum, KeywordProperties(AutoKeywordPosition.Before)]
+    public static CardKeyword SwapAndInvert;
 }

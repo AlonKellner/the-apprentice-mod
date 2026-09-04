@@ -23,6 +23,7 @@ public class BestOfBoth : UnderstudyCard
         WithVars(new IntVar("Swap", 1), new IntVar("Invert", 1));
         WithTip(UnderstudyKeywords.Swap);
         WithTip(UnderstudyKeywords.Invert);
+        WithTip(UnderstudyKeywords.SwapAndInvert);
     }
 
     protected override void OnUpgrade()

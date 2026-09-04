@@ -31,6 +31,9 @@ public class CardTooltipKeywordSyncTests
         ["Invertible"] = "UnderstudyKeywords.Invertible)",
         ["Swap"] = "UnderstudyKeywords.Swap)",
         ["Swappable"] = "UnderstudyKeywords.Swappable)",
+        // The "Swap & Invert" combined keyword is triggered by the gold word "simultaneously" in the
+        // description of cards that do both at once (Best of Both / Pass the Mic / Standing Ovation).
+        ["simultaneously"] = "UnderstudyKeywords.SwapAndInvert)",
         ["Unplayable"] = "CardKeyword.Unplayable)",
         ["Rewarded"] = "typeof(RewardedPower)",
         ["Punished"] = "typeof(PunishedPower)",
