@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.13.63: Reworded the Swap keyword (\"Trade the rightmost swappable debuff of yours for the rightmost swappable buff from each enemy\"), and added a new \"Swap & Invert\" keyword explaining the simultaneous trade-and-keep-the-buff behavior. Best of Both, Pass the Mic, Standing Ovation (and Glitter Bomb) now show all three keywords: Swap, Invert, and Swap & Invert.",
+  "changeNote": "v1.13.64: Fixed the Planned selection index badges lingering on a card after you deselect it from hand (they now clear immediately). Added automatic diagnostics that log an error if a badge is ever stranded on a non-selected card, plus a dev-console command 'understudy_badgediag [on|off|dump]' for verbose badge logging.",
   "tags": [],
   "dependencies": [
     3737335127

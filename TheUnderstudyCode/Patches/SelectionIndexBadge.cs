@@ -3,6 +3,8 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using Godot;
 using MegaCrit.Sts2.addons.mega_text;
+using MegaCrit.Sts2.Core.Logging;
+using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Nodes.Cards;
 
 namespace TheUnderstudy.TheUnderstudyCode.Patches;
@@ -65,9 +67,47 @@ public static class SelectionIndexBadge
     // returning to hand or on freed grid nodes.
     public static void ClearAll()
     {
+        if (Diagnostics && Tracked.Count > 0) Log.Info($"[BadgeDiag] ClearAll removing {Tracked.Count} badge(s)");
         foreach (var card in Tracked) RemoveFrom(card);
         Tracked.Clear();
     }
+
+    // ── Diagnostics ────────────────────────────────────────────────────────────────────────────────────
+    // Toggle with the `understudy_badgediag` dev-console command (on/off/dump). When on, every render/clear
+    // is logged. The stray-badge invariant below runs REGARDLESS of the flag — it's the automatic tripwire
+    // for the bug this guards: a badge that survives on a card no longer in the selection.
+    public static bool Diagnostics;
+
+    private static string Name(CardModel? m) => m?.Id.ToString() ?? "(null)";
+
+    // Called by the hand-selection patch after each render with the three views of the world that must
+    // agree: what the game says is selected (_selectedCards), what the lifted container still holds
+    // (can lag by one deselect), and what we actually badged. Logs the full picture when Diagnostics is on,
+    // and ALWAYS fires an error if any badge is stranded on a non-selected card (the deselect bug).
+    public static void DiagAfterRender(
+        string context,
+        IReadOnlyList<CardModel> selected,
+        IReadOnlyList<CardModel> containerHolders,
+        IReadOnlyList<CardModel> badged)
+    {
+        var selectedSet = new HashSet<CardModel>(selected);
+        var stray = Tracked.Where(c => GodotObject.IsInstanceValid(c) && c.Model != null && !selectedSet.Contains(c.Model))
+            .Select(c => c.Model).ToList();
+        if (stray.Count > 0)
+            Log.Error($"[BadgeDiag/{context}] STRAY BADGE(S) on non-selected card(s): " +
+                      $"[{string.Join(", ", stray.Select(Name))}] | selected=[{string.Join(", ", selected.Select(Name))}] " +
+                      $"| this is the deselect-badge bug — a badge outlived its selection.");
+
+        if (Diagnostics)
+            Log.Info($"[BadgeDiag/{context}] selected=[{string.Join(", ", selected.Select(Name))}] " +
+                     $"containerHolders=[{string.Join(", ", containerHolders.Select(Name))}] " +
+                     $"badged=[{string.Join(", ", badged.Select(Name))}] tracked={Tracked.Count}");
+    }
+
+    // On-demand dump (understudy_badgediag dump) of the currently tracked badges.
+    public static void DumpState(string context) =>
+        Log.Info($"[BadgeDiag/{context}] tracked badges ({Tracked.Count}): " +
+                 string.Join(", ", Tracked.Select(c => GodotObject.IsInstanceValid(c) ? Name(c.Model) : "(freed)")));
 
     private static void RemoveFrom(NCard card)
     {
