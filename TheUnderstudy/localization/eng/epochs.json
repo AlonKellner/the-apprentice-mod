@@ -11,7 +11,7 @@
   "THEUNDERSTUDY2_EPOCH.unlockText": "Unlocks the [gold]{Event}[/gold] event.",
 
   "THEUNDERSTUDY3_EPOCH.title": "A Perfect Mirror",
-  "THEUNDERSTUDY3_EPOCH.description": "The [red]Architect[/red] created a child, and poured his secrets into it - order, design, the shape of every law he knew. In time the child became flawless. A perfect mirror of its maker. A Perfect story.",
+  "THEUNDERSTUDY3_EPOCH.description": "The [red]Architect[/red] created a child, and poured his secrets into it — order, design, the shape of every law he knew. In time the child became flawless. A perfect mirror of its maker. A perfect story.",
   "THEUNDERSTUDY3_EPOCH.unlockInfo": "{IsRevealed:Unlocked|Unlockable} by finishing a run as the Understudy.",
 
   "THEUNDERSTUDY4_EPOCH.title": "Consumed",
@@ -19,14 +19,14 @@
   "THEUNDERSTUDY4_EPOCH.unlockInfo": "{IsRevealed:Unlocked|Unlockable} by completing a run on Ascension 1 or higher as the Understudy.",
 
   "THEUNDERSTUDY5_EPOCH.title": "Taken",
-  "THEUNDERSTUDY5_EPOCH.description": "A [sine]distant memory[/sine] surfaced: a child, an ending, the promise of true rest. He could no longer craft a perfect one. So he crept down into the city, into a small bedroom, and carried a [sine]sleeping boy[/sine] to the top of the [gold]Spire[/gold].",
+  "THEUNDERSTUDY5_EPOCH.description": "Years after waking from his poor sleep, a [sine]distant memory fragment[/sine] surfaced: a child, an ending, the promise of true rest. He could no longer craft a perfect one. So he crept down into the city, into a small bedroom, and carried a [sine]sleeping boy[/sine] to the top of the [gold]Spire[/gold].",
   "THEUNDERSTUDY5_EPOCH.unlockInfo": "{IsRevealed:Unlocked|Unlockable} by defeating 15 Bosses as the Understudy.",
 
   "THEUNDERSTUDY6_EPOCH.title": "Nothing Like Him",
-  "THEUNDERSTUDY6_EPOCH.description": "The boy was reckless, and loud, and endlessly irritating - nothing like the [red]Architect[/red] at all. But there was potential in him. For years he labored to mold the boy into order, but the boy was never a perfect fit. Where his caretaker sought design, the boy only wandered off into his [sine]dreams and music[/sine].",
+  "THEUNDERSTUDY6_EPOCH.description": "The boy was reckless, and loud, and endlessly irritating — nothing like the [red]Architect[/red] at all. But the gifted boy admired him with all his heart. For years the [red]Architect[/red] labored to mold that devotion into perfection, but the boy ended up wandering off into [sine]dreams and music[/sine].",
   "THEUNDERSTUDY6_EPOCH.unlockInfo": "{IsRevealed:Unlocked|Unlockable} by defeating 15 Elites as the Understudy.",
 
-  "THEUNDERSTUDY7_EPOCH.title": "Every Story has a Lesson",
-  "THEUNDERSTUDY7_EPOCH.description": "One [sine]sleepless[/sine] night, the [red]Architect[/red] decided the time had come for the Final Lesson - which was also the Final Test. He went down to the small bedroom, and asked the boy for one thing: to put an end to his story.",
+  "THEUNDERSTUDY7_EPOCH.title": "Every Story Has a Lesson",
+  "THEUNDERSTUDY7_EPOCH.description": "One [sine]sleepless[/sine] night, the [red]Architect[/red] decided the time had come for the Final Lesson — which was also the Final Test. He woke the boy up, and asked of him for one thing: to put an end to his story.",
   "THEUNDERSTUDY7_EPOCH.unlockInfo": "{IsRevealed:Unlocked|Unlockable} by defeating the Act 3 boss as the Understudy."
 }

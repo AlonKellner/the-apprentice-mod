@@ -7,28 +7,28 @@
 
   "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.1-0r.ancient": "You again. This is tedious.",
   "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.1-0r.next": "Answer",
-  "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.1-1r.char": "You asked me to play for you, my Lullabies helped you sleep. Don't you remember?",
+  "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.1-1r.char": "You asked me to play for you — my lullabies helped you sleep. Don't you remember?",
   "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.1-1r.next": "Continue",
   "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.1-2r.ancient": "I remember wasted potential.",
   "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.1-visit": "1",
 
   "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.2-0r.ancient": "If you can't kill me, you're wasting both of our time.",
   "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.2-0r.next": "Insist",
-  "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.2-1r.char": "I can do it! I wrote a Requiem for you, listen!",
+  "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.2-1r.char": "I can do it! I wrote a Requiem for you — listen!",
   "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.2-1r.next": "Continue",
   "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.2-2r.ancient": "I am not the one who keeps dying.",
   "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.2-visit": "1",
 
   "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.3-0r.ancient": "Still climbing. Still begging to be heard.",
   "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.3-0r.next": "Refuse",
-  "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.3-1r.char": "No. Not anymore. I stopped writing this for you - this one's mine.",
+  "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.3-1r.char": "No. Not anymore. I stopped writing this for you — this one's mine.",
   "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.3-1r.next": "Continue",
   "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.3-2r.ancient": "Is it now?... Then play, student.",
   "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.3-visit": "1",
 
   "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.4-0.char": "Master. I climbed all the way back to you.",
   "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.4-0.next": "Continue",
-  "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.4-1.ancient": "You return? I killed you once already - and you never even raised your hands.",
+  "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.4-1.ancient": "You return? I killed you once already — and you never even raised your hands.",
   "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.4-1.next": "Confess",
   "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.4-2.char": "I froze. I couldn't fight you. I'm still not sure I can.",
   "THE_ARCHITECT.talk.THEUNDERSTUDY-THE_UNDERSTUDY.4-2.next": "Continue",
@@ -86,11 +86,11 @@
 
   "OROBAS.talk.THEUNDERSTUDY-THE_UNDERSTUDY.1-0r.ancient": "More music!! Found shinies for you!! Now play!! Play!!",
 
-  "OROBAS.talk.THEUNDERSTUDY-THE_UNDERSTUDY.2-0.ancient": "This one!! Broken shape... Orobas fix!! Make TRUE shape!! Better better!!",
+  "OROBAS.talk.THEUNDERSTUDY-THE_UNDERSTUDY.2-0.ancient": "This one!! For you!! Orobas made it shiny!! Better better!!",
   "OROBAS.talk.THEUNDERSTUDY-THE_UNDERSTUDY.2-0.next": "Continue",
-  "OROBAS.talk.THEUNDERSTUDY-THE_UNDERSTUDY.2-1.char": "Make it what it was always meant to be. ...Yes. Do that. I've been trying to do that my whole life.",
+  "OROBAS.talk.THEUNDERSTUDY-THE_UNDERSTUDY.2-1.char": "A gift with no strings on it? Rarer than any masterpiece in this place, friend. I'll keep it close.",
   "OROBAS.talk.THEUNDERSTUDY-THE_UNDERSTUDY.2-1.next": "Continue",
-  "OROBAS.talk.THEUNDERSTUDY-THE_UNDERSTUDY.2-2.ancient": "Life short!! Try more!! Trying is good!! Very very good!!",
+  "OROBAS.talk.THEUNDERSTUDY-THE_UNDERSTUDY.2-2.ancient": "Keep keep!! Take shiny!! Take take!!",
 
   "PAEL.talk.THEUNDERSTUDY-THE_UNDERSTUDY.0-0.ancient": "[thinky_dots]Rest, weary one. Take of my flesh, and dream a little while...[/thinky_dots]",
   "PAEL.talk.THEUNDERSTUDY-THE_UNDERSTUDY.0-0.next": "Continue",
@@ -116,7 +116,7 @@
 
   "TANX.talk.THEUNDERSTUDY-THE_UNDERSTUDY.2-0.ancient": "FIGHT ME, COMPOSER!! SHOW YOUR MIGHT!!",
   "TANX.talk.THEUNDERSTUDY-THE_UNDERSTUDY.2-0.next": "Perform",
-  "TANX.talk.THEUNDERSTUDY-THE_UNDERSTUDY.2-1.char": "[i][font_size=22]The Understudy raises both hands and conducts. The room seems to strike on his downbeat.[/font_size][/i]",
+  "TANX.talk.THEUNDERSTUDY-THE_UNDERSTUDY.2-1.char": "[i][font_size=22]The Understudy raises both hands and conducts — and the room strikes on his downbeat.[/font_size][/i]",
   "TANX.talk.THEUNDERSTUDY-THE_UNDERSTUDY.2-1.next": "Continue",
   "TANX.talk.THEUNDERSTUDY-THE_UNDERSTUDY.2-2.ancient": "THAT... THAT WAS FIGHTING!? MIGHTY NOISE!! TAKE A WEAPON!! TAKE!!",
 
@@ -128,7 +128,7 @@
 
   "TEZCATARA.talk.THEUNDERSTUDY-THE_UNDERSTUDY.1-0r.ancient": "Back for more, sweetie? Still [jitter][b]flawless[/b][/jitter], are we?",
 
-  "TEZCATARA.talk.THEUNDERSTUDY-THE_UNDERSTUDY.2-0.ancient": "I knew a man of order once. Wrote a whole [jitter][b]book[/b][/jitter] of laws, terribly proud. You wear his handwriting all over you.",
+  "TEZCATARA.talk.THEUNDERSTUDY-THE_UNDERSTUDY.2-0.ancient": "I knew a man of order once. Wrote his own story in a [jitter][b]golden book[/b][/jitter], terribly proud. You wear his handwriting all over you.",
   "TEZCATARA.talk.THEUNDERSTUDY-THE_UNDERSTUDY.2-0.next": "Continue",
   "TEZCATARA.talk.THEUNDERSTUDY-THE_UNDERSTUDY.2-1.char": "...You've read the book. Then you know what he shaped me to be. Tell me — did he ever finish the last chapter?",
   "TEZCATARA.talk.THEUNDERSTUDY-THE_UNDERSTUDY.2-1.next": "Continue",
@@ -136,7 +136,7 @@
 
   "VAKUU.talk.THEUNDERSTUDY-THE_UNDERSTUDY.0-0.ancient": "Ah. The Architect's little marionette. I hold a contract that could make you so very much more.",
   "VAKUU.talk.THEUNDERSTUDY-THE_UNDERSTUDY.0-0.next": "Retort",
-  "VAKUU.talk.THEUNDERSTUDY-THE_UNDERSTUDY.0-1.char": "[i][font_size=22]The Understudy smiles; it doesn't quite reach.[/font_size][/i] No strings, demon. I write my own part.",
+  "VAKUU.talk.THEUNDERSTUDY-THE_UNDERSTUDY.0-1.char": "No strings, demon. I write my own part.",
   "VAKUU.talk.THEUNDERSTUDY-THE_UNDERSTUDY.0-1.next": "Continue",
   "VAKUU.talk.THEUNDERSTUDY-THE_UNDERSTUDY.0-2.ancient": "They all write their own part. Right up until the ink dries and they read the fine print.",
 
