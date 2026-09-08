@@ -32,11 +32,23 @@ public abstract class UnderstudyCard(
     bool showInCardLibrary = true)
     : ConstructedCardModel(cost, type, rarity, target, showInCardLibrary)
 {
-    // Portrait resolution order: (1) bespoke per-card art if it exists, else (2) a single shared
-    // per-card-type placeholder — card_portraits/placeholders/{attack,skill,power}.png — so every
-    // card of a type draws from ONE editable image (edit it + republish to update them all at once),
-    // else (3) the base game's blank missing-portrait default. Bespoke per-card art, once added,
-    // always wins over the type placeholder.
+    // Portrait resolution, in quality-tier order (see art/PROCESS.md):
+    //
+    //   T2 final       card_portraits/<slug>.png          500x380, one file serving both the in-hand
+    //                                                     portrait and the big inspect view
+    //   T1 beta        card_portraits/beta/<slug>.png     correct subject/size, unfinished rendering
+    //   T0 placeholder card_portraits/placeholders/{attack,skill,power}.png
+    //                                                     one shared image per card type, so every card
+    //                                                     of a type updates from ONE edit
+    //   (last resort)  the base game's blank missing-portrait default
+    //
+    // card_portraits/big/<slug>.png stays supported and outranks everything for the inspect view, for
+    // the occasional card that wants art composed differently at large size. It is optional: with only
+    // the single 500x380 file present, both views use it — which is what halves the card art backlog
+    // from 182 images to 91.
+    //
+    // Every step is a ResourceLoader.Exists check, so tiers can land per-card in any order and an
+    // unmade card simply keeps the tier below it.
     private string TypePlaceholderName => Type switch
     {
         CardType.Attack => "attack",
@@ -47,13 +59,22 @@ public abstract class UnderstudyCard(
     private string? TypePlaceholderPortrait =>
         $"placeholders/{TypePlaceholderName}.png".CardImagePath();
 
+    private string ArtFileName => $"{Id.Entry.RemovePrefix().ToLowerInvariant()}.png";
+
+    private string? FinalPortrait => ArtFileName.CardImagePath();
+
+    private string? BetaPortrait => ArtFileName.BetaCardImagePath();
+
     public override string PortraitPath =>
-        $"{Id.Entry.RemovePrefix().ToLowerInvariant()}.png".CardImagePath()
-            ?? TypePlaceholderPortrait ?? MissingPortraitPath;
+        FinalPortrait ?? BetaPortrait ?? TypePlaceholderPortrait ?? MissingPortraitPath;
 
     public override string? CustomPortraitPath =>
-        $"{Id.Entry.RemovePrefix().ToLowerInvariant()}.png".BigCardImagePath()
-            ?? TypePlaceholderPortrait;
+        ArtFileName.BigCardImagePath() ?? FinalPortrait ?? BetaPortrait ?? TypePlaceholderPortrait;
+
+    // Deliberately does NOT fall through to the type placeholder: the base game decides when to show
+    // beta art, and answering "yes, there is beta art" with a shared placeholder would change what the
+    // game displays today. Only a real beta file overrides this.
+    public override string BetaPortraitPath => BetaPortrait ?? base.BetaPortraitPath;
 
     // (The per-card WithTunedTip() helper that used to live here is gone: TunedModifier.AddTips now
     // supplies the same tip from the modifier side, so it reaches every Tuned card — including

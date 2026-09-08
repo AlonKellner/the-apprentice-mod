@@ -19,8 +19,10 @@ public class FoldableStageRestSiteOption : CustomRestSiteOption
     public override string OptionId => Id;
 
     // Without a CustomIconPath the button falls back to the base game's Dig shovel (see
-    // DraftingPaperRestSiteOption). Uses the Tuned power icon until dedicated rest-site art is drawn.
-    public override string? CustomIconPath => "powers/tuned_power.png".ImagePath();
+    // DraftingPaperRestSiteOption). Drop-in: images/restsite/enact.png when packed, otherwise the
+    // Tuned power icon.
+    public override string? CustomIconPath =>
+        "enact.png".RestSiteImagePath() ?? "powers/tuned_power.png".ImagePath();
 
     public FoldableStageRestSiteOption(Player owner) : base(owner) { }
 

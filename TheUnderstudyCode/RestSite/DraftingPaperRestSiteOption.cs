@@ -21,9 +21,10 @@ public class DraftingPaperRestSiteOption : CustomRestSiteOption
     public override string OptionId => Id;
 
     // Without a CustomIconPath the button resolves its icon against the base game's ui/rest_site/
-    // folder (where a mod texture can't exist) and falls back to the Dig shovel. PLACEHOLDER: the
-    // Planned glyph (this option enchants Planned) until dedicated rest-site art is drawn.
-    public override string? CustomIconPath => "powers/planned_counter_power.png".ImagePath();
+    // folder (where a mod texture can't exist) and falls back to the Dig shovel. Drop-in:
+    // images/restsite/notate.png when packed, otherwise the Planned glyph (this option enchants Planned).
+    public override string? CustomIconPath =>
+        "notate.png".RestSiteImagePath() ?? "powers/planned_counter_power.png".ImagePath();
 
     public DraftingPaperRestSiteOption(Player owner) : base(owner) { }
 

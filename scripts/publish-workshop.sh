@@ -16,7 +16,7 @@ DOTNET="$HOME/.dotnet/dotnet"
 WS="$ROOT/workshop/TheUnderstudyWIP"
 CONTENT="$WS/content"
 UPLOADER="$ROOT/tools/mod-uploader"
-CARDS_JSON="$ROOT/TheUnderstudy/localization/eng/cards.json"
+ASSETS="$ROOT/TheUnderstudy"
 PCK="$ROOT/publish/TheUnderstudy.pck"
 DLL="$ROOT/.godot/mono/temp/bin/Debug/TheUnderstudy.dll"
 
@@ -49,7 +49,11 @@ fi
 step "Publishing (PCK export via MegaDot)"
 "$DOTNET" publish "$ROOT/TheUnderstudy.csproj" -clp:ErrorsOnly || true
 [ -f "$PCK" ] || die "no PCK produced at $PCK"
-[ "$PCK" -nt "$CARDS_JSON" ] || die "PCK is older than cards.json — PCK export did not run; see the publish output above."
+# Compare against the newest packed asset, not just cards.json: every image, scene, shader and loc file
+# under TheUnderstudy/ goes into the pack, so keying on one localization file let an art-only change
+# sail past this guard and publish a PCK without the new art.
+NEWEST="$(find "$ASSETS" -type f ! -name '*.import' -newer "$PCK" -print -quit 2>/dev/null || true)"
+[ -z "$NEWEST" ] || die "PCK is older than $NEWEST — PCK export did not run; see the publish output above."
 
 step "Building shipping DLL (AnyCPU Debug top-level)"
 "$DOTNET" build "$ROOT/TheUnderstudy.csproj" --nologo -clp:ErrorsOnly || die "DLL build failed."

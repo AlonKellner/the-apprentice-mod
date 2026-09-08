@@ -96,12 +96,57 @@ public class TheUnderstudy : PlaceholderCharacterModel
     // and the character-select face (locked + unlocked) all use Understudy_Face.png. CustomIcon above
     // wraps CustomIconTexturePath, so it picks this up too. The character-select background is a small
     // scene wrapping the Attack card placeholder art as a full-rect TextureRect — CharacterSelectBg is
-    // instantiated as a Control, so it must be a scene, not a plain texture. The map marker is left as
-    // the inherited Ironclad default until dedicated art is made.
+    // instantiated as a Control, so it must be a scene, not a plain texture.
     public override string CustomIconTexturePath => "character_icon_the_understudy.png".CharacterUiPath();
     public override string CustomCharacterSelectIconPath => "char_select_the_understudy.png".CharacterUiPath();
     public override string CustomCharacterSelectLockedIconPath => "char_select_the_understudy_locked.png".CharacterUiPath();
     public override string CustomCharacterSelectBg => "char_select_bg_the_understudy.tscn".SceneResPath();
+
+    // ── Drop-in slots: mod art if it is packed, BaseLib's Ironclad placeholder otherwise ──────────
+    // PlaceholderCharacterModel fills every one of these with an "ironclad"-keyed base-game path, which
+    // is what the Understudy renders today — an Ironclad body in combat, at the rest site, in the shop,
+    // on the map, and in a multiplayer lobby. Each override below resolves the mod's own file first and
+    // falls back to that inherited default, so shipping the art is the only step needed to switch a slot
+    // over; until then these are exactly equivalent to not overriding at all. Naming and dimensions for
+    // every file named here are specified in art/assets/CHARACTER_UI.md and art/assets/RIG.md.
+    public override string? CustomIconOutlineTexturePath =>
+        "character_icon_the_understudy_outline.png".CharacterUiImagePath() ?? base.CustomIconOutlineTexturePath;
+
+    public override string? CustomMapMarkerPath =>
+        "map_marker_the_understudy.png".CharacterUiImagePath() ?? base.CustomMapMarkerPath;
+
+    // The combat body. A Tier-1 static illustration and a Tier-3 rigged .glb both arrive as this one
+    // scene path, so the rig can replace the static version without touching any other code.
+    public override string CustomVisualPath =>
+        "the_understudy_visuals.tscn".ExistingSceneResPath() ?? base.CustomVisualPath;
+
+    public override string CustomTrailPath =>
+        "the_understudy_card_trail.tscn".ExistingSceneResPath() ?? base.CustomTrailPath;
+
+    public override string CustomRestSiteAnimPath =>
+        "the_understudy_rest_site.tscn".ExistingSceneResPath() ?? base.CustomRestSiteAnimPath;
+
+    public override string CustomMerchantAnimPath =>
+        "the_understudy_merchant.tscn".ExistingSceneResPath() ?? base.CustomMerchantAnimPath;
+
+    // The character-select -> run wipe. This one is a ShaderMaterial (.tres), not a texture: the shader
+    // reads a grayscale mask's red channel and steps it against a threshold, so the art is the mask the
+    // material points at. See art/assets/CHARACTER_UI.md.
+    public override string CustomCharacterSelectTransitionPath =>
+        "materials/the_understudy_transition_mat.tres".ExistingModResPath() ?? base.CustomCharacterSelectTransitionPath;
+
+    // Multiplayer rock-paper-scissors arm art. Live surface: the mod ships multiplayer cards.
+    public override string CustomArmPointingTexturePath =>
+        "multiplayer_hand_the_understudy_point.png".CharacterUiImagePath() ?? base.CustomArmPointingTexturePath;
+
+    public override string CustomArmRockTexturePath =>
+        "multiplayer_hand_the_understudy_rock.png".CharacterUiImagePath() ?? base.CustomArmRockTexturePath;
+
+    public override string CustomArmPaperTexturePath =>
+        "multiplayer_hand_the_understudy_paper.png".CharacterUiImagePath() ?? base.CustomArmPaperTexturePath;
+
+    public override string CustomArmScissorsTexturePath =>
+        "multiplayer_hand_the_understudy_scissors.png".CharacterUiImagePath() ?? base.CustomArmScissorsTexturePath;
 
     // Combat energy counter: the Understudy's golden energy orb (big_energy) is the base orb layer,
     // the other four layers stay transparent, with warm-gold burst particles and a dark-amber number

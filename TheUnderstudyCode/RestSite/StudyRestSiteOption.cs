@@ -17,10 +17,9 @@ public class StudyRestSiteOption : CustomRestSiteOption
     // Without this, the button's icon path resolves against the BASE GAME's ui/rest_site/ folder
     // (via ImageHelper.GetImagePath) where option_theunderstudy_study.png can't exist, so the game
     // falls back to a shovel that reads as "Dig". CustomIconPath points at a mod resource instead.
-    // PLACEHOLDER: the Planned/order glyph until a dedicated book icon is drawn — swap this for
-    // "restsite/study.png".ImagePath() (or similar) once the art exists. Score/Foldable Stage have
-    // the same missing-icon gap and would benefit from the same treatment.
-    public override string? CustomIconPath => "powers/planned_counter_power.png".ImagePath();
+    // Drop-in: images/restsite/study.png when packed, otherwise the Planned/order glyph as before.
+    public override string? CustomIconPath =>
+        "study.png".RestSiteImagePath() ?? "powers/planned_counter_power.png".ImagePath();
 
     private readonly BookOfEndings _book;
 

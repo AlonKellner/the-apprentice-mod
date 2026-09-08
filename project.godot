@@ -15,9 +15,7 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 [application]
 
 config/name="TheUnderstudy"
-run/main_scene="res://scenes/cards/overlays/afflictions/order.tscn"
 config/features=PackedStringArray("4.7", "Mobile")
-config/icon="res://TheUnderstudy/mod_image.png"
 
 [display]
 

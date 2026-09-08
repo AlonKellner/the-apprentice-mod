@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.13.65: Text/localization pass. Rewrote the Orobas True Mask dialogue (now a simple gift exchange) and polished the Tanx conducting line, plus a mod-wide cleanup - fixed typos/title-case/grammar, standardized keyword tagging (Vigor/Block/simultaneously, lowercase 'invertible', un-tagged card types), 'attacks and skills'/'in your hand' phrasing, and em-dashes. No gameplay changes.",
+  "changeNote": "v1.13.66: Fixed the Book of Endings counter showing a stale study count after changing acts. The ring now reconciles to the true unspent bank on every map (re)generation - so a study spent revealing a boss no longer keeps showing as unspent in the next act, and existing saves self-heal on load. Mechanics were already correct; this was display-only.",
   "tags": [],
   "dependencies": [
     3737335127

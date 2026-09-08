@@ -131,11 +131,24 @@ public class BookOfEndings : CustomRelicModel
             consumed = AltBossReveal.Settle(studies, consumed, CapFor(state, primary.LastActIndex));
         }
 
+        int leftAct = primary.LastActIndex;
         foreach (var h in holders)
         {
             h.Consumed = consumed;
             h.LastActIndex = actIndex;
         }
+
+        Log.Info($"[BookOfEndings] settle: left act {leftAct} -> act {actIndex}, consumed now {consumed}");
+    }
+
+    // Reconcile every holder's counter ring with the true unspent bank. The ring shows Bank = studies -
+    // consumed; Study() refreshes it when studies change, but leaving an act (which changes consumed)
+    // never did — so a study spent revealing the act you left kept showing as an unspent 1 in the next
+    // act. Called on every map (re)generation, so it also self-heals a run already sitting in a settled
+    // act on load (where SettleIfActChanged early-returns because the act stamp already matches).
+    private static void RefreshRings(IRunState state)
+    {
+        foreach (var h in Holders(state)) h.InvokeDisplayAmountChanged();
     }
 
     // Whether the Rest Site's Study option is usable right now. The option is always shown; this is what
@@ -194,6 +207,7 @@ public class BookOfEndings : CustomRelicModel
         if (AltBossStore.For(map).Count > 0) return map; // already injected on this map instance
 
         SettleIfActChanged(runState, actIndex);
+        RefreshRings(runState); // reconcile the counter to the true bank (fires before the reveal early-returns)
 
         var act = runState.Acts[actIndex];
         var allBossIds = act.AllBossEncounters.Select(e => e.Id.ToString()).ToList();

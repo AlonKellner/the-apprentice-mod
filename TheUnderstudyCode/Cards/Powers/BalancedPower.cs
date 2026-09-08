@@ -28,10 +28,6 @@ public class BalancedPower : UnderstudyPower
     public override PowerType Type => PowerType.Buff;
     public override PowerStackType StackType => PowerStackType.Counter;
 
-    // No dedicated art exists yet, so this falls back to the game's missing_power glyph.
-    public override string? CustomPackedIconPath => "standingby.png".PowerImagePath();
-    public override string? CustomBigIconPath => "standingby.png".BigPowerImagePath();
-
     // Behind InitInternalData rather than an ordinary field: a power reaches combat through
     // ToMutable() -> MutableClone(), a MemberwiseClone that copies reference fields BY REFERENCE, so
     // a plain List would stay shared with the canonical model — and therefore between every creature
