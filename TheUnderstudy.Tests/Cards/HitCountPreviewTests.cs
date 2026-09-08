@@ -9,40 +9,42 @@ using Xunit;
 
 namespace TheUnderstudy.Tests.Cards;
 
-// Contract for the live "(Hits N times)" preview on the "deal X damage for each Y" cards. Each such card
-// must (1) back the hit count with a CalculatedVar named "CalculatedHits" over CalculationBase 0 /
-// CalculationExtra 1 (so the previewed value equals the raw count), and (2) render it in cards.json via
-// {CalculatedHits:diff()} + the plural formatter, gated to combat by {InCombat:(preview)|}. Mirrors base-game
-// FlakCannon/Flechettes. The live value itself needs a real Owner/combat, so it's verified in-game — these
-// bare tests only pin the var wiring and the loc reference.
+// Contract for the live "(Hits N times)" preview on the hit-count cards. Each such card must (1) back the
+// hit count with a CalculatedVar named "CalculatedHits" over CalculationExtra 1 and a card-specific
+// CalculationBase (0 = "damage for each Y", the Flechettes/FlakCannon pattern; 1 = "deal X damage, hits an
+// additional time for each Y", the Rattle pattern — one guaranteed hit plus the count), and (2) render it
+// in cards.json via {CalculatedHits:diff()} + the plural formatter, gated to combat by {InCombat:(preview)|}.
+// The live value itself needs a real Owner/combat, so it's verified in-game — these bare tests only pin the
+// var wiring and the loc reference.
 public class HitCountPreviewTests
 {
     public static IEnumerable<object[]> HitCountCards() => new List<object[]>
     {
-        new object[] { typeof(CleanSlate) },
-        new object[] { typeof(LetLoose) },
+        new object[] { typeof(CleanSlate), 0 }, // "damage for each exhausted" — pure count (Flechettes)
+        new object[] { typeof(LetLoose), 1 },   // base hit + one additional per Unplayable (Rattle)
     };
 
     [Theory]
     [MemberData(nameof(HitCountCards))]
-    public void Card_BacksHitCountWithCalculatedVar(Type cardType)
+    public void Card_BacksHitCountWithCalculatedVar(Type cardType, int expectedBase)
     {
         var card = (UnderstudyCard)Activator.CreateInstance(cardType)!;
 
         Assert.True(card.DynamicVars.ContainsKey("CalculatedHits"), $"{cardType.Name}: no 'CalculatedHits' var");
         Assert.IsType<CalculatedVar>(card.DynamicVars["CalculatedHits"]);
 
-        // base 0 + extra 1 * count => the previewed value is exactly the raw hit count.
+        // previewed value = CalculationBase + CalculationExtra(1) * count.
         Assert.True(card.DynamicVars.ContainsKey("CalculationBase"), $"{cardType.Name}: no 'CalculationBase' var");
         Assert.True(card.DynamicVars.ContainsKey("CalculationExtra"), $"{cardType.Name}: no 'CalculationExtra' var");
-        Assert.Equal(0, (int)card.DynamicVars["CalculationBase"].BaseValue);
+        Assert.Equal(expectedBase, (int)card.DynamicVars["CalculationBase"].BaseValue);
         Assert.Equal(1, (int)card.DynamicVars["CalculationExtra"].BaseValue);
     }
 
     [Theory]
     [MemberData(nameof(HitCountCards))]
-    public void Card_RendersHitCountPreview(Type cardType)
+    public void Card_RendersHitCountPreview(Type cardType, int expectedBase)
     {
+        _ = expectedBase; // unused here; the shared data source carries it for the wiring test above
         string key = "THEUNDERSTUDY-" + ToScreamingSnakeCase(cardType.Name);
         var description = LoadDescriptions()[key];
 

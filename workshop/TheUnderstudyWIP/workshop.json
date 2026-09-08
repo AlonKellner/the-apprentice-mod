@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.13.66: Fixed the Book of Endings counter showing a stale study count after changing acts. The ring now reconciles to the true unspent bank on every map (re)generation - so a study spent revealing a boss no longer keeps showing as unspent in the next act, and existing saves self-heal on load. Mechanics were already correct; this was display-only.",
+  "changeNote": "v1.13.67: Let Loose now deals its base damage once, then hits an additional time for each Unplayable in your hand (was one hit PER Unplayable, so it did nothing with none in hand). Wording/implementation follow the base game's Rattle. Still removes Unplayable from your attacks and skills.",
   "tags": [],
   "dependencies": [
     3737335127
