@@ -40,4 +40,26 @@ public static class AltBossStore
 
     // Whether a coordinate is one of this map's injected alt bosses.
     public static bool IsAltBoss(ActMap map, MapCoord coord) => EncounterAt(map, coord) != null;
+
+    // The injected alt boss node at this coord, or null.
+    public static AltBossNode? NodeAt(ActMap map, MapCoord coord)
+    {
+        foreach (var n in For(map))
+            if (n.Point.coord.col == coord.col && n.Point.coord.row == coord.row) return n;
+        return null;
+    }
+
+    // True when `coord` is an alt FIRST boss (IsSecond == false) that has a chained alt SECOND boss still
+    // to fight — the Ascension-10 double-boss case the base reward screen misses. The base game only opens
+    // the map to travel to the second boss when you're on the DEFAULT first boss (Map.BossMapPoint.coord),
+    // so an alt first boss otherwise jumps straight to the act ending; AltBossSecondBossProceedPatch uses
+    // this to plug that gap. The chained second registers with ParentCoord == its first boss's coord.
+    public static bool HasChainedSecondBoss(ActMap map, MapCoord coord)
+    {
+        var node = NodeAt(map, coord);
+        if (node == null || node.IsSecond) return false;
+        foreach (var n in For(map))
+            if (n.IsSecond && n.ParentCoord.col == coord.col && n.ParentCoord.row == coord.row) return true;
+        return false;
+    }
 }

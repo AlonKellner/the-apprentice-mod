@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.13.67: Let Loose now deals its base damage once, then hits an additional time for each Unplayable in your hand (was one hit PER Unplayable, so it did nothing with none in hand). Wording/implementation follow the base game's Rattle. Still removes Unplayable from your attacks and skills.",
+  "changeNote": "v1.13.68: Fixed a Book of Endings bug on Ascension 10 (double boss): clearing an alternative FIRST boss skipped its chained second boss and ended the run early. Beating an alt first boss now opens the map to travel to its alt second boss, just like the default double boss - the run only ends after the second.",
   "tags": [],
   "dependencies": [
     3737335127
