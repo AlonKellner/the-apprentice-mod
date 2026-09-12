@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.13.69: Fixed a crash/invariant when a Planned card is copied by a relic (e.g. Music Box's ethereal copy of Motif) - the copy shared the original's Planned queue slots, so applying Planned to one desynced both onto the same index. Copies now get their own independent Planned state.",
+  "changeNote": "v1.13.70: Fixed the Planned counter and card index numbers not refreshing when a Planned card is copied mid-combat (Music Box etc.) - the copy showed the original's #N and wasn't counted until the next Planned action. The views now re-sync as soon as the copy enters play.",
   "tags": [],
   "dependencies": [
     3737335127

@@ -105,6 +105,20 @@ public class PlannedCounterPower : UnderstudyPower
         await Task.CompletedTask;
     }
 
+    // A card COPIED/generated mid-combat (Music Box's ethereal copy, Smokestack, etc.) can carry a
+    // PlannedModifier cloned from its source — but the copy path fires no PlannedModifier.Changed and
+    // recomputes no visual indices, so the copy showed the SOURCE's stale "#N" and the counter never
+    // included its slots (the copy of Motif kept #3/#4 and the badge stayed at the pre-copy total).
+    // AddGeneratedCardToCombat adds the card to its pile and THEN fires this hook, so the copy is already
+    // in RelevantCards here: a live re-sync renumbers every slot and updates the badge. Gated to generated
+    // cards that actually carry Planned, since only those change the queue.
+    public override async Task AfterCardGeneratedForCombat(CardModel card, Player? creator)
+    {
+        if (card.TryGetModifier<PlannedModifier>(out _))
+            UpdateDisplayIfChanged();
+        await Task.CompletedTask;
+    }
+
     public override async Task AfterCardExhausted(PlayerChoiceContext choiceContext, CardModel card, bool causedByEthereal)
     {
         UpdateDisplayIfChanged();
