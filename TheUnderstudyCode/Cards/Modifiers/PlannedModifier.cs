@@ -41,6 +41,23 @@ public class PlannedModifier : CardModifier
         _visualBySeq = new Dictionary<int, int>();
     }
 
+    // When a card is COPIED (Music Box's ethereal copy, and any relic/effect that clones a card),
+    // BaseLib's card-clone handler MutableClones each modifier and then calls this hook. MutableClone is
+    // a shallow copy, so the clone's _sequenceIndices / _visualBySeq still POINT AT the original card's
+    // lists — the "sharesList=True" aliasing the slot-collision invariant caught: applying/removing a
+    // Planned slot on either card would mutate both, and NextSlotFor would double-count the shared slots.
+    // Deep-copy both collections here so the copy owns fully independent Planned state. This is the
+    // general fix for "a copied card carries a modifier with mutable collection state": override
+    // AfterClonedOnCard and re-instantiate every reference-type field (value-type/immutable fields are
+    // already safe under the shallow clone). Contents are preserved, so a copied Planned card keeps its
+    // own queue slots — it just no longer shares them with the original.
+    public override void AfterClonedOnCard(CardModel card)
+    {
+        base.AfterClonedOnCard(card);
+        _sequenceIndices = new List<int>(_sequenceIndices);
+        _visualBySeq = new Dictionary<int, int>(_visualBySeq);
+    }
+
     public static event Action? Changed;
 
     // Raised the first time a card receives a Planned slot (not on subsequent re-Plans of the

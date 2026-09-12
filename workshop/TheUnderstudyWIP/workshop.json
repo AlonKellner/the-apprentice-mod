@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.13.68: Fixed a Book of Endings bug on Ascension 10 (double boss): clearing an alternative FIRST boss skipped its chained second boss and ended the run early. Beating an alt first boss now opens the map to travel to its alt second boss, just like the default double boss - the run only ends after the second.",
+  "changeNote": "v1.13.69: Fixed a crash/invariant when a Planned card is copied by a relic (e.g. Music Box's ethereal copy of Motif) - the copy shared the original's Planned queue slots, so applying Planned to one desynced both onto the same index. Copies now get their own independent Planned state.",
   "tags": [],
   "dependencies": [
     3737335127
