@@ -24,8 +24,18 @@ public static class PrePlannedSetup
 
     // A card is pre-Planned if its class declares it (Playlist) or it carries a
     // persistent PrePlanned enchantment applied out of combat by the Drafting Paper relic.
-    public static bool IsPrePlanned(CardModel card) =>
-        (card is UnderstudyCard uc && uc.IsPrePlanned) || card.Enchantment is PrePlanned;
+    public static bool IsPrePlanned(CardModel card) => PrePlannedCount(card) > 0;
+
+    // How many pre-Planned slots a card should START combat with: one per independent pre-Planned
+    // SOURCE — its class declaring IsPrePlanned (e.g. Playlist upgraded) AND/OR a persistent PrePlanned
+    // enchantment (Notate / Drafting Paper). A card carrying BOTH starts Planned twice (#1 and #2). A
+    // card has at most one Enchantment, so the enchantment side contributes at most one.
+    public static int PrePlannedCount(CardModel card) =>
+        PrePlannedCount(card is UnderstudyCard uc && uc.IsPrePlanned, card.Enchantment is PrePlanned);
+
+    // Pure core (unit-testable without a live card): sum the pre-Planned sources.
+    public static int PrePlannedCount(bool classPrePlanned, bool prePlannedEnchantment) =>
+        (classPrePlanned ? 1 : 0) + (prePlannedEnchantment ? 1 : 0);
 
     // Pure: order pre-Planned cards by deck-acquisition rank, stable for equal ranks (identical
     // duplicate copies keep their encounter order). The caller then hands each the next sequencer
@@ -53,8 +63,12 @@ public static class PrePlannedSetup
             .Where(c => IsPrePlanned(c) && !c.TryGetModifier<PlannedModifier>(out _))
             .ToList();
 
+        // Each card fully before the next (in deck order), one slot per pre-Planned source — so a card
+        // pre-Planned twice (its own IsPrePlanned + a PrePlanned enchantment) gets two consecutive slots
+        // (#1, #2) rather than one.
         foreach (var clone in OrderByDeckRank(prePlanned, DeckRank))
-            PlannedModifier.ApplyPrePlanned(clone, combat);
+            for (int i = 0; i < PrePlannedCount(clone); i++)
+                PlannedModifier.ApplyPrePlanned(clone, combat);
 
         // Pre-Tuned enchantment (Foldable Stage): grant Tuned to any enchanted card not already Tuned.
         // Order-independent, so no coordination needed — just apply once. Driven here (not from the

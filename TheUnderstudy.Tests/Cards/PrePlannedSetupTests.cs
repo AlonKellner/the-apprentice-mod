@@ -20,6 +20,16 @@ public class PrePlannedSetupTests
         Assert.Equal(new[] { "b", "c", "d", "a" }, ordered);
     }
 
+    // A card is pre-Planned once per source: its class's IsPrePlanned (Playlist upgraded) and/or a
+    // PrePlanned enchantment (Notate). Both => starts Planned twice (#1 and #2) — the reported case.
+    [Theory]
+    [InlineData(false, false, 0)]
+    [InlineData(true, false, 1)]  // Playlist+ only
+    [InlineData(false, true, 1)]  // Notate enchantment only
+    [InlineData(true, true, 2)]   // Playlist+ enchanted with Notate -> pre-Planned twice
+    public void PrePlannedCount_SumsIndependentSources(bool classPrePlanned, bool enchantment, int expected) =>
+        Assert.Equal(expected, PrePlannedSetup.PrePlannedCount(classPrePlanned, enchantment));
+
     [Fact]
     public void OrderByDeckRank_AssigningSequentialSlots_IsUniqueAndDeckOrdered()
     {

@@ -191,19 +191,23 @@ public class PlannedModifier : CardModifier
 
     // Attaches a concrete, sequencer-assigned Planned slot to a card that STARTS a combat Planned
     // (pre-Planned). Unlike Apply, it does NOT raise Applied: a card that begins already queued is not
-    // an "apply Planned" action, so it must not trigger reactive hooks (Master Form etc.). Idempotent
-    // — a card already carrying a Planned slot is skipped. Callers assign pre-Planned cards in deck
-    // order at combat start (see PrePlannedSetup), so they take the lowest slots (0,1,2,…) and always
-    // sort before any Planned applied later in the combat.
+    // an "apply Planned" action, so it must not trigger reactive hooks (Master Form etc.). APPENDS one
+    // slot per call (creating the modifier on the first) — a card pre-Planned from MULTIPLE sources (its
+    // own IsPrePlanned AND a PrePlanned enchantment) is called once per source, so it starts combat
+    // Planned that many times (#1, #2, …). Callers assign pre-Planned cards in deck order at combat start
+    // (see PrePlannedSetup), each card fully before the next, so they take the lowest slots (0,1,2,…) and
+    // always sort before any Planned applied later in the combat. Not idempotent by itself; the
+    // once-per-combat guard and the "no modifier yet" filter live in PrePlannedSetup.AssignIfNeeded.
     public static void ApplyPrePlanned(CardModel card, ICombatState combat)
     {
-        if (card.TryGetModifier<PlannedModifier>(out _)) return;
-
         int newSlot = NextSlotFor(card.Owner);
-        CardModifier.AddModifier<PlannedModifier>(card);
-        card.TryGetModifier<PlannedModifier>(out var mod);
-        mod!.ReinitCollections();
-        mod.SequenceIndices.Add(newSlot);
+        if (!card.TryGetModifier<PlannedModifier>(out var mod))
+        {
+            CardModifier.AddModifier<PlannedModifier>(card);
+            card.TryGetModifier<PlannedModifier>(out mod);
+            mod!.ReinitCollections();
+        }
+        mod!.SequenceIndices.Add(newSlot);
         if (!card.TryGetModifier<UnplayableModifier>(out _))
             CardModifier.AddModifier<UnplayableModifier>(card);
         InvokeChanged();

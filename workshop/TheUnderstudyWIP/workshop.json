@@ -2,7 +2,7 @@
   "title": "The Understudy WIP",
   "description": "Work-in-progress build of The Understudy, a new playable character for Slay the Spire 2. Shared for friend testing. Requires BaseLib.",
   "visibility": "unlisted",
-  "changeNote": "v1.13.70: Fixed the Planned counter and card index numbers not refreshing when a Planned card is copied mid-combat (Music Box etc.) - the copy showed the original's #N and wasn't counted until the next Planned action. The views now re-sync as soon as the copy enters play.",
+  "changeNote": "v1.13.71: A card pre-Planned from two sources at once - e.g. Playlist+ (starts Planned) enchanted with Notate (also starts Planned) - now starts combat Planned TWICE (#1 and #2) instead of once. Pre-Planned slots are granted one per source.",
   "tags": [],
   "dependencies": [
     3737335127
