@@ -66,6 +66,7 @@ public abstract class InvertiblePair
         // then gain the inverted buff and hand the debuff to the enemies.
         if (selfRemove > 0) plan.Removes.Add(SceneStealing.RemoveDebuffFromSelf(holding, self, selfRemove));
         StageInvertBuff(plan, self, invertRemove);
+        RestoreDebts.Forgive(self, holding.Power, invertRemove);   // inverted stacks are no longer owed back
         if (swapRemove > 0)
             foreach (var enemy in enemies)
                 plan.Applies.Add(SceneStealing.GiveDebuffToEnemy(holding, enemy, swapRemove));
@@ -171,6 +172,9 @@ public sealed class SignFlipPair<TPower> : InvertiblePair where TPower : PowerMo
         var (converted, _) = EmotionalExpression.ComputeSignFlip(c.GetPowerAmount<TPower>(), max);
         if (converted <= 0) return 0;
         await PowerCmd.Apply<TPower>(ctx, c, 2 * converted, c, null, false);
+        // An enemy that took this stat and will give it back (The Lost, Hunter Killer...) now owes less:
+        // the stacks just inverted count as returned. See RestoreDebts.
+        RestoreDebts.Forgive(c, ModelDb.Power<TPower>(), converted);
         return converted;
     }
 

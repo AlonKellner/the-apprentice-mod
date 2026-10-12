@@ -51,6 +51,7 @@ public class MultiplayerStaticStateGuardTests
         // Immutable reflection-metadata caches (readonly PropertyInfo / FieldInfo).
         "UnderstudyCard.cs::TipDescriptionProperty",
         "UnderstudyCard.cs::ConstructedHoverTipsField",
+        "RestoreDebts.cs::InternalData",
         // Notification callback hook, wired once at init (dispatch point, not stored gameplay state).
         "DebuffClearNotifier.cs::DebuffCleared",
         // Immutable-after-init lazy caches of canonical models / registry entries (read-only once built).
@@ -64,6 +65,9 @@ public class MultiplayerStaticStateGuardTests
         "PlayAllPlannedCard.cs::_diagCombat",
         // Per-player, per-combat guard keyed by Player (deterministic; ConditionalWeakTable, no order state).
         "PrePlannedSetup.cs::_assignedFor",
+        // Per-TenderPower-instance restore debt (ConditionalWeakTable). Filled and paid only by lockstep hooks
+        // (Tender's own card-played apply, Invert) reading synced state, so every client holds the same value.
+        "RestoreDebts.cs::_tenderDebts",
         // KNOWN SMELL (flagged in the plan): Fate Knocking's running-damage cache + its combat token.
         // Currently consistent across clients (populated from deterministic DamageResults) but should be
         // migrated to a CombatManager.Instance.History-derived sum. Allowlisted, not endorsed.
